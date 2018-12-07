@@ -100,7 +100,7 @@ controllerAddress=$(cd $srcDir/protocol && truffle networks | awk '/54321/{f=1;n
 echo "Controller address: $controllerAddress"
 truffle networks
 truffle networks > $gethRoot/networks
-echo $controllerAddress > $getRoot/controllerAddress
+echo $controllerAddress > $gethRoot/controllerAddress
 cd $OPWD
 sleep 3
 # now we need to wait till 100 block mined (so current protocol round will be 2)
