@@ -1,4 +1,4 @@
-npm install -g truffle
+npm install -g truffle yarn
 mkdir /psrc && cd /psrc
 
 git clone https://github.com/livepeer/protocol.git
@@ -76,13 +76,13 @@ module.exports = async () => {
 }
 EOF
 
-echo "npm install"
-npm install
+echo "yarn install"
+yarn
 echo "Complinig protocol..."
-npm run compile
+yarn run compile
 echo "Complie done, deploying"
 
-nohup bash -c "/start.sh &" && 
+nohup bash -c "/start.sh &" &&
 sleep 1
 
 OPWD=$PWD
