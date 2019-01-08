@@ -6,4 +6,5 @@ geth -networkid 54321 -rpc -ws \
       --unlock 0,1,2,3 \
       --password $gethRoot/password.txt \
       --nodiscover --maxpeers 0 \
+      -targetgaslimit 8000000 \
       -mine
