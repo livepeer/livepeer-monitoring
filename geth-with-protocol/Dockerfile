@@ -5,10 +5,8 @@ WORKDIR /
 ENV gethRoot /root/.ethereum
 COPY genesis.json /geth/genesis.json
 COPY keys/* /geth/keys/
-COPY start.sh start.sh
 RUN echo "" > /geth/password.txt
 
-RUN chmod +x start.sh
 RUN geth --datadir $gethRoot init /geth/genesis.json
 RUN cp /geth/keys/* $gethRoot/keystore/
 
@@ -35,10 +33,6 @@ COPY start.sh start.sh
 RUN chmod +x start.sh
 
 RUN ./build-protocol.sh
-
-EXPOSE 8545/tcp
-EXPOSE 8546/tcp
-ENTRYPOINT ./start.sh
 
 # Now create clean image
 FROM alpine:latest
