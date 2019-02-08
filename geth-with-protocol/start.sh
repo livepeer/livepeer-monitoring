@@ -7,5 +7,5 @@ geth -networkid 54321 -rpc -ws \
       --password $gethRoot/password.txt \
       --nodiscover --maxpeers 0 \
       -targetgaslimit 8000000 \
-      --cache=512 \
+      --cache=512 --verbosity 2 \
       -mine
