@@ -8,6 +8,8 @@ echo "Setting devenv specific protocol parameters"
 migrations="$srcDir/protocol/migrations/migrations.config.js"
 sed -i 's/roundLength:.*$/roundLength: 50,/' $migrations
 sed -i 's/unlockPeriod:.*$/unlockPeriod: 50,/' $migrations
+sed -i 's/numActiveTranscoders:.*$/numActiveTranscoders: 50,/' $migrations
+sed -i 's/numTranscoders:.*$/numTranscoders: 100,/' $migrations
 
 
 
