@@ -5,10 +5,8 @@ WORKDIR /
 ENV gethRoot /root/.ethereum
 COPY genesis.json /geth/genesis.json
 COPY keys/* /geth/keys/
-COPY start.sh start.sh
 RUN echo "" > /geth/password.txt
 
-RUN chmod +x start.sh
 RUN geth --datadir $gethRoot init /geth/genesis.json
 RUN cp /geth/keys/* $gethRoot/keystore/
 
@@ -36,15 +34,11 @@ RUN chmod +x start.sh
 
 RUN ./build-protocol.sh
 
-EXPOSE 8545/tcp
-EXPOSE 8546/tcp
-ENTRYPOINT ./start.sh
-
 # Now create clean image
 FROM alpine:latest
 ENV GET_MINING_ACCOUNT 87da6a8c6e9eff15d703fc2773e32f6af8dbe301
 ENV gethRoot /root/.ethereum
-LABEL org.livepeer.controller="0x93ad00a63b14492386df9f1cc123d785705bdf99"
+LABEL org.livepeer.controller="0xA1fe753Fe65002C22dDc7eab29A308f73C7B6982"
 
 COPY --from=builder-node /usr/local/bin/geth /usr/local/bin/
 COPY --from=builder-node $gethRoot $gethRoot/
