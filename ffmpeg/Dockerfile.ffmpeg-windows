@@ -1,0 +1,59 @@
+# escape=`
+
+# Builds ffmpeg libs on windows. To be used as base image
+# for building livepeer no on windows.
+
+# docker build -m 4gb -t livepeer/ffmpeg-base:windows -f Dockerfile.ffmpeg-windows .
+# docker push livepeer/ffmpeg-base:windows
+
+FROM mcr.microsoft.com/windows/servercore:ltsc2019 as builder
+
+
+WORKDIR c:/temp
+
+SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
+
+# Download and extract MSYS2 with 7zip.
+
+RUN Invoke-WebRequest -UserAgent 'DockerCI' -outfile 7zsetup.exe http://www.7-zip.org/a/7z1604-x64.exe
+
+RUN Start-Process .\7zsetup -ArgumentList '/S /D=c:/7zip' -Wait
+
+RUN (new-object System.Net.WebClient).DownloadFile('http://repo.msys2.org/distrib/msys2-x86_64-latest.tar.xz','C:\temp\msys2-x86_64-latest.tar.xz')
+RUN Get-FileHash -Path msys2-x86_64-latest.tar.xz 
+RUN C:\7zip\7z e msys2-x86_64-latest.tar.xz -Wait
+RUN C:\7zip\7z x msys2-x86_64-latest.tar -o"C:\\"
+
+# Install MSYS2 and our required packages
+
+RUN Write-Host 'Updating MSYSTEM and MSYSCON ...'; `
+    [Environment]::SetEnvironmentVariable('MSYSTEM', 'MSYS2', [EnvironmentVariableTarget]::Machine); `
+    [Environment]::SetEnvironmentVariable('MSYSCON', 'defterm', [EnvironmentVariableTarget]::Machine);
+
+RUN C:\msys64\usr\bin\bash.exe -l -c 'exit 0'; `
+    C:\msys64\usr\bin\bash.exe -l -c 'echo "Now installing MSYS2..."'; `
+    C:\msys64\usr\bin\bash.exe -l -c 'pacman -Syuu --needed --noconfirm --noprogressbar --ask=20'; `
+    C:\msys64\usr\bin\bash.exe -l -c 'pacman -Syu  --needed --noconfirm --noprogressbar --ask=20'; `
+    C:\msys64\usr\bin\bash.exe -l -c 'pacman -Su   --needed --noconfirm --noprogressbar --ask=20'; `
+    # Install our packages. Use the mingw-w64-x86_64 version of everything run-time; MSYS2 is apparently slower?
+    C:\msys64\usr\bin\bash.exe -l -c 'pacman -S perl binutils git make autoconf mingw-w64-x86_64-gcc mingw-w64-x86_64-libtool mingw-w64-x86_64-gnutls mingw-w64-x86_64-go mingw-w64-x86_64-pkg-config --noconfirm --noprogressbar --ask=20'; `
+    C:\msys64\usr\bin\bash.exe -l -c 'pacman -Scc --noconfirm'; `
+    C:\msys64\usr\bin\bash.exe -l -c 'echo "Successfully installed MSYS2"'; `
+    # MSYS2 leaves processes running or something - this step hangs? Hard shutdown to fix that.
+    Stop-Computer -Force
+
+# Install FFMpeg, nasm, x264
+ADD install_ffmpeg_windows.sh c:\temp\install_ffmpeg_windows.sh
+ADD install_ffmpeg.sh c:\temp\install_ffmpeg.sh
+
+RUN  C:\msys64\usr\bin\bash.exe -l -c '/c/temp/install_ffmpeg_windows.sh '; `
+     C:\msys64\usr\bin\bash.exe -l -c 'echo "Successfully complided ffmpeg lib"';
+
+RUN Remove-Item @('C:\msys64\build\x264') -Force -Recurse; `
+    Remove-Item @('C:\msys64\build\nasm') -Force -Recurse; `
+    Remove-Item @('C:\msys64\build\ffmpeg') -Force -Recurse;
+
+FROM mcr.microsoft.com/windows/servercore:ltsc2019
+
+COPY --from=builder c:\msys64 c:\msys64
+COPY --from=builder c:\7zip c:\7zip
