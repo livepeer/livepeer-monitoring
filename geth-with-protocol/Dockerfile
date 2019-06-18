@@ -12,7 +12,7 @@ RUN cp /geth/keys/* $gethRoot/keystore/
 
 FROM node:8-alpine as builder-node
 ENV gethRoot /root/.ethereum
-ENV GET_MINING_ACCOUNT 87da6a8c6e9eff15d703fc2773e32f6af8dbe301
+ENV GETH_MINING_ACCOUNT 87da6a8c6e9eff15d703fc2773e32f6af8dbe301
 
 RUN apk add --no-cache \
         libstdc++ \
@@ -36,7 +36,7 @@ RUN ./build-protocol.sh
 
 # Now create clean image
 FROM alpine:latest
-ENV GET_MINING_ACCOUNT 87da6a8c6e9eff15d703fc2773e32f6af8dbe301
+ENV GETH_MINING_ACCOUNT 87da6a8c6e9eff15d703fc2773e32f6af8dbe301
 ENV gethRoot /root/.ethereum
 LABEL org.livepeer.controller="0xA1fe753Fe65002C22dDc7eab29A308f73C7B6982"
 
@@ -50,5 +50,5 @@ EXPOSE 8545/tcp
 EXPOSE 8546/tcp
 ENTRYPOINT ./start.sh
 
-# Build Docker image: docker build -t geth-dev .
-# Run: docker run -d -p 8545:8545 -p 8546:8546 --name geth-dev geth-dev
+# Build Docker image: ./build.sh 
+# Run: docker run -d -p 8545:8545 -p 8546:8546 --name geth-with-livepeer-protocol livepeer/geth-with-livepeer-protocol
