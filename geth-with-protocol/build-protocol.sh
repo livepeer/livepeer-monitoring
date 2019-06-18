@@ -1,4 +1,3 @@
-npm install -g truffle
 mkdir /psrc && cd /psrc
 
 git clone -b pm https://github.com/livepeer/protocol.git
@@ -10,8 +9,6 @@ sed -i 's/roundLength:.*$/roundLength: 50,/' $migrations
 sed -i 's/unlockPeriod:.*$/unlockPeriod: 50,/' $migrations
 sed -i 's/numActiveTranscoders:.*$/numActiveTranscoders: 50,/' $migrations
 sed -i 's/numTranscoders:.*$/numTranscoders: 100,/' $migrations
-
-
 
 cat << EOF > $srcDir/protocol/truffle.js
 require("babel-register")
@@ -26,7 +23,7 @@ module.exports = {
             gas: 8000000
         },
         lpTestNet: {
-            from: "0x$GET_MINING_ACCOUNT",
+            from: "0x$GETH_MINING_ACCOUNT",
             host: "localhost",
             port: 8545,
             network_id: 54321,
@@ -52,17 +49,21 @@ echo "Installing local dev version of $srcDir/protocol/scripts/unpauseController
 cat <<EOF > $srcDir/protocol/scripts/unpauseController.js
 const Controller = artifacts.require("Controller")
 
-module.exports = async () => {
+module.exports = async cb => {
     const controller = await Controller.deployed()
-    await controller.unpause()
+    await controller.unpause({from: "0x$GETH_MINING_ACCOUNT"})
+    cb()
 }
 EOF
 
 echo "npm install"
 npm install
-echo "Complinig protocol..."
+echo "Compiling contracts..."
 npm run compile
-echo "Complie done, deploying"
+echo "Done compiling, deploying..."
+
+# Create truffle alias pointing to locally installed version
+alias truffle=./node_modules/.bin/truffle
 
 nohup bash -c "/start.sh &" &&
 sleep 1
