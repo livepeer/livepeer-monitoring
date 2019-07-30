@@ -3,9 +3,10 @@ geth -networkid 54321 -rpc -ws \
       -rpccorsdomain "*" -wsorigins "*" \
       -rpcapi 'personal,account,eth,web3,net,txpool,miner,debug' \
       -wsapi 'personal,account,eth,web3,net,txpool,miner,debug' \
-      --unlock 0,1,2,3 \
+      --unlock '0161e041aad467a890839d5b08b138c1e6373072,87da6a8c6e9eff15d703fc2773e32f6af8dbe301,b97de4b8c857e4f6bc354f226dc3249aaee49209,c5065c9eeebe6df2c2284d046bfc906501846c51' \
       --password $gethRoot/password.txt \
       --nodiscover --maxpeers 0 \
       --targetgaslimit 0x8000000 \
-      --cache=512 --verbosity 2 \
-      -mine
+      --cache=512 \
+      -mine -verbosity 2 \
+      --allow-insecure-unlock -gcmode "archive" -syncmode "full" --rpcvhosts="*" \
