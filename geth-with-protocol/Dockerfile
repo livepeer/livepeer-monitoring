@@ -1,5 +1,4 @@
-# can't use geth 1.8 - it doesn't retain state inside docker container
-FROM ethereum/client-go:v1.7.3 as builder-geth
+FROM ethereum/client-go:v1.9.0 as builder-geth
 
 WORKDIR /
 ENV gethRoot /root/.ethereum
@@ -12,7 +11,7 @@ RUN cp /geth/keys/* $gethRoot/keystore/
 
 FROM node:8-alpine as builder-node
 ENV gethRoot /root/.ethereum
-ENV GETH_MINING_ACCOUNT 87da6a8c6e9eff15d703fc2773e32f6af8dbe301
+ENV GETH_MINING_ACCOUNT 0161e041aad467a890839d5b08b138c1e6373072
 
 RUN apk add --no-cache \
         libstdc++ \
@@ -36,9 +35,9 @@ RUN ./build-protocol.sh
 
 # Now create clean image
 FROM alpine:latest
-ENV GETH_MINING_ACCOUNT 87da6a8c6e9eff15d703fc2773e32f6af8dbe301
+ENV GETH_MINING_ACCOUNT 0161e041aad467a890839d5b08b138c1e6373072
 ENV gethRoot /root/.ethereum
-LABEL org.livepeer.controller="0xA1fe753Fe65002C22dDc7eab29A308f73C7B6982"
+LABEL org.livepeer.controller="0x77A0865438f2EfD65667362D4a8937537CA7a5EF"
 
 COPY --from=builder-node /usr/local/bin/geth /usr/local/bin/
 COPY --from=builder-node $gethRoot $gethRoot/
