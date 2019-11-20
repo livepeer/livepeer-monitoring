@@ -1,6 +1,6 @@
 mkdir /psrc && cd /psrc
 
-git clone -b pm https://github.com/livepeer/protocol.git
+git clone -b streamflow https://github.com/livepeer/protocol.git
 srcDir=/psrc
 cd $srcDir/protocol
 echo "Setting devenv specific protocol parameters"
@@ -32,7 +32,8 @@ module.exports = {
     },
     compilers: {
         solc: {
-            version: "0.4.25",
+            version: "0.5.11",
+            parser: "solcjs",
             settings: {
                 optimizer: {
                     enabled: true,
