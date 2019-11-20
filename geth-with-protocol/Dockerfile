@@ -9,7 +9,7 @@ RUN echo "" > /geth/password.txt
 RUN geth --datadir $gethRoot init /geth/genesis.json
 RUN cp /geth/keys/* $gethRoot/keystore/
 
-FROM node:8-alpine as builder-node
+FROM node:10-alpine as builder-node
 ENV gethRoot /root/.ethereum
 ENV GETH_MINING_ACCOUNT 0161e041aad467a890839d5b08b138c1e6373072
 
