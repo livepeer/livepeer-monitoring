@@ -82,5 +82,9 @@ EXPOSE 3000
 
 COPY --from=c1 /run.sh /run.sh
 
-USER grafana
-ENTRYPOINT [ "/run.sh" ]
+# USER grafana
+# ENTRYPOINT [ "/run.sh" ]
+
+RUN apk add supervisor
+COPY supervisord.conf /etc/supervisor.d/supervisord.conf
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor.d/supervisord.conf", "-e", "debug"]
