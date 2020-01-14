@@ -12,9 +12,9 @@ COPY --from=t1  /bin/promtool           /bin/promtool
 COPY --from=t1  /etc/prometheus/prometheus.yml            /etc/prometheus/prometheus.yml
 COPY --from=t1  /usr/share/prometheus/console_libraries/            /usr/share/prometheus/console_libraries/
 COPY --from=t1  /usr/share/prometheus/consoles/           /usr/share/prometheus/consoles/
-COPY --from=t1  /LICENSE            /LICENSE
-COPY --from=t1  /NOTICE           /NOTICE
-COPY --from=t1  /npm_licenses.tar.bz2           /npm_licenses.tar.bz2
+# COPY --from=t1  /LICENSE            /LICENSE
+# COPY --from=t1  /NOTICE           /NOTICE
+# COPY --from=t1  /npm_licenses.tar.bz2           /npm_licenses.tar.bz2
 
 # RUN ln -s /usr/share/prometheus/console_libraries /usr/share/prometheus/consoles/ /etc/prometheus/
 COPY --from=t1 /prometheus /prometheus
@@ -66,12 +66,12 @@ RUN mkdir -p "$GF_PATHS_HOME/.aws" && \
     chmod -R 777 "$GF_PATHS_DATA" "$GF_PATHS_HOME/.aws" "$GF_PATHS_LOGS" "$GF_PATHS_PLUGINS" "$GF_PATHS_PROVISIONING"
 
 # PhantomJS
-COPY --from=c1 /lib /lib
-COPY --from=c1 /lib64 /lib64
+# COPY --from=c1 /lib /lib
+# COPY --from=c1 /lib64 /lib64
 COPY --from=c1 /usr/lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu
-COPY --from=c1 /usr/share /usr/share
+COPY --from=c1 /usr/share/grafana /usr/share/grafana
 COPY --from=c1 /etc/fonts /etc/fonts
-COPY --from=c1 /usr/local/bin /usr/local/bin
+# COPY --from=c1 /usr/local/bin /usr/local/bin
 
 COPY --from=c1 $GF_PATHS_HOME/bin/grafana-cli $GF_PATHS_HOME/bin/grafana-cli
 COPY --from=c1 $GF_PATHS_HOME/public $GF_PATHS_HOME/public
