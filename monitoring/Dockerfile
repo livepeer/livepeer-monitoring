@@ -42,7 +42,8 @@ ENV PATH="/usr/share/grafana/bin:$PATH" \
     GF_PATHS_HOME="/usr/share/grafana" \
     GF_PATHS_LOGS="/var/log/grafana" \
     GF_PATHS_PLUGINS="/var/lib/grafana/plugins" \
-    GF_PATHS_PROVISIONING="/etc/grafana/provisioning"
+    GF_PATHS_PROVISIONING="/etc/grafana/provisioning" \
+    LP_PROMETHEUS_ENDPOINT="http://localhost:9090"
 
 WORKDIR $GF_PATHS_HOME
 
@@ -77,6 +78,14 @@ COPY --from=c1 $GF_PATHS_HOME/bin/grafana-cli $GF_PATHS_HOME/bin/grafana-cli
 COPY --from=c1 $GF_PATHS_HOME/public $GF_PATHS_HOME/public
 COPY --from=c1 $GF_PATHS_HOME/tools $GF_PATHS_HOME/tools
 COPY --from=c1 $GF_PATHS_HOME/tools/phantomjs/render.js $GF_PATHS_HOME/tools/phantomjs/render.js
+
+COPY ./grafana/grafanaDatasources.yml $GF_PATHS_PROVISIONING/datasources/datasources.yml
+COPY ./grafana/grafanaDashboards.yml $GF_PATHS_PROVISIONING/dashboards/dashboards.yml
+COPY ./grafana/1.json $GF_PATHS_DATA/dashboards/1.json
+COPY ./grafana/2.json $GF_PATHS_DATA/dashboards/2.json
+COPY ./grafana/3.json $GF_PATHS_DATA/dashboards/3.json
+COPY ./grafana/livepeer_overview.json $GF_PATHS_DATA/dashboards/livepeer_overview.json
+
 
 EXPOSE 3000
 
