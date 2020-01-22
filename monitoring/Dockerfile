@@ -4,7 +4,9 @@ ARG OS="linux"
 FROM prom/prometheus:latest as t1
 FROM grafana/grafana:latest as c1
 
-FROM alpine:latest as t2
+# FROM alpine:latest as t2
+FROM node:alpine as t2
+
 ARG ARCH="amd64"
 ARG OS="linux"
 COPY --from=t1  /bin/prometheus           /bin/prometheus
@@ -43,7 +45,9 @@ ENV PATH="/usr/share/grafana/bin:$PATH" \
     GF_PATHS_LOGS="/var/log/grafana" \
     GF_PATHS_PLUGINS="/var/lib/grafana/plugins" \
     GF_PATHS_PROVISIONING="/etc/grafana/provisioning" \
-    LP_PROMETHEUS_ENDPOINT="http://localhost:9090"
+    LP_PROMETHEUS_ENDPOINT="http://localhost:9090" \
+    LP_MODE="standalone" \
+    LP_NODES="localhost:7935"
 
 WORKDIR $GF_PATHS_HOME
 
@@ -96,4 +100,20 @@ COPY --from=c1 /run.sh /run.sh
 
 RUN apk add supervisor
 COPY supervisord.conf /etc/supervisor.d/supervisord.conf
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor.d/supervisord.conf", "-e", "debug"]
+# RUN /usr/bin/supervisord -c /etc/supervisor.d/supervisord.conf
+
+RUN mkdir -p "/config-generator"
+COPY config-generator /config-generator
+# CMD ["node", "/config-generator/src/generate.js"]
+RUN cd /config-generator && npm install
+RUN node /config-generator/src/generate.js
+
+# CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor.d/supervisord.conf", "-e", "debug"]
+COPY start.sh /start.sh
+ENTRYPOINT [ "/start.sh" ]
+CMD ["/start.sh"]
+
+# build
+# sudo docker build -t super-container:latest -f Dockerfile .
+# to run 
+# sudo docker run --net=host --env LP_MODE=standalone --env LP_NODES=localhost:9735,localhost:7936 super-container:latest
