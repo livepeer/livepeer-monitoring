@@ -51,12 +51,9 @@ function prometheusConfig (env) {
           }]
         })
       case 'kubernetes':
-        obj.scrape_configs.push({
-          job_name: 'livepeer-nodes',
-          static_configs: [{
-            targets: env['LP_NODES'].split(',')
-          }]
-        })
+        const namespaces = (env['LP_KUBE_NAMESPACES']) ? env['LP_KUBE_NAMESPACES'].split(',') : null
+        obj.scrape_configs = getPromKubeJobs(namespaces)
+        console.log('obj.scrap_configs: ', JSON.stringify(obj.scrape_configs))
       default:
         break
     }
@@ -67,13 +64,8 @@ function prometheusConfig (env) {
   return obj
 }
 
-const promeKubeDefaultConfig = {
-  "global": {
-    "scrape_interval": "5s",
-    "scrape_timeout": "5s",
-    "evaluation_interval": "5s"
-  },
-  "scrape_configs": [
+function getPromKubeJobs (namespaces) {
+  return [
     {
       "job_name": "kubernetes-apiservers",
       "scrape_interval": "5s",
@@ -85,9 +77,7 @@ const promeKubeDefaultConfig = {
           "api_server": null,
           "role": "endpoints",
           "namespaces": {
-            "names": [
-              "tenant-livepeer"
-            ]
+            "names": namespaces
           }
         }
       ],
@@ -121,9 +111,7 @@ const promeKubeDefaultConfig = {
           "api_server": null,
           "role": "node",
           "namespaces": {
-            "names": [
-              "tenant-livepeer"
-            ]
+            "names": namespaces
           }
         }
       ],
@@ -169,9 +157,7 @@ const promeKubeDefaultConfig = {
           "api_server": null,
           "role": "pod",
           "namespaces": {
-            "names": [
-              "tenant-livepeer"
-            ]
+            "names": namespaces
           }
         }
       ],
@@ -245,9 +231,7 @@ const promeKubeDefaultConfig = {
           "api_server": null,
           "role": "node",
           "namespaces": {
-            "names": [
-              "tenant-livepeer"
-            ]
+            "names": namespaces
           }
         }
       ],
@@ -293,9 +277,7 @@ const promeKubeDefaultConfig = {
           "api_server": null,
           "role": "endpoints",
           "namespaces": {
-            "names": [
-              "tenant-livepeer"
-            ]
+            "names": namespaces
           }
         }
       ],
