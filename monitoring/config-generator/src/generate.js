@@ -59,11 +59,14 @@ function prometheusConfig (env) {
             targets: env.nodes.split(',')
           }]
         })
+        break
       case 'kubernetes':
         const namespaces = (env.kube_namespaces) ? env.kube_namespaces.split(',') : null
         obj.scrape_configs = getPromKubeJobs(namespaces)
         console.log('obj.scrap_configs: ', JSON.stringify(obj.scrape_configs))
+        break
       default:
+        throw new Error(`mode ${env.mode} does not have a defined prometheus.yml config`)
         break
     }
   } else {
