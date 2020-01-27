@@ -36,7 +36,7 @@ WORKDIR    /prometheus
 
 
 ARG GF_UID="472"
-ARG GF_GID="472"
+# ARG GF_GID="472"
 
 ENV PATH="/usr/share/grafana/bin:$PATH" \
     GF_PATHS_CONFIG="/etc/grafana/grafana.ini" \
@@ -57,7 +57,7 @@ RUN apk add --no-cache ca-certificates bash tzdata && \
 COPY --from=c1 $GF_PATHS_HOME/conf $GF_PATHS_HOME/conf
 
 RUN mkdir -p "$GF_PATHS_HOME/.aws" && \
-    addgroup -S -g $GF_GID grafana && \
+    addgroup -S -g $GF_UID grafana && \
     adduser -S -u $GF_UID -G grafana grafana && \
     mkdir -p "$GF_PATHS_PROVISIONING/datasources" \
              "$GF_PATHS_PROVISIONING/dashboards" \
