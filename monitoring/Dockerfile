@@ -40,10 +40,10 @@ ARG GF_UID="472"
 
 ENV PATH="/usr/share/grafana/bin:$PATH" \
     GF_PATHS_CONFIG="/etc/grafana/grafana.ini" \
-    GF_PATHS_DATA="/var/lib/grafana" \
+    GF_PATHS_DATA="/data/grafana" \
     GF_PATHS_HOME="/usr/share/grafana" \
     GF_PATHS_LOGS="/var/log/grafana" \
-    GF_PATHS_PLUGINS="/var/lib/grafana/plugins" \
+    GF_PATHS_PLUGINS="/data/grafana/plugins" \
     GF_PATHS_PROVISIONING="/etc/grafana/provisioning" \
     LP_PROMETHEUS_ENDPOINT="http://localhost:9090" \
     LP_MODE="standalone" \
@@ -107,6 +107,8 @@ COPY config-generator /config-generator
 # CMD ["node", "/config-generator/src/generate.js"]
 RUN cd /config-generator && npm install
 RUN node /config-generator/src/generate.js
+
+VOLUME [ "/data/grafana" ]
 
 # CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor.d/supervisord.conf", "-e", "debug"]
 COPY start.sh /start.sh
