@@ -1,13 +1,21 @@
+#!/usr/bin/env node
+
 'use strict'
 
 const fs = require('fs')
 const path = require('path')
 const YAML = require('yaml')
+const yargs = require('yargs')
+
 
 function generate () {
-  console.log(process.env)
+  // console.log(process.env)
+  const argv = yargs
+                .env('LP_')
+                .argv
+  console.log(argv)
 
-  const promConfig = prometheusConfig(process.env)
+  const promConfig = prometheusConfig(argv)
   console.log('prom JSON: ', JSON.stringify(promConfig))
 
   saveYaml('/etc/prometheus', 'prometheus.yml', promConfig)
@@ -33,13 +41,14 @@ function prometheusConfig (env) {
     scrape_configs: []
   }
 
-  if (env && env['LP_MODE']) {
-    switch (env['LP_MODE']) {
+  if (env && env.mode) {
+    console.log('here')
+    switch (env.mode) {
       case 'standalone':
         obj.scrape_configs.push({
           job_name: 'livepeer-nodes',
           static_configs: [{
-            targets: env['LP_NODES'].split(',')
+            targets: env.nodes.split(',')
           }]
         })
         break
@@ -47,11 +56,11 @@ function prometheusConfig (env) {
         obj.scrape_configs.push({
           job_name: 'livepeer-nodes',
           static_configs: [{
-            targets: env['LP_NODES'].split(',')
+            targets: env.nodes.split(',')
           }]
         })
       case 'kubernetes':
-        const namespaces = (env['LP_KUBE_NAMESPACES']) ? env['LP_KUBE_NAMESPACES'].split(',') : null
+        const namespaces = (env.kube_namespaces) ? env.kube_namespaces.split(',') : null
         obj.scrape_configs = getPromKubeJobs(namespaces)
         console.log('obj.scrap_configs: ', JSON.stringify(obj.scrape_configs))
       default:
