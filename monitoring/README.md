@@ -19,7 +19,7 @@ a bundled prometheus/grafana container with a config templating for monitoring l
 
 - `--nodes`: a comma separated list of the livepeer nodes and their `cli` port we'd like to monitor, example: `--nodes=localhost:7935,localhost:7936`, this isn't required in the kubernetes deployments since discovery is done automatically using the `prometheus.io/scrape` labels.
 
-- `--kube_namespaces` : comma separated list of namespaces to monitoring in the `kubernetes` deployment, this is needed for certain special deployments, it defaults to an empty array.
+- `--kube-namespaces` : comma separated list of namespaces to monitoring in the `kubernetes` deployment, this is needed for certain special deployments, it defaults to an empty array.
 
 ### ENVs
 

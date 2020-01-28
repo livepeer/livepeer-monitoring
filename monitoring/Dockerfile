@@ -46,7 +46,6 @@ ENV PATH="/usr/share/grafana/bin:$PATH" \
     GF_PATHS_PLUGINS="/data/grafana/plugins" \
     GF_PATHS_PROVISIONING="/etc/grafana/provisioning" \
     LP_PROMETHEUS_ENDPOINT="http://localhost:9090" \
-    LP_MODE="standalone" \
     LP_NODES="localhost:7935"
 
 WORKDIR $GF_PATHS_HOME
@@ -103,9 +102,10 @@ COPY supervisord.conf /etc/supervisor.d/supervisord.conf
 # RUN /usr/bin/supervisord -c /etc/supervisor.d/supervisord.conf
 
 RUN mkdir -p "/config-generator"
-COPY config-generator /config-generator
+COPY config-generator/package.json /config-generator/package.json
 # CMD ["node", "/config-generator/src/generate.js"]
 RUN cd /config-generator && npm install
+COPY config-generator /config-generator
 RUN node /config-generator/src/generate.js
 
 VOLUME [ "/data/grafana" ]

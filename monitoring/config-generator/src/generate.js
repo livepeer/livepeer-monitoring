@@ -10,8 +10,41 @@ const yargs = require('yargs')
 
 function generate () {
   const argv = yargs
-                .env('LP_')
-                .argv
+      .usage(
+        `
+    Livepeer Monitoring Supercontainer
+
+    Options my also be provided as LP_ prefixed environment variables, e.g. LP_MODE=standalone is the same as --mode=standalone.
+    `,
+      )
+    .env('LP_')
+    .help()
+    .exitProcess(false)
+    .options({
+      mode: {
+        describe: 'environment in which to monitor livepeer containers',
+        default: 'standalone',
+        demandOption: true,
+        type: 'string',
+        choices: ['standalone', 'docker-compose', 'kubernetes'],
+      },
+      nodes: {
+        describe: "`--nodes`: a comma separated list of the livepeer nodes and their `cli` port we'd like to monitor, example: `--nodes=localhost:7935,localhost:7936`, this isn't required in the kubernetes deployments since discovery is done automatically using the `prometheus.io/scrape` labels.",
+        type: "string",
+        default: "localhost:7935"
+      },
+      'kube-namespaces': {
+        describe: 'comma separated list of namespaces to monitoring in the `kubernetes` deployment, this is needed for certain special deployments, it defaults to an empty array.',
+        type: "string"
+      }
+    })
+    .argv
+
+  console.log(argv)
+
+  if (argv.help || argv.version) {
+    process.exit(1)
+  }
 
   const promConfig = prometheusConfig(argv)
   console.log('prom JSON: ', JSON.stringify(promConfig))
@@ -58,9 +91,8 @@ function prometheusConfig (env) {
         })
         break
       case 'kubernetes':
-        const namespaces = (env.kube_namespaces) ? env.kube_namespaces.split(',') : null
+        const namespaces = (env.kubeNamespaces) ? env.kubeNamespaces.split(',') : null
         obj.scrape_configs = getPromKubeJobs(namespaces)
-        console.log('obj.scrap_configs: ', JSON.stringify(obj.scrape_configs))
         break
       default:
         throw new Error(`mode ${env.mode} does not have a defined prometheus.yml config`)
