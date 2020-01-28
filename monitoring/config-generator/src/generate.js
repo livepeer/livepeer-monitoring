@@ -9,11 +9,9 @@ const yargs = require('yargs')
 
 
 function generate () {
-  // console.log(process.env)
   const argv = yargs
                 .env('LP_')
                 .argv
-  console.log(argv)
 
   const promConfig = prometheusConfig(argv)
   console.log('prom JSON: ', JSON.stringify(promConfig))
@@ -42,7 +40,6 @@ function prometheusConfig (env) {
   }
 
   if (env && env.mode) {
-    console.log('here')
     switch (env.mode) {
       case 'standalone':
         obj.scrape_configs.push({
