@@ -5,7 +5,7 @@ ENV PKG_CONFIG_PATH /root/compiled/lib/pkgconfig
 WORKDIR /root
 
 RUN apt update \
-    && apt install -y build-essential pkg-config autoconf gnutls-dev git
+    && apt install -y build-essential pkg-config autoconf gnutls-dev git curl
 
 COPY install_ffmpeg.sh install_ffmpeg.sh
 RUN ./install_ffmpeg.sh
