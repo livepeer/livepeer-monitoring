@@ -40,11 +40,11 @@ function generate () {
     })
     .argv
 
-  console.log(argv)
-
   if (argv.help || argv.version) {
     process.exit(1)
   }
+  
+  console.log(argv)
 
   const promConfig = prometheusConfig(argv)
   console.log('prom JSON: ', JSON.stringify(promConfig))
