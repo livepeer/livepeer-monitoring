@@ -6,6 +6,7 @@ const fs = require('fs')
 const path = require('path')
 const YAML = require('yaml')
 const yargs = require('yargs')
+const supervisord = require('./supervisord')
 
 
 function generate () {
@@ -36,6 +37,21 @@ function generate () {
       'kube-namespaces': {
         describe: 'comma separated list of namespaces to monitoring in the `kubernetes` deployment, this is needed for certain special deployments, it defaults to an empty array.',
         type: "string"
+      },
+      'prometheus-storagePath': {
+        describe: 'the path to the TSDB folder',
+        default: '/data/promtheus',
+        type: 'string'
+      },
+      'prometheus-prefix': {
+        describe: 'useful for running prometheus GUI as a subpath , example: /prometheus',
+        default: '/',
+        type: 'string'
+      },
+      'prometheus-externalUrl': {
+        describe: 'external URL for the promtheus service',
+        default: 'http://localhost:9090',
+        type: 'string'
       }
     })
     .argv
@@ -48,8 +64,11 @@ function generate () {
 
   const promConfig = prometheusConfig(argv)
   console.log('prom JSON: ', JSON.stringify(promConfig))
+  const supervisordConfig = supervisord.generate(argv)
 
   saveYaml('/etc/prometheus', 'prometheus.yml', promConfig)
+  fs.writeFileSync(path.join('/etc/supervisor.d', 'supervisord.conf'), supervisordConfig)
+
 }
 
 
@@ -58,6 +77,7 @@ function saveYaml (outputFolder, name, content) {
   // console.log(content)
   fs.writeFileSync(path.join(outputFolder, name), YAML.stringify(content))
 }
+
 
 generate()
 
