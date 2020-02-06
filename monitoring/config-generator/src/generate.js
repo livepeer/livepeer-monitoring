@@ -113,6 +113,17 @@ function prometheusConfig (env) {
       case 'kubernetes':
         const namespaces = (env.kubeNamespaces) ? env.kubeNamespaces.split(',') : null
         obj.scrape_configs = getPromKubeJobs(namespaces)
+        if (env.kubeLongterm) {
+          obj['remote_read'] = [{
+            url: 'http://localhost:9201/read',
+            remote_timeout: '30s'
+          }]
+
+          obj['remote_write'] = [{
+            url: 'http://localhost:9201/write',
+            remote_timeout: '30s'
+          }]
+        }
         break
       default:
         throw new Error(`mode ${env.mode} does not have a defined prometheus.yml config`)
