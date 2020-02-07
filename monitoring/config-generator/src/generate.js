@@ -82,7 +82,7 @@ function saveYaml (outputFolder, name, content) {
 generate()
 
 
-function prometheusConfig (env) {
+function prometheusConfig (params) {
   let obj = {
     global: {
       scrape_interval: '5s',
@@ -92,13 +92,13 @@ function prometheusConfig (env) {
     scrape_configs: []
   }
 
-  if (env && env.mode) {
-    switch (env.mode) {
+  if (params && params.mode) {
+    switch (params.mode) {
       case 'standalone':
         obj.scrape_configs.push({
           job_name: 'livepeer-nodes',
           static_configs: [{
-            targets: env.nodes.split(',')
+            targets: params.nodes.split(',')
           }]
         })
         break
@@ -106,14 +106,14 @@ function prometheusConfig (env) {
         obj.scrape_configs.push({
           job_name: 'livepeer-nodes',
           static_configs: [{
-            targets: env.nodes.split(',')
+            targets: params.nodes.split(',')
           }]
         })
         break
       case 'kubernetes':
-        const namespaces = (env.kubeNamespaces) ? env.kubeNamespaces.split(',') : null
+        const namespaces = (params.kubeNamespaces) ? params.kubeNamespaces.split(',') : null
         obj.scrape_configs = getPromKubeJobs(namespaces)
-        if (env.kubeLongterm) {
+        if (params.kubeLongterm) {
           obj['remote_read'] = [{
             url: 'http://localhost:9201/read',
             remote_timeout: '30s'
@@ -126,7 +126,7 @@ function prometheusConfig (env) {
         }
         break
       default:
-        throw new Error(`mode ${env.mode} does not have a defined prometheus.yml config`)
+        throw new Error(`mode ${params.mode} does not have a defined prometheus.yml config`)
         break
     }
   } else {
