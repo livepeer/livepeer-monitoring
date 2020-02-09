@@ -38,6 +38,10 @@ function generate () {
         describe: 'comma separated list of namespaces to monitoring in the `kubernetes` deployment, this is needed for certain special deployments, it defaults to an empty array.',
         type: "string"
       },
+      'kube-longterm': {
+        describe: 'enables longterm storage via PostgreSQL, note that the pg_prometheus, and the postgresql adapter are not included in this bundle',
+        type: "boolean"
+      },
       'prometheus-storagePath': {
         describe: 'the path to the TSDB folder',
         default: '/data/promtheus',
