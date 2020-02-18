@@ -28,6 +28,11 @@ grafana datasource
 - `LP_PROMETHEUS_ENDPOINT` : a full url of the prometheus endpoint, this defaults to `http://localhost:9090` , but in our kubernetes deployments and docker-compose, this need to be changed
 
 
+### Grafana Envs
+
+All `GF_` prefixed envs are passed to grafana , you can find out more details at the [official grafana docs](https://grafana.com/docs/grafana/latest/installation/configuration/#configure-with-environment-variables)
+
+
 ## Usage examples
 
 ```bash

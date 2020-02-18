@@ -6,6 +6,7 @@ const fs = require('fs')
 const path = require('path')
 const YAML = require('yaml')
 const yargs = require('yargs')
+const supervisord = require('./supervisord')
 
 
 function generate () {
@@ -36,6 +37,25 @@ function generate () {
       'kube-namespaces': {
         describe: 'comma separated list of namespaces to monitoring in the `kubernetes` deployment, this is needed for certain special deployments, it defaults to an empty array.',
         type: "string"
+      },
+      'kube-longterm': {
+        describe: 'enables longterm storage via PostgreSQL, note that the pg_prometheus, and the postgresql adapter are not included in this bundle',
+        type: "boolean"
+      },
+      'prometheus-storagePath': {
+        describe: 'the path to the TSDB folder',
+        default: '/data/promtheus',
+        type: 'string'
+      },
+      'prometheus-prefix': {
+        describe: 'useful for running prometheus GUI as a subpath , example: /prometheus',
+        default: '/',
+        type: 'string'
+      },
+      'prometheus-externalUrl': {
+        describe: 'external URL for the promtheus service',
+        default: 'http://localhost:9090',
+        type: 'string'
       }
     })
     .argv
@@ -48,8 +68,11 @@ function generate () {
 
   const promConfig = prometheusConfig(argv)
   console.log('prom JSON: ', JSON.stringify(promConfig))
+  const supervisordConfig = supervisord.generate(argv)
 
   saveYaml('/etc/prometheus', 'prometheus.yml', promConfig)
+  fs.writeFileSync(path.join('/etc/supervisor.d', 'supervisord.conf'), supervisordConfig)
+
 }
 
 
@@ -59,10 +82,11 @@ function saveYaml (outputFolder, name, content) {
   fs.writeFileSync(path.join(outputFolder, name), YAML.stringify(content))
 }
 
+
 generate()
 
 
-function prometheusConfig (env) {
+function prometheusConfig (params) {
   let obj = {
     global: {
       scrape_interval: '5s',
@@ -72,13 +96,13 @@ function prometheusConfig (env) {
     scrape_configs: []
   }
 
-  if (env && env.mode) {
-    switch (env.mode) {
+  if (params && params.mode) {
+    switch (params.mode) {
       case 'standalone':
         obj.scrape_configs.push({
           job_name: 'livepeer-nodes',
           static_configs: [{
-            targets: env.nodes.split(',')
+            targets: params.nodes.split(',')
           }]
         })
         break
@@ -86,16 +110,27 @@ function prometheusConfig (env) {
         obj.scrape_configs.push({
           job_name: 'livepeer-nodes',
           static_configs: [{
-            targets: env.nodes.split(',')
+            targets: params.nodes.split(',')
           }]
         })
         break
       case 'kubernetes':
-        const namespaces = (env.kubeNamespaces) ? env.kubeNamespaces.split(',') : null
+        const namespaces = (params.kubeNamespaces) ? params.kubeNamespaces.split(',') : null
         obj.scrape_configs = getPromKubeJobs(namespaces)
+        if (params.kubeLongterm) {
+          obj['remote_read'] = [{
+            url: 'http://localhost:9201/read',
+            remote_timeout: '30s'
+          }]
+
+          obj['remote_write'] = [{
+            url: 'http://localhost:9201/write',
+            remote_timeout: '30s'
+          }]
+        }
         break
       default:
-        throw new Error(`mode ${env.mode} does not have a defined prometheus.yml config`)
+        throw new Error(`mode ${params.mode} does not have a defined prometheus.yml config`)
         break
     }
   } else {
