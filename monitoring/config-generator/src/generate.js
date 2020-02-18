@@ -56,6 +56,16 @@ function generate () {
         describe: 'external URL for the promtheus service',
         default: 'http://localhost:9090',
         type: 'string'
+      },
+      'cadvisor-port': {
+        describe: '[docker compose mode only] the port defined for cadvisor',
+        default: 8080,
+        type: 'number'
+      },
+      'node-exporter-port': {
+        describe: '[docker compose mode only] the port defined for node-exporter',
+        default: 9100,
+        type: 'number'
       }
     })
     .argv
@@ -113,6 +123,33 @@ function prometheusConfig (params) {
             targets: params.nodes.split(',')
           }]
         })
+
+        if (params.cadvisorPort) {
+          obj.scrape_configs.push({
+            job_name: 'cadvisor',
+            dns_sd_configs: [{
+              names: [
+                'tasks.cadvisor'
+              ],
+              type: 'A',
+              port: params.cadvisorPort
+            }]
+          })
+        }
+
+        if (params.nodeExporterPort) {
+          obj.scrape_configs.push({
+            job_name: 'node-exporter',
+            dns_sd_configs: [{
+              names: [
+                'tasks.node-exporter'
+              ],
+              type: 'A',
+              port: params.nodeExporterPort
+            }]
+          })
+        }
+
         break
       case 'kubernetes':
         const namespaces = (params.kubeNamespaces) ? params.kubeNamespaces.split(',') : null
