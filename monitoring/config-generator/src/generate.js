@@ -62,6 +62,10 @@ function generate () {
         default: 8080,
         type: 'number'
       },
+      'kube-cadvisor': {
+        describe: 'enables kubernetes-cadvisor prometheus job',
+        type: "boolean"
+      },
       'node-exporter-port': {
         describe: '[docker compose mode only] the port defined for node-exporter',
         default: 9100,
@@ -165,6 +169,45 @@ function prometheusConfig (params) {
             remote_timeout: '30s'
           }]
         }
+
+        if (params.kubeCadvisor) {
+          obj.scrape_configs.push({
+            job_name: 'kubernetes-cadvisor',
+            scheme: 'https',
+            kubernetes_sd_configs: [{
+              api_server: null,
+              role: 'node',
+              namespaces: {
+                names: namespaces
+              },
+              bearer_token_file: '/var/run/secrets/kubernetes.io/serviceaccount/token',
+              tls_config: {
+                ca_file: '/var/run/secrets/kubernetes.io/serviceaccount/ca.crt',
+                insecure_skip_verify: false
+              },
+              relabel_configs: [{
+                separator: ';',
+                regex: '__meta_kubernetes_node_label_(.+)',
+                replacement: '$1',
+                action: 'labelmap'
+              },{
+                separator: ';',
+                regex: '(.*)',
+                target_label: '__address__',
+                replacement: 'kubernetes.default.svc:443',
+                action: 'replace'
+              },{
+                source_labels: '[__meta_kubernetes_node_name]',
+                separator: ';',
+                regex: '(.+)',
+                target_label: '__metrics_path__',
+                replacement: '/api/v1/nodes/${1}/proxy/metrics/cadvisor',
+                action: 'replace'
+              }]
+            }]
+          })
+        }
+        
         break
       default:
         throw new Error(`mode ${params.mode} does not have a defined prometheus.yml config`)
