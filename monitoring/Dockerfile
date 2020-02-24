@@ -4,13 +4,6 @@ ARG OS="linux"
 FROM prom/prometheus:latest as t1
 FROM grafana/grafana:latest as c1
 
-FROM golang:alpine as c2
-WORKDIR /
-COPY nvidia_smi_exporter.go nvidia_smi_exporter.go
-RUN go build -v nvidia_smi_exporter.go
-
-
-# FROM alpine:latest as t2
 FROM node:alpine as t2
 
 ARG ARCH="amd64"
@@ -95,15 +88,12 @@ COPY ./grafana/2.json $GF_PATHS_DATA/dashboards/2.json
 COPY ./grafana/3.json $GF_PATHS_DATA/dashboards/3.json
 COPY ./grafana/livepeer_overview.json $GF_PATHS_DATA/dashboards/livepeer_overview.json
 COPY ./grafana/livepeer_payments_overview.json $GF_PATHS_DATA/dashboards/livepeer_payments_overview.json
+COPY ./grafana/nvidia-gpu.json $GF_PATHS_DATA/dashboards/nvidia-gpu.json
 
 
 EXPOSE 3000
 
 COPY --from=c1 /run.sh /run.sh
-
-ENV NVIDIA_DRIVER_CAPABILITIES=all
-# COPY nvidia-smi-exporter
-COPY --from=c2 /nvidia_smi_exporter /nvidia_smi_exporter
 
 RUN apk add supervisor
 COPY supervisord.conf /etc/supervisor.d/supervisord.conf
