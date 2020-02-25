@@ -88,6 +88,7 @@ COPY ./grafana/1.json $GF_PATHS_DATA/dashboards/1.json
 COPY ./grafana/2.json $GF_PATHS_DATA/dashboards/2.json
 COPY ./grafana/3.json $GF_PATHS_DATA/dashboards/3.json
 COPY ./grafana/livepeer_overview.json $GF_PATHS_DATA/dashboards/livepeer_overview.json
+COPY ./grafana/livepeer_payments_overview.json $GF_PATHS_DATA/dashboards/livepeer_payments_overview.json
 
 
 EXPOSE 3000
