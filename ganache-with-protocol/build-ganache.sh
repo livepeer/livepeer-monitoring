@@ -1,6 +1,9 @@
 git clone -b streamflow https://github.com/livepeer/protocol.git
 cd protocol
 echo "Setting devenv specific protocol parameters"
+pollCreator="/protocol/contracts/polling/PollCreator.sol"
+sed -i 's/10 rounds.*$/7 rounds/' $pollCreator
+sed -i 's/POLL_PERIOD = .*$/POLL_PERIOD = 7 * 50;/' $pollCreator
 migrations="/protocol/migrations/migrations.config.js"
 sed -i 's/roundLength:.*$/roundLength: 50,/' $migrations
 sed -i 's/unlockPeriod:.*$/unlockPeriod: 50,/' $migrations
