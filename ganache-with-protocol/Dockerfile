@@ -22,4 +22,4 @@ COPY --from=builder-node /ganache_db /ganache_db
 
 EXPOSE 8545/tcp
 
-ENTRYPOINT ganache-cli -k istanbul -l 0x7A1200 -h 0.0.0.0 -a 310 -i 54321 -d --db $GANACHE_DB_PATH
+ENTRYPOINT ganache-cli -q -k istanbul -l 0x7A1200 -h 0.0.0.0 -a 310 -i 54321 -d --db $GANACHE_DB_PATH
