@@ -57,6 +57,11 @@ function generate () {
         default: 'http://localhost:9090',
         type: 'string'
       },
+      'prometheus-kube-scrape': {
+        describe: 'annotation for scraping Kubernetes pods',
+        default: 'scrape',
+        type: 'string'
+      },
       'cadvisor-port': {
         describe: '[docker compose mode only] the port defined for cadvisor',
         default: 8080,
@@ -157,7 +162,7 @@ function prometheusConfig (params) {
         break
       case 'kubernetes':
         const namespaces = (params.kubeNamespaces) ? params.kubeNamespaces.split(',') : null
-        obj.scrape_configs = getPromKubeJobs(namespaces)
+        obj.scrape_configs = getPromKubeJobs(namespaces, params.prometheusKubeScrape)
         if (params.kubeLongterm) {
           obj['remote_read'] = [{
             url: 'http://localhost:9201/read',
@@ -220,7 +225,7 @@ function prometheusConfig (params) {
   return obj
 }
 
-function getPromKubeJobs (namespaces) {
+function getPromKubeJobs (namespaces, promKubeScrape) {
   return [
     {
       "job_name": "kubernetes-apiservers",
@@ -320,7 +325,7 @@ function getPromKubeJobs (namespaces) {
       "relabel_configs": [
         {
           "source_labels": [
-            "__meta_kubernetes_pod_annotation_prometheus_io_scrape"
+            `__meta_kubernetes_pod_annotation_prometheus_io_${promKubeScrape}`
           ],
           "separator": ";",
           "regex": "true",
@@ -440,7 +445,7 @@ function getPromKubeJobs (namespaces) {
       "relabel_configs": [
         {
           "source_labels": [
-            "__meta_kubernetes_service_annotation_prometheus_io_scrape"
+            `__meta_kubernetes_service_annotation_prometheus_io_${promKubeScrape}`
           ],
           "separator": ";",
           "regex": "true",
