@@ -249,7 +249,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(up{livepeer_node_type=\"broadcaster\"})",
+          "expr": "sum(up{livepeer_node_type=~\"^.*broadcaster.*$\"})",
           "format": "time_series",
           "instant": true,
           "intervalFactor": 1,
@@ -672,7 +672,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(up{livepeer_node_type=\"orchestrator\"})",
+          "expr": "sum(up{livepeer_node_type=~\"^.*orchestrator.*$\"})",
           "format": "time_series",
           "instant": true,
           "intervalFactor": 1,
