@@ -2,7 +2,7 @@ ARG ARCH="amd64"
 ARG OS="linux"
 
 FROM prom/prometheus:latest as t1
-FROM grafana/grafana:latest as c1
+FROM grafana/grafana:6.7.3 as c1
 
 FROM node:alpine as t2
 

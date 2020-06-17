@@ -21,6 +21,8 @@ a bundled prometheus/grafana container with a config templating for monitoring l
 
 - `--kube-namespaces` : comma separated list of namespaces to monitoring in the `kubernetes` deployment, this is needed for certain special deployments, it defaults to an empty array.
 
+- `--prometheus-kube-scrape`: string annotation for scraping a kube pod. Ex. If the value for this flag is `scrape_this_pod` then all kube pods to be scraped should have the annotation `prometheus.io/scrape_this_pod`. The value for this flag must follow the Prometheus requirements for naming and match the regex `[a-zA-Z_][a-zA-Z0-9_]*` (ACII letters, numbers and underscores).
+
 ### ENVs
 
 these env variables cannot be passed as a arg, this is because we use them in the simple docker templating for stuff like
