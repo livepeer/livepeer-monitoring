@@ -23,6 +23,8 @@ a bundled prometheus/grafana container with a config templating for monitoring l
 
 - `--prometheus-kube-scrape`: string annotation for scraping a kube pod. Ex. If the value for this flag is `scrape_this_pod` then all kube pods to be scraped should have the annotation `prometheus.io/scrape_this_pod`. The value for this flag must follow the Prometheus requirements for naming and match the regex `[a-zA-Z_][a-zA-Z0-9_]*` (ACII letters, numbers and underscores).
 
+- `--pagerduty-service-key`: the [service key](https://support.pagerduty.com/docs/services-and-integrations) (not API key!) for the Prometheus integration on your Pagerduty service to receive alerts from Prometheus Alertmanager. 
+
 ### ENVs
 
 these env variables cannot be passed as a arg, this is because we use them in the simple docker templating for stuff like
@@ -46,5 +48,8 @@ $ sudo docker run --net=host livepeer/monitoring:latest --mode standalone --node
 
 ```
 
+**note** on OSX omit ``--net=host`  and use `host.docker.internal` instead of localhost for the `--nodes`. Port forwarding will using the `-p` flag is also required. 
+
+```docker run livepeer/monitoring:latest --mode standalone --nodes=docker.host.internal:9735```
 
 dashboards are available at the usual `3000` port for grafana and `9090` for prometheus. you can change that using the docker port forwarding `-p` flag

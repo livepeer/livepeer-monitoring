@@ -3,6 +3,7 @@ ARG OS="linux"
 
 FROM prom/prometheus:latest as t1
 FROM grafana/grafana:6.7.3 as c1
+FROM prom/alertmanager:latest as a1
 
 FROM node:alpine as t2
 
@@ -31,6 +32,8 @@ WORKDIR    /prometheus
 #              "--web.console.templates=/usr/share/prometheus/consoles" ]
 
 
+COPY --from=a1 /bin/alertmanager /bin/alertmanager
+EXPOSE 9093
 
 
 
