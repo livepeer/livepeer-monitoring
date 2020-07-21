@@ -1010,7 +1010,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "histogram_quantile(0.99, sum(rate(livepeer_transcode_latency_seconds_bucket[1m])) by ( le))",
+          "expr": "histogram_quantile(0.99, sum(rate(livepeer_transcode_overall_latency_seconds_bucket[1m])) by ( le))",
           "format": "time_series",
           "instant": false,
           "intervalFactor": 1,
@@ -1018,21 +1018,21 @@
           "refId": "D"
         },
         {
-          "expr": "histogram_quantile(0.95, sum(rate(livepeer_transcode_latency_seconds_bucket[1m])) by (le))",
+          "expr": "histogram_quantile(0.95, sum(rate(livepeer_transcode_overall_latency_seconds_bucket[1m])) by (le))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "95th",
           "refId": "A"
         },
         {
-          "expr": "histogram_quantile(0.9, sum(rate(livepeer_transcode_latency_seconds_bucket[1m])) by ( le))",
+          "expr": "histogram_quantile(0.9, sum(rate(livepeer_transcode_overall_latency_seconds_bucket[1m])) by ( le))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "90th",
           "refId": "B"
         },
         {
-          "expr": "histogram_quantile(0.5, sum(rate(livepeer_transcode_latency_seconds_bucket[1m])) by ( le))",
+          "expr": "histogram_quantile(0.5, sum(rate(livepeer_transcode_overall_latency_seconds_bucket[1m])) by ( le))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "50th",
@@ -1205,7 +1205,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(livepeer_transcode_latency_seconds_sum{node_type=\"bctr\"}[1m])) by (instance) / sum(rate(livepeer_transcode_latency_seconds_count{node_type=\"bctr\"}[1m])) by (instance)",
+          "expr": "sum(rate(livepeer_transcode_overall_latency_seconds_sum{node_type=\"bctr\"}[1m])) by (instance) / sum(rate(livepeer_transcode_overall_latency_seconds_count{node_type=\"bctr\"}[1m])) by (instance)",
           "format": "time_series",
           "instant": false,
           "intervalFactor": 1,
