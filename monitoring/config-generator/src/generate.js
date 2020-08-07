@@ -10,6 +10,8 @@ const supervisord = require('./supervisord')
 const config = require('./config')
 
 function generate() {
+  // Get all alert grpigroup names] for the --alert-groups default
+  const allGroups = getRules().groups.map(g => g.name).join(',');
   const argv = yargs
     .usage(
       `
@@ -77,8 +79,13 @@ function generate() {
         type: 'number'
       },
       'pagerduty-service-key': {
-        descibe: 'pagerduty service key for alertmanager to send alerts',
+        describe: 'pagerduty service key for alertmanager to send alerts',
         default: '',
+        type: 'string'
+      },
+      'alert-groups': {
+        describe: 'comma-separated list of alert groups to enable',
+        default: allGroups,
         type: 'string'
       }
     }).argv
@@ -93,7 +100,7 @@ function generate() {
   console.log('prom JSON: ', JSON.stringify(promConfig))
   const supervisordConfig = supervisord.generate(argv)
   saveYaml('/etc/prometheus', 'alertmanager.yml', getAlertManagerConfig(argv))
-  saveYaml('/etc/prometheus', 'rules.yml', getRules())
+  saveYaml('/etc/prometheus', 'rules.yml', getRules(argv.alertGroups))
   saveYaml('/etc/prometheus', 'prometheus.yml', promConfig)
   fs.writeFileSync(
     path.join('/etc/supervisor.d', 'supervisord.conf'),
@@ -577,7 +584,7 @@ function getAlertManagerConfig(params) {
   }
 }
 
-function getRules() {
+function getRules(allowList) {
   let groups = []
 
   let broadcastingFunds = {
@@ -622,6 +629,55 @@ function getRules() {
   }
 
   groups.push(broadcastingFunds)
+
+
+  let transcodingLatency = {
+    name: 'transcoding-latency',
+    rules: [{
+        alert: '50-pct-latency-high',
+        expr: 'histogram_quantile(0.5, sum(rate(livepeer_transcode_latency_seconds_bucket[1m])) by ( le)) < 1',
+        for: '5m',
+        annotations: {
+          title: '50% transcoding latency is high',
+          description: 'Our 50% transcoding latency is greater than one second'
+        },
+        labels: {
+          severity: 'page'
+        }
+      },
+      {
+        alert: '90-pct-latency-high',
+        expr: 'histogram_quantile(0.9, sum(rate(livepeer_transcode_latency_seconds_bucket[1m])) by ( le)) < 2',
+        for: '2m',
+        annotations: {
+          title: '90% transcoding latency is high',
+          description: 'Our 90% transcoding latency is greater than two seconds'
+        },
+        labels: {
+          severity: 'page'
+        }
+      },
+      {
+        alert: '99-pct-latency-high',
+        expr: 'histogram_quantile(0.99, sum(rate(livepeer_transcode_latency_seconds_bucket[1m])) by ( le)) < 5',
+        for: '1m',
+        annotations: {
+          title: '99% transcoding latency is high',
+          description: 'Our 99% transcoding latency is greater than five seconds'
+        },
+        labels: {
+          severity: 'page'
+        }
+      },
+    ]
+  }
+
+  groups.push(transcodingLatency)
+
+  if (allowList) {
+    const allowed = allowList.split(',')
+    groups = groups.filter(g => allowed.includes(g.name))
+  }
 
   return {
     groups
