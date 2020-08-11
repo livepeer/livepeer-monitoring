@@ -635,7 +635,7 @@ function getRules(allowList) {
     name: 'transcoding-latency',
     rules: [{
         alert: '50-pct-latency-high',
-        expr: 'histogram_quantile(0.5, sum(rate(livepeer_transcode_latency_seconds_bucket[1m])) by ( le)) > 1',
+        expr: 'histogram_quantile(0.5, sum(rate(livepeer_transcode_overall_latency_seconds_bucket[1m])) by ( le)) > 1',
         for: '5m',
         annotations: {
           title: '50% transcoding latency is high',
@@ -647,7 +647,7 @@ function getRules(allowList) {
       },
       {
         alert: '90-pct-latency-high',
-        expr: 'histogram_quantile(0.9, sum(rate(livepeer_transcode_latency_seconds_bucket[1m])) by ( le)) > 2',
+        expr: 'histogram_quantile(0.9, sum(rate(livepeer_transcode_overall_latency_seconds_bucket[1m])) by ( le)) > 2',
         for: '2m',
         annotations: {
           title: '90% transcoding latency is high',
@@ -659,7 +659,7 @@ function getRules(allowList) {
       },
       {
         alert: '99-pct-latency-high',
-        expr: 'histogram_quantile(0.99, sum(rate(livepeer_transcode_latency_seconds_bucket[1m])) by ( le)) > 5',
+        expr: 'histogram_quantile(0.99, sum(rate(livepeer_transcode_overall_latency_seconds_bucket[1m])) by ( le)) > 5',
         for: '1m',
         annotations: {
           title: '99% transcoding latency is high',
