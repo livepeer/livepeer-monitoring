@@ -17,3 +17,7 @@ jobs:
         cd monitoring
         docker build -t livepeer/monitoring:$BRANCH .
         docker push livepeer/monitoring:$BRANCH
+        
+        cd ../fluentd-tweaked
+        docker build -t livepeerci/fluentd-tweaked:$BRANCH .
+        docker push livepeerci/fluentd-tweaked:$BRANCH
