@@ -87,6 +87,11 @@ function generate() {
         describe: 'comma-separated list of alert groups to enable',
         default: allGroups,
         type: 'string'
+      },
+      'discord-webhook': {
+        describe: 'the webhook for the Discord notification channel',
+        type: 'string',
+        default: null
       }
     }).argv
 
@@ -102,6 +107,9 @@ function generate() {
   saveYaml('/etc/prometheus', 'alertmanager.yml', getAlertManagerConfig(argv))
   saveYaml('/etc/prometheus', 'rules.yml', getRules(argv.alertGroups))
   saveYaml('/etc/prometheus', 'prometheus.yml', promConfig)
+  if (argv['discord-webhook']) {
+    saveYaml('/etc/grafana/provisioning/notifiers', 'discord.yml', grafanaNotificationChannelsConfig(argv))
+  }
   fs.writeFileSync(
     path.join('/etc/supervisor.d', 'supervisord.conf'),
     supervisordConfig
@@ -682,4 +690,21 @@ function getRules(allowList) {
   return {
     groups
   }
+}
+
+function grafanaNotificationChannelsConfig(params) {
+  let obj = {
+    notifiers: [{
+      name: 'discord',
+      type: 'discord',
+      uid: 'discord',
+      org_id: 1,
+      settings: {
+        content: '',
+        url: params['discord-webhook']
+      }
+    }]
+  }
+
+  return obj
 }

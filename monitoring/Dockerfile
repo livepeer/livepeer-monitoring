@@ -92,6 +92,8 @@ COPY ./grafana/3.json $GF_PATHS_DATA/dashboards/3.json
 COPY ./grafana/livepeer_overview.json $GF_PATHS_DATA/dashboards/livepeer_overview.json
 COPY ./grafana/livepeer_payments_overview.json $GF_PATHS_DATA/dashboards/livepeer_payments_overview.json
 COPY ./grafana/nvidia-gpu.json $GF_PATHS_DATA/dashboards/nvidia-gpu.json
+COPY ./grafana/kubernetes/lpDebugger.json $GF_PATHS_DATA/dashboards/kubernetes/lpDebugger.json
+COPY ./grafana/kubernetes/livepeer_overview.json $GF_PATHS_DATA/dashboards/kubernetes/k8s_livepeer_overview.json
 
 
 EXPOSE 3000
