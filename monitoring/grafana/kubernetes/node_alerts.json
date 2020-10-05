@@ -12,7 +12,7 @@
       }
     ]
   },
-  "description": "Alerts for Linux Nodes using prometheus and node_exporter. You can have alerts for Disk space, CPU and Memory. Also added a log of alerts and alert status.",
+  "description": "Alerts for Nodes using prometheus and node_exporter. You can have alerts for Disk space, CPU and Memory. Also added a log of alerts and alert status.",
   "editable": true,
   "gnetId": 5984,
   "graphTooltip": 0,
@@ -70,151 +70,6 @@
           {
             "evaluator": {
               "params": [
-                90
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "A",
-                "5m",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "min"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "0m",
-        "frequency": "60s",
-        "handler": 1,
-        "message": "Disk Space Alert",
-        "name": "Linux Nodes Disk Usage alert",
-        "noDataState": "no_data",
-        "notifications": [
-          {
-            "uid": "discord"
-          },
-          {
-            "uid": "prom-alertmanger"
-          }
-        ]
-      },
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "Prometheus",
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 7,
-        "w": 24,
-        "x": 0,
-        "y": 9
-      },
-      "hiddenSeries": false,
-      "id": 1,
-      "legend": {
-        "avg": false,
-        "current": true,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {
-        "dataLinks": []
-      },
-      "paceLength": 10,
-      "percentage": false,
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "100.0 - 100 * ((node_filesystem_avail_bytes / 1000 / 1000 ) / (node_filesystem_size_bytes  / 1024 / 1024))",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "{{instance}} - {{mountpoint}}",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "fill": true,
-          "line": true,
-          "op": "gt",
-          "value": 90
-        }
-      ],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Linux Nodes Disk Usage",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "transparent": true,
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "decimals": null,
-          "format": "percent",
-          "label": "",
-          "logBase": 1,
-          "max": "100",
-          "min": "0",
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
                 70
               ],
               "type": "gt"
@@ -241,7 +96,7 @@
         "frequency": "60s",
         "handler": 1,
         "message": "CPU Usage Alert",
-        "name": "Linux Nodes CPU Usage alert",
+        "name": "Nodes CPU Usage alert",
         "noDataState": "no_data",
         "notifications": [
           {
@@ -263,7 +118,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 16
+        "y": 9
       },
       "hiddenSeries": false,
       "id": 4,
@@ -318,7 +173,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Linux Nodes CPU Usage",
+      "title": "Nodes CPU Usage",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -386,7 +241,7 @@
         "executionErrorState": "alerting",
         "frequency": "60s",
         "handler": 1,
-        "name": "Linux Nodes Memory Usage alert",
+        "name": "Nodes Memory Usage alert",
         "noDataState": "no_data",
         "notifications": [
           {
@@ -408,7 +263,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 23
+        "y": 16
       },
       "hiddenSeries": false,
       "id": 5,
@@ -458,7 +313,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Linux Nodes Memory Usage",
+      "title": "Nodes Memory Usage",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -496,6 +351,151 @@
         "align": false,
         "alignLevel": null
       }
+    },
+    {
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                90
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "5m",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "min"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "0m",
+        "frequency": "60s",
+        "handler": 1,
+        "message": "Disk Space Alert",
+        "name": "Nodes Disk Usage alert",
+        "noDataState": "no_data",
+        "notifications": [
+          {
+            "uid": "discord"
+          },
+          {
+            "uid": "prom-alertmanger"
+          }
+        ]
+      },
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 23
+      },
+      "hiddenSeries": false,
+      "id": 1,
+      "legend": {
+        "avg": false,
+        "current": true,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "paceLength": 10,
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "100.0 - 100 * ((node_filesystem_avail_bytes / 1000 / 1000 ) / (node_filesystem_size_bytes  / 1024 / 1024))",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "{{instance}} - {{mountpoint}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "fill": true,
+          "line": true,
+          "op": "gt",
+          "value": 90
+        }
+      ],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Nodes Disk Usage",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "transparent": true,
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "decimals": null,
+          "format": "percent",
+          "label": "",
+          "logBase": 1,
+          "max": "100",
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     }
   ],
   "refresh": "5s",
@@ -503,7 +503,7 @@
   "style": "dark",
   "tags": [
     "alerts",
-    "linux"
+    "k8s"
   ],
   "templating": {
     "list": []
@@ -538,10 +538,10 @@
     ]
   },
   "timezone": "",
-  "title": "Alerts - Linux Nodes",
+  "title": "Alerts - Nodes",
   "uid": "000000012",
   "variables": {
     "list": []
   },
-  "version": 1
+  "version": 3
 }
