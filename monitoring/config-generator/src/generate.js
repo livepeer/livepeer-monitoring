@@ -29,7 +29,7 @@ function generate() {
         default: 'standalone',
         demandOption: true,
         type: 'string',
-        choices: ['standalone', 'docker-compose', 'kubernetes']
+        choices: ['standalone', 'docker-compose', 'kubernetes', 'federated']
       },
       nodes: {
         describe: "`--nodes`: a comma separated list of the livepeer nodes and their `cli` port we'd like to monitor, example: `--nodes=localhost:7935,localhost:7936`, this isn't required in the kubernetes deployments since discovery is done automatically using the `prometheus.io/scrape` labels.",
@@ -147,6 +147,22 @@ function prometheusConfig(params) {
       case 'standalone':
         obj.scrape_configs.push({
           job_name: 'livepeer-nodes',
+          static_configs: [{
+            targets: params.nodes.split(',')
+          }]
+        })
+        break
+      case 'federated':
+        obj.scrape_configs.push({
+          job_name: 'kubernetes-clusters',
+          honor_labels: true,
+          metrics_path: '/prometheus/federate',
+          params: {
+            'match[]': [
+              '{job="kubernetes-service-endpoints"}',
+              '{__name__=~"job:.*"}'
+            ]
+          },
           static_configs: [{
             targets: params.nodes.split(',')
           }]
