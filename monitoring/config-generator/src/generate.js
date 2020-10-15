@@ -719,5 +719,21 @@ function grafanaNotificationChannelsConfig(params) {
     }]
   }
 
+  // direct pagerDuty integration
+  // NOTE: these are not activated into the dashboards by default right now. However
+  // the alertmanager is added by default which forwards the alerts to pagerDuty anyway
+  if (params['pagerduty-service-key']) {
+    obj.notifiers.push({
+      name: 'pagerDuty',
+      type: 'pagerduty',
+      uid: 'pagerDuty',
+      org_name: 'Main Org.',
+      is_default: true, 
+      secure_settings: {
+        integrationKey: params['pagerduty-service-key']
+      }
+    })
+  }
+
   return obj
 }
