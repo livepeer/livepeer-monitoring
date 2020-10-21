@@ -698,6 +698,25 @@ function getRules(allowList) {
 
   groups.push(transcodingLatency)
 
+  let successRate = {
+    name: 'success-rate',
+    rules: [{
+        alert: 'success-rate-low',
+        expr: '(sum(rate(livepeer_segment_transcoded_all_appeared_total[1m])) by (instance) / sum(rate(livepeer_segment_source_emerged_total[1m])) by (instance)) < 0.8',
+        for: '1m',
+        annotations: {
+          title: 'Success rate too low',
+          description: 'The success rate for instance {{ $labels.instance }} has dropped below 80%'
+        },
+        labels: {
+          severity: 'page'
+        }
+      }
+    ]
+  }
+
+  groups.push(successRate)
+
   if (allowList) {
     const allowed = allowList.split(',')
     groups = groups.filter(g => allowed.includes(g.name))
