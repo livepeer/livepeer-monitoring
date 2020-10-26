@@ -92,7 +92,11 @@ function generate() {
         describe: 'the webhook for the Discord notification channel',
         type: 'string',
         default: null
-      }
+      },
+      'grafana-alerts': {
+        describe: 'enables grafana alerts to hook up to the prometheus alertmanager',
+        type: 'boolean'
+      },
     }).argv
 
   if (argv.help || argv.version) {
@@ -107,8 +111,8 @@ function generate() {
   saveYaml('/etc/prometheus', 'alertmanager.yml', getAlertManagerConfig(argv))
   saveYaml('/etc/prometheus', 'rules.yml', getRules(argv.alertGroups))
   saveYaml('/etc/prometheus', 'prometheus.yml', promConfig)
-  if (argv['discord-webhook']) {
-    saveYaml('/etc/grafana/provisioning/notifiers', 'discord.yml', grafanaNotificationChannelsConfig(argv))
+  if (argv['grafana-alerts']) {
+    saveYaml('/etc/grafana/provisioning/notifiers', 'notifiers.yml', grafanaNotificationChannelsConfig(argv))
   }
   fs.writeFileSync(
     path.join('/etc/supervisor.d', 'supervisord.conf'),
@@ -719,7 +723,32 @@ function grafanaNotificationChannelsConfig(params) {
         content: '',
         url: params['discord-webhook']
       }
+    },{
+      name: 'prom-alertmanager',
+      type: 'prometheus-alertmanager',
+      uid: 'prom-alertmanager',
+      org_name: 'Main Org.',
+      is_default: true, 
+      settings: {
+        url: 'http://localhost:9093'
+      }
     }]
+  }
+
+  // direct pagerDuty integration
+  // NOTE: these are not activated into the dashboards by default right now. However
+  // the alertmanager is added by default which forwards the alerts to pagerDuty anyway
+  if (params['pagerduty-service-key']) {
+    obj.notifiers.push({
+      name: 'pagerDuty',
+      type: 'pagerduty',
+      uid: 'pagerDuty',
+      org_name: 'Main Org.',
+      is_default: true, 
+      secure_settings: {
+        integrationKey: params['pagerduty-service-key']
+      }
+    })
   }
 
   return obj
