@@ -48,8 +48,10 @@ $ sudo docker run --net=host livepeer/monitoring:latest --mode standalone --node
 
 ```
 
-**note** on OSX omit ``--net=host`  and use `host.docker.internal` instead of localhost for the `--nodes`. Port forwarding will using the `-p` flag is also required. 
+**Note**: On OSX omit `--net=host`  and use `host.docker.internal` instead of localhost for the `--nodes`. Port forwarding using the `-p` flag is also required. For example:
 
-```docker run livepeer/monitoring:latest --mode standalone --nodes=docker.host.internal:9735```
+```docker run livepeer/monitoring:latest --mode standalone --nodes=host.docker.internal:7935```
 
-dashboards are available at the usual `3000` port for grafana and `9090` for prometheus. you can change that using the docker port forwarding `-p` flag
+The nodes specified must be run with the `-monitor` flag so that they expose a `/metrics` endpoint that Prometheus can scrape.
+
+Dashboards are available at the usual `3000` port for Grafana and `9090` for Prometheus. You can change the port used to access the dashboards using the Docker port forwarding `-p` flag.
