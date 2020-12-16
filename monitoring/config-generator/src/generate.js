@@ -658,40 +658,16 @@ function getRules(allowList) {
 
   groups.push(broadcastingFunds)
 
-
-  let transcodingLatency = {
-    name: 'transcoding-latency',
-    rules: [{
-        alert: '50-pct-latency-high',
-        expr: 'histogram_quantile(0.5, sum(rate(livepeer_transcode_overall_latency_seconds_bucket[1m])) by ( le)) > 1',
-        for: '5m',
-        annotations: {
-          title: '50% transcoding latency is high',
-          description: 'Our 50% transcoding latency is greater than one second'
-        },
-        labels: {
-          severity: 'page'
-        }
-      },
+  let httpRealTimeRatio = {
+    name: 'http-real-time-ratio',
+    rules: [
       {
-        alert: '90-pct-latency-high',
-        expr: 'histogram_quantile(0.9, sum(rate(livepeer_transcode_overall_latency_seconds_bucket[1m])) by ( le)) > 2',
+        alert: 'real-time',
+        expr: '(sum(increase(livepeer_http_client_segment_transcoded_realtime_3x[1m])) + sum(increase(livepeer_http_client_segment_transcoded_realtime_2x[1m])) + sum(increase(livepeer_http_client_segment_transcoded_realtime_1x[1m]))) / sum(increase(livepeer_segment_source_emerged_unprocessed_total[1m])) < .97',
         for: '2m',
         annotations: {
-          title: '90% transcoding latency is high',
-          description: 'Our 90% transcoding latency is greater than two seconds'
-        },
-        labels: {
-          severity: 'page'
-        }
-      },
-      {
-        alert: '99-pct-latency-high',
-        expr: 'histogram_quantile(0.99, sum(rate(livepeer_transcode_overall_latency_seconds_bucket[1m])) by ( le)) > 5',
-        for: '1m',
-        annotations: {
-          title: '99% transcoding latency is high',
-          description: 'Our 99% transcoding latency is greater than five seconds'
+          title: '% real-time or faster HTTP push requests is low',
+          description: 'The % of HTTP push requests that complete in real-time or faster is lower than 97%'
         },
         labels: {
           severity: 'page'
@@ -700,7 +676,7 @@ function getRules(allowList) {
     ]
   }
 
-  groups.push(transcodingLatency)
+  groups.push(httpRealTimeRatio)
 
   let successRate = {
     name: 'success-rate',
