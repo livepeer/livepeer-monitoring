@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 1,
-  "id": 8,
+  "id": 3,
   "links": [],
   "panels": [
     {
@@ -2257,9 +2257,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(livepeer_orchestrator_swaps[5m])",
+          "expr": "sum(rate(livepeer_orchestrator_swaps[1m]))",
+          "instant": false,
           "interval": "",
-          "legendFormat": "",
+          "legendFormat": "SwapsPerMinute",
           "refId": "A"
         }
       ],
