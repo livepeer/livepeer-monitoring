@@ -1326,8 +1326,9 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(increase(livepeer_segment_source_upload_failed_total[1m])) by (error_code)",
+          "expr": "sum(increase(livepeer_segment_source_upload_failed_total{error_code!=\"DuplicateSegment\"}[1m])) by (error_code)",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 1,
           "legendFormat": "{{error_code}}",
           "refId": "A"
@@ -1417,9 +1418,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(increase(livepeer_segment_transcode_failed_total[1m])) by (error_code)",
+          "expr": "sum(increase(livepeer_segment_transcode_failed_total{error_code!=\"DuplicateSegment\"}[1m])) by (error_code)",
           "format": "time_series",
           "instant": false,
+          "interval": "",
           "intervalFactor": 1,
           "legendFormat": "{{error_code}}",
           "refId": "A"
@@ -1481,7 +1483,7 @@
         "y": 32
       },
       "hiddenSeries": false,
-      "id": 42,
+      "id": 56,
       "legend": {
         "avg": false,
         "current": false,
@@ -1493,7 +1495,6 @@
       },
       "lines": true,
       "linewidth": 1,
-      "links": [],
       "nullPointMode": "null",
       "options": {
         "dataLinks": []
@@ -1508,18 +1509,23 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(livepeer_transcode_retried[1m])",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "{{instance}} - try={{try}}",
+          "expr": "sum(increase(livepeer_segment_source_upload_failed_total{error_code=\"DuplicateSegment\"}[1m]))",
+          "interval": "",
+          "legendFormat": "UploadFailed",
           "refId": "A"
+        },
+        {
+          "expr": "sum(increase(livepeer_segment_transcode_failed_total{error_code=\"DuplicateSegment\"}[1m]))",
+          "interval": "",
+          "legendFormat": "TranscodeFailed",
+          "refId": "B"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Retries",
+      "title": "Duplicate Segments",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1662,7 +1668,7 @@
         "y": 40
       },
       "hiddenSeries": false,
-      "id": 22,
+      "id": 42,
       "legend": {
         "avg": false,
         "current": false,
@@ -1679,7 +1685,6 @@
       "options": {
         "dataLinks": []
       },
-      "paceLength": 10,
       "percentage": false,
       "pointradius": 2,
       "points": false,
@@ -1690,10 +1695,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(livepeer_segment_source_upload_failed_total) by (instance, error_code)",
+          "expr": "rate(livepeer_transcode_retried[1m])",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "{{instance}} {{error_code}}",
+          "legendFormat": "{{instance}} - try={{try}}",
           "refId": "A"
         }
       ],
@@ -1701,7 +1706,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Upload Errors Raw",
+      "title": "Retries",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1844,7 +1849,7 @@
         "y": 48
       },
       "hiddenSeries": false,
-      "id": 32,
+      "id": 22,
       "legend": {
         "avg": false,
         "current": false,
@@ -1872,23 +1877,18 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(increase(livepeer_segment_source_appeared_total[30s])) - sum(increase(livepeer_segment_source_uploaded_total[30s]))\n",
+          "expr": "sum(livepeer_segment_source_upload_failed_total) by (instance, error_code)",
           "format": "time_series",
           "intervalFactor": 1,
+          "legendFormat": "{{instance}} {{error_code}}",
           "refId": "A"
-        },
-        {
-          "expr": "",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "refId": "B"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Not Uploaded Segments, rate",
+      "title": "Upload Errors Raw",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -2020,7 +2020,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
-      "description": "Percentage of segments transcoded faster than 3x realtime speed, 3x, 1x,  half realtime and more than two time slower than realtime",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -2030,7 +2029,7 @@
         "y": 56
       },
       "hiddenSeries": false,
-      "id": 52,
+      "id": 32,
       "legend": {
         "avg": false,
         "current": false,
@@ -2042,55 +2041,39 @@
       },
       "lines": true,
       "linewidth": 1,
+      "links": [],
       "nullPointMode": "null",
       "options": {
         "dataLinks": []
       },
-      "percentage": true,
+      "paceLength": 10,
+      "percentage": false,
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
       "seriesOverrides": [],
       "spaceLength": 10,
-      "stack": true,
+      "stack": false,
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(increase(livepeer_http_client_segment_transcoded_realtime_3x[1m]))/sum(increase(livepeer_segment_source_emerged_unprocessed_total[1m]))",
-          "interval": "",
-          "legendFormat": "3x",
+          "expr": "sum(increase(livepeer_segment_source_appeared_total[30s])) - sum(increase(livepeer_segment_source_uploaded_total[30s]))\n",
+          "format": "time_series",
+          "intervalFactor": 1,
           "refId": "A"
         },
         {
-          "expr": "sum(increase(livepeer_http_client_segment_transcoded_realtime_2x[1m]))/sum(increase(livepeer_segment_source_emerged_unprocessed_total[1m]))",
-          "interval": "",
-          "legendFormat": "2x",
-          "refId": "C"
-        },
-        {
-          "expr": "sum(increase(livepeer_http_client_segment_transcoded_realtime_1x[1m]))/sum(increase(livepeer_segment_source_emerged_unprocessed_total[1m]))",
-          "interval": "",
-          "legendFormat": "1x",
+          "expr": "",
+          "format": "time_series",
+          "intervalFactor": 1,
           "refId": "B"
-        },
-        {
-          "expr": "sum(increase(livepeer_http_client_segment_transcoded_realtime_half[1m]))/sum(increase(livepeer_segment_source_emerged_unprocessed_total[1m]))",
-          "interval": "",
-          "legendFormat": "half realtime",
-          "refId": "D"
-        },
-        {
-          "expr": "sum(increase(livepeer_http_client_segment_transcoded_realtime_slow[1m]))/sum(increase(livepeer_segment_source_emerged_unprocessed_total[1m]))",
-          "interval": "",
-          "legendFormat": "slow",
-          "refId": "E"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "HTTP push realtime ratio",
+      "title": "Not Uploaded Segments, rate",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -2222,6 +2205,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
+      "description": "Percentage of segments transcoded faster than 3x realtime speed, 3x, 1x,  half realtime and more than two time slower than realtime",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -2231,7 +2215,7 @@
         "y": 64
       },
       "hiddenSeries": false,
-      "id": 54,
+      "id": 52,
       "legend": {
         "avg": false,
         "current": false,
@@ -2247,28 +2231,51 @@
       "options": {
         "dataLinks": []
       },
-      "percentage": false,
+      "percentage": true,
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
       "seriesOverrides": [],
       "spaceLength": 10,
-      "stack": false,
+      "stack": true,
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(livepeer_orchestrator_swaps[1m]))",
-          "instant": false,
+          "expr": "sum(increase(livepeer_http_client_segment_transcoded_realtime_3x[1m]))/sum(increase(livepeer_segment_source_emerged_unprocessed_total[1m]))",
           "interval": "",
-          "legendFormat": "SwapsPerMinute",
+          "legendFormat": "3x",
           "refId": "A"
+        },
+        {
+          "expr": "sum(increase(livepeer_http_client_segment_transcoded_realtime_2x[1m]))/sum(increase(livepeer_segment_source_emerged_unprocessed_total[1m]))",
+          "interval": "",
+          "legendFormat": "2x",
+          "refId": "C"
+        },
+        {
+          "expr": "sum(increase(livepeer_http_client_segment_transcoded_realtime_1x[1m]))/sum(increase(livepeer_segment_source_emerged_unprocessed_total[1m]))",
+          "interval": "",
+          "legendFormat": "1x",
+          "refId": "B"
+        },
+        {
+          "expr": "sum(increase(livepeer_http_client_segment_transcoded_realtime_half[1m]))/sum(increase(livepeer_segment_source_emerged_unprocessed_total[1m]))",
+          "interval": "",
+          "legendFormat": "half realtime",
+          "refId": "D"
+        },
+        {
+          "expr": "sum(increase(livepeer_http_client_segment_transcoded_realtime_slow[1m]))/sum(increase(livepeer_segment_source_emerged_unprocessed_total[1m]))",
+          "interval": "",
+          "legendFormat": "slow",
+          "refId": "E"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Orchestrator Swaps",
+      "title": "HTTP push realtime ratio",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -2368,6 +2375,95 @@
       "timeRegions": [],
       "timeShift": null,
       "title": "Segments Number",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 72
+      },
+      "hiddenSeries": false,
+      "id": 54,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(rate(livepeer_orchestrator_swaps[1m]))",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "SwapsPerMinute",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Orchestrator Swaps",
       "tooltip": {
         "shared": true,
         "sort": 0,
