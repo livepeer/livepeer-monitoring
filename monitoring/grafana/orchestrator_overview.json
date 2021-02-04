@@ -2,7 +2,6 @@
   "annotations": {
     "list": [
       {
-        "$$hashKey": "object:228",
         "builtIn": 1,
         "datasource": "-- Grafana --",
         "enable": true,
@@ -16,7 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 8,
+  "id": 3,
   "links": [],
   "panels": [
     {
@@ -49,12 +48,10 @@
       "mappingType": 1,
       "mappingTypes": [
         {
-          "$$hashKey": "object:340",
           "name": "value to text",
           "value": 1
         },
         {
-          "$$hashKey": "object:341",
           "name": "range to text",
           "value": 2
         }
@@ -99,7 +96,6 @@
       "valueFontSize": "80%",
       "valueMaps": [
         {
-          "$$hashKey": "object:343",
           "op": "=",
           "text": "N/A",
           "value": "null"
@@ -126,7 +122,7 @@
         "thresholdMarkers": true
       },
       "gridPos": {
-        "h": 6,
+        "h": 3,
         "w": 5,
         "x": 5,
         "y": 0
@@ -137,12 +133,10 @@
       "mappingType": 1,
       "mappingTypes": [
         {
-          "$$hashKey": "object:744",
           "name": "value to text",
           "value": 1
         },
         {
-          "$$hashKey": "object:745",
           "name": "range to text",
           "value": 2
         }
@@ -187,7 +181,6 @@
       "valueFontSize": "80%",
       "valueMaps": [
         {
-          "$$hashKey": "object:747",
           "op": "=",
           "text": "N/A",
           "value": "null"
@@ -265,7 +258,6 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:400",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -274,7 +266,6 @@
           "show": true
         },
         {
-          "$$hashKey": "object:401",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -340,6 +331,91 @@
       "timeShift": null,
       "title": "Orchestrator Utilization",
       "type": "gauge"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": false,
+      "colorValue": false,
+      "colors": [
+        "#299c46",
+        "rgba(237, 129, 40, 0.89)",
+        "#d44a3a"
+      ],
+      "datasource": null,
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 5,
+        "x": 5,
+        "y": 3
+      },
+      "id": 25,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "pluginVersion": "6.7.3",
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": false,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": false,
+        "ymax": null,
+        "ymin": null
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "expr": "sum(livepeer_max_sessions_total{node_type=\"orch\"})",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "thresholds": "",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "# Orchestrator Sessions (Max)",
+      "type": "singlestat",
+      "valueFontSize": "80%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        }
+      ],
+      "valueName": "current"
     },
     {
       "aliasColors": {},
@@ -426,7 +502,6 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:314",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -435,7 +510,6 @@
           "show": true
         },
         {
-          "$$hashKey": "object:315",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -516,7 +590,6 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:93",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -525,7 +598,6 @@
           "show": true
         },
         {
-          "$$hashKey": "object:94",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -624,7 +696,6 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:208",
           "format": "s",
           "label": null,
           "logBase": 1,
@@ -633,7 +704,6 @@
           "show": true
         },
         {
-          "$$hashKey": "object:209",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -714,7 +784,6 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:360",
           "format": "s",
           "label": null,
           "logBase": 1,
@@ -723,7 +792,6 @@
           "show": true
         },
         {
-          "$$hashKey": "object:361",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -822,7 +890,6 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:117",
           "format": "s",
           "label": null,
           "logBase": 1,
@@ -831,7 +898,6 @@
           "show": true
         },
         {
-          "$$hashKey": "object:118",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -912,7 +978,6 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:581",
           "format": "s",
           "label": null,
           "logBase": 1,
@@ -921,7 +986,6 @@
           "show": true
         },
         {
-          "$$hashKey": "object:582",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -1020,7 +1084,6 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:879",
           "format": "s",
           "label": null,
           "logBase": 1,
@@ -1029,7 +1092,6 @@
           "show": true
         },
         {
-          "$$hashKey": "object:880",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -1110,7 +1172,6 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:962",
           "format": "s",
           "label": null,
           "logBase": 1,
@@ -1119,7 +1180,6 @@
           "show": true
         },
         {
-          "$$hashKey": "object:963",
           "format": "short",
           "label": null,
           "logBase": 1,
