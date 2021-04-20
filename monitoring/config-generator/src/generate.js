@@ -64,6 +64,11 @@ function generate() {
         default: 'scrape',
         type: 'string'
       },
+      'prometheus-retention-size': {
+        describe: '[EXPERIMENTAL] The maximum number of bytes of storage blocks to retain. The oldest data will be removed first. Defaults to 0 or disabled. This flag is experimental and may change in future releases',
+        default: '0',
+        type: 'string'
+      },
       'cadvisor-port': {
         describe: '[docker compose mode only] the port defined for cadvisor',
         default: 8080,
