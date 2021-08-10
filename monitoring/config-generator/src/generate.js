@@ -668,7 +668,7 @@ function getRules(allowList) {
     rules: [
       {
         alert: 'real-time',
-        expr: '(sum(increase(livepeer_http_client_segment_transcoded_realtime_3x[1m])) + sum(increase(livepeer_http_client_segment_transcoded_realtime_2x[1m])) + sum(increase(livepeer_http_client_segment_transcoded_realtime_1x[1m]))) / sum(increase(livepeer_segment_source_emerged_unprocessed_total[1m])) < .97',
+        expr: '(sum(increase(livepeer_http_client_segment_transcoded_realtime_3x[1m])) + sum(increase(livepeer_http_client_segment_transcoded_realtime_2x[1m])) + sum(increase(livepeer_http_client_segment_transcoded_realtime_1x[1m]))) / (sum(increase(livepeer_http_client_segment_transcoded_realtime_3x[1m])) + sum(increase(livepeer_http_client_segment_transcoded_realtime_2x[1m])) + sum(increase(livepeer_http_client_segment_transcoded_realtime_1x[1m])) + sum(increase(livepeer_http_client_segment_transcoded_realtime_half[1m])) + sum(increase(livepeer_http_client_segment_transcoded_realtime_slow[1m]))) < .99',
         for: '2m',
         annotations: {
           title: '% real-time or faster HTTP push requests is low',
