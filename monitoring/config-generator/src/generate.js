@@ -672,7 +672,7 @@ function getRules(allowList) {
         for: '2m',
         annotations: {
           title: '% real-time or faster HTTP push requests is low',
-          description: 'The % of HTTP push requests that complete in real-time or faster is lower than 97%'
+          description: 'The % of HTTP push requests that complete in real-time or faster is lower than 99%'
         },
         labels: {
           severity: 'page'
