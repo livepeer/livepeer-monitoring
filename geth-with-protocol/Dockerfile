@@ -1,4 +1,4 @@
-FROM ethereum/client-go:v1.9.11 as builder-geth
+FROM ethereum/client-go:v1.10.8 as builder-geth
 
 WORKDIR /
 ENV gethRoot /root/.ethereum
