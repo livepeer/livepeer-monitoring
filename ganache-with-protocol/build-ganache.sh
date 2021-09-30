@@ -1,5 +1,7 @@
 git clone -b streamflow https://github.com/livepeer/protocol.git
 cd protocol
+# TODO: Update this file to be compatible with new deployment scripts in protocol repo
+git checkout d8e3523e3779a7f339b94159ad5d36ce428799cc
 echo "Setting devenv specific protocol parameters"
 pollCreator="/protocol/contracts/polling/PollCreator.sol"
 sed -i 's/10 rounds.*$/7 rounds/' $pollCreator
