@@ -1,8 +1,8 @@
 ARG ARCH="amd64"
 ARG OS="linux"
 
-FROM prom/prometheus:latest as t1
-FROM grafana/grafana:6.7.3 as c1
+FROM prom/prometheus:v2.30.1 as t1
+FROM grafana/grafana:8.1.5 as c1
 FROM prom/alertmanager:latest as a1
 
 FROM node:alpine as t2
@@ -37,7 +37,7 @@ EXPOSE 9093
 
 
 
-ARG GF_UID="472"
+ARG GF_UID="0"
 # ARG GF_GID="472"
 
 ENV PATH="/usr/share/grafana/bin:$PATH" \
@@ -58,8 +58,8 @@ RUN apk add --no-cache ca-certificates bash tzdata && \
 COPY --from=c1 $GF_PATHS_HOME/conf $GF_PATHS_HOME/conf
 
 RUN mkdir -p "$GF_PATHS_HOME/.aws" && \
-    addgroup -S -g $GF_UID grafana && \
-    adduser -S -u $GF_UID -G grafana grafana && \
+    # addgroup -S -g $GF_UID grafana && \
+    # adduser -S -u $GF_UID -G grafana grafana && \
     mkdir -p "$GF_PATHS_PROVISIONING/datasources" \
              "$GF_PATHS_PROVISIONING/dashboards" \
              "$GF_PATHS_PROVISIONING/notifiers" \
@@ -68,21 +68,21 @@ RUN mkdir -p "$GF_PATHS_HOME/.aws" && \
              "$GF_PATHS_DATA" && \
     cp "$GF_PATHS_HOME/conf/sample.ini" "$GF_PATHS_CONFIG" && \
     cp "$GF_PATHS_HOME/conf/ldap.toml" /etc/grafana/ldap.toml && \
-    chown -R grafana:grafana "$GF_PATHS_DATA" "$GF_PATHS_HOME/.aws" "$GF_PATHS_LOGS" "$GF_PATHS_PLUGINS" "$GF_PATHS_PROVISIONING" && \
+    # chown -R grafana:grafana "$GF_PATHS_DATA" "$GF_PATHS_HOME/.aws" "$GF_PATHS_LOGS" "$GF_PATHS_PLUGINS" "$GF_PATHS_PROVISIONING" && \
     chmod -R 777 "$GF_PATHS_DATA" "$GF_PATHS_HOME/.aws" "$GF_PATHS_LOGS" "$GF_PATHS_PLUGINS" "$GF_PATHS_PROVISIONING"
 
 # PhantomJS
 # COPY --from=c1 /lib /lib
 # COPY --from=c1 /lib64 /lib64
-COPY --from=c1 /usr/lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu
+# COPY --from=c1 /usr/lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu
 COPY --from=c1 /usr/share/grafana /usr/share/grafana
-COPY --from=c1 /etc/fonts /etc/fonts
+# COPY --from=c1 /etc/fonts /etc/fonts
 # COPY --from=c1 /usr/local/bin /usr/local/bin
 
 COPY --from=c1 $GF_PATHS_HOME/bin/grafana-cli $GF_PATHS_HOME/bin/grafana-cli
 COPY --from=c1 $GF_PATHS_HOME/public $GF_PATHS_HOME/public
-COPY --from=c1 $GF_PATHS_HOME/tools $GF_PATHS_HOME/tools
-COPY --from=c1 $GF_PATHS_HOME/tools/phantomjs/render.js $GF_PATHS_HOME/tools/phantomjs/render.js
+# COPY --from=c1 $GF_PATHS_HOME/tools $GF_PATHS_HOME/tools
+# COPY --from=c1 $GF_PATHS_HOME/tools/phantomjs/render.js $GF_PATHS_HOME/tools/phantomjs/render.js
 
 COPY ./grafana/grafanaDatasources.yml $GF_PATHS_PROVISIONING/datasources/datasources.yml
 COPY ./grafana/grafanaDashboards.yml $GF_PATHS_PROVISIONING/dashboards/dashboards.yml
