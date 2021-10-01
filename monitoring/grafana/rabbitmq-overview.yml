@@ -16,8 +16,8 @@
   "editable": true,
   "gnetId": 10991,
   "graphTooltip": 1,
-  "id": 14,
-  "iteration": 1633125569297,
+  "id": 16,
+  "iteration": 1633126361708,
   "links": [
     {
       "icon": "doc",
@@ -5812,7 +5812,7 @@
           "value": "staging-rabbitmq"
         },
         "datasource": "Prometheus",
-        "definition": "label_values(rabbitmq_identity_info{kubernetes_namespace=\"$namespace\", livepeer_node_type=\"$node_type\", rabbitmq_cluster=\"$rabbitmq_cluster\"}, livepeer_node_type)",
+        "definition": "label_values(rabbitmq_identity_info{kubernetes_namespace=\"$namespace\", rabbitmq_cluster=\"$rabbitmq_cluster\"}, livepeer_node_type)",
         "error": null,
         "hide": 0,
         "includeAll": false,
@@ -5821,7 +5821,7 @@
         "multi": false,
         "name": "node_type",
         "options": [],
-        "query": "label_values(rabbitmq_identity_info{kubernetes_namespace=\"$namespace\", livepeer_node_type=\"$node_type\", rabbitmq_cluster=\"$rabbitmq_cluster\"}, livepeer_node_type)",
+        "query": "label_values(rabbitmq_identity_info{kubernetes_namespace=\"$namespace\", rabbitmq_cluster=\"$rabbitmq_cluster\"}, livepeer_node_type)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
@@ -5864,5 +5864,5 @@
   "variables": {
     "list": []
   },
-  "version": 8
+  "version": 1
 }
