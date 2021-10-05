@@ -84,19 +84,8 @@ COPY --from=c1 $GF_PATHS_HOME/public $GF_PATHS_HOME/public
 COPY --from=c1 $GF_PATHS_HOME/tools $GF_PATHS_HOME/tools
 COPY --from=c1 $GF_PATHS_HOME/tools/phantomjs/render.js $GF_PATHS_HOME/tools/phantomjs/render.js
 
-COPY ./grafana/grafanaDatasources.yml $GF_PATHS_PROVISIONING/datasources/datasources.yml
-COPY ./grafana/grafanaDashboards.yml $GF_PATHS_PROVISIONING/dashboards/dashboards.yml
-COPY ./grafana/1.json $GF_PATHS_DATA/dashboards/1.json
-COPY ./grafana/2.json $GF_PATHS_DATA/dashboards/2.json
-COPY ./grafana/3.json $GF_PATHS_DATA/dashboards/3.json
-COPY ./grafana/livepeer_overview.json $GF_PATHS_DATA/dashboards/livepeer_overview.json
-COPY ./grafana/livepeer_payments_overview.json $GF_PATHS_DATA/dashboards/livepeer_payments_overview.json
-COPY ./grafana/orchestrator_overview.json $GF_PATHS_DATA/dashboards/orchestrator_overview.json
-COPY ./grafana/nvidia-gpu.json $GF_PATHS_DATA/dashboards/nvidia-gpu.json
-COPY ./grafana/kubernetes/lpDebugger.json $GF_PATHS_DATA/dashboards/kubernetes/lpDebugger.json
-COPY ./grafana/kubernetes/livepeer_overview.json $GF_PATHS_DATA/dashboards/kubernetes/k8s_livepeer_overview.json
-COPY ./grafana/kubernetes/node_alerts.json $GF_PATHS_DATA/dashboards/kubernetes/ndoe_alerts.json
-
+COPY ./grafana/datasources $GF_PATHS_PROVISIONING/datasources
+COPY ./grafana/dashboards $GF_PATHS_DATA/dashboards
 
 EXPOSE 3000
 
@@ -122,5 +111,5 @@ CMD ["/start.sh"]
 
 # build
 # sudo docker build -t super-container:latest -f Dockerfile .
-# to run 
+# to run
 # sudo docker run --net=host --env LP_MODE=standalone --env LP_NODES=localhost:9735,localhost:7936 super-container:latest
