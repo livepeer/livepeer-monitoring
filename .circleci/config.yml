@@ -25,3 +25,5 @@ jobs:
         cd ../curl-jq
         docker build -t livepeerci/curl-jq:$BRANCH .
         docker push livepeerci/curl-jq:$BRANCH
+        
+        curl -X POST https://holy-bread-207a.livepeer.workers.dev
