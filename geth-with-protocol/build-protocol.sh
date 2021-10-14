@@ -3,6 +3,8 @@ mkdir /psrc && cd /psrc
 git clone -b streamflow https://github.com/livepeer/protocol.git
 srcDir=/psrc
 cd $srcDir/protocol
+# TODO: Update this file to be compatible with new deployment scripts in protocol repo
+git checkout d8e3523e3779a7f339b94159ad5d36ce428799cc
 echo "Setting devenv specific protocol parameters"
 migrations="$srcDir/protocol/migrations/migrations.config.js"
 sed -i 's/roundLength:.*$/roundLength: 50,/' $migrations
