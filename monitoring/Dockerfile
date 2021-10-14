@@ -58,8 +58,6 @@ RUN apk add --no-cache ca-certificates bash tzdata && \
 COPY --from=c1 $GF_PATHS_HOME/conf $GF_PATHS_HOME/conf
 
 RUN mkdir -p "$GF_PATHS_HOME/.aws" && \
-    # addgroup -S -g $GF_UID grafana && \
-    # adduser -S -u $GF_UID -G grafana grafana && \
     mkdir -p "$GF_PATHS_PROVISIONING/datasources" \
              "$GF_PATHS_PROVISIONING/dashboards" \
              "$GF_PATHS_PROVISIONING/notifiers" \
@@ -68,22 +66,11 @@ RUN mkdir -p "$GF_PATHS_HOME/.aws" && \
              "$GF_PATHS_DATA" && \
     cp "$GF_PATHS_HOME/conf/sample.ini" "$GF_PATHS_CONFIG" && \
     cp "$GF_PATHS_HOME/conf/ldap.toml" /etc/grafana/ldap.toml && \
-    # chown -R grafana:grafana "$GF_PATHS_DATA" "$GF_PATHS_HOME/.aws" "$GF_PATHS_LOGS" "$GF_PATHS_PLUGINS" "$GF_PATHS_PROVISIONING" && \
     chmod -R 777 "$GF_PATHS_DATA" "$GF_PATHS_HOME/.aws" "$GF_PATHS_LOGS" "$GF_PATHS_PLUGINS" "$GF_PATHS_PROVISIONING"
 
-# PhantomJS
-# COPY --from=c1 /lib /lib
-# COPY --from=c1 /lib64 /lib64
-# COPY --from=c1 /usr/lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu
 COPY --from=c1 /usr/share/grafana /usr/share/grafana
-# COPY --from=c1 /etc/fonts /etc/fonts
-# COPY --from=c1 /usr/local/bin /usr/local/bin
-
 COPY --from=c1 $GF_PATHS_HOME/bin/grafana-cli $GF_PATHS_HOME/bin/grafana-cli
 COPY --from=c1 $GF_PATHS_HOME/public $GF_PATHS_HOME/public
-# COPY --from=c1 $GF_PATHS_HOME/tools $GF_PATHS_HOME/tools
-# COPY --from=c1 $GF_PATHS_HOME/tools/phantomjs/render.js $GF_PATHS_HOME/tools/phantomjs/render.js
-
 COPY ./grafana/grafanaDatasources.yml $GF_PATHS_PROVISIONING/datasources/datasources.yml
 COPY ./grafana/grafanaDashboards.yml $GF_PATHS_PROVISIONING/dashboards/dashboards.yml
 COPY ./grafana/1.json $GF_PATHS_DATA/dashboards/1.json
@@ -104,18 +91,15 @@ COPY --from=c1 /run.sh /run.sh
 
 RUN apk add supervisor
 COPY supervisord.conf /etc/supervisor.d/supervisord.conf
-# RUN /usr/bin/supervisord -c /etc/supervisor.d/supervisord.conf
 
 RUN mkdir -p "/config-generator"
 COPY config-generator/package.json /config-generator/package.json
-# CMD ["node", "/config-generator/src/generate.js"]
 RUN cd /config-generator && npm install
 COPY config-generator /config-generator
 RUN node /config-generator/src/generate.js
 
 VOLUME [ "/data/grafana" ]
 
-# CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor.d/supervisord.conf", "-e", "debug"]
 COPY start.sh /start.sh
 ENTRYPOINT [ "/start.sh" ]
 CMD ["/start.sh"]
