@@ -88,6 +88,11 @@ function generate() {
         default: '',
         type: 'string'
       },
+      'pagerduty-lopri-service-key': {
+        describe: 'pagerduty service key for low urgency notifications',
+        default: '',
+        type: 'string'
+      },
       'alert-groups': {
         describe: 'comma-separated list of alert groups to enable',
         default: allGroups,
@@ -551,7 +556,9 @@ function getPromKubeJobs(namespaces, promKubeScrape) {
 
 function getAlertManagerConfig(params) {
   // global configuration
-  let global = {}
+  let global = {
+    pagerduty_url: config.PAGERDUTY_URL
+  }
 
   // The root route on which each incoming alert enters.
   let route = {
@@ -572,7 +579,7 @@ function getAlertManagerConfig(params) {
 
   inhibit_rules.push({
     source_match: {
-      serverity: 'high'
+      severity: 'high'
     },
     target_match: {
       severity: 'page'
@@ -597,15 +604,31 @@ function getAlertManagerConfig(params) {
   })
 
   // Add receiver configs
-  if (params && params['pagerduty-service-key']) {
-    global['pagerduty_url'] = config.PAGERDUTY_URL
+  const pagerKey = params?.['pagerduty-service-key']
+  if (pagerKey) {
     receivers.push({
       name: 'pagerduty',
       pagerduty_configs: [{
-        service_key: params['pagerduty-service-key']
+        service_key: pagerKey
       }]
     })
-  } else {
+  }
+  const pagerLopriKey = params?.['pagerduty-lopri-service-key']
+  if (pagerLopriKey) {
+    receivers.push({
+      name: 'pagerduty_lopri',
+      pagerduty_configs: [{
+        service_key: pagerLopriKey
+      }]
+    })
+    route.routes.push({
+      receiver: 'pagerduty_lopri',
+      matchers: [
+        'severity = low'
+      ]
+    })
+  }
+  if (!receivers.length) {
     return {}
   }
 
@@ -663,24 +686,57 @@ function getRules(allowList) {
 
   groups.push(broadcastingFunds)
 
+  const realTimeTranscodesCount = (bucket, range) =>
+      `sum(increase(livepeer_http_client_segment_transcoded_realtime_${bucket}[${range}]))`
+  const realTimeQuery = (range, threshold) => `\
+(
+    ${realTimeTranscodesCount('3x', range)} +
+    ${realTimeTranscodesCount('2x', range)} +
+    ${realTimeTranscodesCount('1x', range)}
+) / (
+    ${realTimeTranscodesCount('3x', range)} +
+    ${realTimeTranscodesCount('2x', range)} +
+    ${realTimeTranscodesCount('1x', range)} +
+    ${realTimeTranscodesCount('half', range)} +
+    ${realTimeTranscodesCount('slow', range)}
+) < ${threshold}`
+
+  let httpRealTimeRatioLopri = {
+    name: 'http-real-time-ratio-lopri',
+    rules: [
+      {
+        alert: '[LOPRI]real-time-warning',
+        expr: realTimeQuery('1m', '.99'),
+        for: '2m',
+        annotations: {
+          title: '% real-time or faster HTTP push requests is slightly low',
+          description: 'The 1m average % of HTTP push requests that completed in real-time or faster is lower than 99%'
+        },
+        labels: {
+          severity: 'low'
+        }
+      },
+    ]
+  }
   let httpRealTimeRatio = {
     name: 'http-real-time-ratio',
     rules: [
       {
-        alert: 'real-time',
-        expr: '(sum(increase(livepeer_http_client_segment_transcoded_realtime_3x[1m])) + sum(increase(livepeer_http_client_segment_transcoded_realtime_2x[1m])) + sum(increase(livepeer_http_client_segment_transcoded_realtime_1x[1m]))) / (sum(increase(livepeer_http_client_segment_transcoded_realtime_3x[1m])) + sum(increase(livepeer_http_client_segment_transcoded_realtime_2x[1m])) + sum(increase(livepeer_http_client_segment_transcoded_realtime_1x[1m])) + sum(increase(livepeer_http_client_segment_transcoded_realtime_half[1m])) + sum(increase(livepeer_http_client_segment_transcoded_realtime_slow[1m]))) < .99',
+        alert: 'real-time-critical',
+        expr: realTimeQuery('10m', '.90'),
         for: '2m',
         annotations: {
-          title: '% real-time or faster HTTP push requests is low',
-          description: 'The % of HTTP push requests that complete in real-time or faster is lower than 99%'
+          title: '% real-time or faster HTTP push requests is critically low',
+          description: 'The 10m average % of HTTP push requests that completed in real-time or faster is lower than 90%'
         },
         labels: {
-          severity: 'page'
+          severity: 'critical'
         }
       },
     ]
   }
 
+  groups.push(httpRealTimeRatioLopri)
   groups.push(httpRealTimeRatio)
 
   let successRate = {
@@ -728,7 +784,7 @@ function grafanaNotificationChannelsConfig(params) {
       type: 'prometheus-alertmanager',
       uid: 'prom-alertmanager',
       org_name: 'Main Org.',
-      is_default: true, 
+      is_default: true,
       settings: {
         url: 'http://localhost:9093'
       }
@@ -744,7 +800,7 @@ function grafanaNotificationChannelsConfig(params) {
       type: 'pagerduty',
       uid: 'pagerDuty',
       org_name: 'Main Org.',
-      is_default: true, 
+      is_default: true,
       secure_settings: {
         integrationKey: params['pagerduty-service-key']
       }
