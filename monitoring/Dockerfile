@@ -48,7 +48,8 @@ ENV PATH="/usr/share/grafana/bin:$PATH" \
     GF_PATHS_PLUGINS="/data/grafana/plugins" \
     GF_PATHS_PROVISIONING="/etc/grafana/provisioning" \
     LP_PROMETHEUS_ENDPOINT="http://localhost:9090" \
-    LP_NODES="localhost:7935"
+    LP_NODES="localhost:7935" \
+    LP_DISCORD_WEBHOOK="discord_incident_response_hook"
 
 WORKDIR $GF_PATHS_HOME
 
@@ -73,6 +74,7 @@ COPY --from=c1 $GF_PATHS_HOME/bin/grafana-cli $GF_PATHS_HOME/bin/grafana-cli
 COPY --from=c1 $GF_PATHS_HOME/public $GF_PATHS_HOME/public
 
 COPY ./grafana/datasources $GF_PATHS_PROVISIONING/datasources
+COPY ./grafana/notifiers $GF_PATHS_PROVISIONING/notifiers
 COPY ./grafana/dashboards $GF_PATHS_PROVISIONING/dashboards
 
 EXPOSE 3000
