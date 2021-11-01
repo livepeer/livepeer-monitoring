@@ -6,8 +6,18 @@ notifiers:
     is_default: true
     secure_settings:
       url: $LP_DISCORD_WEBHOOK
+  - name: pagerduty-alerts
+    type: pagerduty
+    uid: pagerduty
+    org_name: Main Org.
+    is_default: false
+    secure_settings:
+      integrationKey: $LP_PAGERDUTY_KEY
 
 delete_notifiers:
   - name: discord-alerts
     uid: discord
+    org_name: Main Org.
+  - name: pagerduty-alerts
+    uid: pagerduty
     org_name: Main Org.
