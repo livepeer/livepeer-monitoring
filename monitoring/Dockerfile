@@ -48,9 +48,7 @@ ENV PATH="/usr/share/grafana/bin:$PATH" \
     GF_PATHS_PLUGINS="/data/grafana/plugins" \
     GF_PATHS_PROVISIONING="/etc/grafana/provisioning" \
     LP_PROMETHEUS_ENDPOINT="http://localhost:9090" \
-    LP_NODES="localhost:7935" \
-    LP_DISCORD_WEBHOOK="discord_incident_response_hook"\
-    LP_PAGERDUTY_KEY="pagerduty-token"
+    LP_NODES="localhost:7935"
 
 WORKDIR $GF_PATHS_HOME
 
