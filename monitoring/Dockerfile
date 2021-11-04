@@ -73,7 +73,6 @@ COPY --from=c1 $GF_PATHS_HOME/bin/grafana-cli $GF_PATHS_HOME/bin/grafana-cli
 COPY --from=c1 $GF_PATHS_HOME/public $GF_PATHS_HOME/public
 
 COPY ./grafana/datasources $GF_PATHS_PROVISIONING/datasources
-COPY ./grafana/notifiers $GF_PATHS_PROVISIONING/notifiers
 COPY ./grafana/dashboards $GF_PATHS_PROVISIONING/dashboards
 
 EXPOSE 3000
