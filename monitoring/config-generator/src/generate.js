@@ -122,7 +122,7 @@ function generate() {
   saveYaml('/etc/prometheus', 'rules.yml', getRules(argv.alertGroups))
   saveYaml('/etc/prometheus', 'prometheus.yml', promConfig)
   if (argv['grafana-alerts']) {
-    saveYaml('/etc/grafana/provisioning/notifiers', 'notifiers.yml', grafanaNotificationChannelsConfig(argv))
+    saveYaml('/etc/grafana/provisioning/notifiers', 'generated_notifiers.yml', grafanaNotificationChannelsConfig(argv))
   }
   fs.writeFileSync(
     path.join('/etc/supervisor.d', 'supervisord.conf'),
@@ -800,7 +800,7 @@ function grafanaNotificationChannelsConfig(params) {
       type: 'pagerduty',
       uid: 'pagerDuty',
       org_name: 'Main Org.',
-      is_default: true,
+      is_default: false,
       secure_settings: {
         integrationKey: params['pagerduty-service-key']
       }
