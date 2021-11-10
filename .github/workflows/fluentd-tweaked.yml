@@ -1,0 +1,50 @@
+name: fluentd-tweaked
+on: push
+
+jobs:
+  docker:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: docker login
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          # docker login
+          docker version
+          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+
+      - name: Check out code
+        uses: actions/checkout@v1
+
+      - name: What is branch?
+        id: is-branch
+        run: |
+          BRANCH="${GITHUB_REF#refs/heads/}"
+          IS_MASTER=$([[ "$BRANCH" = 'master' ]] && echo 'true' || echo 'false')
+          echo ::set-output name=branch::$BRANCH
+          echo ::set-output name=master::$IS_MASTER
+
+      - name: Tags
+        id: tags
+        uses: livepeer/action-gh-release-tags@v0
+        with:
+          force-latest: ${{ steps.is-branch.outputs.master }}
+
+      - name: docker build
+        env:
+          TAGS: ${{ steps.tags.outputs.tags }}
+        run: |
+          cd fluentd-tweaked
+          docker build $(printf ' -t livepeerci/fluentd-tweaked:%s' $TAGS) .
+
+      - name: docker push
+        env:
+          TAGS: ${{ steps.tags.outputs.tags }}
+        run: |
+          for TAG in $TAGS; do
+            docker push livepeerci/fluentd-tweaked:$TAG
+          done
+
+      - name: notify livepeer-infra
+        run: curl -X POST https://holy-bread-207a.livepeer.workers.dev
