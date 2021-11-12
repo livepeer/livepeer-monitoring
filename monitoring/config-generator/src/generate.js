@@ -775,6 +775,18 @@ function getRules(allowList, namespace) {
 function grafanaNotificationChannelsConfig(params) {
   let obj = {
     notifiers: [{
+      name: 'prom-alertmanager',
+      type: 'prometheus-alertmanager',
+      uid: 'prom-alertmanager',
+      org_name: 'Main Org.',
+      is_default: true,
+      settings: {
+        url: 'http://localhost:9093'
+      }
+    }]
+  } 
+  if (params['discord-webhook']) {
+    obj.notifiers.push({
       name: 'discord',
       type: 'discord',
       uid: 'discord',
@@ -783,7 +795,7 @@ function grafanaNotificationChannelsConfig(params) {
         content: '',
         url: params['discord-webhook']
       }
-    }]
+    })
   }
 
   if (params['pagerduty-service-key'] && params['grafana-alerts']) {
@@ -795,6 +807,19 @@ function grafanaNotificationChannelsConfig(params) {
       is_default: false,
       secure_settings: {
         integrationKey: params['pagerduty-service-key']
+      }
+    })
+  }
+
+  if (params['pagerduty-lopri-service-key']) {
+    obj.notifiers.push({
+      name: 'pagerDuty',
+      type: 'pagerduty',
+      uid: 'pagerDuty',
+      org_name: 'Main Org.',
+      is_default: false,
+      secure_settings: {
+        integrationKey: params['pagerduty-lopri-service-key']
       }
     })
   }
