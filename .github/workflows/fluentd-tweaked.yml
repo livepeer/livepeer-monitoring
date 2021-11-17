@@ -17,19 +17,11 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v1
 
-      - name: What is branch?
-        id: is-branch
-        run: |
-          BRANCH="${GITHUB_REF#refs/heads/}"
-          IS_MASTER=$([[ "$BRANCH" = 'master' ]] && echo 'true' || echo 'false')
-          echo ::set-output name=branch::$BRANCH
-          echo ::set-output name=master::$IS_MASTER
-
       - name: Tags
         id: tags
         uses: livepeer/action-gh-release-tags@v0
         with:
-          force-latest: ${{ steps.is-branch.outputs.master }}
+          always-latest-on-branch: master
 
       - name: docker build
         env:
