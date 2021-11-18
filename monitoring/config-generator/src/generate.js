@@ -121,9 +121,7 @@ function generate() {
   saveYaml('/etc/prometheus', 'alertmanager.yml', getAlertManagerConfig(argv))
   saveYaml('/etc/prometheus', 'rules.yml', getRules(argv.alertGroups))
   saveYaml('/etc/prometheus', 'prometheus.yml', promConfig)
-  if (argv['grafana-alerts']) {
-    saveYaml('/etc/grafana/provisioning/notifiers', 'generated_notifiers.yml', grafanaNotificationChannelsConfig(argv))
-  }
+  saveYaml('/etc/grafana/provisioning/notifiers', 'generated_notifiers.yml', grafanaNotificationChannelsConfig(argv))
   fs.writeFileSync(
     path.join('/etc/supervisor.d', 'supervisord.conf'),
     supervisordConfig
@@ -782,10 +780,7 @@ function grafanaNotificationChannelsConfig(params) {
     }]
   }
 
-  // direct pagerDuty integration
-  // NOTE: these are not activated into the dashboards by default right now. However
-  // the alertmanager is added by default which forwards the alerts to pagerDuty anyway
-  if (params['pagerduty-service-key']) {
+  if (params['pagerduty-service-key'] && params['grafana-alerts']) {
     obj.notifiers.push({
       name: 'pagerDuty',
       type: 'pagerduty',
