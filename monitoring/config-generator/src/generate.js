@@ -779,15 +779,6 @@ function grafanaNotificationChannelsConfig(params) {
         content: '',
         url: params['discord-webhook']
       }
-    },{
-      name: 'prom-alertmanager',
-      type: 'prometheus-alertmanager',
-      uid: 'prom-alertmanager',
-      org_name: 'Main Org.',
-      is_default: true,
-      settings: {
-        url: 'http://localhost:9093'
-      }
     }]
   }
 
