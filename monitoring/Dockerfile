@@ -72,6 +72,7 @@ COPY --from=c1 /usr/share/grafana /usr/share/grafana
 COPY --from=c1 $GF_PATHS_HOME/bin/grafana-cli $GF_PATHS_HOME/bin/grafana-cli
 COPY --from=c1 $GF_PATHS_HOME/public $GF_PATHS_HOME/public
 
+RUN grafana-cli plugins install grafana-image-renderer
 COPY ./grafana/datasources $GF_PATHS_PROVISIONING/datasources
 COPY ./grafana/dashboards $GF_PATHS_PROVISIONING/dashboards
 
