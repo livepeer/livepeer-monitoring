@@ -4,6 +4,7 @@ ARG OS="linux"
 FROM prom/prometheus:v2.30.1 as t1
 FROM grafana/grafana:8.1.8 as c1
 FROM prom/alertmanager:latest as a1
+FROM grafana/loki:main as loki
 
 FROM node:alpine as t2
 
@@ -104,6 +105,12 @@ COPY ./grafana/dashboards $GF_PATHS_PROVISIONING/dashboards
 EXPOSE 3000
 
 COPY --from=c1 /run.sh /run.sh
+
+# LOKI 
+USER loki
+EXPOSE 3100
+COPY --from=loki /usr/bin/loki /usr/bin/loki
+# CMD ["/usr/bin/loki", "-config.file=/etc/loki/local-config.yaml"]
 
 RUN apk add supervisor
 COPY supervisord.conf /etc/supervisor.d/supervisord.conf
