@@ -72,7 +72,31 @@ COPY --from=c1 /usr/share/grafana /usr/share/grafana
 COPY --from=c1 $GF_PATHS_HOME/bin/grafana-cli $GF_PATHS_HOME/bin/grafana-cli
 COPY --from=c1 $GF_PATHS_HOME/public $GF_PATHS_HOME/public
 
-RUN grafana-cli plugins install grafana-image-renderer
+# Grafana image rendering borrowed from https://github.com/grafana/grafana/blob/main/packaging/docker/custom/Dockerfile
+RUN apk add --no-cache libaio libnsl && \
+    ln -s /usr/lib/libnsl.so.2 /usr/lib/libnsl.so.1 && \
+    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.30-r0/glibc-2.30-r0.apk \
+      -O /tmp/glibc-2.30-r0.apk && \
+    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.30-r0/glibc-bin-2.30-r0.apk \
+      -O /tmp/glibc-bin-2.30-r0.apk && \
+    apk add --no-cache --allow-untrusted /tmp/glibc-2.30-r0.apk /tmp/glibc-bin-2.30-r0.apk && \
+    rm -f /tmp/glibc-2.30-r0.apk && \
+    rm -f /tmp/glibc-bin-2.30-r0.apk && \
+    rm -f /lib/ld-linux-x86-64.so.2 && \
+    rm -f /etc/ld.so.cache;
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
+    echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
+    echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
+    apk --no-cache  upgrade && \
+    apk add --no-cache udev ttf-opensans chromium && \
+    rm -rf /tmp/* && \
+    rm -rf /usr/share/grafana/tools/phantomjs && \
+    grafana-cli \
+        --pluginsDir "$GF_PATHS_PLUGINS" \
+        --pluginUrl https://github.com/grafana/grafana-image-renderer/releases/latest/download/plugin-linux-x64-glibc-no-chromium.zip \
+        plugins install grafana-image-renderer;
+ENV GF_PLUGIN_RENDERING_CHROME_BIN="/usr/bin/chromium-browser"
+
 COPY ./grafana/datasources $GF_PATHS_PROVISIONING/datasources
 COPY ./grafana/dashboards $GF_PATHS_PROVISIONING/dashboards
 
