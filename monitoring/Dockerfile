@@ -72,7 +72,7 @@ COPY --from=c1 /usr/share/grafana /usr/share/grafana
 COPY --from=c1 $GF_PATHS_HOME/bin/grafana-cli $GF_PATHS_HOME/bin/grafana-cli
 COPY --from=c1 $GF_PATHS_HOME/public $GF_PATHS_HOME/public
 
-# Grafana image rendering borrowed from https://github.com/grafana/grafana/blob/main/packaging/docker/custom/Dockerfile
+# Chromium dependencies from https://github.com/grafana/grafana/blob/f661e20dd757c76fb050306374601241f6b4097e/packaging/docker/Dockerfile#L38
 RUN apk add --no-cache libaio libnsl && \
     ln -s /usr/lib/libnsl.so.2 /usr/lib/libnsl.so.1 && \
     wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.30-r0/glibc-2.30-r0.apk \
@@ -84,6 +84,7 @@ RUN apk add --no-cache libaio libnsl && \
     rm -f /tmp/glibc-bin-2.30-r0.apk && \
     rm -f /lib/ld-linux-x86-64.so.2 && \
     rm -f /etc/ld.so.cache;
+# Grafana image rendering from https://github.com/grafana/grafana/blob/e0db19e74116db30d5e6b7666a2888238b4cb416/packaging/docker/custom/Dockerfile#L15
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
     echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
     echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
