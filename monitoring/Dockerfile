@@ -49,6 +49,7 @@ ENV PATH="/usr/share/grafana/bin:$PATH" \
     GF_PATHS_PLUGINS="/data/grafana/plugins" \
     GF_PATHS_PROVISIONING="/etc/grafana/provisioning" \
     LP_PROMETHEUS_ENDPOINT="http://localhost:9090" \
+    LP_LOKI_ENDPOINT="http://localhost:3100" \
     LP_NODES="localhost:7935"
 
 WORKDIR $GF_PATHS_HOME
