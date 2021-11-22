@@ -14,7 +14,7 @@ function generate (params, defaults = '/etc/supervisor.d/supervisord.conf') {
   }
 
   if (params && params['loki-url']) {
-    obj['program:loki'].command = `/usr/bin/loki --config.file=/etc/loki/config.yaml`
+    obj['program:loki'].command = `/usr/bin/loki --config.file=/etc/loki/loki.yaml`
   }
 
   return ini.stringify(obj)

@@ -112,6 +112,11 @@ function generate() {
         describe: 'enables grafana alerts to hook up to the prometheus alertmanager',
         type: 'boolean'
       },
+      'loki-url': {
+        describe: 'loki datasource url',
+        type: 'string',
+        default: 'http://localhost:3100',
+      }
     }).argv
 
   if (argv.help || argv.version) {

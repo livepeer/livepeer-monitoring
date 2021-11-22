@@ -110,6 +110,7 @@ COPY --from=c1 /run.sh /run.sh
 USER loki
 EXPOSE 3100
 COPY --from=loki /usr/bin/loki /usr/bin/loki
+COPY --from=loki /etc/loki/loki.yaml /etc/loki/loki.yaml
 # CMD ["/usr/bin/loki", "-config.file=/etc/loki/local-config.yaml"]
 
 RUN apk add supervisor
