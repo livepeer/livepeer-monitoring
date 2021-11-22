@@ -107,7 +107,6 @@ EXPOSE 3000
 COPY --from=c1 /run.sh /run.sh
 
 # LOKI 
-USER loki
 EXPOSE 3100
 COPY --from=loki /usr/bin/loki /usr/bin/loki
 COPY  ./config/loki.yaml /etc/loki/loki.yaml
