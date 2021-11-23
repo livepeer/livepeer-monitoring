@@ -35,6 +35,8 @@ schema_config:
       period: 24h
 server:
   http_listen_port: 3100
+  http_listen_address: "0.0.0.0"
+  http_path_prefix: "/loki"
 storage_config:
   boltdb_shipper:
     active_index_directory: /data/loki/boltdb-shipper-active
