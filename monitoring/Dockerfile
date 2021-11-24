@@ -4,7 +4,7 @@ ARG OS="linux"
 FROM prom/prometheus:v2.30.1 as t1
 FROM grafana/grafana:8.1.8 as c1
 FROM prom/alertmanager:latest as a1
-FROM grafana/loki:main as loki
+FROM grafana/loki:2.4.1 as loki
 
 FROM node:alpine as t2
 
