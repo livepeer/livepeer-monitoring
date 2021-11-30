@@ -98,6 +98,11 @@ function generate() {
         default: allGroups,
         type: 'string'
       },
+      'alert-namespace': {
+        describe: 'identifier to include in alerts title and namespace all alerts sent',
+        default: '',
+        type: 'string'
+      },
       'discord-webhook': {
         describe: 'the webhook for the Discord notification channel',
         type: 'string',
@@ -119,7 +124,7 @@ function generate() {
   console.log('prom JSON: ', JSON.stringify(promConfig))
   const supervisordConfig = supervisord.generate(argv)
   saveYaml('/etc/prometheus', 'alertmanager.yml', getAlertManagerConfig(argv))
-  saveYaml('/etc/prometheus', 'rules.yml', getRules(argv.alertGroups))
+  saveYaml('/etc/prometheus', 'rules.yml', getRules(argv.alertGroups, argv.alertNamespace))
   saveYaml('/etc/prometheus', 'prometheus.yml', promConfig)
   saveYaml('/etc/grafana/provisioning/notifiers', 'generated_notifiers.yml', grafanaNotificationChannelsConfig(argv))
   fs.writeFileSync(
@@ -638,13 +643,14 @@ function getAlertManagerConfig(params) {
   }
 }
 
-function getRules(allowList) {
+function getRules(allowList, namespace) {
   let groups = []
+  const namespaceTag = namespace ? `[${namespace}] ` : ''
 
   let broadcastingFunds = {
     name: 'broadcasting-funds',
     rules: [{
-        alert: 'deposit-low',
+        alert: `${namespaceTag}deposit-low`,
         expr: 'livepeer_broadcaster_deposit < 200000000',
         for: '1m',
         annotations: {
@@ -656,7 +662,7 @@ function getRules(allowList) {
         }
       },
       {
-        alert: 'deposit-very-low',
+        alert: `${namespaceTag}deposit-very-low`,
         expr: 'livepeer_broadcaster_deposit < 50000000',
         for: '1m',
         annotations: {
@@ -668,7 +674,7 @@ function getRules(allowList) {
         }
       },
       {
-        alert: 'reserve-used',
+        alert: `${namespaceTag}reserve-used`,
         expr: 'livepeer_broadcaster_reserve < livepeer_broadcaster_reserve offset 1m',
         for: '1m',
         annotations: {
@@ -703,7 +709,7 @@ function getRules(allowList) {
     name: 'http-real-time-ratio-lopri',
     rules: [
       {
-        alert: '[LOPRI]real-time-warning',
+        alert: `[LOPRI] ${namespaceTag}real-time-warning`,
         expr: realTimeQuery('1m', '.99'),
         for: '2m',
         annotations: {
@@ -720,7 +726,7 @@ function getRules(allowList) {
     name: 'http-real-time-ratio',
     rules: [
       {
-        alert: 'real-time-critical',
+        alert: `${namespaceTag}real-time-critical`,
         expr: realTimeQuery('10m', '.90'),
         for: '2m',
         annotations: {
@@ -740,7 +746,7 @@ function getRules(allowList) {
   let successRate = {
     name: 'success-rate',
     rules: [{
-        alert: 'success-rate-low',
+        alert: `${namespaceTag}success-rate-low`,
         expr: '(sum(rate(livepeer_segment_transcoded_all_appeared_total[1m])) by (instance) / sum(rate(livepeer_segment_source_emerged_total[1m])) by (instance)) < 0.8',
         for: '1m',
         annotations: {
