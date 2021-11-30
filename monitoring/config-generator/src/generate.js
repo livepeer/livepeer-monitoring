@@ -40,9 +40,13 @@ function generate() {
         describe: 'comma separated list of namespaces to monitoring in the `kubernetes` deployment, this is needed for certain special deployments, it defaults to an empty array.',
         type: 'string'
       },
-      'kube-longterm': {
-        describe: 'enables longterm storage via PostgreSQL, note that the pg_prometheus, and the postgresql adapter are not included in this bundle',
+      'prometheus-longterm': {
+        describe: 'enables longterm storage via any prometheus compatible remote storage',
         type: 'boolean'
+      },
+      'prometheus-remote-endpoint': {
+        describe: 'the remote_write endpoint',
+        type: 'string'
       },
       'prometheus-storagePath': {
         describe: 'the path to the TSDB folder',
@@ -229,16 +233,24 @@ function prometheusConfig(params) {
           namespaces,
           params.prometheusKubeScrape
         )
-        if (params.kubeLongterm) {
-          obj['remote_read'] = [{
-            url: 'http://localhost:9201/read',
-            remote_timeout: '30s'
-          }]
-
-          obj['remote_write'] = [{
-            url: 'http://localhost:9201/write',
-            remote_timeout: '30s'
-          }]
+        
+        if (params.prometheusLongterm) {
+          if (params.prometheusRemoteEndpoint) {
+            obj['remote_write'] = [{
+              url: params.prometheusRemoteEndpoint,
+              remote_timeout: '30s'
+            }]
+          } else {
+            obj['remote_read'] = [{
+              url: 'http://localhost:9201/read',
+              remote_timeout: '30s'
+            }]
+  
+            obj['remote_write'] = [{
+              url: 'http://localhost:9201/write',
+              remote_timeout: '30s'
+            }]
+          }
         }
 
         if (params.kubeCadvisor) {
