@@ -161,9 +161,9 @@ function prometheusConfig(params) {
       scrape_interval: '5s',
       scrape_timeout: '5s',
       evaluation_interval: '5s',
-      external_labels: [{
+      external_labels: {
         region: params.region
-      }],
+      },
     },
     scrape_configs: [],
     rule_files: ['rules.yml'],
