@@ -120,6 +120,11 @@ function generate() {
         describe: 'loki datasource url',
         type: 'string',
         default: 'http://localhost:3100',
+      },
+      'region': {
+        describe: 'the region name, added as an external label',
+        type: 'string',
+        default: 'not_set'
       }
     }).argv
 
@@ -155,7 +160,10 @@ function prometheusConfig(params) {
     global: {
       scrape_interval: '5s',
       scrape_timeout: '5s',
-      evaluation_interval: '5s'
+      evaluation_interval: '5s',
+      external_labels: {
+        region: params.region
+      },
     },
     scrape_configs: [],
     rule_files: ['rules.yml'],
