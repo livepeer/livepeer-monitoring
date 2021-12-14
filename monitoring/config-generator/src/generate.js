@@ -40,9 +40,13 @@ function generate() {
         describe: 'comma separated list of namespaces to monitoring in the `kubernetes` deployment, this is needed for certain special deployments, it defaults to an empty array.',
         type: 'string'
       },
-      'kube-longterm': {
-        describe: 'enables longterm storage via PostgreSQL, note that the pg_prometheus, and the postgresql adapter are not included in this bundle',
+      'prometheus-longterm': {
+        describe: 'enables longterm storage via any prometheus compatible remote storage',
         type: 'boolean'
+      },
+      'prometheus-remote-endpoint': {
+        describe: 'the remote_write endpoint',
+        type: 'string'
       },
       'prometheus-storagePath': {
         describe: 'the path to the TSDB folder',
@@ -112,6 +116,20 @@ function generate() {
         describe: 'enables grafana alerts to hook up to the prometheus alertmanager',
         type: 'boolean'
       },
+      'loki-enabled': {
+        describe: 'enable loki',
+        type: 'boolean',
+      },
+      'loki-url': {
+        describe: 'loki datasource url',
+        type: 'string',
+        default: 'http://localhost:3100',
+      },
+      'region': {
+        describe: 'the region name, added as an external label',
+        type: 'string',
+        default: 'not_set'
+      }
     }).argv
 
   if (argv.help || argv.version) {
@@ -146,7 +164,10 @@ function prometheusConfig(params) {
     global: {
       scrape_interval: '5s',
       scrape_timeout: '5s',
-      evaluation_interval: '5s'
+      evaluation_interval: '5s',
+      external_labels: {
+        region: params.region
+      },
     },
     scrape_configs: [],
     rule_files: ['rules.yml'],
@@ -224,16 +245,24 @@ function prometheusConfig(params) {
           namespaces,
           params.prometheusKubeScrape
         )
-        if (params.kubeLongterm) {
-          obj['remote_read'] = [{
-            url: 'http://localhost:9201/read',
-            remote_timeout: '30s'
-          }]
-
-          obj['remote_write'] = [{
-            url: 'http://localhost:9201/write',
-            remote_timeout: '30s'
-          }]
+        
+        if (params.prometheusLongterm) {
+          if (params.prometheusRemoteEndpoint) {
+            obj['remote_write'] = [{
+              url: params.prometheusRemoteEndpoint,
+              remote_timeout: '30s'
+            }]
+          } else {
+            obj['remote_read'] = [{
+              url: 'http://localhost:9201/read',
+              remote_timeout: '30s'
+            }]
+  
+            obj['remote_write'] = [{
+              url: 'http://localhost:9201/write',
+              remote_timeout: '30s'
+            }]
+          }
         }
 
         if (params.kubeCadvisor) {
@@ -775,6 +804,18 @@ function getRules(allowList, namespace) {
 function grafanaNotificationChannelsConfig(params) {
   let obj = {
     notifiers: [{
+      name: 'prom-alertmanager',
+      type: 'prometheus-alertmanager',
+      uid: 'prom-alertmanager',
+      org_name: 'Main Org.',
+      is_default: true,
+      settings: {
+        url: 'http://localhost:9093'
+      }
+    }]
+  } 
+  if (params['discord-webhook']) {
+    obj.notifiers.push({
       name: 'discord',
       type: 'discord',
       uid: 'discord',
@@ -783,7 +824,7 @@ function grafanaNotificationChannelsConfig(params) {
         content: '',
         url: params['discord-webhook']
       }
-    }]
+    })
   }
 
   if (params['pagerduty-service-key'] && params['grafana-alerts']) {
@@ -795,6 +836,19 @@ function grafanaNotificationChannelsConfig(params) {
       is_default: false,
       secure_settings: {
         integrationKey: params['pagerduty-service-key']
+      }
+    })
+  }
+
+  if (params['pagerduty-lopri-service-key']) {
+    obj.notifiers.push({
+      name: 'pagerDuty',
+      type: 'pagerduty',
+      uid: 'pagerDuty',
+      org_name: 'Main Org.',
+      is_default: false,
+      secure_settings: {
+        integrationKey: params['pagerduty-lopri-service-key']
       }
     })
   }

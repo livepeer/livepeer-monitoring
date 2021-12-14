@@ -4,6 +4,7 @@ ARG OS="linux"
 FROM prom/prometheus:v2.30.1 as t1
 FROM grafana/grafana:8.1.8 as c1
 FROM prom/alertmanager:latest as a1
+FROM grafana/loki:2.4.1 as loki
 
 FROM node:alpine as t2
 
@@ -48,6 +49,7 @@ ENV PATH="/usr/share/grafana/bin:$PATH" \
     GF_PATHS_PLUGINS="/data/grafana/plugins" \
     GF_PATHS_PROVISIONING="/etc/grafana/provisioning" \
     LP_PROMETHEUS_ENDPOINT="http://localhost:9090" \
+    LP_LOKI_ENDPOINT="http://localhost:3100" \
     LP_NODES="localhost:7935"
 
 WORKDIR $GF_PATHS_HOME
@@ -104,6 +106,12 @@ COPY ./grafana/dashboards $GF_PATHS_PROVISIONING/dashboards
 EXPOSE 3000
 
 COPY --from=c1 /run.sh /run.sh
+
+# LOKI 
+EXPOSE 3100
+COPY --from=loki /usr/bin/loki /usr/bin/loki
+COPY  ./config/loki.yaml /etc/loki/loki.yaml
+# CMD ["/usr/bin/loki", "-config.file=/etc/loki/local-config.yaml"]
 
 RUN apk add supervisor
 COPY supervisord.conf /etc/supervisor.d/supervisord.conf
