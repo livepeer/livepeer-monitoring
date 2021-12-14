@@ -15,6 +15,8 @@ function generate (params, defaults = '/etc/supervisor.d/supervisord.conf') {
 
   if (params && params['loki-enabled'] && params['loki-url']) {
     obj['program:loki'].command = `/usr/bin/loki --config.file=/etc/loki/loki.yaml`
+  } else {
+    delete obj['program:loki']
   }
 
   return ini.stringify(obj)
