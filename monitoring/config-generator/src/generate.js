@@ -116,6 +116,10 @@ function generate() {
         describe: 'enables grafana alerts to hook up to the prometheus alertmanager',
         type: 'boolean'
       },
+      'loki-enabled': {
+        describe: 'enable loki',
+        type: 'boolean',
+      },
       'loki-url': {
         describe: 'loki datasource url',
         type: 'string',
