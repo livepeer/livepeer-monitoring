@@ -87,7 +87,8 @@ RUN apk add --no-cache libaio libnsl && \
     rm -f /lib/ld-linux-x86-64.so.2 && \
     rm -f /etc/ld.so.cache;
 # Grafana image rendering from https://github.com/grafana/grafana/blob/e0db19e74116db30d5e6b7666a2888238b4cb416/packaging/docker/custom/Dockerfile#L15
-RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
+RUN if [[ $(uname -m) == "x86_64" ]]; then \
+    echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
     echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
     echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
     apk --no-cache  upgrade && \
@@ -97,7 +98,8 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repos
     grafana-cli \
         --pluginsDir "$GF_PATHS_PLUGINS" \
         --pluginUrl https://github.com/grafana/grafana-image-renderer/releases/latest/download/plugin-linux-x64-glibc-no-chromium.zip \
-        plugins install grafana-image-renderer;
+        plugins install grafana-image-renderer; \
+    fi
 ENV GF_PLUGIN_RENDERING_CHROME_BIN="/usr/bin/chromium-browser"
 
 COPY ./grafana/datasources $GF_PATHS_PROVISIONING/datasources

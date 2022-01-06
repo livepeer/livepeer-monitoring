@@ -11,7 +11,7 @@ username=$(echo "${full_url}" | cut -d/ -f 3 | cut -d: -f 1)
 base_url=$(echo "${full_url}" | cut -d@ -f 2)
 folder="grafana/dashboards"
 
-rm -rf $folder
+find $folder -type f | grep json | xargs rm
 mkdir -p "${folder}" 
 for db_search_json in $(curl --fail -s "${full_url}/api/search" | jq -cr '.[] | @base64'); do
   db_uid=$(echo "${db_search_json}" | base64 -d | jq -r .uid)
@@ -25,6 +25,6 @@ for db_search_json in $(curl --fail -s "${full_url}/api/search" | jq -cr '.[] | 
   filename="${folder}/${db_folder}/${db_slug}.json"
   mkdir -p "$(dirname $filename)"
   echo "Exporting \"${db_title}\" to \"${filename}\"..." 
-  echo "${db_json}" | jq -r . > "${filename}"
+  echo "${db_json}" | jq -r '.dashboard' > "${filename}"
 done
 echo "Done"
