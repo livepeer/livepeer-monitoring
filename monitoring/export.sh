@@ -25,6 +25,6 @@ for db_search_json in $(curl --fail -s "${full_url}/api/search" | jq -cr '.[] | 
   filename="${folder}/${db_folder}/${db_slug}.json"
   mkdir -p "$(dirname $filename)"
   echo "Exporting \"${db_title}\" to \"${filename}\"..." 
-  echo "${db_json}" | jq -r '.dashboard' > "${filename}"
+  echo "${db_json}" | jq -r '.dashboard | .id = null' > "${filename}"
 done
 echo "Done"
