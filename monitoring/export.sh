@@ -6,15 +6,12 @@
 
 set -euo pipefail
 
-create_slug () {
-  echo "$1" | iconv -t ascii//TRANSLIT | sed -r s/[^a-zA-Z0-9]+/-/g | sed -r s/^-+\|-+$//g | tr A-Z a-z
-}
-
 full_url=$1
 username=$(echo "${full_url}" | cut -d/ -f 3 | cut -d: -f 1)
 base_url=$(echo "${full_url}" | cut -d@ -f 2)
-folder=$(create_slug "${username}-${base_url}")
+folder="grafana/dashboards"
 
+rm -rf $folder
 mkdir -p "${folder}" 
 for db_search_json in $(curl --fail -s "${full_url}/api/search" | jq -cr '.[] | @base64'); do
   db_uid=$(echo "${db_search_json}" | base64 -d | jq -r .uid)
