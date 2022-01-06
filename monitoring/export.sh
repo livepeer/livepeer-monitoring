@@ -13,7 +13,7 @@ folder="grafana/dashboards"
 
 find $folder -type f | grep json | xargs rm
 mkdir -p "${folder}" 
-for db_search_json in $(curl --fail -s "${full_url}/api/search" | jq -cr '.[] | @base64'); do
+for db_search_json in $(curl --fail -s "${full_url}/api/search?type=dash-db" | jq -cr '.[] | @base64'); do
   db_uid=$(echo "${db_search_json}" | base64 -d | jq -r .uid)
   db_folder=$(echo "${db_search_json}" | base64 -d | jq -r .folderTitle)
   if [[ "$db_folder" == "null" ]]; then
