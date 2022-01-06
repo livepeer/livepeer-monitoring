@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 1,
-  "id": 10,
+  "id": null,
   "links": [],
   "panels": [
     {
@@ -291,9 +291,9 @@
         "thresholdMarkers": true
       },
       "gridPos": {
-        "h": 5,
-        "w": 4,
-        "x": 13,
+        "h": 4,
+        "w": 5,
+        "x": 12,
         "y": 0
       },
       "id": 46,
@@ -355,88 +355,96 @@
       "valueName": "current"
     },
     {
-      "cacheTimeout": null,
-      "colorBackground": false,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
       "datasource": null,
-      "description": "Total number of transcoded segments.",
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
+      "description": "",
+      "fill": 1,
+      "fillGradient": 0,
       "gridPos": {
-        "h": 5,
-        "w": 4,
-        "x": 18,
+        "h": 8,
+        "w": 7,
+        "x": 17,
         "y": 0
       },
-      "id": 44,
-      "interval": null,
-      "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
-      "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
+      "hiddenSeries": false,
+      "id": 14,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
       },
-      "tableColumn": "",
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "paceLength": 10,
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(livepeer_segment_transcoded_unprocessed_total)",
+          "expr": "sum(rate(livepeer_segment_transcoded_all_appeared_total[1m])) by (instance) / sum(rate(livepeer_segment_source_emerged_total[1m])) by (instance)",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "",
+          "legendFormat": "{{instance}}",
           "refId": "A"
         }
       ],
-      "thresholds": "",
+      "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
-      "title": "Transcoded Segments",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
+      "title": "Success rate (1m avg)",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
         {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
+          "format": "percentunit",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
         }
       ],
-      "valueName": "current"
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "cacheTimeout": null,
@@ -588,9 +596,7 @@
           "expr": "sum(ALERTS)",
           "format": "time_series",
           "instant": true,
-          "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "",
           "refId": "A"
         }
       ],
@@ -693,99 +699,88 @@
       "valueName": "avg"
     },
     {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": null,
-      "description": "shows the currently total active sessions for each Broadcaster.",
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 5
-      },
-      "hiddenSeries": false,
-      "id": 53,
-      "legend": {
-        "alignAsTable": false,
-        "avg": true,
-        "current": true,
-        "hideEmpty": true,
-        "hideZero": true,
-        "max": true,
-        "min": false,
-        "show": true,
-        "total": true,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null",
-      "options": {
-        "dataLinks": []
-      },
-      "percentage": false,
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "sum(increase(livepeer_current_sessions_total{node_type=\"bctr\"}[1m])) by (node_id)",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "{{node_id}}",
-          "refId": "C"
-        }
+      "cacheTimeout": null,
+      "colorBackground": false,
+      "colorValue": false,
+      "colors": [
+        "#299c46",
+        "rgba(237, 129, 40, 0.89)",
+        "#d44a3a"
       ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Broadcasters Increase in Current Sessions (1m)",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
+      "datasource": null,
+      "description": "Total number of transcoded segments.",
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
       },
-      "transparent": true,
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 12,
+        "y": 4
       },
-      "yaxes": [
+      "id": 44,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
         {
-          "decimals": 0,
-          "format": "short",
-          "label": "sessions",
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
+          "name": "value to text",
+          "value": 1
         },
         {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
+          "name": "range to text",
+          "value": 2
         }
       ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": false,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": false
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "expr": "sum(livepeer_segment_transcoded_unprocessed_total)",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "thresholds": "",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Transcoded Segments",
+      "type": "singlestat",
+      "valueFontSize": "80%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        }
+      ],
+      "valueName": "current"
     },
     {
       "aliasColors": {},
@@ -793,7 +788,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
-      "description": "shows the currently total active sessions for each orchestrator",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -803,145 +797,7 @@
         "y": 8
       },
       "hiddenSeries": false,
-      "id": 52,
-      "legend": {
-        "alignAsTable": false,
-        "avg": true,
-        "current": true,
-        "hideEmpty": true,
-        "hideZero": true,
-        "max": true,
-        "min": false,
-        "show": true,
-        "total": true,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null",
-      "options": {
-        "dataLinks": []
-      },
-      "percentage": false,
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "sum(increase(livepeer_current_sessions_total{node_type=\"orch\"}[1m])) by (node_id)",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "{{node_id}}",
-          "refId": "C"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "ORCHs Total Increase in Current Sessions (1m)",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "transparent": true,
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "decimals": 0,
-          "format": "short",
-          "label": "sessions",
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                0.9
-              ],
-              "type": "lt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "A",
-                "1m",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "avg"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "3m",
-        "frequency": "1m",
-        "handler": 1,
-        "message": "True Success Rate is less than 90%",
-        "name": "True Success rate < 90%",
-        "noDataState": "no_data",
-        "notifications": [
-          {
-            "uid": "discord"
-          },
-          {
-            "uid": "prom-alertmanger"
-          }
-        ]
-      },
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": null,
-      "description": "",
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 13
-      },
-      "hiddenSeries": false,
-      "id": 14,
+      "id": 18,
       "legend": {
         "avg": false,
         "current": false,
@@ -969,33 +825,23 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(livepeer_segment_transcoded_all_appeared_total[1m])) by (node_id) / sum(rate(livepeer_segment_source_emerged_total[1m])) by (node_id)",
+          "expr": "livepeer_success_rate{node_type=\"bctr\"} and max_over_time(livepeer_current_sessions_total{node_type=\"bctr\"}[1m]) > 0",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{node_id}}",
+          "legendFormat": "{{instance}}",
           "refId": "A"
         }
       ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "fill": true,
-          "line": true,
-          "op": "lt",
-          "value": 0.9
-        }
-      ],
+      "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "True Success rate (1m avg)",
+      "title": "Success Rate (Client, 1m avg)",
       "tooltip": {
         "shared": true,
         "sort": 0,
         "value_type": "individual"
       },
-      "transparent": true,
       "type": "graph",
       "xaxis": {
         "buckets": null,
@@ -1028,441 +874,6 @@
       }
     },
     {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                15
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "A",
-                "1m",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "avg"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "3m",
-        "frequency": "1m",
-        "handler": 1,
-        "message": "Overall Transcode Latency is Longer than 15 seconds",
-        "name": "Average Overall Latency > 15s",
-        "noDataState": "no_data",
-        "notifications": [
-          {
-            "uid": "discord"
-          },
-          {
-            "uid": "prom-alertmanger"
-          }
-        ]
-      },
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": null,
-      "description": "Latency is calculated on Broadcaster, from time source segment goes out from segmenter till transcoded segment gets inserted into manifest.",
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 16
-      },
-      "hiddenSeries": false,
-      "id": 8,
-      "legend": {
-        "avg": true,
-        "current": false,
-        "max": true,
-        "min": true,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {
-        "dataLinks": [
-          {
-            "targetBlank": true,
-            "title": "Logs",
-            "url": "https://my.papertrailapp.com/events?focus=${__from}&q=${__field.labels.node_id}"
-          }
-        ]
-      },
-      "paceLength": 10,
-      "percentage": false,
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "sum(rate(livepeer_transcode_overall_latency_seconds_sum{node_type=\"bctr\"}[1m])) by (node_id) / sum(rate(livepeer_transcode_overall_latency_seconds_count{node_type=\"bctr\"}[1m])) by (node_id)",
-          "format": "time_series",
-          "instant": false,
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "{{node_id}}",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "fill": true,
-          "line": true,
-          "op": "gt",
-          "value": 15
-        }
-      ],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Average Overall Latency (B -> OT -> B)",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "transparent": true,
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "s",
-          "label": "",
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                3
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "A",
-                "1m",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "avg"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "3m",
-        "frequency": "1m",
-        "handler": 1,
-        "message": "Transcoding is taking longer than 3 seconds",
-        "name": "transcode time > 3s",
-        "noDataState": "no_data",
-        "notifications": [
-          {
-            "uid": "discord"
-          },
-          {
-            "uid": "prom-alertmanger"
-          }
-        ]
-      },
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": null,
-      "description": "Orchestrator Average Transcode Time",
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 21
-      },
-      "hiddenSeries": false,
-      "id": 48,
-      "legend": {
-        "avg": true,
-        "current": false,
-        "hideEmpty": false,
-        "hideZero": true,
-        "max": true,
-        "min": true,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {
-        "dataLinks": [
-          {
-            "targetBlank": true,
-            "title": "logs",
-            "url": "https://my.papertrailapp.com/events?focus=${__from}&q=${__field.labels.node_id}"
-          }
-        ]
-      },
-      "paceLength": 10,
-      "percentage": false,
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "rate(livepeer_transcode_time_seconds_sum{node_type=\"orch\"}[1m]) / rate(livepeer_transcode_time_seconds_count{node_type=\"orch\"}[1m])",
-          "format": "time_series",
-          "instant": false,
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "{{node_id}}/{{profiles}}",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "fill": true,
-          "line": true,
-          "op": "gt",
-          "value": 3
-        }
-      ],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "O Average Transcode Time",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "transparent": true,
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "s",
-          "label": "",
-          "logBase": 1,
-          "max": null,
-          "min": "0",
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": false
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": null,
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 24
-      },
-      "hiddenSeries": false,
-      "id": 26,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {
-        "dataLinks": [
-          {
-            "targetBlank": true,
-            "title": "Logs",
-            "url": "https://my.papertrailapp.com/events?focus=${__from}&q=program:orchestrator"
-          }
-        ]
-      },
-      "paceLength": 10,
-      "percentage": false,
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "histogram_quantile(0.99, sum(rate(livepeer_transcode_overall_latency_seconds_bucket[1m])) by ( le))",
-          "format": "time_series",
-          "instant": false,
-          "intervalFactor": 1,
-          "legendFormat": "99th",
-          "refId": "D"
-        },
-        {
-          "expr": "histogram_quantile(0.95, sum(rate(livepeer_transcode_overall_latency_seconds_bucket[1m])) by (le))",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "95th",
-          "refId": "A"
-        },
-        {
-          "expr": "histogram_quantile(0.9, sum(rate(livepeer_transcode_overall_latency_seconds_bucket[1m])) by ( le))",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "90th",
-          "refId": "B"
-        },
-        {
-          "expr": "histogram_quantile(0.5, sum(rate(livepeer_transcode_overall_latency_seconds_bucket[1m])) by ( le))",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "50th",
-          "refId": "C"
-        }
-      ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "fill": true,
-          "line": true,
-          "op": "gt",
-          "value": 2,
-          "yaxis": "left"
-        }
-      ],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Overall Transcode Latency, percentiles",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "transparent": true,
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "s",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": false
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
@@ -1475,7 +886,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 29
+        "y": 8
       },
       "hiddenSeries": false,
       "id": 28,
@@ -1493,13 +904,7 @@
       "links": [],
       "nullPointMode": "null",
       "options": {
-        "dataLinks": [
-          {
-            "targetBlank": true,
-            "title": "Logs",
-            "url": "https://my.papertrailapp.com/events?focus=${__from}&q=program:orchestrator"
-          }
-        ]
+        "dataLinks": []
       },
       "paceLength": 10,
       "percentage": false,
@@ -1544,7 +949,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "O Transcode time, percentiles",
+      "title": "Transcode time, percentiles",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1593,10 +998,10 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 32
+        "y": 16
       },
       "hiddenSeries": false,
-      "id": 18,
+      "id": 26,
       "legend": {
         "avg": false,
         "current": false,
@@ -1624,25 +1029,45 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "livepeer_success_rate{node_type=\"bctr\"} and max_over_time(livepeer_current_sessions_total{node_type=\"bctr\"}[1m]) > 0",
+          "expr": "histogram_quantile(0.99, sum(rate(livepeer_transcode_overall_latency_seconds_bucket[1m])) by ( le))",
           "format": "time_series",
-          "interval": "",
+          "instant": false,
           "intervalFactor": 1,
-          "legendFormat": "{{node_id}}",
+          "legendFormat": "99th",
+          "refId": "D"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(livepeer_transcode_overall_latency_seconds_bucket[1m])) by (le))",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "95th",
           "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.9, sum(rate(livepeer_transcode_overall_latency_seconds_bucket[1m])) by ( le))",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "90th",
+          "refId": "B"
+        },
+        {
+          "expr": "histogram_quantile(0.5, sum(rate(livepeer_transcode_overall_latency_seconds_bucket[1m])) by ( le))",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "50th",
+          "refId": "C"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "B Success Rate (Client, 1m avg)",
+      "title": "Latency, percentiles",
       "tooltip": {
         "shared": true,
         "sort": 0,
         "value_type": "individual"
       },
-      "transparent": true,
       "type": "graph",
       "xaxis": {
         "buckets": null,
@@ -1653,8 +1078,99 @@
       },
       "yaxes": [
         {
-          "format": "percentunit",
+          "format": "s",
           "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      },
+      "hiddenSeries": false,
+      "id": 4,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "paceLength": 10,
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "rate(livepeer_transcode_time_seconds_sum{node_type=\"orch\"}[1m]) / rate(livepeer_transcode_time_seconds_count{node_type=\"orch\"}[1m])",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "{{instance}}/{{profiles}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Average Transcode Time",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "s",
+          "label": "",
           "logBase": 1,
           "max": null,
           "min": null,
@@ -1675,42 +1191,99 @@
       }
     },
     {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                10
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "A",
-                "1m",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "avg"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "1m",
-        "frequency": "1m",
-        "handler": 1,
-        "message": "There are more than 10 Upload Errors",
-        "name": "Upload Errors alert",
-        "noDataState": "no_data",
-        "notifications": []
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "description": "Latency is calculated on Broadcaster, from time source segment goes out from segmenter till transcoded segment gets inserted into manifest.",
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 24
       },
+      "hiddenSeries": false,
+      "id": 8,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "paceLength": 10,
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(rate(livepeer_transcode_overall_latency_seconds_sum{node_type=\"bctr\"}[1m])) by (instance) / sum(rate(livepeer_transcode_overall_latency_seconds_count{node_type=\"bctr\"}[1m])) by (instance)",
+          "format": "time_series",
+          "instant": false,
+          "intervalFactor": 1,
+          "legendFormat": "{{instance}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Average Latency",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "s",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
@@ -1722,7 +1295,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 37
+        "y": 24
       },
       "hiddenSeries": false,
       "id": 12,
@@ -1753,22 +1326,15 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(increase(livepeer_segment_source_upload_failed_total[1m])) by (error_code)",
+          "expr": "sum(increase(livepeer_segment_source_upload_failed_total{error_code!=\"DuplicateSegment\"}[1m])) by (error_code)",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 1,
           "legendFormat": "{{error_code}}",
           "refId": "A"
         }
       ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "fill": true,
-          "line": true,
-          "op": "gt",
-          "value": 10
-        }
-      ],
+      "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
@@ -1810,49 +1376,6 @@
       }
     },
     {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                10
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "A",
-                "1m",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "last"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "3m",
-        "frequency": "1m",
-        "handler": 1,
-        "message": "There are more than 10 Transcode Errors in the past 3 minutes",
-        "name": "Transcode Errors alert",
-        "noDataState": "no_data",
-        "notifications": [
-          {
-            "uid": "discord"
-          },
-          {
-            "uid": "prom-alertmanger"
-          }
-        ]
-      },
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
@@ -1864,15 +1387,13 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 40
+        "y": 32
       },
       "hiddenSeries": false,
-      "id": 56,
+      "id": 10,
       "legend": {
         "avg": false,
         "current": false,
-        "hideEmpty": false,
-        "hideZero": true,
         "max": false,
         "min": false,
         "show": true,
@@ -1884,13 +1405,7 @@
       "links": [],
       "nullPointMode": "null",
       "options": {
-        "dataLinks": [
-          {
-            "targetBlank": true,
-            "title": "logs (from start of interval)",
-            "url": "https://my.papertrailapp.com/events?focus=${__from}&q=${__field.labels.node_id}"
-          }
-        ]
+        "dataLinks": []
       },
       "paceLength": 10,
       "percentage": false,
@@ -1903,24 +1418,16 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(increase(livepeer_segment_transcode_failed_total[1m])) by (error_code, node_id)",
+          "expr": "sum(increase(livepeer_segment_transcode_failed_total{error_code!=\"DuplicateSegment\"}[1m])) by (error_code)",
           "format": "time_series",
           "instant": false,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{node_id}} {{error_code}}",
+          "legendFormat": "{{error_code}}",
           "refId": "A"
         }
       ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "fill": true,
-          "line": true,
-          "op": "gt",
-          "value": 10
-        }
-      ],
+      "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
@@ -1930,7 +1437,6 @@
         "sort": 0,
         "value_type": "individual"
       },
-      "transparent": true,
       "type": "graph",
       "xaxis": {
         "buckets": null,
@@ -1945,7 +1451,7 @@
           "label": null,
           "logBase": 1,
           "max": null,
-          "min": "0",
+          "min": null,
           "show": true
         },
         {
@@ -1974,7 +1480,192 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 45
+        "y": 32
+      },
+      "hiddenSeries": false,
+      "id": 56,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(increase(livepeer_segment_source_upload_failed_total{error_code=\"DuplicateSegment\"}[1m]))",
+          "interval": "",
+          "legendFormat": "UploadFailed",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(increase(livepeer_segment_transcode_failed_total{error_code=\"DuplicateSegment\"}[1m]))",
+          "interval": "",
+          "legendFormat": "TranscodeFailed",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Duplicate Segments",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 40
+      },
+      "hiddenSeries": false,
+      "id": 34,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "paceLength": 10,
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "increase(livepeer_discovery_errors_total[30s])",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "{{instance}} {{error_code}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Discovery Errors ",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 40
       },
       "hiddenSeries": false,
       "id": 42,
@@ -2067,7 +1758,7 @@
         "y": 48
       },
       "hiddenSeries": false,
-      "id": 34,
+      "id": 20,
       "legend": {
         "avg": false,
         "current": false,
@@ -2095,11 +1786,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "increase(livepeer_discovery_errors_total[30s])",
+          "expr": "sum(livepeer_segment_transcode_failed_total) by (error_code)",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{instance}} {{error_code}}",
+          "legendFormat": "{{error_code}}",
           "refId": "A"
         }
       ],
@@ -2107,7 +1797,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Discovery Errors ",
+      "title": "Transcode Errors Raw",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -2136,7 +1826,7 @@
           "logBase": 1,
           "max": null,
           "min": null,
-          "show": false
+          "show": true
         }
       ],
       "yaxis": {
@@ -2156,7 +1846,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 53
+        "y": 48
       },
       "hiddenSeries": false,
       "id": 22,
@@ -2174,13 +1864,7 @@
       "links": [],
       "nullPointMode": "null",
       "options": {
-        "dataLinks": [
-          {
-            "targetBlank": true,
-            "title": "Logs (from the start of the interval)",
-            "url": "https://my.papertrailapp.com/events?focus=${__from}&q=${__field.labels.node_id}"
-          }
-        ]
+        "dataLinks": []
       },
       "paceLength": 10,
       "percentage": false,
@@ -2193,11 +1877,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(livepeer_segment_source_upload_failed_total) by (node_id, error_code)",
+          "expr": "sum(livepeer_segment_source_upload_failed_total) by (instance, error_code)",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{node_id}} {{error_code}}",
+          "legendFormat": "{{instance}} {{error_code}}",
           "refId": "A"
         }
       ],
@@ -2211,7 +1894,6 @@
         "sort": 0,
         "value_type": "individual"
       },
-      "transparent": true,
       "type": "graph",
       "xaxis": {
         "buckets": null,
@@ -2249,6 +1931,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
+      "description": "Number of times HTTP push connection was dropped before transcoding complete",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -2258,12 +1941,10 @@
         "y": 56
       },
       "hiddenSeries": false,
-      "id": 20,
+      "id": 48,
       "legend": {
         "avg": false,
         "current": false,
-        "hideEmpty": true,
-        "hideZero": true,
         "max": false,
         "min": false,
         "show": true,
@@ -2272,18 +1953,10 @@
       },
       "lines": true,
       "linewidth": 1,
-      "links": [],
       "nullPointMode": "null",
       "options": {
-        "dataLinks": [
-          {
-            "targetBlank": true,
-            "title": "Logs (from start of the interval)",
-            "url": "https://my.papertrailapp.com/events?focus=${__from}&q=${__field.labels.node_id}"
-          }
-        ]
+        "dataLinks": []
       },
-      "paceLength": 10,
       "percentage": false,
       "pointradius": 2,
       "points": false,
@@ -2294,11 +1967,9 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(livepeer_segment_transcode_failed_total) by (node_id, error_code)",
-          "format": "time_series",
+          "expr": "sum(increase(livepeer_http_client_timeout_1[1m])) by (node_id)",
           "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "{{node_id}} {{error_code}}",
+          "legendFormat": "{{node_id}}",
           "refId": "A"
         }
       ],
@@ -2306,13 +1977,12 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Transcode Errors Raw",
+      "title": "HTTP Client Timeout 1",
       "tooltip": {
         "shared": true,
         "sort": 0,
         "value_type": "individual"
       },
-      "transparent": true,
       "type": "graph",
       "xaxis": {
         "buckets": null,
@@ -2356,7 +2026,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 61
+        "y": 56
       },
       "hiddenSeries": false,
       "id": 32,
@@ -2446,14 +2116,216 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
-      "description": "Total number of segments emerged from segmenter and total number of segments transcoded",
+      "description": "Number of times HTTP push connection was dropped before transcoded segments was sent back to client",
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 64
+      },
+      "hiddenSeries": false,
+      "id": 50,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(increase(livepeer_http_client_timeout_2[1m])) by (node_id)",
+          "interval": "",
+          "legendFormat": "{{node_id}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "HTTP Client timeout 2",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "description": "Percentage of segments transcoded faster than 3x realtime speed, 3x, 1x,  half realtime and more than two time slower than realtime",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 69
+        "y": 64
+      },
+      "hiddenSeries": false,
+      "id": 52,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": true,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(increase(livepeer_http_client_segment_transcoded_realtime_3x[1m]))/sum(increase(livepeer_segment_source_emerged_unprocessed_total[1m]))",
+          "interval": "",
+          "legendFormat": "3x",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(increase(livepeer_http_client_segment_transcoded_realtime_2x[1m]))/sum(increase(livepeer_segment_source_emerged_unprocessed_total[1m]))",
+          "interval": "",
+          "legendFormat": "2x",
+          "refId": "C"
+        },
+        {
+          "expr": "sum(increase(livepeer_http_client_segment_transcoded_realtime_1x[1m]))/sum(increase(livepeer_segment_source_emerged_unprocessed_total[1m]))",
+          "interval": "",
+          "legendFormat": "1x",
+          "refId": "B"
+        },
+        {
+          "expr": "sum(increase(livepeer_http_client_segment_transcoded_realtime_half[1m]))/sum(increase(livepeer_segment_source_emerged_unprocessed_total[1m]))",
+          "interval": "",
+          "legendFormat": "half realtime",
+          "refId": "D"
+        },
+        {
+          "expr": "sum(increase(livepeer_http_client_segment_transcoded_realtime_slow[1m]))/sum(increase(livepeer_segment_source_emerged_unprocessed_total[1m]))",
+          "interval": "",
+          "legendFormat": "slow",
+          "refId": "E"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "HTTP push realtime ratio",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "description": "Total number of segments emerged from segmenter and total number of segments transcoded",
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 72
       },
       "hiddenSeries": false,
       "id": 30,
@@ -2545,17 +2417,16 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
-      "description": "Number of sessions per orchestrator",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 0,
-        "y": 56
+        "x": 12,
+        "y": 72
       },
       "hiddenSeries": false,
-      "id": 50,
+      "id": 54,
       "legend": {
         "avg": false,
         "current": false,
@@ -2567,23 +2438,24 @@
       },
       "lines": true,
       "linewidth": 1,
-      "nullPointMode": "null as zero",
+      "nullPointMode": "null",
       "options": {
         "dataLinks": []
       },
-      "percentage": true,
+      "percentage": false,
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
       "seriesOverrides": [],
       "spaceLength": 10,
-      "stack": true,
+      "stack": false,
       "steppedLine": false,
       "targets": [
         {
-          "expr": "livepeer_current_sessions_total{node_type=\"orch\"}",
+          "expr": "sum(rate(livepeer_orchestrator_swaps[1m]))",
+          "instant": false,
           "interval": "",
-          "legendFormat": "",
+          "legendFormat": "SwapsPerMinute",
           "refId": "A"
         }
       ],
@@ -2591,7 +2463,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Orchestrators Sessions Distribution",
+      "title": "Orchestrator Swaps",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -2640,10 +2512,10 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 64
+        "y": 80
       },
       "hiddenSeries": false,
-      "id": 55,
+      "id": 58,
       "legend": {
         "avg": false,
         "current": false,
@@ -2655,21 +2527,21 @@
       },
       "lines": true,
       "linewidth": 1,
-      "nullPointMode": "null as zero",
+      "nullPointMode": "null",
       "options": {
         "dataLinks": []
       },
-      "percentage": true,
+      "percentage": false,
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
       "seriesOverrides": [],
       "spaceLength": 10,
-      "stack": true,
+      "stack": false,
       "steppedLine": false,
       "targets": [
         {
-          "expr": "livepeer_current_sessions_total{node_type=\"bctr\"}",
+          "expr": "increase(livepeer_recording_save_errors[30s])",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -2679,7 +2551,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Broascasters Sessions Distribution",
+      "title": "Recording Errors",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -2695,6 +2567,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:538",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -2703,6 +2576,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:539",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -2715,10 +2589,209 @@
         "align": false,
         "alignLevel": null
       }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 80
+      },
+      "hiddenSeries": false,
+      "id": 60,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(increase(livepeer_recording_saved_segments[30s]))",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Saved segments",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:647",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:648",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "description": "Time it takes to save segment to object storage (GCP)",
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 88
+      },
+      "hiddenSeries": false,
+      "id": 62,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(livepeer_recording_save_latency_bucket[1m])) by (le))",
+          "interval": "",
+          "legendFormat": "95th",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.9, sum(rate(livepeer_recording_save_latency_bucket[1m])) by ( le))",
+          "interval": "",
+          "legendFormat": "90th",
+          "refId": "B"
+        },
+        {
+          "expr": "histogram_quantile(0.5, sum(rate(livepeer_recording_save_latency_bucket[1m])) by ( le))",
+          "interval": "",
+          "legendFormat": "50th",
+          "refId": "C"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(livepeer_recording_save_latency_bucket[1m])) by ( le))",
+          "interval": "",
+          "legendFormat": "99th",
+          "refId": "D"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Recording save latency, percentiles",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:878",
+          "format": "s",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:879",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     }
   ],
-  "refresh": false,
-  "schemaVersion": 23,
+  "refresh": "5s",
+  "schemaVersion": 22,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -2754,10 +2827,10 @@
     ]
   },
   "timezone": "",
-  "title": "K8s Livepeer Overview",
-  "uid": "ZsZv-B3iy",
+  "title": "Livepeer Overview",
+  "uid": "ZsZv-B3iz",
   "variables": {
     "list": []
   },
-  "version": 8
+  "version": 1
 }
