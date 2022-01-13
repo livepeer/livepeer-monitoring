@@ -28,7 +28,6 @@ jobs:
           TAGS: ${{ steps.tags.outputs.tags }}
           DOCKER_BUILDKIT: 1
         run: |
-          cd monitoring
           docker build $(printf ' -t livepeer/monitoring:%s' $TAGS) .
 
       - name: docker push
