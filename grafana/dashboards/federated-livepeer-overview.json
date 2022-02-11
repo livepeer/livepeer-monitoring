@@ -2074,6 +2074,49 @@
       }
     },
     {
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                0.15
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "B",
+                "1m",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "last"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "30s",
+        "frequency": "1m",
+        "handler": 1,
+        "message": "HTTP push realtime ratio for 1x decreased",
+        "name": "HTTP push realtime ratio alert",
+        "noDataState": "no_data",
+        "notifications": [
+          {
+            "uid": "jx6jkJxnk"
+          },
+          {
+            "uid": "1HTjty-7k"
+          }
+        ]
+      },
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
@@ -2081,7 +2124,8 @@
       "description": "Percentage of segments transcoded faster than 3x realtime speed, 3x, 1x,  half realtime and more than two time slower than realtime",
       "fieldConfig": {
         "defaults": {
-          "links": []
+          "links": [],
+          "unit": "none"
         },
         "overrides": []
       },
@@ -2151,7 +2195,16 @@
           "refId": "E"
         }
       ],
-      "thresholds": [],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "fill": true,
+          "line": true,
+          "op": "gt",
+          "value": 0.15,
+          "visible": true
+        }
+      ],
       "timeRegions": [],
       "title": "HTTP push realtime ratio",
       "tooltip": {
@@ -2167,7 +2220,7 @@
       },
       "yaxes": [
         {
-          "format": "short",
+          "format": "none",
           "logBase": 1,
           "show": true
         },
@@ -2673,6 +2726,6 @@
   "timezone": "",
   "title": "Federated Livepeer Overview",
   "uid": "ZsZv-B3im",
-  "version": 5,
+  "version": 3,
   "weekStart": ""
 }

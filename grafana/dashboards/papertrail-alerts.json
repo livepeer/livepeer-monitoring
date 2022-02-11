@@ -26,6 +26,49 @@
   "liveNow": false,
   "panels": [
     {
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                0.01
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "10s",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "last"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "0s",
+        "frequency": "1m",
+        "handler": 1,
+        "message": "etcd Write failure",
+        "name": "etcd write failure alert",
+        "noDataState": "ok",
+        "notifications": [
+          {
+            "uid": "jx6jkJxnk"
+          },
+          {
+            "uid": "1HTjty-7k"
+          }
+        ]
+      },
       "datasource": {
         "type": "loki",
         "uid": "P8E80F9AEF21F6940"
@@ -103,8 +146,16 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum by (region) (rate({app=\"mist\"} |~ \"Error creating etcd Traefik rule\"[1m]))",
+          "expr": "sum by (region) (count_over_time({app=\"mist\"} |~ \"Error creating etcd Traefik rule\"[1m]))",
           "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "op": "gt",
+          "value": 0.01,
+          "visible": true
         }
       ],
       "title": "etcd write failure",
@@ -117,7 +168,7 @@
           {
             "evaluator": {
               "params": [
-                -3
+                1
               ],
               "type": "gt"
             },
@@ -127,7 +178,7 @@
             "query": {
               "params": [
                 "A",
-                "1m",
+                "10s",
                 "now"
               ]
             },
@@ -139,13 +190,20 @@
           }
         ],
         "executionErrorState": "alerting",
-        "for": "2m",
+        "for": "0s",
         "frequency": "1m",
         "handler": 1,
         "message": "increased panics",
         "name": "increased panics alert",
         "noDataState": "ok",
-        "notifications": []
+        "notifications": [
+          {
+            "uid": "jx6jkJxnk"
+          },
+          {
+            "uid": "1HTjty-7k"
+          }
+        ]
       },
       "description": "",
       "fieldConfig": {
@@ -221,7 +279,7 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(rate({app=~\"prod-livepeer-[^(secondary|monitoring)].*\"} |= \"panic\"[1m]))",
+          "expr": "sum(count_over_time({app=~\"prod-livepeer-[^(secondary|monitoring)].*\"} |= \"panic\"[1m]))",
           "refId": "A"
         }
       ],
@@ -229,7 +287,7 @@
         {
           "colorMode": "critical",
           "op": "gt",
-          "value": -3,
+          "value": 1,
           "visible": true
         }
       ],
@@ -237,6 +295,49 @@
       "type": "timeseries"
     },
     {
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                10000
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "10s",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "last"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "0s",
+        "frequency": "1m",
+        "handler": 1,
+        "message": "High viewership count",
+        "name": "request per minute alert",
+        "noDataState": "ok",
+        "notifications": [
+          {
+            "uid": "jx6jkJxnk"
+          },
+          {
+            "uid": "1HTjty-7k"
+          }
+        ]
+      },
       "datasource": {
         "type": "loki",
         "uid": "P8E80F9AEF21F6940"
@@ -322,8 +423,16 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({app=\"traefik\", region!=\"eu-metrics\"} |= \"GET /hls/\" | regexp \".+GET /hls/(\\\\w+\\\\+)?(?P<playback_id>[^/]+).+\" [1m])) by (playback_id, region)",
+          "expr": "sum(count_over_time({app=\"traefik\", region!=\"eu-metrics\"} |= \"GET /hls/\" | regexp \".+GET /hls/(\\\\w+\\\\+)?(?P<playback_id>[^/]+).+\" [1m])) by (playback_id, region) > 60000",
           "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "op": "gt",
+          "value": 10000,
+          "visible": true
         }
       ],
       "title": "request per minute",
@@ -358,12 +467,20 @@
           }
         ],
         "executionErrorState": "alerting",
-        "for": "30s",
+        "for": "0s",
         "frequency": "1m",
         "handler": 1,
+        "message": "Zombie External Dns alert",
         "name": "zombie external dns",
         "noDataState": "ok",
-        "notifications": []
+        "notifications": [
+          {
+            "uid": "jx6jkJxnk"
+          },
+          {
+            "uid": "1HTjty-7k"
+          }
+        ]
       },
       "datasource": {
         "type": "loki",
@@ -442,7 +559,7 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(rate({app=\"external-dns\"} |= \"owner id does not match\"[1m])) by (region)",
+          "expr": "sum(count_over_time({app=\"external-dns\"} |= \"owner id does not match\"[1m])) by (region)",
           "refId": "A"
         }
       ],
@@ -486,12 +603,20 @@
           }
         ],
         "executionErrorState": "alerting",
-        "for": "30s",
+        "for": "0s",
         "frequency": "1m",
         "handler": 1,
+        "message": "BGP unreachable",
         "name": "bgp unreachable alert",
         "noDataState": "ok",
-        "notifications": []
+        "notifications": [
+          {
+            "uid": "jx6jkJxnk"
+          },
+          {
+            "uid": "1HTjty-7k"
+          }
+        ]
       },
       "datasource": {
         "type": "loki",
@@ -570,7 +695,7 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(rate({app=\"bgpm-exporter\"} |= \"The following nodes were unreachable in\"[1m])) by (reigon)",
+          "expr": "sum(count_over_time({app=\"bgpm-exporter\"} |= \"The following nodes were unreachable in\"[1m])) by (reigon)",
           "refId": "A"
         }
       ],
@@ -602,7 +727,7 @@
             "query": {
               "params": [
                 "A",
-                "5m",
+                "10s",
                 "now"
               ]
             },
@@ -614,13 +739,20 @@
           }
         ],
         "executionErrorState": "alerting",
-        "for": "1m",
-        "frequency": "10m",
+        "for": "0s",
+        "frequency": "1m",
         "handler": 1,
         "message": "Stream Health Publish Error",
         "name": "Stream Health Publish Error  alert",
         "noDataState": "ok",
-        "notifications": []
+        "notifications": [
+          {
+            "uid": "jx6jkJxnk"
+          },
+          {
+            "uid": "1HTjty-7k"
+          }
+        ]
       },
       "datasource": {
         "type": "loki",
@@ -756,7 +888,7 @@
             "query": {
               "params": [
                 "A",
-                "5m",
+                "10s",
                 "now"
               ]
             },
@@ -768,12 +900,20 @@
           }
         ],
         "executionErrorState": "alerting",
-        "for": "1m",
-        "frequency": "1h",
+        "for": "0s",
+        "frequency": "1m",
         "handler": 1,
+        "message": "Unknown panics increased",
         "name": "Unknown panics alert",
         "noDataState": "ok",
-        "notifications": []
+        "notifications": [
+          {
+            "uid": "jx6jkJxnk"
+          },
+          {
+            "uid": "1HTjty-7k"
+          }
+        ]
       },
       "datasource": {
         "type": "loki",
@@ -852,7 +992,7 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(rate({app!=\"bgpm-exporter\",region=~\"^(sgp|eu-metrics).+\"} |= \"panic\"[1m])) by (region)",
+          "expr": "sum(count_over_time({app!=\"bgpm-exporter\",region=~\"^(sgp|eu-metrics).+\"} |= \"panic\"[1m])) by (region)",
           "refId": "A"
         }
       ],
@@ -868,6 +1008,49 @@
       "type": "timeseries"
     },
     {
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                1
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "1m",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "last"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "0s",
+        "frequency": "1m",
+        "handler": 1,
+        "message": "RabbitMQ Network Partition By region alert",
+        "name": "RabbitMQ Network Partition By region alert",
+        "noDataState": "ok",
+        "notifications": [
+          {
+            "uid": "jx6jkJxnk"
+          },
+          {
+            "uid": "1HTjty-7k"
+          }
+        ]
+      },
       "datasource": {
         "type": "loki",
         "uid": "P8E80F9AEF21F6940"
@@ -945,8 +1128,16 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(rate({app=\"prod-rabbitmq\",component=\"rabbitmq\"} |~ \"mnesia_event\" |~ \"inconsistent_database\" |~  \"running_partitioned_network\"[1m])) by (region)",
+          "expr": "sum(count_over_time({app=\"prod-rabbitmq\",component=\"rabbitmq\"} |~ \"mnesia_event\" |~ \"inconsistent_database\" |~  \"running_partitioned_network\"[1m])) by (region)",
           "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "op": "gt",
+          "value": 1,
+          "visible": true
         }
       ],
       "title": "RabbitMQ Network Partition By region",
@@ -990,6 +1181,9 @@
         "notifications": [
           {
             "uid": "jx6jkJxnk"
+          },
+          {
+            "uid": "1HTjty-7k"
           }
         ]
       },
@@ -1102,7 +1296,7 @@
             "query": {
               "params": [
                 "A",
-                "1m",
+                "10s",
                 "now"
               ]
             },
@@ -1114,7 +1308,7 @@
           }
         ],
         "executionErrorState": "alerting",
-        "for": "5m",
+        "for": "10s",
         "frequency": "1m",
         "handler": 1,
         "message": "[LOPRI] KRYPTONITE DETECTED!!! 🦠",
@@ -1123,6 +1317,9 @@
         "notifications": [
           {
             "uid": "discord"
+          },
+          {
+            "uid": "1HTjty-7k"
           }
         ]
       },
@@ -1184,8 +1381,8 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 0,
-        "y": 40
+        "x": 12,
+        "y": 32
       },
       "id": 2,
       "options": {
@@ -1204,7 +1401,7 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(rate({app=~\"prod-livepeer-broadcaster.*\"} |~ \"Hit max transcode attempts: body timeout: context deadline exceeded\"[1m]))",
+          "expr": "sum(count_over_time({app=~\"prod-livepeer-broadcaster.*\"} |~ \"Hit max transcode attempts: body timeout: context deadline exceeded\"[1m]))",
           "refId": "A"
         }
       ],
@@ -1235,6 +1432,6 @@
   "timezone": "",
   "title": "papertrail alerts",
   "uid": "KXVHQPJ7z",
-  "version": 27,
+  "version": 14,
   "weekStart": ""
 }
