@@ -129,6 +129,11 @@ function generate() {
         describe: 'the region name, added as an external label',
         type: 'string',
         default: 'not_set'
+      },
+      'skip-provisioning': {
+        describe: 'skip provisioning grafana',
+        type: 'boolean',
+        default: false
       }
     }).argv
 
@@ -144,7 +149,11 @@ function generate() {
   saveYaml('/etc/prometheus', 'alertmanager.yml', getAlertManagerConfig(argv))
   saveYaml('/etc/prometheus', 'rules.yml', getRules(argv.alertGroups, argv.alertNamespace))
   saveYaml('/etc/prometheus', 'prometheus.yml', promConfig)
-  saveYaml('/etc/grafana/provisioning/notifiers', 'generated_notifiers.yml', grafanaNotificationChannelsConfig(argv))
+  if (argv['skip-provisioning']) {
+    console.log('skipping grafana provisioning...')
+  } else {
+    saveYaml('/etc/grafana/provisioning/notifiers', 'generated_notifiers.yml', grafanaNotificationChannelsConfig(argv))
+  }
   fs.writeFileSync(
     path.join('/etc/supervisor.d', 'supervisord.conf'),
     supervisordConfig
@@ -807,7 +816,7 @@ function grafanaNotificationChannelsConfig(params) {
       name: 'prom-alertmanager',
       type: 'prometheus-alertmanager',
       uid: 'prom-alertmanager',
-      org_name: 'Main Org.',
+      org_id: 1,
       is_default: true,
       settings: {
         url: 'http://localhost:9093'
