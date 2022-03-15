@@ -841,7 +841,7 @@ function grafanaNotificationChannelsConfig(params) {
       name: 'pagerDuty',
       type: 'pagerduty',
       uid: 'pagerDuty',
-      org_name: 'Main Org.',
+      org_id: 1,
       is_default: false,
       secure_settings: {
         integrationKey: params['pagerduty-service-key']
@@ -854,7 +854,7 @@ function grafanaNotificationChannelsConfig(params) {
       name: 'pagerDuty',
       type: 'pagerduty',
       uid: 'pagerDuty',
-      org_name: 'Main Org.',
+      org_id: 1,
       is_default: false,
       secure_settings: {
         integrationKey: params['pagerduty-lopri-service-key']
