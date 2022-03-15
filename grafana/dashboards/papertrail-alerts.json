@@ -32,9 +32,9 @@
           {
             "evaluator": {
               "params": [
-                0.01
+                1
               ],
-              "type": "gt"
+              "type": "lt"
             },
             "operator": {
               "type": "and"
@@ -57,9 +57,9 @@
         "for": "0s",
         "frequency": "1m",
         "handler": 1,
-        "message": "etcd Write failure",
-        "name": "etcd write failure alert",
-        "noDataState": "ok",
+        "message": "There was no logs from a Livepeer region",
+        "name": "Region Log Rate [1m] alert",
+        "noDataState": "no_data",
         "notifications": [
           {
             "uid": "jx6jkJxnk"
@@ -129,7 +129,7 @@
         "x": 0,
         "y": 0
       },
-      "id": 20,
+      "id": 24,
       "options": {
         "legend": {
           "calcs": [],
@@ -146,19 +146,20 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum by (region) (count_over_time({app=\"mist\"} |~ \"Error creating etcd Traefik rule\"[1m]))",
+          "expr": "sum(count_over_time({region=~\".+\"}[1m])) by (region)",
+          "legendFormat": "{{region}}",
           "refId": "A"
         }
       ],
       "thresholds": [
         {
           "colorMode": "critical",
-          "op": "gt",
-          "value": 0.01,
+          "op": "lt",
+          "value": 1,
           "visible": true
         }
       ],
-      "title": "etcd write failure",
+      "title": "Region Log Rate [1m]",
       "type": "timeseries"
     },
     {
@@ -295,49 +296,6 @@
       "type": "timeseries"
     },
     {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                10000
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "A",
-                "10s",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "last"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "0s",
-        "frequency": "1m",
-        "handler": 1,
-        "message": "High viewership count",
-        "name": "request per minute alert",
-        "noDataState": "ok",
-        "notifications": [
-          {
-            "uid": "jx6jkJxnk"
-          },
-          {
-            "uid": "1HTjty-7k"
-          }
-        ]
-      },
       "datasource": {
         "type": "loki",
         "uid": "P8E80F9AEF21F6940"
@@ -375,13 +333,6 @@
               "mode": "off"
             }
           },
-          "links": [
-            {
-              "targetBlank": true,
-              "title": "logs",
-              "url": "https://eu-metrics-monitoring.livepeer.live/grafana/explore?left=%5B%22now-5m%22,%22now%22,%22Loki%22,%7B%22datasource%22:%7B%22type%22:%22loki%22,%22uid%22:%22P8E80F9AEF21F6940%22%7D,%22expr%22:%22%7Bregion%3D%5C%22$${__field.region}%5C%22%7D%20%7C%3D%20%5C%22$${__field.playback_id}%22%22,%22refId%22:%22A%22%7D%5D&orgId=1"
-            }
-          ],
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -405,7 +356,7 @@
         "x": 0,
         "y": 8
       },
-      "id": 6,
+      "id": 22,
       "options": {
         "legend": {
           "calcs": [],
@@ -416,26 +367,18 @@
           "mode": "single"
         }
       },
-      "pluginVersion": "8.3.3",
       "targets": [
         {
           "datasource": {
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({app=\"traefik\", region!=\"eu-metrics\"} |= \"GET /hls/\" | regexp \".+GET /hls/(\\\\w+\\\\+)?(?P<playback_id>[^/]+).+\" [1m])) by (playback_id, region) > 60000",
+          "expr": "sum(count_over_time({app=\"traefik\"} |= \" 503 \"[1m])) by (region)",
+          "legendFormat": "{{ region }}",
           "refId": "A"
         }
       ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "op": "gt",
-          "value": 10000,
-          "visible": true
-        }
-      ],
-      "title": "request per minute",
+      "title": "Traefik 503",
       "type": "timeseries"
     },
     {
@@ -606,8 +549,8 @@
         "for": "0s",
         "frequency": "1m",
         "handler": 1,
-        "message": "BGP unreachable",
-        "name": "bgp unreachable alert",
+        "message": "etcd Write failure",
+        "name": "etcd write failure alert",
         "noDataState": "ok",
         "notifications": [
           {
@@ -678,7 +621,7 @@
         "x": 0,
         "y": 16
       },
-      "id": 18,
+      "id": 20,
       "options": {
         "legend": {
           "calcs": [],
@@ -695,7 +638,7 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({app=\"bgpm-exporter\"} |= \"The following nodes were unreachable in\"[1m])) by (reigon)",
+          "expr": "sum by (region) (count_over_time({app=\"mist\"} |~ \"Error creating etcd Traefik rule\"[1m]))",
           "refId": "A"
         }
       ],
@@ -707,7 +650,7 @@
           "visible": true
         }
       ],
-      "title": "bgp unreachable",
+      "title": "etcd write failure",
       "type": "timeseries"
     },
     {
@@ -878,7 +821,7 @@
           {
             "evaluator": {
               "params": [
-                0.01
+                10000
               ],
               "type": "gt"
             },
@@ -903,8 +846,8 @@
         "for": "0s",
         "frequency": "1m",
         "handler": 1,
-        "message": "Unknown panics increased",
-        "name": "Unknown panics alert",
+        "message": "High viewership count",
+        "name": "request per minute alert",
         "noDataState": "ok",
         "notifications": [
           {
@@ -952,6 +895,13 @@
               "mode": "off"
             }
           },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "logs",
+              "url": "https://eu-metrics-monitoring.livepeer.live/grafana/explore?left=%5B%22now-5m%22,%22now%22,%22Loki%22,%7B%22datasource%22:%7B%22type%22:%22loki%22,%22uid%22:%22P8E80F9AEF21F6940%22%7D,%22expr%22:%22%7Bregion%3D%5C%22$${__field.region}%5C%22%7D%20%7C%3D%20%5C%22$${__field.playback_id}%22%22,%22refId%22:%22A%22%7D%5D&orgId=1"
+            }
+          ],
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -975,7 +925,7 @@
         "x": 0,
         "y": 24
       },
-      "id": 16,
+      "id": 6,
       "options": {
         "legend": {
           "calcs": [],
@@ -986,13 +936,14 @@
           "mode": "single"
         }
       },
+      "pluginVersion": "8.3.3",
       "targets": [
         {
           "datasource": {
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({app!=\"bgpm-exporter\",region=~\"^(sgp|eu-metrics).+\"} |= \"panic\"[1m])) by (region)",
+          "expr": "sum(count_over_time({app=\"traefik\", region!=\"eu-metrics\"} |= \"GET /hls/\" | regexp \".+GET /hls/(\\\\w+\\\\+)?(?P<playback_id>[^/]+).+\" [1m])) by (playback_id, region) > 24000",
           "refId": "A"
         }
       ],
@@ -1000,11 +951,11 @@
         {
           "colorMode": "critical",
           "op": "gt",
-          "value": 0.01,
+          "value": 10000,
           "visible": true
         }
       ],
-      "title": "unknown panics",
+      "title": "request per minute",
       "type": "timeseries"
     },
     {
@@ -1150,7 +1101,7 @@
           {
             "evaluator": {
               "params": [
-                1
+                0.01
               ],
               "type": "gt"
             },
@@ -1160,7 +1111,7 @@
             "query": {
               "params": [
                 "A",
-                "1m",
+                "10s",
                 "now"
               ]
             },
@@ -1175,8 +1126,8 @@
         "for": "0s",
         "frequency": "1m",
         "handler": 1,
-        "message": "Detected API Connection Timeouts",
-        "name": "API DB Connection Timeouts  alert",
+        "message": "BGP unreachable",
+        "name": "bgp unreachable alert",
         "noDataState": "ok",
         "notifications": [
           {
@@ -1247,7 +1198,7 @@
         "x": 0,
         "y": 32
       },
-      "id": 14,
+      "id": 18,
       "options": {
         "legend": {
           "calcs": [],
@@ -1264,7 +1215,7 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum by (region) (count_over_time({app=\"prod-livepeer-api\"} |= \"Connection terminated due to connection timeout\"[1m]))",
+          "expr": "sum(count_over_time({app=\"bgpm-exporter\"} |= \"The following nodes were unreachable in\"[1m])) by (reigon)",
           "refId": "A"
         }
       ],
@@ -1272,11 +1223,11 @@
         {
           "colorMode": "critical",
           "op": "gt",
-          "value": 1,
+          "value": 0.01,
           "visible": true
         }
       ],
-      "title": "API DB Connection Timeouts ",
+      "title": "bgp unreachable",
       "type": "timeseries"
     },
     {
@@ -1415,6 +1366,278 @@
       ],
       "title": "KRYPTONITE",
       "type": "timeseries"
+    },
+    {
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                0.01
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "10s",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "last"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "0s",
+        "frequency": "1m",
+        "handler": 1,
+        "message": "Unknown panics increased",
+        "name": "Unknown panics alert",
+        "noDataState": "ok",
+        "notifications": [
+          {
+            "uid": "jx6jkJxnk"
+          },
+          {
+            "uid": "1HTjty-7k"
+          }
+        ]
+      },
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 40
+      },
+      "id": 16,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "expr": "sum(count_over_time({app!=\"bgpm-exporter\",region=~\"^(sgp|eu-metrics).+\"} |= \"panic\"[1m])) by (region)",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "op": "gt",
+          "value": 0.01,
+          "visible": true
+        }
+      ],
+      "title": "unknown panics",
+      "type": "timeseries"
+    },
+    {
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                1
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "1m",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "last"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "0s",
+        "frequency": "1m",
+        "handler": 1,
+        "message": "Detected API Connection Timeouts",
+        "name": "API DB Connection Timeouts  alert",
+        "noDataState": "ok",
+        "notifications": [
+          {
+            "uid": "jx6jkJxnk"
+          },
+          {
+            "uid": "1HTjty-7k"
+          }
+        ]
+      },
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 48
+      },
+      "id": 14,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "expr": "sum by (region) (count_over_time({app=\"prod-livepeer-api\"} |= \"Connection terminated due to connection timeout\"[1m]))",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "op": "gt",
+          "value": 1,
+          "visible": true
+        }
+      ],
+      "title": "API DB Connection Timeouts ",
+      "type": "timeseries"
     }
   ],
   "refresh": "",
@@ -1432,6 +1655,6 @@
   "timezone": "",
   "title": "papertrail alerts",
   "uid": "KXVHQPJ7z",
-  "version": 14,
+  "version": 18,
   "weekStart": ""
 }

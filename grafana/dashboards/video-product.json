@@ -31,8 +31,8 @@
         "uid": "P8E80F9AEF21F6940"
       },
       "gridPos": {
-        "h": 9,
-        "w": 12,
+        "h": 8,
+        "w": 24,
         "x": 0,
         "y": 0
       },
@@ -67,7 +67,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 9
+        "y": 8
       },
       "id": 8,
       "panels": [],
@@ -98,7 +98,7 @@
         "h": 8,
         "w": 6,
         "x": 0,
-        "y": 10
+        "y": 9
       },
       "id": 6,
       "options": {
@@ -157,7 +157,7 @@
         "h": 8,
         "w": 6,
         "x": 6,
-        "y": 10
+        "y": 9
       },
       "id": 9,
       "options": {
@@ -203,7 +203,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 10
+        "y": 9
       },
       "hiddenSeries": false,
       "id": 4,
@@ -265,7 +265,7 @@
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Multistream Usage",
+      "title": "Multistream Usage Overview",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -297,6 +297,181 @@
         "align": true,
         "alignLevel": 0
       }
+    },
+    {
+      "description": "Multistream usage in minutes by stream manifestId",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "Duration",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "m"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 0,
+        "y": 17
+      },
+      "id": 11,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "8.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "increase(mistconnector_multistream_usage_minutes{manifest_id != ''} [1d])",
+          "format": "time_series",
+          "interval": "",
+          "legendFormat": "{{manifest_id}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Multistream Usage By ManifestID (Time)",
+      "type": "timeseries"
+    },
+    {
+      "description": "Multistream usage in megabytes by stream manifestId",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "Data",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "mbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 12,
+        "y": 17
+      },
+      "id": 13,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "8.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "increase(mistconnector_multistream_usage_megabytes{manifest_id != ''} [1d])",
+          "interval": "",
+          "legendFormat": "{{manifest_id}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Multistream Usage By ManifestID (Data)",
+      "type": "timeseries"
     }
   ],
   "refresh": false,
@@ -314,6 +489,6 @@
   "timezone": "",
   "title": "Video Product",
   "uid": "JRJqn_17z",
-  "version": 2,
+  "version": 4,
   "weekStart": ""
 }
