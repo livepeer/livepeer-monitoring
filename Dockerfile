@@ -104,7 +104,7 @@ RUN if [[ $(uname -m) == "x86_64" ]]; then \
 ENV GF_PLUGIN_RENDERING_CHROME_BIN="/usr/bin/chromium-browser"
 
 COPY ./grafana/datasources $GF_PATHS_PROVISIONING/datasources
-# COPY ./grafana/dashboards $GF_PATHS_PROVISIONING/dashboards
+COPY ./grafana/dashboards $GF_PATHS_PROVISIONING/dashboards
 
 EXPOSE 3000
 
