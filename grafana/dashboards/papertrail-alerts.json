@@ -20,7 +20,7 @@
   },
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "graphTooltip": 0,
+  "graphTooltip": 1,
   "id": null,
   "links": [],
   "liveNow": false,
@@ -524,7 +524,7 @@
           {
             "evaluator": {
               "params": [
-                0.01
+                3
               ],
               "type": "gt"
             },
@@ -646,7 +646,7 @@
         {
           "colorMode": "critical",
           "op": "gt",
-          "value": 0.01,
+          "value": 3,
           "visible": true
         }
       ],
@@ -1079,7 +1079,7 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({app=\"prod-rabbitmq\",component=\"rabbitmq\"} |~ \"mnesia_event\" |~ \"inconsistent_database\" |~  \"running_partitioned_network\"[1m])) by (region)",
+          "expr": "sum(count_over_time({app=\"prod-rabbitmq\",component=\"rabbitmq\"} |~ \"mnesia_event\" |~ \"inconsistent_database\" |~  \"running_partitioned_network\"[1h])) by (region)",
           "refId": "A"
         }
       ],
@@ -1532,7 +1532,7 @@
           }
         ],
         "executionErrorState": "alerting",
-        "for": "0s",
+        "for": "3m",
         "frequency": "1m",
         "handler": 1,
         "message": "Detected API Connection Timeouts",
@@ -1655,6 +1655,6 @@
   "timezone": "",
   "title": "papertrail alerts",
   "uid": "KXVHQPJ7z",
-  "version": 18,
+  "version": 24,
   "weekStart": ""
 }
