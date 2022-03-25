@@ -340,52 +340,14 @@
       }
     },
     {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                95
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "A",
-                "5m",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "avg"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "keep_state",
-        "for": "5m",
-        "frequency": "1m",
-        "handler": 1,
-        "name": "Nodes Disk Usage alert",
-        "noDataState": "ok",
-        "notifications": [
-          {
-            "uid": "jx6jkJxnk"
-          },
-          {
-            "uid": "1HTjty-7k"
-          }
-        ]
-      },
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "fieldConfig": {
         "defaults": {
           "links": []
@@ -430,29 +392,15 @@
       "steppedLine": false,
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "exemplar": true,
-          "expr": "sum by (region, mountpoint, nodename) (\n    ((100.0 - 100 * ((node_filesystem_avail_bytes[1m] / 1000 / 1000 ) / (node_filesystem_size_bytes[1m]  / 1024 / 1024))) > 90)\n        * on(instance) group_left(nodename) node_uname_info\n    )",
+          "expr": "100.0 - 100 * ((node_filesystem_avail_bytes / 1000 / 1000 ) / (node_filesystem_size_bytes  / 1024 / 1024))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "{{region}}-{{nodename}}: {{mountpoint}}",
+          "legendFormat": "{{instance}} - {{mountpoint}}",
           "refId": "A"
         }
       ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "fill": true,
-          "line": true,
-          "op": "gt",
-          "value": 95,
-          "visible": true
-        }
-      ],
+      "thresholds": [],
       "timeRegions": [],
       "title": "Nodes Disk Usage",
       "tooltip": {
@@ -469,16 +417,14 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:84",
           "format": "percent",
           "label": "",
           "logBase": 1,
           "max": "100",
-          "min": "90",
+          "min": "0",
           "show": true
         },
         {
-          "$$hashKey": "object:85",
           "format": "short",
           "logBase": 1,
           "show": true
@@ -489,7 +435,7 @@
       }
     }
   ],
-  "refresh": "",
+  "refresh": "5s",
   "schemaVersion": 34,
   "style": "dark",
   "tags": [
@@ -531,6 +477,6 @@
   "timezone": "",
   "title": "Alerts - Nodes",
   "uid": "000000012",
-  "version": 7,
+  "version": 8,
   "weekStart": ""
 }
