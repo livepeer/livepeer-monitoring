@@ -19,11 +19,25 @@
     ]
   },
   "editable": true,
-  "gnetId": null,
+  "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
   "id": null,
   "links": [],
+  "liveNow": false,
   "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 8,
+      "panels": [],
+      "title": "Default",
+      "type": "row"
+    },
     {
       "alert": {
         "alertRuleTags": {},
@@ -31,7 +45,7 @@
           {
             "evaluator": {
               "params": [
-                3
+                0
               ],
               "type": "gt"
             },
@@ -41,7 +55,7 @@
             "query": {
               "params": [
                 "A",
-                "4m",
+                "1m",
                 "now"
               ]
             },
@@ -53,15 +67,25 @@
           }
         ],
         "executionErrorState": "alerting",
-        "for": "4m",
+        "for": "2m",
         "frequency": "1m",
         "handler": 1,
-        "message": "Too many MistProcLivepeer restarts!\n```\nmanifest_id: ${manifest_id}\nregion: ${region}\npod: ${pod}\n```",
-        "name": "Excessive MistProcLivepeer restarts alert",
-        "noDataState": "no_data",
-        "notifications": []
+        "message": "Orchestrators got stuck in unrecoverable state. Must restart them manually.",
+        "name": "Unrecoverable Orchestrators alert",
+        "noDataState": "ok",
+        "notifications": [
+          {
+            "uid": "jx6jkJxnk"
+          },
+          {
+            "uid": "xIogFCs7k"
+          }
+        ]
       },
-      "datasource": "Loki",
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -113,10 +137,144 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 18,
-        "w": 24,
+        "h": 10,
+        "w": 12,
         "x": 0,
-        "y": 0
+        "y": 1
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "expr": "sum(count_over_time({app=~\".*prod.+orchestrator.*\"} |= \"Unrecoverable state\" [1m])) by (region, pod)",
+          "legendFormat": "{{region}}-{{pod}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "op": "gt",
+          "value": 0,
+          "visible": true
+        }
+      ],
+      "title": "Unrecoverable Orchestrators",
+      "type": "timeseries"
+    },
+    {
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                3
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "4m",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "max"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "4m",
+        "frequency": "1m",
+        "handler": 1,
+        "message": "Too many MistProcLivepeer restarts!\n```\nmanifest_id: ${manifest_id}\nregion: ${region}\npod: ${pod}\n```",
+        "name": "Excessive MistProcLivepeer restarts alert",
+        "noDataState": "no_data",
+        "notifications": [
+          {
+            "uid": "discord"
+          }
+        ]
+      },
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 1
       },
       "id": 2,
       "options": {
@@ -131,7 +289,12 @@
       },
       "targets": [
         {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
           "expr": "sum by (manifest_id, region, pod) (count_over_time(\n  {app=\"mist\", container=\"mist\"} \n  |= \"Starting process: /usr/bin/MistProcLivepeer\" \n  | pattern `<_>\"source\":\"video<_>+<manifest_id>\"` [4m]\n)) > 3",
+          "legendFormat": "{{manifest_id}} @ {{region}}-{{pod}}",
           "refId": "A"
         }
       ],
@@ -145,10 +308,432 @@
       ],
       "title": "Excessive MistProcLivepeer restarts",
       "type": "timeseries"
+    },
+    {
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                0
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "1m",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "max"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "10m",
+        "frequency": "1m",
+        "handler": 1,
+        "message": "A RabbitMQ client has invalid connection credentials! \n\nThis likely means that the cluster was reprovisioned and the pods have outdated secrets for the credentials.\n\nTo fix, try a `kubectl rollout restart` of the affected apps.",
+        "name": "RabbitMQ broken client credentials",
+        "noDataState": "ok",
+        "notifications": [
+          {
+            "uid": "xIogFCs7k"
+          },
+          {
+            "uid": "jx6jkJxnk"
+          }
+        ]
+      },
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 12,
+        "x": 0,
+        "y": 11
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "expr": "sum(count_over_time({app=~\"prod-.+\",app!=\"prod-livepeer-monitoring\"} |= \"username or password not allowed\" [1m])) by (app, region)",
+          "legendFormat": "{{region}}-{{app}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "op": "gt",
+          "value": 0,
+          "visible": true
+        }
+      ],
+      "title": "RabbitMQ broken client credentials",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 22
+      },
+      "id": 10,
+      "panels": [],
+      "title": "Tasks/VOD",
+      "type": "row"
+    },
+    {
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                2
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "15m",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "last"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "5m",
+        "frequency": "1m",
+        "handler": 1,
+        "message": "Tasks are accumulating in RabbitMQ. \n\nCheck RabbitMQ queue state (e.g. via management dashboard). They may have been not scheduled or not consumed from the queue.",
+        "name": "Task Queue Accumulation alert",
+        "noDataState": "no_data",
+        "notifications": [
+          {
+            "uid": "jx6jkJxnk"
+          },
+          {
+            "uid": "xIogFCs7k"
+          }
+        ]
+      },
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 23
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "expr": "count by (region) (count by (region, taskId) (\n  count_over_time({app=\"prod-livepeer-api\"} |= \"publishing message to task.trigger\" | pattern \"<_>task.trigger.<type>.<taskId> on exchange<_>\" [15m])\n))\n- \ncount by (region) (count by (region, taskId) (\n  count_over_time({app=\"prod-task-runner\"} |= \"Starting task\" | logfmt | label_format taskId=id [15m])\n))",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "op": "gt",
+          "value": 2,
+          "visible": true
+        }
+      ],
+      "title": "Task Queue Accumulation",
+      "type": "timeseries"
+    },
+    {
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                0
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "15m",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "last"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "3m",
+        "frequency": "1m",
+        "handler": 1,
+        "message": "Specific tasks are being re-executed multiple times. \n\nPossibly hitting some corner case or bug in task runner. Investigate cause and consider deleting the task in the API so its execution is dropped.",
+        "name": "Poison Tasks alert",
+        "noDataState": "ok",
+        "notifications": [
+          {
+            "uid": "1HTjty-7k"
+          },
+          {
+            "uid": "jx6jkJxnk"
+          }
+        ]
+      },
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 23
+      },
+      "id": 14,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "expr": "count by (id, region) (count_over_time({app=\"prod-task-runner\"} |= \"Starting task\" | logfmt [2h])) > 2",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "op": "gt",
+          "value": 0,
+          "visible": true
+        }
+      ],
+      "title": "Poison Tasks",
+      "type": "timeseries"
     }
   ],
-  "refresh": "",
-  "schemaVersion": 30,
+  "refresh": false,
+  "schemaVersion": 34,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -162,5 +747,6 @@
   "timezone": "",
   "title": "Loki Alerts",
   "uid": "dbme6io7k",
-  "version": 4
+  "version": 23,
+  "weekStart": ""
 }

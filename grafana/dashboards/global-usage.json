@@ -648,7 +648,7 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum (count_over_time({app=\"traefik\"} |= \"GET /hls/\" [10m])) by (region) / 10",
+          "expr": "sum (count_over_time(\n  {app=\"traefik\"} \n  | json \n  | __error__!=\"JSONParserErr\"\n  | RequestMethod=\"GET\"\n  | RequestPath=~\"/hls/.+\" [10m])) by (region) / 10",
           "refId": "A"
         }
       ],
@@ -716,9 +716,9 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum (count_over_time({app=\"traefik\"} |= \"GET /hls/\" \n| regexp \".+GET /hls/(\\\\w+\\\\+)?(?P<playback_id>[^/]+).+\" \n| regexp \".+playback-792e3a71a26-(?P<mist_instance>.+)-livepeer-com@kubernetes.+\" [10m])\n) by (playback_id, region, mist_instance) / 10",
+          "expr": "sum (count_over_time({app=\"traefik\"}  \n  | json \n  | __error__!=\"JSONParserErr\"\n  | RequestMethod=\"GET\"\n  | RequestPath=~\"/hls/.+\"\n  | regexp \".+/hls/(\\\\w+\\\\+)?(?P<playback_id>[^/]+).+\" \n  | regexp \".+playback-792e3a71a26-(?P<mist_instance>.+)-livepeer-com@kubernetes.+\" [10m])\n) by (playback_id, region, mist_instance) / 10",
           "instant": true,
-          "legendFormat": "{{playback_id}}",
+          "legendFormat": "",
           "range": false,
           "refId": "A"
         }
@@ -742,6 +742,6 @@
   "timezone": "",
   "title": "Global Usage",
   "uid": "cssTqW17k",
-  "version": 18,
+  "version": 21,
   "weekStart": ""
 }
