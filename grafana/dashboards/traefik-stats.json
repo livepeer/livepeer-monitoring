@@ -437,7 +437,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "sum(rate(traefik_entrypoint_requests_total{code != \"200\"}[1m])) by (code)",
+          "expr": "sum(rate(traefik_entrypoint_requests_total{code != \"200\", code != \"404\"}[1m])) by (code)",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -546,6 +546,6 @@
   "timezone": "",
   "title": "Traefik Stats",
   "uid": "ztOmuUf7z",
-  "version": 11,
+  "version": 12,
   "weekStart": ""
 }

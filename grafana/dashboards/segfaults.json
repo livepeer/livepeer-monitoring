@@ -252,17 +252,21 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
-        "w": 12,
+        "h": 10,
+        "w": 24,
         "x": 0,
         "y": 8
       },
       "id": 2,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "sortBy": "Total",
+          "sortDesc": true
         },
         "tooltip": {
           "mode": "single"
@@ -274,8 +278,8 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({app=\"core-dump-handler\"} |~ \"core_dump_agent] Uploading:\" | regexp \"^.+Uploading: /var/mnt/core-dump-handler/cores/[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-dump-\\\\d+-(?P<segfault_pod>\\\\S+)-(?P<binary>\\\\S+)-\\\\d+-\\\\d+.zip\" | segfault_pod =~ \"prod.+\"[1m])) by (segfault_pod, region, binary)",
-          "legendFormat": "{{ region }}-{{ segfault_pod }}-{{ binary }}",
+          "expr": "sum(count_over_time({app=\"core-dump-handler\"} |~ \"core_dump_agent] Uploading:\" | regexp \"^.+Uploading: /var/mnt/core-dump-handler/cores/[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-dump-\\\\d+-(?P<segfault_pod>\\\\S+)-(?P<binary>\\\\S+)-\\\\d+-\\\\d+.zip\" | segfault_pod =~ \"prod.+\"[1m])) by (segfault_pod, region, binary, node_name)",
+          "legendFormat": "{{ region }}-{{node_name}}-{{ segfault_pod }}-{{ binary }}",
           "refId": "A"
         }
       ],
@@ -341,7 +345,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 8
+        "y": 18
       },
       "id": 7,
       "options": {
@@ -384,6 +388,6 @@
   "timezone": "",
   "title": "Segfaults",
   "uid": "oQFxlqU7k",
-  "version": 9,
+  "version": 11,
   "weekStart": ""
 }

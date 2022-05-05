@@ -20,69 +20,13 @@
   },
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "graphTooltip": 0,
+  "graphTooltip": 1,
   "id": null,
   "links": [],
   "liveNow": false,
   "panels": [
     {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 0
-      },
-      "id": 8,
-      "panels": [],
-      "title": "Default",
-      "type": "row"
-    },
-    {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                0
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "A",
-                "10s",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "last"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "10m",
-        "frequency": "150s",
-        "handler": 1,
-        "message": "Orchestrator stuck in unrecoverable state. \n\nMust restart them manually. e.g.:\n```\nkubectl --context=${region} delete pod ${pod}\n```",
-        "name": "Unrecoverable Orchestrator",
-        "noDataState": "ok",
-        "notifications": [
-          {
-            "uid": "jx6jkJxnk"
-          }
-        ]
-      },
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
+      "description": "",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -134,17 +78,21 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 10,
+        "h": 8,
         "w": 12,
         "x": 0,
-        "y": 1
+        "y": 0
       },
-      "id": 4,
+      "id": 10,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
+          "calcs": [
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "sortBy": "Last *",
+          "sortDesc": true
         },
         "tooltip": {
           "mode": "single"
@@ -153,70 +101,20 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum(count_over_time({app=~\".*prod.+orchestrator.*\"} |= \"Unrecoverable state\" [150s])) by (region, pod)",
-          "legendFormat": "{{region}}-{{pod}}",
+          "exemplar": true,
+          "expr": "sum(changes(kube_pod_container_status_restarts_total{}[15m])>1) by (region)",
+          "interval": "",
+          "legendFormat": "{{ region }}",
           "refId": "A"
         }
       ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "op": "gt",
-          "value": 0,
-          "visible": true
-        }
-      ],
-      "title": "Unrecoverable Orchestrators",
+      "title": "Pod Restarts",
       "type": "timeseries"
     },
     {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                3
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "A",
-                "4m",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "max"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "4m",
-        "frequency": "1m",
-        "handler": 1,
-        "message": "Too many MistProcLivepeer restarts!\n```\nmanifest_id: ${manifest_id}\nregion: ${region}\npod: ${pod}\n```",
-        "name": "Excessive MistProcLivepeer restarts alert",
-        "noDataState": "no_data",
-        "notifications": [
-          {
-            "uid": "discord"
-          }
-        ]
-      },
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -268,10 +166,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 10,
+        "h": 9,
         "w": 12,
         "x": 12,
-        "y": 1
+        "y": 0
       },
       "id": 2,
       "options": {
@@ -287,23 +185,106 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum by (manifest_id, region, pod) (count_over_time(\n  {app=\"mist\", container=\"mist\"} \n  |= \"Starting process: /usr/bin/MistProcLivepeer\" \n  | pattern `<_>\"source\":\"video<_>+<manifest_id>\"` [4m]\n)) > 3",
-          "legendFormat": "{{manifest_id}} @ {{region}}-{{pod}}",
+          "exemplar": true,
+          "expr": "sum(kube_deployment_status_replicas_unavailable{}) by (region)",
+          "interval": "",
+          "legendFormat": "",
           "refId": "A"
         }
       ],
-      "thresholds": [
+      "title": "Deployment Replicas Unavailable",
+      "type": "timeseries"
+    },
+    {
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 11,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "sortBy": "Last *",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
         {
-          "colorMode": "critical",
-          "op": "gt",
-          "value": 3,
-          "visible": true
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "sum(changes(kube_pod_container_status_restarts_total{}[15m])>1) by (container)",
+          "interval": "",
+          "legendFormat": "{{ container }}",
+          "refId": "A"
         }
       ],
-      "title": "Excessive MistProcLivepeer restarts",
+      "title": "Pod Restarts by Container",
       "type": "timeseries"
     },
     {
@@ -329,30 +310,26 @@
             },
             "reducer": {
               "params": [],
-              "type": "max"
+              "type": "avg"
             },
             "type": "query"
           }
         ],
         "executionErrorState": "alerting",
-        "for": "10m",
+        "for": "0m",
         "frequency": "1m",
         "handler": 1,
-        "message": "A RabbitMQ client has invalid connection credentials! \n\nThis likely means that the cluster was reprovisioned and the pods have outdated secrets for the credentials.\n\nTo fix, try a `kubectl rollout restart` of the affected apps.",
-        "name": "RabbitMQ broken client credentials",
+        "message": "This node has disk pressure and will probably start evicting pods, someone please go find out why.",
+        "name": "Node DiskPressure alert",
         "noDataState": "ok",
         "notifications": [
           {
-            "uid": "xIogFCs7k"
+            "uid": "jx6jkJxnk"
           },
           {
-            "uid": "jx6jkJxnk"
+            "uid": "1HTjty-7k"
           }
         ]
-      },
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
       },
       "fieldConfig": {
         "defaults": {
@@ -405,12 +382,12 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 11,
+        "h": 9,
         "w": 12,
-        "x": 0,
-        "y": 11
+        "x": 12,
+        "y": 9
       },
-      "id": 6,
+      "id": 5,
       "options": {
         "legend": {
           "calcs": [],
@@ -421,14 +398,18 @@
           "mode": "single"
         }
       },
+      "pluginVersion": "8.3.3",
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum(count_over_time({app=~\"prod-.+\",app!=\"prod-livepeer-monitoring\"} |= \"username or password not allowed\" [1m])) by (app, region)",
-          "legendFormat": "{{region}}-{{app}}",
+          "exemplar": true,
+          "expr": "kube_node_status_condition{condition=\"DiskPressure\", status=\"true\"} > 0",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "{{ region }}-{{ node }}",
           "refId": "A"
         }
       ],
@@ -440,70 +421,10 @@
           "visible": true
         }
       ],
-      "title": "RabbitMQ broken client credentials",
+      "title": "Node DiskPressure",
       "type": "timeseries"
     },
     {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 22
-      },
-      "id": 10,
-      "panels": [],
-      "title": "Tasks/VOD",
-      "type": "row"
-    },
-    {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                2
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "A",
-                "15m",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "last"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "5m",
-        "frequency": "1m",
-        "handler": 1,
-        "message": "Tasks are accumulating in RabbitMQ. \n\nCheck RabbitMQ queue state (e.g. via management dashboard). They may have been not scheduled or not consumed from the queue.",
-        "name": "Task Queue Accumulation alert",
-        "noDataState": "no_data",
-        "notifications": [
-          {
-            "uid": "jx6jkJxnk"
-          },
-          {
-            "uid": "xIogFCs7k"
-          }
-        ]
-      },
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -555,12 +476,12 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 9,
         "w": 12,
         "x": 0,
-        "y": 23
+        "y": 16
       },
-      "id": 12,
+      "id": 4,
       "options": {
         "legend": {
           "calcs": [],
@@ -571,25 +492,22 @@
           "mode": "single"
         }
       },
+      "pluginVersion": "8.3.3",
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
           },
-          "expr": "count by (region) (count by (region, taskId) (\n  count_over_time({app=\"prod-livepeer-api\",region!=\"sin\"} |= \"publishing message to task.trigger\" | pattern \"<_>task.trigger.<type>.<taskId> on exchange<_>\" [15m])\n))\n- \ncount by (region) (count by (region, taskId) (\n  count_over_time({app=\"prod-task-runner\"} |= \"Starting task\" | logfmt | label_format taskId=id [15m])\n))",
+          "exemplar": true,
+          "expr": "kube_node_status_condition{condition=\"Ready\", status=\"false\"} > 0",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "{{ region }}-{{ node }}",
           "refId": "A"
         }
       ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "op": "gt",
-          "value": 2,
-          "visible": true
-        }
-      ],
-      "title": "Task Queue Accumulation",
+      "title": "Node Not Ready",
       "type": "timeseries"
     },
     {
@@ -609,36 +527,32 @@
             "query": {
               "params": [
                 "A",
-                "10s",
+                "1m",
                 "now"
               ]
             },
             "reducer": {
               "params": [],
-              "type": "last"
+              "type": "avg"
             },
             "type": "query"
           }
         ],
         "executionErrorState": "alerting",
-        "for": "3m",
+        "for": "0m",
         "frequency": "1m",
         "handler": 1,
-        "message": "Specific tasks are being re-executed multiple times. \n\nPossibly hitting some corner case or bug in task runner. Investigate cause and consider deleting the task in the API so its execution is dropped.",
-        "name": "Poison Tasks alert",
-        "noDataState": "ok",
+        "message": "Pods are being evicted in ${region}, someone please go find out why",
+        "name": "Pods Evicted alert",
+        "noDataState": "no_data",
         "notifications": [
           {
-            "uid": "1HTjty-7k"
+            "uid": "jx6jkJxnk"
           },
           {
-            "uid": "jx6jkJxnk"
+            "uid": "1HTjty-7k"
           }
         ]
-      },
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
       },
       "fieldConfig": {
         "defaults": {
@@ -688,40 +602,15 @@
             ]
           }
         },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "{id=\"51ea2a1e-618e-452d-a024-7c5a0ace266f\",region=\"fra\"}"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 23
+        "y": 18
       },
-      "id": 14,
+      "id": 8,
       "options": {
         "legend": {
           "calcs": [],
@@ -735,10 +624,13 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
           },
-          "expr": "count by (id, region) (count_over_time({app=\"prod-task-runner\"} |= \"Starting task\" | logfmt [2h])) > 2",
+          "exemplar": true,
+          "expr": "sum(changes(kube_pod_status_reason{reason=\"Evicted\"}==1)) by (region)",
+          "interval": "",
+          "legendFormat": "",
           "refId": "A"
         }
       ],
@@ -750,11 +642,183 @@
           "visible": true
         }
       ],
-      "title": "Poison Tasks",
+      "title": "Pods Evicted",
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 25
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "8.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "kube_node_status_condition{condition=\"PIDPressure\", status=\"true\"} > 0",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "{{ region }}-{{ node }}",
+          "refId": "A"
+        }
+      ],
+      "title": "Node PIDPressure",
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 26
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "8.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "kube_node_status_condition{condition=\"MemoryPressure\", status=\"true\"} > 0",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "{{ region }}-{{ node }}",
+          "refId": "A"
+        }
+      ],
+      "title": "Node MemoryPressure",
       "type": "timeseries"
     }
   ],
-  "refresh": false,
+  "refresh": "",
   "schemaVersion": 34,
   "style": "dark",
   "tags": [],
@@ -762,13 +826,13 @@
     "list": []
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Loki Alerts",
-  "uid": "dbme6io7k",
-  "version": 39,
+  "title": "Kube API Alerts",
+  "uid": "jSbZINlnk",
+  "version": 23,
   "weekStart": ""
 }

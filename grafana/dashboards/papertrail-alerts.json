@@ -717,7 +717,7 @@
           {
             "evaluator": {
               "params": [
-                0.01
+                0
               ],
               "type": "gt"
             },
@@ -727,19 +727,19 @@
             "query": {
               "params": [
                 "A",
-                "10s",
+                "1m",
                 "now"
               ]
             },
             "reducer": {
               "params": [],
-              "type": "last"
+              "type": "max"
             },
             "type": "query"
           }
         ],
         "executionErrorState": "alerting",
-        "for": "0s",
+        "for": "2m",
         "frequency": "1m",
         "handler": 1,
         "message": "Stream Health Publish Error",
@@ -864,7 +864,7 @@
         {
           "colorMode": "critical",
           "op": "gt",
-          "value": 0.01,
+          "value": 0,
           "visible": true
         }
       ],
@@ -1417,7 +1417,7 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "",
+  "refresh": false,
   "schemaVersion": 34,
   "style": "dark",
   "tags": [],
@@ -1432,6 +1432,6 @@
   "timezone": "",
   "title": "papertrail alerts",
   "uid": "KXVHQPJ7z",
-  "version": 30,
+  "version": 31,
   "weekStart": ""
 }
