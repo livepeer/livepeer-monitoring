@@ -19,110 +19,76 @@
     ]
   },
   "editable": true,
-  "gnetId": null,
+  "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": null,
+  "id": 49,
   "links": [],
+  "liveNow": false,
   "panels": [
     {
-      "datasource": null,
+      "description": "",
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 5,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
+            "mode": "thresholds"
           },
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
+                "color": "red",
                 "value": null
               },
               {
-                "color": "red",
-                "value": 80
+                "color": "green",
+                "value": 4
               }
             ]
-          }
+          },
+          "unit": ": 1"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 5,
+        "h": 8,
         "w": 12,
         "x": 0,
         "y": 0
       },
-      "id": 2,
+      "id": 16,
       "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
         },
-        "tooltip": {
-          "mode": "single"
-        }
+        "textMode": "auto"
       },
+      "pluginVersion": "8.3.3",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "exemplar": true,
-          "expr": "sum(livepeer_fast_verification_using_current_sessions_total{node_type=\"bctr\"})",
+          "expr": "((avg(livepeer_segment_transcoded_total{trusted=\"untrusted\", verified=\"verified\",node_type=\"bctr\"}) / 2) / avg(livepeer_segment_transcoded_total{trusted=\"untrusted\", verified=\"unverified\",node_type=\"bctr\"})) * 100",
           "interval": "",
-          "legendFormat": "Using fast verification",
+          "legendFormat": "",
           "refId": "A"
-        },
-        {
-          "exemplar": true,
-          "expr": "sum(livepeer_fast_verification_enabled_current_sessions_total{node_type=\"bctr\"})-sum(livepeer_fast_verification_using_current_sessions_total{node_type=\"bctr\"})",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Enabled but not using",
-          "refId": "B"
-        },
-        {
-          "exemplar": true,
-          "expr": "sum(livepeer_current_sessions_total{node_type=\"bctr\"})-sum(livepeer_fast_verification_enabled_current_sessions_total{node_type=\"bctr\"})",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Not enabled fast verification",
-          "refId": "C"
         }
       ],
-      "title": "Fast Verification Session Usage",
-      "type": "timeseries"
+      "title": "Unverified : Verified Segment Ratio",
+      "type": "stat"
     },
     {
-      "datasource": null,
       "description": "Percentage of streams using public orchestrators",
       "fieldConfig": {
         "defaults": {
@@ -171,7 +137,7 @@
         "showThresholdMarkers": true,
         "text": {}
       },
-      "pluginVersion": "8.1.5",
+      "pluginVersion": "8.3.3",
       "targets": [
         {
           "exemplar": true,
@@ -186,7 +152,6 @@
       "type": "gauge"
     },
     {
-      "datasource": null,
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -218,6 +183,7 @@
       },
       "id": 6,
       "options": {
+        "orientation": "auto",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -229,7 +195,7 @@
         "showThresholdMarkers": true,
         "text": {}
       },
-      "pluginVersion": "8.1.5",
+      "pluginVersion": "8.3.3",
       "targets": [
         {
           "exemplar": true,
@@ -243,89 +209,6 @@
       "type": "gauge"
     },
     {
-      "datasource": null,
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "percentunit"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 12,
-        "x": 0,
-        "y": 5
-      },
-      "id": 8,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single"
-        }
-      },
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "(sum(rate(livepeer_fast_verification_done[1m])) - (sum(rate(livepeer_fast_verification_failed[1m])) or vector(0))) / sum(rate(livepeer_fast_verification_done[1m]))",
-          "interval": "",
-          "legendFormat": "fast verification success rate",
-          "refId": "A"
-        }
-      ],
-      "title": "Fast Verification success rate",
-      "type": "timeseries"
-    },
-    {
-      "datasource": null,
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -406,7 +289,183 @@
       "type": "timeseries"
     },
     {
-      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 5,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum(livepeer_fast_verification_using_current_sessions_total{node_type=\"bctr\"})",
+          "interval": "",
+          "legendFormat": "Using fast verification",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "sum(livepeer_fast_verification_enabled_current_sessions_total{node_type=\"bctr\"})-sum(livepeer_fast_verification_using_current_sessions_total{node_type=\"bctr\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Enabled but not using",
+          "refId": "B"
+        },
+        {
+          "exemplar": true,
+          "expr": "sum(livepeer_current_sessions_total{node_type=\"bctr\"})-sum(livepeer_fast_verification_enabled_current_sessions_total{node_type=\"bctr\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Not enabled fast verification",
+          "refId": "C"
+        }
+      ],
+      "title": "Fast Verification Session Usage",
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 12,
+        "x": 0,
+        "y": 13
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "(sum(rate(livepeer_fast_verification_done[1m])) - (sum(rate(livepeer_fast_verification_failed[1m])) or vector(0))) / sum(rate(livepeer_fast_verification_done[1m]))",
+          "interval": "",
+          "legendFormat": "fast verification success rate",
+          "refId": "A"
+        }
+      ],
+      "title": "Fast Verification success rate",
+      "type": "timeseries"
+    },
+    {
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -433,7 +492,7 @@
         "h": 4,
         "w": 5,
         "x": 0,
-        "y": 10
+        "y": 18
       },
       "id": 12,
       "options": {
@@ -451,7 +510,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.1.5",
+      "pluginVersion": "8.3.3",
       "targets": [
         {
           "exemplar": true,
@@ -465,7 +524,6 @@
       "type": "stat"
     },
     {
-      "datasource": null,
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -492,7 +550,7 @@
         "h": 4,
         "w": 6,
         "x": 5,
-        "y": 10
+        "y": 18
       },
       "id": 13,
       "options": {
@@ -510,7 +568,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.1.5",
+      "pluginVersion": "8.3.3",
       "targets": [
         {
           "exemplar": true,
@@ -524,7 +582,6 @@
       "type": "stat"
     },
     {
-      "datasource": null,
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -551,7 +608,7 @@
         "h": 4,
         "w": 6,
         "x": 11,
-        "y": 10
+        "y": 18
       },
       "id": 14,
       "options": {
@@ -569,7 +626,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.1.5",
+      "pluginVersion": "8.3.3",
       "targets": [
         {
           "exemplar": true,
@@ -584,7 +641,7 @@
     }
   ],
   "refresh": "5s",
-  "schemaVersion": 30,
+  "schemaVersion": 34,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -596,7 +653,8 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Livepeer fast verification",
+  "title": "Livepeer Fast Verification",
   "uid": "oAdgvYO7k",
-  "version": 3
+  "version": 7,
+  "weekStart": ""
 }
