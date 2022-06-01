@@ -537,13 +537,175 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "(rate(livepeer_fast_verification_done[5m])- (rate(livepeer_fast_verification_failed[5m]) or vector(0)))/(rate(livepeer_fast_verification_done[5m]))",
+          "expr": "vector(1)- rate(livepeer_fast_verification_failed[1m])",
           "interval": "",
-          "legendFormat": "FV success rate {{instance}}",
+          "legendFormat": "FV success rate {{orchestrator_uri}} ",
           "refId": "A"
         }
       ],
       "title": "FV success rate per Orchestrator",
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 12,
+        "x": 0,
+        "y": 18
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "(rate(livepeer_fast_verification_failed{fverror_type!=\"2\"}[1m]))",
+          "interval": "",
+          "legendFormat": "FV Type1 fail rate {{orchestrator_uri}} {{region}}",
+          "refId": "A"
+        }
+      ],
+      "title": "FV Signature Comparison fail rate per Orchestrator",
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 12,
+        "x": 13,
+        "y": 18
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "(rate(livepeer_fast_verification_failed{fverror_type!=\"1\"}[1m]))",
+          "interval": "",
+          "legendFormat": "FV Type2 fail rate {{orchestrator_uri}} {{region}}",
+          "refId": "A"
+        }
+      ],
+      "title": "FV Video Comparison fail rate per Orchestrator",
       "type": "timeseries"
     },
     {
@@ -573,7 +735,7 @@
         "h": 4,
         "w": 5,
         "x": 0,
-        "y": 18
+        "y": 23
       },
       "id": 12,
       "options": {
@@ -631,7 +793,7 @@
         "h": 4,
         "w": 6,
         "x": 5,
-        "y": 18
+        "y": 23
       },
       "id": 13,
       "options": {
@@ -689,7 +851,7 @@
         "h": 4,
         "w": 6,
         "x": 11,
-        "y": 18
+        "y": 23
       },
       "id": 14,
       "options": {
