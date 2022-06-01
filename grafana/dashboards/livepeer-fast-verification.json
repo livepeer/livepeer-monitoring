@@ -537,9 +537,9 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "(rate(livepeer_fast_verification_done[1m])- (rate(livepeer_fast_verification_failed[1m]) or vector(0)))/(rate(livepeer_fast_verification_done[1m]))",
+          "expr": "vector(1)- rate(livepeer_fast_verification_failed[1m])",
           "interval": "",
-          "legendFormat": "FV success rate {{instance}}",
+          "legendFormat": "FV success rate {{orchestrator_uri}} ",
           "refId": "A"
         }
       ],
@@ -620,7 +620,7 @@
           "exemplar": true,
           "expr": "(rate(livepeer_fast_verification_failed{fverror_type!=\"2\"}[1m]))",
           "interval": "",
-          "legendFormat": "FV Type1 fail rate {{instance}}",
+          "legendFormat": "FV Type1 fail rate {{orchestrator_uri}} {{region}}",
           "refId": "A"
         }
       ],
@@ -701,7 +701,7 @@
           "exemplar": true,
           "expr": "(rate(livepeer_fast_verification_failed{fverror_type!=\"1\"}[1m]))",
           "interval": "",
-          "legendFormat": "FV Type2 fail rate {{instance}}",
+          "legendFormat": "FV Type2 fail rate {{orchestrator_uri}} {{region}}",
           "refId": "A"
         }
       ],
