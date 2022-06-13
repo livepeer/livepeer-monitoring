@@ -1,0 +1,33 @@
+name: dashboards_backup
+on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '30 5,17 * * *'
+
+# example query
+# curl -H "Authorization: Bearer eyJrIjoidWUzaDNYQ01NVGxzcUNNOWYwaTE1YVZxcGxHbFduQUIiLCJuIjoiZGFzaGJvYXJkc19iYWNrdXAiLCJpZCI6MX0=" https://eu-metrics-monitoring.livepeer.live/grafana/api/dashboards/home
+
+jobs:
+  backup:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: update dashboards
+        env:
+          API_KEY: ${{ secrets.GRAFANA_READ_API_KEY }}
+        run: |
+          ./export.sh https://eu-metrics-monitoring.livepeer.live/grafana
+
+      - name: Create a PR with the new dashboards
+        uses: ya7ya/create-pull-request@ya/cached-npm
+        if: ${{ success() }}
+        env:
+          GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+          title: "[AUTO] Dashboard backup"
+          labels: "grafana"
+          commit-message: "This is an automated PR for backing up the Grafana dashboards in eu-metrics"
+          branch: backup/grafana
+          base: master
+          delete-branch: true
+          body: "This PR updates the values for the Grafana dashboards in eu-metrics"
