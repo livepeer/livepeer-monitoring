@@ -85,13 +85,18 @@
       "pluginVersion": "8.3.3",
       "targets": [
         {
-          "expr": "sum(livepeer_versions{node_type=\"orch\"})",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "sum(livepeer_versions{node_type=\"orch\", region=~\"$region\"})",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
         }
       ],
-      "title": "# Orchestrators",
+      "title": "# Orchestrators in $region",
       "type": "stat"
     },
     {
@@ -154,13 +159,18 @@
       "pluginVersion": "8.3.3",
       "targets": [
         {
-          "expr": "sum(livepeer_current_sessions_total{node_type=\"orch\"})",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "sum(livepeer_current_sessions_total{node_type=\"orch\",region=~\"$region\"})",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
         }
       ],
-      "title": "# Orchestrator Sessions (Current)",
+      "title": "# Orchestrator Sessions (Current) in $region",
       "type": "stat"
     },
     {
@@ -211,7 +221,12 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(livepeer_current_sessions_total{node_type=\"orch\"})",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "sum(livepeer_current_sessions_total{node_type=\"orch\",region=~\"$region\"})",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -219,7 +234,7 @@
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "# Orchestrators Sessions (Continuous)",
+      "title": "# Orchestrators Sessions (Continuous) in $region",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -291,13 +306,18 @@
       "pluginVersion": "8.3.3",
       "targets": [
         {
-          "expr": "sum(livepeer_current_sessions_total{node_type=\"orch\"}) / sum(livepeer_max_sessions_total{node_type=\"orch\"}) * 100",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "sum(livepeer_current_sessions_total{node_type=\"orch\",region=~\"$region\"}) / sum(livepeer_max_sessions_total{node_type=\"orch\",region=~\"$region\"}) * 100",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
         }
       ],
-      "title": "Orchestrator Utilization",
+      "title": "Orchestrator Utilization in $region",
       "type": "gauge"
     },
     {
@@ -360,115 +380,191 @@
       "pluginVersion": "8.3.3",
       "targets": [
         {
-          "expr": "sum(livepeer_max_sessions_total{node_type=\"orch\"})",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "sum(livepeer_max_sessions_total{node_type=\"orch\",region=~\"$region\"})",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
         }
       ],
-      "title": "# Orchestrator Sessions (Max)",
+      "title": "# Orchestrator Sessions (Max) in $region",
       "type": "stat"
     },
     {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
       "fieldConfig": {
         "defaults": {
-          "links": []
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
         },
         "overrides": []
       },
-      "fill": 1,
-      "fillGradient": 0,
       "gridPos": {
         "h": 8,
         "w": 12,
         "x": 0,
         "y": 6
       },
-      "hiddenSeries": false,
-      "id": 24,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null",
+      "id": 29,
       "options": {
-        "alertThreshold": true
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
       },
-      "percentage": false,
-      "pluginVersion": "8.3.3",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
       "targets": [
         {
-          "expr": "histogram_quantile(0.99, sum(rate(livepeer_transcode_score_bucket{node_type=\"orch\"}[1m])) by ( le))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "livepeer_segment_transcoded_total{node_type=\"orch\",region=~\"$region\"}",
           "interval": "",
-          "legendFormat": "99th",
+          "legendFormat": "",
           "refId": "A"
-        },
-        {
-          "expr": "histogram_quantile(0.9, sum(rate(livepeer_transcode_score_bucket{node_type=\"orch\"}[1m])) by ( le))",
-          "interval": "",
-          "legendFormat": "90th",
-          "refId": "B"
-        },
-        {
-          "expr": "histogram_quantile(0.95, sum(rate(livepeer_transcode_score_bucket{node_type=\"orch\"}[1m])) by ( le))",
-          "interval": "",
-          "legendFormat": "95th",
-          "refId": "C"
-        },
-        {
-          "expr": "histogram_quantile(0.5, sum(rate(livepeer_transcode_score_bucket{node_type=\"orch\"}[1m])) by ( le))",
-          "interval": "",
-          "legendFormat": "50th",
-          "refId": "D"
         }
       ],
-      "thresholds": [],
-      "timeRegions": [],
-      "title": "Transcode Score (Percentile)",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "mode": "time",
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "logBase": 1,
-          "show": true
+      "title": "Segments Transcoded in $region",
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
         },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 6
+      },
+      "id": 30,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "8.3.3",
+      "targets": [
         {
-          "format": "short",
-          "logBase": 1,
-          "show": true
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "sum(livepeer_current_sessions_total{node_type=\"orch\",region=~\"$region\"}) / sum(livepeer_max_sessions_total{node_type=\"orch\",region=~\"$region\"}) * 100",
+          "interval": "",
+          "intervalFactor": 10,
+          "legendFormat": "",
+          "refId": "A"
         }
       ],
-      "yaxis": {
-        "align": false
-      }
+      "title": "Orchestrator Utilization over time in $region",
+      "type": "timeseries"
     },
     {
       "aliasColors": {},
@@ -487,7 +583,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 6
+        "y": 12
       },
       "hiddenSeries": false,
       "id": 22,
@@ -517,7 +613,12 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(livepeer_transcode_score_sum{node_type=\"orch\"}[1m]) / rate(livepeer_transcode_score_count{node_type=\"orch\"}[1m])",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "rate(livepeer_transcode_score_sum{node_type=\"orch\",region=~\"$region\"}[1m]) / rate(livepeer_transcode_score_count{node_type=\"orch\",region=~\"$region\"}[1m])",
           "interval": "",
           "legendFormat": "{{instance}}/{{profiles}}",
           "refId": "A"
@@ -525,7 +626,7 @@
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Transcode Score (Average)",
+      "title": "Transcode Score (Average) in $region ",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -573,7 +674,7 @@
         "y": 14
       },
       "hiddenSeries": false,
-      "id": 16,
+      "id": 24,
       "legend": {
         "avg": false,
         "current": false,
@@ -600,25 +701,45 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "histogram_quantile(0.99, sum(rate(livepeer_source_segment_duration_seconds_bucket{node_type=\"orch\"}[1m])) by ( le))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "histogram_quantile(0.99, sum(rate(livepeer_transcode_score_bucket{node_type=\"orch\",region=~\"$region\"}[1m])) by ( le))",
           "interval": "",
           "legendFormat": "99th",
           "refId": "A"
         },
         {
-          "expr": "histogram_quantile(0.9, sum(rate(livepeer_source_segment_duration_seconds_bucket{node_type=\"orch\"}[1m])) by ( le))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "histogram_quantile(0.9, sum(rate(livepeer_transcode_score_bucket{node_type=\"orch\",region=~\"$region\"}[1m])) by ( le))",
           "interval": "",
           "legendFormat": "90th",
           "refId": "B"
         },
         {
-          "expr": "histogram_quantile(0.95, sum(rate(livepeer_source_segment_duration_seconds_bucket{node_type=\"orch\"}[1m])) by ( le))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "histogram_quantile(0.95, sum(rate(livepeer_transcode_score_bucket{node_type=\"orch\",region=~\"$region\"}[1m])) by ( le))",
           "interval": "",
           "legendFormat": "95th",
           "refId": "C"
         },
         {
-          "expr": "histogram_quantile(0.5, sum(rate(livepeer_source_segment_duration_seconds_bucket{node_type=\"orch\"}[1m])) by ( le))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "histogram_quantile(0.5, sum(rate(livepeer_transcode_score_bucket{node_type=\"orch\",region=~\"$region\"}[1m])) by ( le))",
           "interval": "",
           "legendFormat": "50th",
           "refId": "D"
@@ -626,7 +747,7 @@
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Source Duration (Percentile)",
+      "title": "Transcode Score (Percentile) in $region",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -640,7 +761,7 @@
       },
       "yaxes": [
         {
-          "format": "s",
+          "format": "short",
           "logBase": 1,
           "show": true
         },
@@ -671,7 +792,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 14
+        "y": 20
       },
       "hiddenSeries": false,
       "id": 18,
@@ -701,7 +822,12 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(livepeer_source_segment_duration_seconds_sum{node_type=\"orch\"}[1m]) / rate(livepeer_source_segment_duration_seconds_count{node_type=\"orch\"}[1m])",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "rate(livepeer_source_segment_duration_seconds_sum{node_type=\"orch\", region=~\"$region\"}[1m]) / rate(livepeer_source_segment_duration_seconds_count{node_type=\"orch\", region=~\"$region\"}[1m])",
           "interval": "",
           "legendFormat": "{{instance}}",
           "refId": "A"
@@ -709,7 +835,7 @@
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Source Duration (Average)",
+      "title": "Source Duration (Average) in $region ",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -757,7 +883,7 @@
         "y": 22
       },
       "hiddenSeries": false,
-      "id": 14,
+      "id": 16,
       "legend": {
         "avg": false,
         "current": false,
@@ -784,25 +910,45 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "histogram_quantile(0.99, sum(rate(livepeer_download_time_seconds_bucket{node_type=\"orch\"}[1m])) by ( le))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "histogram_quantile(0.99, sum(rate(livepeer_source_segment_duration_seconds_bucket{node_type=\"orch\", region=~\"$region\"}[1m])) by ( le))",
           "interval": "",
           "legendFormat": "99th",
           "refId": "A"
         },
         {
-          "expr": "histogram_quantile(0.9, sum(rate(livepeer_download_time_seconds_bucket{node_type=\"orch\"}[1m])) by ( le))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "histogram_quantile(0.9, sum(rate(livepeer_source_segment_duration_seconds_bucket{node_type=\"orch\", region=~\"$region\"}[1m])) by ( le))",
           "interval": "",
           "legendFormat": "90th",
           "refId": "B"
         },
         {
-          "expr": "histogram_quantile(0.95, sum(rate(livepeer_download_time_seconds_bucket{node_type=\"orch\"}[1m])) by ( le))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "histogram_quantile(0.95, sum(rate(livepeer_source_segment_duration_seconds_bucket{node_type=\"orch\", region=~\"$region\"}[1m])) by ( le))",
           "interval": "",
           "legendFormat": "95th",
           "refId": "C"
         },
         {
-          "expr": "histogram_quantile(0.5, sum(rate(livepeer_download_time_seconds_bucket{node_type=\"orch\"}[1m])) by ( le))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "histogram_quantile(0.5, sum(rate(livepeer_source_segment_duration_seconds_bucket{node_type=\"orch\", region=~\"$region\"}[1m])) by ( le))",
           "interval": "",
           "legendFormat": "50th",
           "refId": "D"
@@ -810,7 +956,7 @@
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Download Times (Percentile)",
+      "title": "Source Duration (Percentile) in $region",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -855,7 +1001,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 22
+        "y": 28
       },
       "hiddenSeries": false,
       "id": 20,
@@ -885,7 +1031,12 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(livepeer_download_time_seconds_sum{node_type=\"orch\"}[1m]) / rate(livepeer_download_time_seconds_count{node_type=\"orch\"}[1m])",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "rate(livepeer_download_time_seconds_sum{node_type=\"orch\", region=~\"$region\"}[1m]) / rate(livepeer_download_time_seconds_count{node_type=\"orch\", region=~\"$region\"}[1m])",
           "interval": "",
           "legendFormat": "{{instance}}",
           "refId": "A"
@@ -893,7 +1044,7 @@
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Download Times (Average)",
+      "title": "Download Times (Average) in $region",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -941,7 +1092,7 @@
         "y": 30
       },
       "hiddenSeries": false,
-      "id": 10,
+      "id": 14,
       "legend": {
         "avg": false,
         "current": false,
@@ -968,25 +1119,45 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "histogram_quantile(0.99, sum(rate(livepeer_transcode_time_seconds_bucket{node_type=\"orch\"}[1m])) by ( le))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "histogram_quantile(0.99, sum(rate(livepeer_download_time_seconds_bucket{node_type=\"orch\", region=~\"$region\"}[1m])) by ( le))",
           "interval": "",
           "legendFormat": "99th",
           "refId": "A"
         },
         {
-          "expr": "histogram_quantile(0.9, sum(rate(livepeer_transcode_time_seconds_bucket{node_type=\"orch\"}[1m])) by ( le))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "histogram_quantile(0.9, sum(rate(livepeer_download_time_seconds_bucket{node_type=\"orch\", region=~\"$region\"}[1m])) by ( le))",
           "interval": "",
           "legendFormat": "90th",
           "refId": "B"
         },
         {
-          "expr": "histogram_quantile(0.95, sum(rate(livepeer_transcode_time_seconds_bucket{node_type=\"orch\"}[1m])) by ( le))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "histogram_quantile(0.95, sum(rate(livepeer_download_time_seconds_bucket{node_type=\"orch\", region=~\"$region\"}[1m])) by ( le))",
           "interval": "",
           "legendFormat": "95th",
           "refId": "C"
         },
         {
-          "expr": "histogram_quantile(0.5, sum(rate(livepeer_transcode_time_seconds_bucket{node_type=\"orch\"}[1m])) by ( le))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "histogram_quantile(0.5, sum(rate(livepeer_download_time_seconds_bucket{node_type=\"orch\", region=~\"$region\"}[1m])) by ( le))",
           "interval": "",
           "legendFormat": "50th",
           "refId": "D"
@@ -994,7 +1165,7 @@
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Transcode Times (Percentile)",
+      "title": "Download Times (Percentile) in $region",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1039,7 +1210,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 30
+        "y": 36
       },
       "hiddenSeries": false,
       "id": 12,
@@ -1069,7 +1240,12 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(livepeer_transcode_time_seconds_sum{node_type=\"orch\"}[1m]) / rate(livepeer_transcode_time_seconds_count{node_type=\"orch\"}[1m])",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "rate(livepeer_transcode_time_seconds_sum{node_type=\"orch\", region=~\"$region\"}[1m]) / rate(livepeer_transcode_time_seconds_count{node_type=\"orch\", region=~\"$region\"}[1m])",
           "interval": "",
           "legendFormat": "{{instance}}/{{profiles}}",
           "refId": "A"
@@ -1077,7 +1253,128 @@
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Transcode Times (Average)",
+      "title": "Transcode Times (Average) in $region",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "s",
+          "logBase": 1,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 38
+      },
+      "hiddenSeries": false,
+      "id": 10,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.3.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "histogram_quantile(0.99, sum(rate(livepeer_transcode_time_seconds_bucket{node_type=\"orch\", region=~\"$region\"}[1m])) by ( le))",
+          "interval": "",
+          "legendFormat": "99th",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "histogram_quantile(0.9, sum(rate(livepeer_transcode_time_seconds_bucket{node_type=\"orch\", region=~\"$region\"}[1m])) by ( le))",
+          "interval": "",
+          "legendFormat": "90th",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "histogram_quantile(0.95, sum(rate(livepeer_transcode_time_seconds_bucket{node_type=\"orch\", region=~\"$region\"}[1m])) by ( le))",
+          "interval": "",
+          "legendFormat": "95th",
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "histogram_quantile(0.5, sum(rate(livepeer_transcode_time_seconds_bucket{node_type=\"orch\", region=~\"$region\"}[1m])) by ( le))",
+          "interval": "",
+          "legendFormat": "50th",
+          "refId": "D"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "Transcode Times (Percentile) in $region",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1161,7 +1458,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 38
+        "y": 46
       },
       "id": 27,
       "options": {
@@ -1181,13 +1478,13 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "sum(livepeer_current_sessions_total{node_type=\"orch\"}) by (node_id,region) / sum(livepeer_max_sessions_total{node_type=\"orch\"}) by (node_id,region)",
+          "expr": "sum(livepeer_current_sessions_total{node_type=\"orch\",region=~\"$region\"}) by (node_id) / sum(livepeer_max_sessions_total{node_type=\"orch\",region=~\"$region\"}) by (node_id)",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
         }
       ],
-      "title": "Session Availability by O",
+      "title": "Session Availability by O in $region",
       "type": "timeseries"
     }
   ],
@@ -1196,7 +1493,31 @@
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "allValue": "",
+        "current": {
+          "selected": false,
+          "text": "All Regions",
+          "value": "$__all"
+        },
+        "definition": "livepeer_current_sessions_total{node_type=\"orch\"}",
+        "hide": 0,
+        "includeAll": true,
+        "multi": false,
+        "name": "region",
+        "options": [],
+        "query": {
+          "query": "livepeer_current_sessions_total{node_type=\"orch\"}",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "/.*region=\\\"([^\\\"]+)\\\".*/",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      }
+    ]
   },
   "time": {
     "from": "now-5m",
@@ -1219,6 +1540,6 @@
   "timezone": "",
   "title": "Orchestrator Overview",
   "uid": "71b6OZ0Gz",
-  "version": 4,
+  "version": 5,
   "weekStart": ""
 }
