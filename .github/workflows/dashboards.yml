@@ -18,10 +18,8 @@ jobs:
           ./export.sh https://eu-metrics-monitoring.livepeer.live/grafana
 
       - name: Create a PR with the new dashboards
-        uses: ya7ya/create-pull-request@ya/cached-npm
+        uses: peter-evans/create-pull-request@v4
         if: ${{ success() }}
-        env:
-          GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
         with:
           token: ${{ secrets.PAT_TOKEN }}
           title: "[AUTO] Dashboard backup"
