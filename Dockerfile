@@ -128,6 +128,7 @@ RUN node /config-generator/src/generate.js
 VOLUME [ "/data/grafana" ]
 
 COPY start.sh /start.sh
+COPY export.sh /export.sh
 ENTRYPOINT [ "/start.sh" ]
 CMD ["/start.sh"]
 

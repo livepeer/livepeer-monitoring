@@ -3,6 +3,7 @@
 # Usage:
 #
 # export_grafana_dashboards.sh https://admin:REDACTED@grafana.dedevsecops.com
+# curl -H "Authorization: Bearer <REDACTED>" https://grafana.dedevsecops.com
 
 set -euo pipefail
 
@@ -13,13 +14,13 @@ folder="grafana/dashboards"
 
 find $folder -type f | grep json | xargs rm
 mkdir -p "${folder}" 
-for db_search_json in $(curl --fail -s "${full_url}/api/search?type=dash-db" | jq -cr '.[] | @base64'); do
+for db_search_json in $(curl -H "Authorization: Bearer ${API_KEY}" --fail -s "${full_url}/api/search?type=dash-db" | jq -cr '.[] | @base64'); do
   db_uid=$(echo "${db_search_json}" | base64 -d | jq -r .uid)
   db_folder=$(echo "${db_search_json}" | base64 -d | jq -r .folderTitle)
   if [[ "$db_folder" == "null" ]]; then
     db_folder=""
   fi
-  db_json=$(curl --fail -s "${full_url}/api/dashboards/uid/${db_uid}")
+  db_json=$(curl -H "Authorization: Bearer ${API_KEY}" --fail -s "${full_url}/api/dashboards/uid/${db_uid}")
   db_slug=$(echo "${db_json}" | jq -r .meta.slug)
   db_title=$(echo "${db_json}" | jq -r .dashboard.title)
   filename="${folder}/${db_folder}/${db_slug}.json"
