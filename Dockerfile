@@ -6,7 +6,7 @@ FROM grafana/grafana:9.1.5 as c1
 FROM prom/alertmanager:latest as a1
 FROM grafana/loki:2.4.1 as loki
 
-FROM node:alpine as t2
+FROM node:alpine3.15 as t2
 
 ARG ARCH="amd64"
 ARG OS="linux"
@@ -77,8 +77,6 @@ COPY --from=c1 $GF_PATHS_HOME/public $GF_PATHS_HOME/public
 
 # Chromium dependencies from https://github.com/grafana/grafana/blob/2916b483ebed3e1f5667a858b251d42d844d6f6a/packaging/docker/Dockerfile#L35
 RUN if [ `arch` = "x86_64" ]; then \
-        # first line from https://github.com/sgerrand/alpine-pkg-glibc/issues/185#issuecomment-1245012640
-        apk add alpine-baselayout=3.2.0-r22 && \
         wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r0/glibc-2.35-r0.apk \
             -O /tmp/glibc-2.35-r0.apk && \
         wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r0/glibc-bin-2.35-r0.apk \
@@ -93,16 +91,12 @@ RUN if [ `arch` = "x86_64" ]; then \
     fi
 # Grafana image rendering from https://github.com/grafana/grafana/blob/e0db19e74116db30d5e6b7666a2888238b4cb416/packaging/docker/custom/Dockerfile#L15
 RUN if [[ $(uname -m) == "x86_64" ]]; then \
-    echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
-    echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
-    echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
-    apk --no-cache  upgrade && \
     apk add --no-cache udev ttf-opensans chromium && \
     rm -rf /tmp/* && \
     rm -rf /usr/share/grafana/tools/phantomjs && \
     grafana-cli \
         --pluginsDir "$GF_PATHS_PLUGINS" \
-        --pluginUrl https://github.com/grafana/grafana-image-renderer/releases/download/v3.6.1/plugin-linux-x64-glibc-no-chromium.zip \
+        --pluginUrl https://github.com/grafana/grafana-image-renderer/releases/download/v3.6.1/plugin-linux-x64-glibc.zip \
         plugins install grafana-image-renderer; \
     fi
 ENV GF_PLUGIN_RENDERING_CHROME_BIN="/usr/bin/chromium-browser"
