@@ -32,7 +32,7 @@
           {
             "evaluator": {
               "params": [
-                4.99
+                10
               ],
               "type": "gt"
             },
@@ -42,30 +42,30 @@
             "query": {
               "params": [
                 "A",
-                "5m",
+                "1m",
                 "now"
               ]
             },
             "reducer": {
               "params": [],
-              "type": "last"
+              "type": "avg"
             },
             "type": "query"
           }
         ],
         "executionErrorState": "alerting",
-        "for": "0s",
+        "for": "0m",
         "frequency": "1m",
         "handler": 1,
-        "message": "etcd Write failure",
-        "name": "etcd write failure alert",
+        "message": "Detected \"no sender deposit\" errors in ${region}, someone roll pods: kubectl get deployments --context=${region} -o name | grep prod-livepeer-secondary-broadcaster | xargs kubectl --context=${region}rollout restart",
+        "name": "\"no sender deposit\" alert",
         "noDataState": "ok",
         "notifications": [
           {
             "uid": "jx6jkJxnk"
           },
           {
-            "uid": "1HTjty-7k"
+            "uid": "xIogFCs7k"
           }
         ]
       },
@@ -129,7 +129,7 @@
         "x": 0,
         "y": 0
       },
-      "id": 20,
+      "id": 22,
       "options": {
         "legend": {
           "calcs": [],
@@ -146,7 +146,8 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum by (region) (count_over_time({app=\"mist\"} |~ \"Error creating etcd Traefik rule\"[1m]))",
+          "expr": "sum(count_over_time({app=~\"prod-livepeer-secondary-broadcaster.+\"} |~ \"no sender deposit\"[1m])) by (region)",
+          "legendFormat": "{{ region }}",
           "refId": "A"
         }
       ],
@@ -154,11 +155,11 @@
         {
           "colorMode": "critical",
           "op": "gt",
-          "value": 4.99,
+          "value": 10,
           "visible": true
         }
       ],
-      "title": "etcd write failure",
+      "title": "\"no sender deposit\"",
       "type": "timeseries"
     },
     {
@@ -168,7 +169,7 @@
           {
             "evaluator": {
               "params": [
-                1
+                3
               ],
               "type": "gt"
             },
@@ -287,7 +288,7 @@
         {
           "colorMode": "critical",
           "op": "gt",
-          "value": 1,
+          "value": 3,
           "visible": true
         }
       ],
@@ -301,7 +302,7 @@
           {
             "evaluator": {
               "params": [
-                10000
+                4.99
               ],
               "type": "gt"
             },
@@ -311,7 +312,7 @@
             "query": {
               "params": [
                 "A",
-                "10s",
+                "5m",
                 "now"
               ]
             },
@@ -326,15 +327,15 @@
         "for": "0s",
         "frequency": "1m",
         "handler": 1,
-        "message": "High viewership count",
-        "name": "request per minute alert",
+        "message": "etcd Write failure",
+        "name": "etcd write failure alert",
         "noDataState": "ok",
         "notifications": [
           {
             "uid": "jx6jkJxnk"
           },
           {
-            "uid": "xIogFCs7k"
+            "uid": "1HTjty-7k"
           }
         ]
       },
@@ -375,13 +376,6 @@
               "mode": "off"
             }
           },
-          "links": [
-            {
-              "targetBlank": true,
-              "title": "logs",
-              "url": "https://eu-metrics-monitoring.livepeer.live/grafana/explore?left=%5B%22now-5m%22,%22now%22,%22Loki%22,%7B%22datasource%22:%7B%22type%22:%22loki%22,%22uid%22:%22P8E80F9AEF21F6940%22%7D,%22expr%22:%22%7Bregion%3D%5C%22$${__field.region}%5C%22%7D%20%7C%3D%20%5C%22$${__field.playback_id}%22%22,%22refId%22:%22A%22%7D%5D&orgId=1"
-            }
-          ],
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -405,7 +399,7 @@
         "x": 0,
         "y": 8
       },
-      "id": 6,
+      "id": 20,
       "options": {
         "legend": {
           "calcs": [],
@@ -416,14 +410,13 @@
           "mode": "single"
         }
       },
-      "pluginVersion": "8.3.3",
       "targets": [
         {
           "datasource": {
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time(\n  {app=\"traefik\", region!=\"eu-metrics\", container=\"prod-traefik\", region!=\"mdw\"} \n  | json \n  | __error__!=\"JSONParserErr\"\n  | line_format \"{{.RequestPath}}\" \n  | regexp \"/hls/(\\\\w+\\\\+)?(?P<playback_id>[^/]+).+\"\n  [1m]\n )) by (playback_id, region) > 60000",
+          "expr": "sum by (region) (count_over_time({app=\"mist\"} |~ \"Error creating etcd Traefik rule\"[1m]))",
           "refId": "A"
         }
       ],
@@ -431,11 +424,11 @@
         {
           "colorMode": "critical",
           "op": "gt",
-          "value": 10000,
+          "value": 4.99,
           "visible": true
         }
       ],
-      "title": "request per minute",
+      "title": "etcd write failure",
       "type": "timeseries"
     },
     {
@@ -581,6 +574,290 @@
           {
             "evaluator": {
               "params": [
+                10000
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "10s",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "last"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "0s",
+        "frequency": "1m",
+        "handler": 1,
+        "message": "High viewership count\n\nModerate the stream: <https://livepeer.com/app/stream/${playback_id}?autoplay>\n(there's a suspend user button at the bottom as well)",
+        "name": "request per minute alert",
+        "noDataState": "ok",
+        "notifications": [
+          {
+            "uid": "jx6jkJxnk"
+          },
+          {
+            "uid": "xIogFCs7k"
+          }
+        ]
+      },
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "logs",
+              "url": "https://eu-metrics-monitoring.livepeer.live/grafana/explore?left=%5B%22now-5m%22,%22now%22,%22Loki%22,%7B%22datasource%22:%7B%22type%22:%22loki%22,%22uid%22:%22P8E80F9AEF21F6940%22%7D,%22expr%22:%22%7Bregion%3D%5C%22$${__field.region}%5C%22%7D%20%7C%3D%20%5C%22$${__field.playback_id}%22%22,%22refId%22:%22A%22%7D%5D&orgId=1"
+            }
+          ],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "8.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "expr": "sum(count_over_time(\n  {app=\"traefik\", region!=\"eu-metrics\", container=\"prod-traefik\"} \n  | json \n  | __error__!=\"JSONParserErr\"\n  | line_format \"{{.RequestPath}}\" \n  | regexp \"/hls/(\\\\w+\\\\+)?(?P<playback_id>[^/]+)/.+\"\n  | playback_id != \"\"\n  [1m]\n )) by (playback_id, region)",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "op": "gt",
+          "value": 10000,
+          "visible": true
+        }
+      ],
+      "title": "request per minute",
+      "type": "timeseries"
+    },
+    {
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                1
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "1m",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "max"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "2m",
+        "frequency": "1m",
+        "handler": 1,
+        "message": "Some broadcaster is getting errors publishing stream health events to RabbitMQ!\n\nThis is likely some stuck client issue. Fix it by rolling out the deployment:\n\n`kubectl --context=${region} rollout restart deployment ${app}`",
+        "name": "Stream Health Publish Error",
+        "noDataState": "ok",
+        "notifications": [
+          {
+            "uid": "jx6jkJxnk"
+          },
+          {
+            "uid": "1HTjty-7k"
+          }
+        ]
+      },
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      },
+      "id": 10,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "expr": "sum by (region, app) (count_over_time({app=~\"prod-livepeer-broadcaster.*\"} |= \"Error publishing stream transcode event\"[1m]))",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "op": "gt",
+          "value": 1,
+          "visible": true
+        }
+      ],
+      "title": "Stream Health Publish Error ",
+      "type": "timeseries"
+    },
+    {
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
                 0.01
               ],
               "type": "gt"
@@ -676,7 +953,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 16
+        "y": 24
       },
       "id": 18,
       "options": {
@@ -708,303 +985,6 @@
         }
       ],
       "title": "bgp unreachable",
-      "type": "timeseries"
-    },
-    {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                0
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "A",
-                "1m",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "max"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "2m",
-        "frequency": "1m",
-        "handler": 1,
-        "message": "Stream Health Publish Error",
-        "name": "Stream Health Publish Error  alert",
-        "noDataState": "ok",
-        "notifications": [
-          {
-            "uid": "jx6jkJxnk"
-          },
-          {
-            "uid": "1HTjty-7k"
-          }
-        ]
-      },
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "{region=\"mdw\"}"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 16
-      },
-      "id": 10,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
-          "expr": "sum by (region) (rate({app=~\"prod-livepeer-broadcaster.*\"} |= \"Error publishing stream transcode event\"[1m]))",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "op": "gt",
-          "value": 0,
-          "visible": true
-        }
-      ],
-      "title": "Stream Health Publish Error ",
-      "type": "timeseries"
-    },
-    {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                0.01
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "A",
-                "10s",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "last"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "0s",
-        "frequency": "1m",
-        "handler": 1,
-        "message": "Unknown panics increased",
-        "name": "Unknown panics alert",
-        "noDataState": "ok",
-        "notifications": [
-          {
-            "uid": "jx6jkJxnk"
-          },
-          {
-            "uid": "1HTjty-7k"
-          }
-        ]
-      },
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 24
-      },
-      "id": 16,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
-          "expr": "sum(count_over_time({app!=\"bgpm-exporter\",region=~\"^(sgp|eu-metrics).+\"} |= \"panic\"[1m])) by (region)",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "op": "gt",
-          "value": 0.01,
-          "visible": true
-        }
-      ],
-      "title": "unknown panics",
       "type": "timeseries"
     },
     {
@@ -1150,7 +1130,7 @@
           {
             "evaluator": {
               "params": [
-                1
+                0.01
               ],
               "type": "gt"
             },
@@ -1160,7 +1140,7 @@
             "query": {
               "params": [
                 "A",
-                "1m",
+                "10s",
                 "now"
               ]
             },
@@ -1172,11 +1152,11 @@
           }
         ],
         "executionErrorState": "alerting",
-        "for": "3m",
+        "for": "0s",
         "frequency": "1m",
         "handler": 1,
-        "message": "Detected API Connection Timeouts",
-        "name": "API DB Connection Timeouts  alert",
+        "message": "Unknown panics increased",
+        "name": "Unknown panics alert",
         "noDataState": "ok",
         "notifications": [
           {
@@ -1247,7 +1227,7 @@
         "x": 0,
         "y": 32
       },
-      "id": 14,
+      "id": 16,
       "options": {
         "legend": {
           "calcs": [],
@@ -1264,7 +1244,7 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum by (region) (count_over_time({app=\"prod-livepeer-api\"} |= \"Connection terminated due to connection timeout\"[1m]))",
+          "expr": "sum(count_over_time({app!=\"bgpm-exporter\",region=~\"^(sgp|eu-metrics).+\"} |= \"panic\"[1m])) by (region)",
           "refId": "A"
         }
       ],
@@ -1272,11 +1252,11 @@
         {
           "colorMode": "critical",
           "op": "gt",
-          "value": 1,
+          "value": 0.01,
           "visible": true
         }
       ],
-      "title": "API DB Connection Timeouts ",
+      "title": "unknown panics",
       "type": "timeseries"
     },
     {
@@ -1415,9 +1395,145 @@
       ],
       "title": "KRYPTONITE",
       "type": "timeseries"
+    },
+    {
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                1
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "1m",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "last"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "3m",
+        "frequency": "1m",
+        "handler": 1,
+        "message": "Detected API Connection Timeouts",
+        "name": "API DB Connection Timeouts  alert",
+        "noDataState": "ok",
+        "notifications": [
+          {
+            "uid": "jx6jkJxnk"
+          },
+          {
+            "uid": "1HTjty-7k"
+          }
+        ]
+      },
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 40
+      },
+      "id": 14,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "expr": "sum by (region) (count_over_time({app=\"prod-livepeer-api\"} |= \"Connection terminated due to connection timeout\"[1m]))",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "op": "gt",
+          "value": 1,
+          "visible": true
+        }
+      ],
+      "title": "API DB Connection Timeouts ",
+      "type": "timeseries"
     }
   ],
-  "refresh": false,
+  "refresh": "",
   "schemaVersion": 34,
   "style": "dark",
   "tags": [],
@@ -1432,6 +1548,6 @@
   "timezone": "",
   "title": "papertrail alerts",
   "uid": "KXVHQPJ7z",
-  "version": 31,
+  "version": 46,
   "weekStart": ""
 }

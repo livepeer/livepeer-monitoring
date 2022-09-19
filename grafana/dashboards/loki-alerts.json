@@ -189,13 +189,13 @@
             "query": {
               "params": [
                 "A",
-                "4m",
+                "1m",
                 "now"
               ]
             },
             "reducer": {
               "params": [],
-              "type": "max"
+              "type": "last"
             },
             "type": "query"
           }
@@ -204,9 +204,9 @@
         "for": "4m",
         "frequency": "1m",
         "handler": 1,
-        "message": "Too many MistProcLivepeer restarts!\n```\nmanifest_id: ${manifest_id}\nregion: ${region}\npod: ${pod}\n```",
+        "message": "Too many MistProcLivepeer restarts for ${manifest_id}!",
         "name": "Excessive MistProcLivepeer restarts alert",
-        "noDataState": "no_data",
+        "noDataState": "ok",
         "notifications": [
           {
             "uid": "discord"
@@ -290,7 +290,7 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum by (manifest_id, region, pod) (count_over_time(\n  {app=\"mist\", container=\"mist\"} \n  |= \"Starting process: /usr/bin/MistProcLivepeer\" \n  | pattern `<_>\"source\":\"video<_>+<manifest_id>\"` [4m]\n)) > 3",
+          "expr": "sum by (manifest_id, region, pod) (count_over_time(\n  {app=\"mist\", container=\"mist\"} \n  |= \"Starting process: /usr/bin/MistProcLivepeer\" \n  | pattern `<_>\"source\":\"video<_>+<manifest_id>\"` [4m]\n)) > 1",
           "legendFormat": "{{manifest_id}} @ {{region}}-{{pod}}",
           "refId": "A"
         }
@@ -490,7 +490,7 @@
         "handler": 1,
         "message": "Tasks are accumulating in RabbitMQ. \n\nCheck RabbitMQ queue state (e.g. via management dashboard). They may have been not scheduled or not consumed from the queue.",
         "name": "Task Queue Accumulation alert",
-        "noDataState": "no_data",
+        "noDataState": "keep_state",
         "notifications": [
           {
             "uid": "jx6jkJxnk"
@@ -752,9 +752,313 @@
       ],
       "title": "Poison Tasks",
       "type": "timeseries"
+    },
+    {
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                0
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "10m",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "max"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "0m",
+        "frequency": "10m",
+        "handler": 1,
+        "message": "An asset with a considerable (>100ms) `start_time` in tracks has been uploaded!\n```\nassetId = [${assetId}]\n```\n\nThis is an ongoing investigation on how often we really get assets with that. \nThere is a known issue when we process those so we are monitoring if/when\nwe should prioritize a fix: `https://github.com/livepeer/task-runner/issues/28`\n\nConsider checking the asset source content and processed outputs to check\nif the result was acceptable, and maybe even contacting the user about it if\nappropriate.",
+        "name": "Asset with start_time uploaded",
+        "noDataState": "ok",
+        "notifications": [
+          {
+            "uid": "jx6jkJxnk"
+          }
+        ]
+      },
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 31
+      },
+      "id": 16,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "expr": "max_over_time({app=\"prod-task-runner\"} |= \"Probed video file\" | logfmt | maxStreamStartTime > 0.1 | unwrap maxStreamStartTime [10m]) by (assetId)",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "op": "gt",
+          "value": 0,
+          "visible": true
+        }
+      ],
+      "title": "Assets with considerable start_time",
+      "type": "timeseries"
+    },
+    {
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                6
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "5m",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "max"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "4m",
+        "frequency": "2m",
+        "handler": 1,
+        "message": "Too many task failures in region: `${region}`\n\nInvestigate the errors at: https://lvpr.link/loki-failed-tasks",
+        "name": "Too many VOD task failures",
+        "noDataState": "ok",
+        "notifications": [
+          {
+            "uid": "1HTjty-7k"
+          },
+          {
+            "uid": "jx6jkJxnk"
+          }
+        ]
+      },
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 31
+      },
+      "id": 18,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "expr": "sum(count_over_time({app=\"prod-task-runner\"} |= \"Task handler processed task\" | logfmt | error != \"%!q(<nil>)\" [2m])) by (region)",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "op": "gt",
+          "value": 6,
+          "visible": true
+        }
+      ],
+      "title": "Task failures by region",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 12,
+        "x": 12,
+        "y": 39
+      },
+      "id": 20,
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": false,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "expr": "{app=\"prod-task-runner\"} |= \"Task handler processed task\" | logfmt | error != \"%!q(<nil>)\" \n| error !~ \".+unexpected EOF\" \n| error !~ \".+stream error: stream ID.+\" \n| error !~ \"error processing ffprobe output: unsupported .+\"\n| error !~ \"(?s).*context deadline exceeded.*\" \n| error !~ \".+mp4io: parse error:.+TagSizeInvalid.+\"\n| error != \"error probing file: error running ffprobe [] exit status 1\"\n| error !~ \"bad status code from import request:.+\"\n| line_format \"{{ .error }}\"",
+          "refId": "A"
+        }
+      ],
+      "title": "Recent unknown VOD task errors",
+      "type": "logs"
     }
   ],
-  "refresh": false,
+  "refresh": "",
   "schemaVersion": 34,
   "style": "dark",
   "tags": [],
@@ -769,6 +1073,6 @@
   "timezone": "",
   "title": "Loki Alerts",
   "uid": "dbme6io7k",
-  "version": 39,
+  "version": 59,
   "weekStart": ""
 }
