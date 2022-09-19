@@ -75,13 +75,15 @@ COPY --from=c1 /usr/share/grafana /usr/share/grafana
 COPY --from=c1 $GF_PATHS_HOME/bin/grafana-cli $GF_PATHS_HOME/bin/grafana-cli
 COPY --from=c1 $GF_PATHS_HOME/public $GF_PATHS_HOME/public
 
-# Chromium dependencies from https://github.com/grafana/grafana/blob/f661e20dd757c76fb050306374601241f6b4097e/packaging/docker/Dockerfile#L38
+# Chromium dependencies from https://github.com/grafana/grafana/blob/2916b483ebed3e1f5667a858b251d42d844d6f6a/packaging/docker/Dockerfile#L35
 RUN if [ `arch` = "x86_64" ]; then \
+        # first line from https://github.com/sgerrand/alpine-pkg-glibc/issues/185#issuecomment-1245012640
+        apk add alpine-baselayout=3.2.0-r22 && \
         wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r0/glibc-2.35-r0.apk \
             -O /tmp/glibc-2.35-r0.apk && \
         wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r0/glibc-bin-2.35-r0.apk \
             -O /tmp/glibc-bin-2.35-r0.apk && \
-        apk add --force-overwrite --no-cache --allow-untrusted /tmp/glibc-2.35-r0.apk /tmp/glibc-bin-2.35-r0.apk && \
+        apk add --no-cache --allow-untrusted /tmp/glibc-2.35-r0.apk /tmp/glibc-bin-2.35-r0.apk && \
         rm -f /lib64/ld-linux-x86-64.so.2 && \
         ln -s /usr/glibc-compat/lib64/ld-linux-x86-64.so.2 /lib64/ld-linux-x86-64.so.2 && \
         rm -f /tmp/glibc-2.35-r0.apk && \
