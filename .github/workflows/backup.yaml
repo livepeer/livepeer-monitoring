@@ -1,4 +1,5 @@
-name: dashboards_backup
+name: Backup dashboards from grafana
+
 on:
   schedule:
     # * is a special character in YAML so you have to quote this string
@@ -9,8 +10,17 @@ on:
 
 jobs:
   backup:
+    name: Run backup script
     runs-on: ubuntu-20.04
     steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          # Check https://github.com/livepeer/go-livepeer/pull/1891
+          # for ref value discussion
+          ref: ${{ github.event.pull_request.head.sha }}
+
       - name: update dashboards
         env:
           API_KEY: ${{ secrets.GRAFANA_READ_API_KEY }}
