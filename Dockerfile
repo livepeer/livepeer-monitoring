@@ -27,19 +27,12 @@ RUN	apk add --no-cache ca-certificates bash tzdata supervisor nodejs npm \
 	&& cp "$GF_PATHS_HOME/conf/ldap.toml" /etc/grafana/ldap.toml \
 	&& chown -R grafana:root "$GF_PATHS_HOME" "$GF_PATHS_PROVISIONING" "$GF_PATHS_LOGS" "$GF_PATHS_LOGS" "$GF_PATHS_PLUGINS" "$GF_PATHS_DATA" /config-generator
 
-USER	grafana
-
-COPY --chown=grafana:root	config-generator/package-lock.json	config-generator/package.json	./
-
-RUN	npm install
-
 # Copy over from prometheus base image
 COPY --from=prometheus	/bin/prometheus	/bin/promtool           /usr/local/bin/
-COPY --chown=grafana:root --from=prometheus	/etc/prometheus/prometheus.yml            /etc/prometheus/prometheus.yml
-COPY --chown=grafana:root --from=prometheus	/usr/share/prometheus/console_libraries/            /usr/share/prometheus/console_libraries/
-COPY --chown=grafana:root --from=prometheus	/usr/share/prometheus/consoles/           /usr/share/prometheus/consoles/
-# RUN ln -s /usr/share/prometheus/console_libraries /usr/share/prometheus/consoles/ /etc/prometheus/
-COPY --chown=grafana:root --from=prometheus	/prometheus	/prometheus
+COPY --from=prometheus	/etc/prometheus/prometheus.yml            /etc/prometheus/prometheus.yml
+COPY --from=prometheus	/usr/share/prometheus/console_libraries/            /usr/share/prometheus/console_libraries/
+COPY --from=prometheus	/usr/share/prometheus/consoles/           /usr/share/prometheus/consoles/
+COPY --from=prometheus	/prometheus	/prometheus
 
 # Copy over from loki base image
 COPY --from=loki /usr/bin/loki /usr/local/bin/loki
@@ -54,16 +47,19 @@ ENV	LP_PROMETHEUS_ENDPOINT="http://localhost:9090" \
 
 COPY --chown=grafana:root	./grafana/	$GF_PATHS_PROVISIONING/
 
-COPY --chown=grafana:root	supervisord.conf	/etc/supervisor.d/supervisord.conf
+COPY	supervisord.conf	/etc/supervisor.d/supervisord.conf
 
-COPY --chown=grafana:root	config-generator	./
+COPY	config-generator/package-lock.json	config-generator/package.json	./
+
+RUN	npm install
+
+COPY	config-generator	./
 
 RUN	node /config-generator/src/generate.js
 
 VOLUME	[ "/data/grafana", "/prometheus" ]
 
-COPY --chown=grafana:root	start.sh	/start.sh
-COPY --chown=grafana:root	export.sh	/export.sh
+COPY	start.sh	export.sh	/
 
 EXPOSE	3100	9090	9093	3000
 
