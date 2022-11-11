@@ -25,7 +25,7 @@ RUN	apk add --no-cache ca-certificates bash tzdata supervisor nodejs npm \
 	&& apk add --no-cache --upgrade --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main openssl musl-utils \
 	&& cp "$GF_PATHS_HOME/conf/sample.ini" "$GF_PATHS_CONFIG" \
 	&& cp "$GF_PATHS_HOME/conf/ldap.toml" /etc/grafana/ldap.toml \
-	&& chown -R grafana:root /config-generator && ls -lha /
+	&& chown -R grafana:root "$GF_PATHS_HOME" "$GF_PATHS_PROVISIONING" "$GF_PATHS_LOGS" "$GF_PATHS_LOGS" "$GF_PATHS_PLUGINS" "$GF_PATHS_DATA" /config-generator
 
 USER	grafana
 
@@ -35,15 +35,15 @@ RUN	npm install
 
 # Copy over from prometheus base image
 COPY --from=prometheus	/bin/prometheus	/bin/promtool           /usr/local/bin/
-COPY --from=prometheus	/etc/prometheus/prometheus.yml            /etc/prometheus/prometheus.yml
-COPY --from=prometheus	/usr/share/prometheus/console_libraries/            /usr/share/prometheus/console_libraries/
-COPY --from=prometheus	/usr/share/prometheus/consoles/           /usr/share/prometheus/consoles/
+COPY --chown=grafana:root --from=prometheus	/etc/prometheus/prometheus.yml            /etc/prometheus/prometheus.yml
+COPY --chown=grafana:root --from=prometheus	/usr/share/prometheus/console_libraries/            /usr/share/prometheus/console_libraries/
+COPY --chown=grafana:root --from=prometheus	/usr/share/prometheus/consoles/           /usr/share/prometheus/consoles/
 # RUN ln -s /usr/share/prometheus/console_libraries /usr/share/prometheus/consoles/ /etc/prometheus/
-COPY --from=prometheus	/prometheus	/prometheus
+COPY --chown=grafana:root --from=prometheus	/prometheus	/prometheus
 
 # Copy over from loki base image
-COPY --from=loki /usr/bin/loki /usr/bin/loki
-COPY  ./config/loki.yaml /etc/loki/loki.yaml
+COPY --from=loki /usr/bin/loki /usr/local/bin/loki
+COPY --chown=grafana:root  ./config/loki.yaml /etc/loki/loki.yaml
 
 # Copy over from alertmanager base image
 COPY --from=alertmanager	/bin/alertmanager /bin/amtool	/usr/local/bin/
@@ -54,20 +54,16 @@ ENV	LP_PROMETHEUS_ENDPOINT="http://localhost:9090" \
 
 COPY --chown=grafana:root	./grafana/	$GF_PATHS_PROVISIONING/
 
-COPY	supervisord.conf	/etc/supervisor.d/supervisord.conf
+COPY --chown=grafana:root	supervisord.conf	/etc/supervisor.d/supervisord.conf
 
 COPY --chown=grafana:root	config-generator	./
 
-USER	root
-
 RUN	node /config-generator/src/generate.js
-
-USER	grafana
 
 VOLUME	[ "/data/grafana", "/prometheus" ]
 
-COPY	start.sh	/start.sh
-COPY	export.sh	/export.sh
+COPY --chown=grafana:root	start.sh	/start.sh
+COPY --chown=grafana:root	export.sh	/export.sh
 
 EXPOSE	3100	9090	9093	3000
 
