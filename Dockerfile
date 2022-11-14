@@ -1,6 +1,6 @@
 FROM	prom/prometheus:v2.40.1	AS	prometheus
 
-FROM	grafana/loki:2.6.1	AS	loki
+FROM	grafana/loki:2.7.0	AS	loki
 
 FROM	prom/alertmanager:v0.24.0	AS	alertmanager
 
