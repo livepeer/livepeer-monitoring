@@ -4,6 +4,14 @@ FROM	grafana/loki:2.6.1	AS	loki
 
 FROM	prom/alertmanager:v0.24.0	AS	alertmanager
 
+FROM	golang:1.19.3-alpine3.16	AS	nvidia-builder
+
+WORKDIR	/src
+
+COPY	nvidia_smi_exporter.go	./
+
+RUN	go build nvidia_smi_exporter.go
+
 FROM	grafana/grafana:9.2.4	AS	grafana
 
 LABEL	maintainer="Amritanshu Varshney <amritanshu+github@livepeer.org>"
@@ -40,6 +48,9 @@ COPY --chown=grafana:root  ./config/loki.yaml /etc/loki/loki.yaml
 
 # Copy over from alertmanager base image
 COPY --from=alertmanager	/bin/alertmanager /bin/amtool	/usr/local/bin/
+
+# Copy over from nvidia smi exporter layer
+COPY --from=nvidia-builder	/src/nvidia_smi_exporter	/usr/local/bin/
 
 ENV	LP_PROMETHEUS_ENDPOINT="http://localhost:9090" \
 	LP_LOKI_ENDPOINT="http://localhost:3100" \

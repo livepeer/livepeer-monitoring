@@ -14,6 +14,7 @@ folder="grafana/dashboards"
 
 find $folder -name '*.json' -type f -delete
 mkdir -p "${folder}"
+
 for db_search_json in $(curl -H "Authorization: Bearer ${API_KEY}" --fail -s "${full_url}/api/search?type=dash-db" | jq -cr '.[] | @base64'); do
   db_uid=$(echo "${db_search_json}" | base64 -d | jq -r .uid)
   db_folder=$(echo "${db_search_json}" | base64 -d | jq -r .folderTitle)
@@ -28,4 +29,5 @@ for db_search_json in $(curl -H "Authorization: Bearer ${API_KEY}" --fail -s "${
   echo "Exporting \"${db_title}\" to \"${filename}\"..."
   echo "${db_json}" | jq -r '.dashboard | .id = null' >"${filename}"
 done
+
 echo "Done"

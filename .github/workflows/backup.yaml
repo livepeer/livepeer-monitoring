@@ -17,25 +17,31 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          # Check https://github.com/livepeer/go-livepeer/pull/1891
-          # for ref value discussion
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: master
 
-      - name: update dashboards
+      - name: Run script to update dashboards
         env:
           API_KEY: ${{ secrets.GRAFANA_READ_API_KEY }}
         run: |
           ./export.sh https://eu-metrics-monitoring.livepeer.live/grafana
 
-      - name: Create a PR with the new dashboards
-        uses: peter-evans/create-pull-request@v4
-        if: ${{ success() }}
+      - name: Commit and push changes
+        id: branch-commit
+        uses: devops-infra/action-commit-push@v0.9.2
         with:
-          token: ${{ secrets.PAT_TOKEN }}
-          title: "[AUTO] Dashboard backup"
-          labels: "grafana"
-          commit-message: "This is an automated PR for backing up the Grafana dashboards in eu-metrics"
-          branch: backup/grafana
-          base: master
-          delete-branch: true
-          body: "This PR updates the values for the Grafana dashboards in eu-metrics"
+          github_token: ${{ secrets.PUSH_TOKEN }}
+          target_branch: backup/grafana
+          commit_prefix: "[AUTO-COMMIT] "
+          commit_message: 'Backup grafana dashboards'
+          force: true
+
+      - name: Create pull request with new dashboards
+        uses: devops-infra/action-pull-request@v0.5.3
+        with:
+          github_token: ${{ github.token }}
+          source_branch: ${{ steps.branch-commit.outputs.branch_name }}
+          target_branch: master
+          title: '[AUTO] Dashboards backup'
+          label: grafana
+          get_diff: true
+          allow_no_diff: false
