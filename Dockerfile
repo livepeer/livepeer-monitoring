@@ -1,4 +1,4 @@
-FROM	prom/prometheus:v2.40.1	AS	prometheus
+FROM	prom/prometheus:v2.40.2	AS	prometheus
 
 FROM	grafana/loki:2.7.0	AS	loki
 
