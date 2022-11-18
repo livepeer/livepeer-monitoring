@@ -1,4 +1,4 @@
-FROM	prom/prometheus:v2.40.1	AS	prometheus
+FROM	prom/prometheus:v2.40.2	AS	prometheus
 
 FROM	grafana/loki:2.7.0	AS	loki
 
@@ -12,7 +12,7 @@ COPY	nvidia_smi_exporter.go	./
 
 RUN	go build nvidia_smi_exporter.go
 
-FROM	grafana/grafana:9.2.4	AS	grafana
+FROM	grafana/grafana:9.2.5	AS	grafana
 
 LABEL	maintainer="Amritanshu Varshney <amritanshu+github@livepeer.org>"
 
@@ -36,18 +36,18 @@ RUN	apk add --no-cache ca-certificates bash tzdata supervisor nodejs npm \
 	&& chown -R grafana:root "$GF_PATHS_HOME" "$GF_PATHS_PROVISIONING" "$GF_PATHS_LOGS" "$GF_PATHS_LOGS" "$GF_PATHS_PLUGINS" "$GF_PATHS_DATA" /config-generator
 
 # Copy over from prometheus base image
-COPY --from=prometheus	/bin/prometheus	/bin/promtool           /usr/local/bin/
-COPY --from=prometheus	/etc/prometheus/prometheus.yml            /etc/prometheus/prometheus.yml
-COPY --from=prometheus	/usr/share/prometheus/console_libraries/            /usr/share/prometheus/console_libraries/
-COPY --from=prometheus	/usr/share/prometheus/consoles/           /usr/share/prometheus/consoles/
-COPY --from=prometheus	/prometheus	/prometheus
+COPY --from=prometheus	/bin/prometheus		/bin/promtool           /usr/local/bin/
+COPY --from=prometheus	/etc/prometheus/prometheus.yml			/etc/prometheus/prometheus.yml
+COPY --from=prometheus	/usr/share/prometheus/console_libraries/	/usr/share/prometheus/console_libraries/
+COPY --from=prometheus	/usr/share/prometheus/consoles/			/usr/share/prometheus/consoles/
+COPY --from=prometheus	/prometheus					/prometheus
 
 # Copy over from loki base image
-COPY --from=loki /usr/bin/loki /usr/local/bin/loki
-COPY --chown=grafana:root  ./config/loki.yaml /etc/loki/loki.yaml
+COPY --from=loki		/usr/bin/loki		/usr/local/bin/loki
+COPY --chown=grafana:root	./config/loki.yaml	/etc/loki/loki.yaml
 
 # Copy over from alertmanager base image
-COPY --from=alertmanager	/bin/alertmanager /bin/amtool	/usr/local/bin/
+COPY --from=alertmanager	/bin/alertmanager	/bin/amtool	/usr/local/bin/
 
 # Copy over from nvidia smi exporter layer
 COPY --from=nvidia-builder	/src/nvidia_smi_exporter	/usr/local/bin/
@@ -60,7 +60,7 @@ COPY --chown=grafana:root	./grafana/	$GF_PATHS_PROVISIONING/
 
 COPY	supervisord.conf	/etc/supervisor.d/supervisord.conf
 
-COPY	config-generator/package-lock.json	config-generator/package.json	./
+COPY	./config-generator/package-lock.json	./config-generator/package.json	./
 
 RUN	npm install
 
@@ -70,7 +70,7 @@ RUN	node /config-generator/src/generate.js
 
 VOLUME	[ "/data/grafana", "/prometheus" ]
 
-COPY	start.sh	export.sh	/
+COPY	./start.sh	./export.sh	/
 
 EXPOSE	3100	9090	9093	3000
 
