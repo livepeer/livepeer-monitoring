@@ -27,13 +27,11 @@ RUN	mkdir -p "$GF_PATHS_HOME/.aws" \
 
 USER	root
 
-WORKDIR	/config-generator
-
-RUN	apk add --no-cache ca-certificates bash tzdata supervisor nodejs npm \
+RUN	apk add --no-cache ca-certificates bash tzdata supervisor yarn \
 	&& apk add --no-cache --upgrade --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main openssl musl-utils \
 	&& cp "$GF_PATHS_HOME/conf/sample.ini" "$GF_PATHS_CONFIG" \
 	&& cp "$GF_PATHS_HOME/conf/ldap.toml" /etc/grafana/ldap.toml \
-	&& chown -R grafana:root "$GF_PATHS_HOME" "$GF_PATHS_PROVISIONING" "$GF_PATHS_LOGS" "$GF_PATHS_LOGS" "$GF_PATHS_PLUGINS" "$GF_PATHS_DATA" /config-generator
+	&& chown -R grafana:root "$GF_PATHS_HOME" "$GF_PATHS_PROVISIONING" "$GF_PATHS_LOGS" "$GF_PATHS_LOGS" "$GF_PATHS_PLUGINS" "$GF_PATHS_DATA"
 
 # Copy over from prometheus base image
 COPY --from=prometheus	/bin/prometheus		/bin/promtool           /usr/local/bin/
@@ -60,9 +58,11 @@ COPY --chown=grafana:root	./grafana/	$GF_PATHS_PROVISIONING/
 
 COPY	supervisord.conf	/etc/supervisor.d/supervisord.conf
 
-COPY	./config-generator/package-lock.json	./config-generator/package.json	./
+WORKDIR	/config-generator
 
-RUN	npm install
+COPY	./config-generator/yarn.lock	./config-generator/package.json	./
+
+RUN	yarn
 
 COPY	config-generator	./
 
@@ -70,7 +70,7 @@ RUN	node /config-generator/src/generate.js
 
 VOLUME	[ "/data/grafana", "/prometheus" ]
 
-COPY	./start.sh	./export.sh	/
+COPY	./start.sh	/
 
 EXPOSE	3100	9090	9093	3000
 

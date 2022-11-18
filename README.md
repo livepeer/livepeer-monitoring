@@ -23,7 +23,7 @@ a bundled prometheus/grafana container with a config templating for monitoring l
 
 - `--prometheus-kube-scrape`: string annotation for scraping a kube pod. Ex. If the value for this flag is `scrape_this_pod` then all kube pods to be scraped should have the annotation `prometheus.io/scrape_this_pod`. The value for this flag must follow the Prometheus requirements for naming and match the regex `[a-zA-Z_][a-zA-Z0-9_]*` (ACII letters, numbers and underscores).
 
-- `--pagerduty-service-key`: the [service key](https://support.pagerduty.com/docs/services-and-integrations) (not API key!) for the Prometheus integration on your Pagerduty service to receive alerts from Prometheus Alertmanager. 
+- `--pagerduty-service-key`: the [service key](https://support.pagerduty.com/docs/services-and-integrations) (not API key!) for the Prometheus integration on your Pagerduty service to receive alerts from Prometheus Alertmanager.
 
 ### ENVs
 
@@ -41,10 +41,10 @@ All `GF_` prefixed envs are passed to grafana , you can find out more details at
 
 ```bash
 # simple standalone setup example using envs
-$ sudo docker run --net=host --env LP_MODE=standalone --env LP_NODES=localhost:9735,localhost:7936 livepeer/monitoring:latest
+$ docker run --net=host --env LP_MODE=standalone --env LP_NODES=localhost:9735,localhost:7936 livepeer/monitoring:latest
 
 # using args
-$ sudo docker run --net=host livepeer/monitoring:latest --mode standalone --nodes=localhost:9735,localhost:7936
+$ docker run --net=host livepeer/monitoring:latest --mode standalone --nodes=localhost:9735,localhost:7936
 
 ```
 

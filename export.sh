@@ -7,17 +7,17 @@
 
 set -euo pipefail
 
-full_url=$1
-username=$(echo "${full_url}" | cut -d/ -f 3 | cut -d: -f 1)
-base_url=$(echo "${full_url}" | cut -d@ -f 2)
+full_url="$1"
+username="$(echo "${full_url}" | cut -d/ -f 3 | cut -d: -f 1)"
+base_url="$(echo "${full_url}" | cut -d@ -f 2)"
 folder="grafana/dashboards"
 
-find $folder -name '*.json' -type f -delete
+find "$folder" -name '*.json' -type f -delete
 mkdir -p "${folder}"
 
 for db_search_json in $(curl -H "Authorization: Bearer ${API_KEY}" --fail -s "${full_url}/api/search?type=dash-db" | jq -cr '.[] | @base64'); do
-  db_uid=$(echo "${db_search_json}" | base64 -d | jq -r .uid)
-  db_folder=$(echo "${db_search_json}" | base64 -d | jq -r .folderTitle)
+  db_uid="$(echo "${db_search_json}" | base64 -d | jq -r .uid)"
+  db_folder="$(echo "${db_search_json}" | base64 -d | jq -r .folderTitle)"
   if [[ "$db_folder" == "null" ]]; then
     db_folder=""
   fi
