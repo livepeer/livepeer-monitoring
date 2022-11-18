@@ -12,7 +12,7 @@ COPY	nvidia_smi_exporter.go	./
 
 RUN	go build nvidia_smi_exporter.go
 
-FROM	grafana/grafana:9.2.4	AS	grafana
+FROM	grafana/grafana:9.2.5	AS	grafana
 
 LABEL	maintainer="Amritanshu Varshney <amritanshu+github@livepeer.org>"
 
