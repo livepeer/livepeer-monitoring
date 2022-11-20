@@ -32,7 +32,7 @@
           {
             "evaluator": {
               "params": [
-                0
+                4
               ],
               "type": "gt"
             },
@@ -42,27 +42,30 @@
             "query": {
               "params": [
                 "A",
-                "5m",
+                "1m",
                 "now"
               ]
             },
             "reducer": {
               "params": [],
-              "type": "max"
+              "type": "avg"
             },
             "type": "query"
           }
         ],
-        "executionErrorState": "alerting",
-        "for": "5m",
+        "executionErrorState": "keep_state",
+        "for": "2m",
         "frequency": "1m",
         "handler": 1,
-        "message": "Test Streams are down.\n\nPlease verify the data in Livepeer Explorer at https://explorer.livepeer.org/leaderboard.",
-        "name": "Test Streams Errors alert",
+        "message": "Elevated 500 levels detected while routing connections from nginx to pod ${upstreamAddr} in region ${region}. Try this command to find the pod:\n```\nkubectl --context=${region}-prod get pods -owide | grep ${upstreamAddr}\n```\n(might have to drop the `:port` part of the `grep`)\n\nYou can fix problem by SSHing into the pod:\n```\nkubectl --context=${region}-prod exec -ti $POD_NAME -- /bin/bash\n```\nand running \n```\nPID=$(ps aux | grep catalyst-node | grep -v livepeer-log | grep -v grep | tr -s ' ' | cut -d ' ' -f 2)\nkill $PID\n```\nor you can just kill the pod if nothing high-priority is happening there (with `kubectl delete pod`).\n\nUsually this is because of this bug: https://github.com/livepeer/catalyst/issues/237\n\nTheoretically I'm (Eli) writing this message tonight and I'll fix the bug tomorrow and none of you will ever see this message, so if you're seeing it maybe something else is wrong.\nTheoretically I'm (Victor) editing this message with the news that I think the fix didn't work or isn't deployed yet ¯\\_(ツ)_/¯",
+        "name": "High 500s from catalyst in `${region}`",
         "noDataState": "ok",
         "notifications": [
           {
             "uid": "jx6jkJxnk"
+          },
+          {
+            "uid": "xIogFCs7k"
           }
         ]
       },
@@ -118,7 +121,32 @@
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "lax: 10.42.0.221:8090"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 9,
@@ -143,8 +171,8 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({app=~\".*prod-orch-tester-orchtester.*\"} |= \"Low number of orchestrators which passed the sanity check\" [1m])) by (region)",
-          "legendFormat": "{{ region }}",
+          "expr": "sum(count_over_time({namespace=\"prod\", app=\"ingress-nginx\", stream=\"stdout\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<origin>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>`| status = \"500\" [1m] )) by (region, upstreamAddr)",
+          "legendFormat": "{{ region }}: {{ upstreamAddr }}",
           "refId": "A"
         }
       ],
@@ -152,11 +180,11 @@
         {
           "colorMode": "critical",
           "op": "gt",
-          "value": 0,
+          "value": 4,
           "visible": true
         }
       ],
-      "title": "Test Stream Errors",
+      "title": "500s by region + upstream",
       "type": "timeseries"
     }
   ],
@@ -173,8 +201,8 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Test Streams",
-  "uid": "BxpTV8Q7z",
-  "version": 19,
+  "title": "nginx analysis",
+  "uid": "zmi6coN4k",
+  "version": 4,
   "weekStart": ""
 }

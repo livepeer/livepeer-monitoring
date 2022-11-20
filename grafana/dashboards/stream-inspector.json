@@ -21,8 +21,8 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "hideControls": false,
   "id": null,
+  "iteration": 1668641432602,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -79,7 +79,7 @@
       },
       "gridPos": {
         "h": 9,
-        "w": 12,
+        "w": 24,
         "x": 0,
         "y": 0
       },
@@ -88,7 +88,7 @@
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "right"
         },
         "tooltip": {
           "mode": "single"
@@ -101,14 +101,13 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "avg_over_time(livepeer_segment_transcoded_all_appeared_total{region =~ \"mdw\"}[4h])",
+          "expr": "mist_sessions{sessType=\"incoming\", stream=~\"video(rec)?\\\\+${stream}\"} > 0",
           "interval": "",
-          "legendFormat": "",
+          "legendFormat": "{{ catalyst_node }}",
           "refId": "A"
         }
       ],
-      "thresholds": [],
-      "title": "Panel Title",
+      "title": "Origin Server",
       "type": "timeseries"
     }
   ],
@@ -117,7 +116,28 @@
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "",
+          "value": ""
+        },
+        "hide": 0,
+        "label": "Stream",
+        "name": "stream",
+        "options": [
+          {
+            "selected": false,
+            "text": "",
+            "value": ""
+          }
+        ],
+        "query": "",
+        "skipUrlSync": false,
+        "type": "textbox"
+      }
+    ]
   },
   "time": {
     "from": "now-6h",
@@ -125,8 +145,8 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Orch tester alerts",
-  "uid": "ChxzFP87k",
-  "version": 1,
+  "title": "Stream Inspector",
+  "uid": "MQJsMGO4z",
+  "version": 5,
   "weekStart": ""
 }

@@ -3,7 +3,10 @@
     "list": [
       {
         "builtIn": 1,
-        "datasource": "-- Grafana --",
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
@@ -20,11 +23,126 @@
   },
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "graphTooltip": 0,
+  "graphTooltip": 1,
   "id": null,
+  "iteration": 1668467189696,
   "links": [],
   "liveNow": false,
   "panels": [
+    {
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 5,
+        "x": 0,
+        "y": 0
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "sum (mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream!~\"$exclude\"})",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "title": "Current Viewers",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 5,
+        "x": 19,
+        "y": 0
+      },
+      "id": 6,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "count(mist_cpu{catalyst=\"true\"})",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "title": "Nodes Online",
+      "type": "stat"
+    },
     {
       "alert": {
         "alertRuleTags": {},
@@ -32,7 +150,7 @@
           {
             "evaluator": {
               "params": [
-                10
+                300
               ],
               "type": "gt"
             },
@@ -57,9 +175,254 @@
         "for": "0m",
         "frequency": "1m",
         "handler": 1,
-        "message": "Detected \"no sender deposit\" errors in ${region}, someone roll pods: kubectl get deployments --context=${region} -o name | grep prod-livepeer-secondary-broadcaster | xargs kubectl --context=${region}rollout restart",
-        "name": "\"no sender deposit\" alert",
-        "noDataState": "ok",
+        "message": "Stream ${stream} has more than 300 viewers, please check to make sure it's not soccer!\n\nCheck using `https://livepeer.studio/app/stream/${stream}?autoplay` (remove `video` or `videorec` prefix)",
+        "name": "Viewers by Stream alert",
+        "noDataState": "no_data",
+        "notifications": [
+          {
+            "uid": "xIogFCs7k"
+          },
+          {
+            "uid": "jx6jkJxnk"
+          }
+        ]
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "Sessions count",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 4,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 7
+      },
+      "id": 1,
+      "options": {
+        "legend": {
+          "calcs": [
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Last",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream!=\"000reallylongnonexistenstreamnamethatreallyshouldntexist000\", stream!~\"$exclude\"}[1m] ) by (stream) or on() vector(0)",
+          "instant": false,
+          "interval": "",
+          "key": "Q-aca73aa4-50db-4a58-ab60-0460130ab40b-0",
+          "legendFormat": "{{ stream }}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "op": "gt",
+          "value": 300,
+          "visible": true
+        }
+      ],
+      "title": "Viewers by Stream",
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 17
+      },
+      "id": 14,
+      "options": {
+        "legend": {
+          "calcs": [
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Last",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream!=\"000reallylongnonexistenstreamnamethatreallyshouldntexist000\", stream!~\"$exclude\"}[1m] ) by (catalyst_node) ",
+          "instant": false,
+          "interval": "",
+          "key": "Q-aca73aa4-50db-4a58-ab60-0460130ab40b-0",
+          "legendFormat": "{{ stream }}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Viewers by Node",
+      "type": "timeseries"
+    },
+    {
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                5
+              ],
+              "type": "lt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "B",
+                "1m",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "max"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "5m",
+        "frequency": "1m",
+        "handler": 1,
+        "message": "No livestream viewers globally! \n\nSomething might have nuked our whole infra (or an entry point to it).",
+        "name": "No viewers globally!",
+        "noDataState": "keep_state",
         "notifications": [
           {
             "uid": "jx6jkJxnk"
@@ -69,144 +432,6 @@
           }
         ]
       },
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 0
-      },
-      "id": 22,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
-          "expr": "sum(count_over_time({app=~\"prod-livepeer-secondary-broadcaster.+\"} |~ \"no sender deposit\"[1m])) by (region)",
-          "legendFormat": "{{ region }}",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "op": "gt",
-          "value": 10,
-          "visible": true
-        }
-      ],
-      "title": "\"no sender deposit\"",
-      "type": "timeseries"
-    },
-    {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                3
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "A",
-                "10s",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "last"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "0s",
-        "frequency": "1m",
-        "handler": 1,
-        "message": "increased panics",
-        "name": "increased panics alert",
-        "noDataState": "ok",
-        "notifications": [
-          {
-            "uid": "jx6jkJxnk"
-          },
-          {
-            "uid": "1HTjty-7k"
-          }
-        ]
-      },
-      "description": "",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -261,88 +486,67 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 0
+        "y": 17
       },
-      "id": 4,
+      "id": 3,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
+          "calcs": [
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Last",
+          "sortDesc": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum(count_over_time({app=~\"prod-livepeer-[^(secondary|monitoring)].*\"} |= \"panic\"[1m]))",
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream!~\"$exclude\", stream!~\"$exclude\"}) by (region)",
+          "instant": false,
+          "interval": "",
+          "key": "Q-aca73aa4-50db-4a58-ab60-0460130ab40b-0",
+          "legendFormat": "{{ stream }}",
+          "range": true,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "sum (mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream!~\"$exclude\", stream!~\"$exclude\"})",
+          "hide": true,
+          "instant": false,
+          "interval": "",
+          "legendFormat": "total",
+          "refId": "B"
         }
       ],
       "thresholds": [
         {
           "colorMode": "critical",
-          "op": "gt",
-          "value": 3,
+          "op": "lt",
+          "value": 5,
           "visible": true
         }
       ],
-      "title": "increased panics",
+      "title": "Viewers by Region",
       "type": "timeseries"
     },
     {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                4.99
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "A",
-                "5m",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "last"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "0s",
-        "frequency": "1m",
-        "handler": 1,
-        "message": "etcd Write failure",
-        "name": "etcd write failure alert",
-        "noDataState": "ok",
-        "notifications": [
-          {
-            "uid": "jx6jkJxnk"
-          },
-          {
-            "uid": "1HTjty-7k"
-          }
-        ]
-      },
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -397,84 +601,42 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 8
+        "y": 25
       },
-      "id": 20,
+      "id": 2,
       "options": {
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum by (region) (count_over_time({app=\"mist\"} |~ \"Error creating etcd Traefik rule\"[1m]))",
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "count(mist_cpu{catalyst=\"true\"})",
+          "instant": false,
+          "interval": "",
+          "key": "Q-711bf133-54fa-4fb0-b865-1b5d8b6428c5-0",
+          "legendFormat": "",
+          "range": true,
           "refId": "A"
         }
       ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "op": "gt",
-          "value": 4.99,
-          "visible": true
-        }
-      ],
-      "title": "etcd write failure",
+      "title": "Node Count",
       "type": "timeseries"
     },
     {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                0.01
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "A",
-                "1m",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "last"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "0s",
-        "frequency": "1m",
-        "handler": 1,
-        "message": "Zombie External Dns alert",
-        "name": "zombie external dns",
-        "noDataState": "ok",
-        "notifications": [
-          {
-            "uid": "jx6jkJxnk"
-          },
-          {
-            "uid": "1HTjty-7k"
-          }
-        ]
-      },
       "datasource": {
         "type": "loki",
         "uid": "P8E80F9AEF21F6940"
@@ -487,6 +649,7 @@
           "custom": {
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMin": 0,
             "barAlignment": 0,
             "drawStyle": "line",
             "fillOpacity": 0,
@@ -533,7 +696,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 8
+        "y": 25
       },
       "id": 12,
       "options": {
@@ -552,19 +715,12 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({app=\"external-dns\"} |= \"owner id does not match\"[1m])) by (region)",
+          "expr": "sum(count_over_time({namespace=\"prod\", app=\"catalyst\"} |~ \"FAIL: onFail\" |~ \"Key duration mismatch; disconnecting\" | pattern \"<_> '<_>+<playback_id>': Key duration mismatch; disconnecting <ip> to recover\"[30m])) by (playback_id)",
+          "legendFormat": "{{ playback_id }}",
           "refId": "A"
         }
       ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "op": "gt",
-          "value": 0.01,
-          "visible": true
-        }
-      ],
-      "title": "zombie external dns",
+      "title": "Key duration mismatch; disconnecting",
       "type": "timeseries"
     },
     {
@@ -574,7 +730,7 @@
           {
             "evaluator": {
               "params": [
-                10000
+                100
               ],
               "type": "gt"
             },
@@ -584,23 +740,23 @@
             "query": {
               "params": [
                 "A",
-                "10s",
+                "15m",
                 "now"
               ]
             },
             "reducer": {
               "params": [],
-              "type": "last"
+              "type": "min"
             },
             "type": "query"
           }
         ],
         "executionErrorState": "alerting",
-        "for": "0s",
+        "for": "5m",
         "frequency": "1m",
         "handler": 1,
-        "message": "High viewership count\n\nModerate the stream: <https://livepeer.com/app/stream/${playback_id}?autoplay>\n(there's a suspend user button at the bottom as well)",
-        "name": "request per minute alert",
+        "message": "Catalyst node ${host} is unable to be replicated by lots of other servers. Please investigate this server and take it out of production if necessary.",
+        "name": "\"Could not retrieve\" replications alert",
         "noDataState": "ok",
         "notifications": [
           {
@@ -648,14 +804,8 @@
               "mode": "off"
             }
           },
-          "links": [
-            {
-              "targetBlank": true,
-              "title": "logs",
-              "url": "https://eu-metrics-monitoring.livepeer.live/grafana/explore?left=%5B%22now-5m%22,%22now%22,%22Loki%22,%7B%22datasource%22:%7B%22type%22:%22loki%22,%22uid%22:%22P8E80F9AEF21F6940%22%7D,%22expr%22:%22%7Bregion%3D%5C%22$${__field.region}%5C%22%7D%20%7C%3D%20%5C%22$${__field.playback_id}%22%22,%22refId%22:%22A%22%7D%5D&orgId=1"
-            }
-          ],
           "mappings": [],
+          "noValue": "0",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -676,28 +826,31 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 16
+        "y": 33
       },
-      "id": 6,
+      "id": 10,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
+          "calcs": [
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "sortBy": "Last *",
+          "sortDesc": true
         },
         "tooltip": {
           "mode": "single"
         }
       },
-      "pluginVersion": "8.3.3",
       "targets": [
         {
           "datasource": {
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time(\n  {app=\"traefik\", region!=\"eu-metrics\", container=\"prod-traefik\"} \n  | json \n  | __error__!=\"JSONParserErr\"\n  | line_format \"{{.RequestPath}}\" \n  | regexp \"/hls/(\\\\w+\\\\+)?(?P<playback_id>[^/]+)/.+\"\n  | playback_id != \"\"\n  [1m]\n )) by (playback_id, region)",
-          "legendFormat": "",
+          "expr": "sum(count_over_time({app=\"catalyst\", namespace=\"prod\"} |~ \"Could not retrieve\" | pattern \"<_> https://<host>/\"[5m])) by (host)",
+          "legendFormat": "{{ host }}",
           "refId": "A"
         },
         {
@@ -705,8 +858,9 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({namespace=\"prod\", app=\"ingress-nginx\", stream=\"stdout\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<origin>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>` | line_format \"{{ .url }}\" | pattern \"/hls/<base>+<playback_id>/\"[1m])) by (region, playback_id)",
+          "expr": "sum(count_over_time({app=\"ingress-nginx\", namespace=\"prod\", stream=\"stderr\"} != \"sent data after final chunk\" |~ \"[error]\" | pattern `<_> upstream: \"<protocol>://<ip>:<port>/<code>.<ext>\", host: \"<upstreamHost>:<upstreamPort>\"`  | port = \"4242\" | ext = \"json\"[1m])) by (upstreamHost)",
           "hide": false,
+          "legendFormat": "{{ upstreamHost }}",
           "refId": "B"
         }
       ],
@@ -714,57 +868,115 @@
         {
           "colorMode": "critical",
           "op": "gt",
-          "value": 10000,
+          "value": 100,
           "visible": true
         }
       ],
-      "title": "request per minute",
+      "title": "\"Could not retrieve\" replications (prod)",
       "type": "timeseries"
     },
     {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                1
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "A",
-                "1m",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "max"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "2m",
-        "frequency": "1m",
-        "handler": 1,
-        "message": "Some broadcaster is getting errors publishing stream health events to RabbitMQ!\n\nThis is likely some stuck client issue. Fix it by rolling out the deployment:\n\n`kubectl --context=${region} rollout restart deployment ${app}`",
-        "name": "Stream Health Publish Error",
-        "noDataState": "ok",
-        "notifications": [
-          {
-            "uid": "jx6jkJxnk"
-          },
-          {
-            "uid": "1HTjty-7k"
-          }
-        ]
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
       },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 33
+      },
+      "id": 15,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "sortBy": "Last *",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "expr": "sum(count_over_time({app=\"catalyst\", namespace=\"prod\"} |~ \"Could not retrieve\" | pattern \"<_> https://<host>/\"[5m]))",
+          "legendFormat": "{{ host }}",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "expr": "sum(count_over_time({app=\"ingress-nginx\", namespace=\"prod\", stream=\"stderr\"} != \"sent data after final chunk\" |~ \"[error]\" | pattern `<_> upstream: \"<protocol>://<ip>:<port>/<code>.<ext>\", host: \"<upstreamHost>:<upstreamPort>\"`  | port = \"4242\" | ext = \"json\"[1m])) ",
+          "hide": false,
+          "legendFormat": "Retrieval Errors",
+          "refId": "B"
+        }
+      ],
+      "title": "\"Could not retrieve\" replications (prod)",
+      "type": "timeseries"
+    },
+    {
       "datasource": {
         "type": "loki",
         "uid": "P8E80F9AEF21F6940"
@@ -825,146 +1037,10 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 12,
-        "y": 16
-      },
-      "id": 10,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "multi"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
-          "expr": "sum by (region, app) (count_over_time({app=~\"prod-livepeer-broadcaster.*\"} |= \"Error publishing stream transcode event\"[1m]))",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "op": "gt",
-          "value": 1,
-          "visible": true
-        }
-      ],
-      "title": "Stream Health Publish Error ",
-      "type": "timeseries"
-    },
-    {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                0.01
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "A",
-                "10s",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "last"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "0s",
-        "frequency": "1m",
-        "handler": 1,
-        "message": "BGP unreachable",
-        "name": "bgp unreachable alert",
-        "noDataState": "ok",
-        "notifications": [
-          {
-            "uid": "jx6jkJxnk"
-          },
-          {
-            "uid": "1HTjty-7k"
-          }
-        ]
-      },
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
         "x": 0,
-        "y": 24
+        "y": 41
       },
-      "id": 18,
+      "id": 17,
       "options": {
         "legend": {
           "calcs": [],
@@ -981,65 +1057,14 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({app=\"bgpm-exporter\"} |= \"The following nodes were unreachable in\"[1m])) by (reigon)",
+          "expr": "sum(count_over_time({namespace=\"prod\", app=\"ingress-nginx\", stream=\"stdout\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<originUrl>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>` | originUrl != \"-\" | line_format \"{{ .originUrl }}\" | pattern \"<originScheme>://<originDomain>/<originPath>\" | line_format \"{{ .originDomain }}\"[1m])) by (status)",
           "refId": "A"
         }
       ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "op": "gt",
-          "value": 0.01,
-          "visible": true
-        }
-      ],
-      "title": "bgp unreachable",
+      "title": "Response Codes",
       "type": "timeseries"
     },
     {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                1
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "A",
-                "1h",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "last"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "0s",
-        "frequency": "1m",
-        "handler": 1,
-        "message": "RabbitMQ Network Partition By region alert",
-        "name": "RabbitMQ Network Partition By region alert",
-        "noDataState": "ok",
-        "notifications": [
-          {
-            "uid": "jx6jkJxnk"
-          },
-          {
-            "uid": "1HTjty-7k"
-          }
-        ]
-      },
       "datasource": {
         "type": "loki",
         "uid": "P8E80F9AEF21F6940"
@@ -1098,9 +1123,9 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 24
+        "y": 41
       },
-      "id": 8,
+      "id": 13,
       "options": {
         "legend": {
           "calcs": [],
@@ -1111,71 +1136,32 @@
           "mode": "single"
         }
       },
+      "pluginVersion": "8.3.3",
       "targets": [
         {
           "datasource": {
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({app=\"prod-rabbitmq\",component=\"rabbitmq\"} |~ \"mnesia_event\" |~ \"inconsistent_database\" |~  \"running_partitioned_network\"[1m])) by (region)",
+          "expr": "sum(count_over_time({namespace=\"prod\", app=\"catalyst\"} |~ \"Packet loss detected\" | pattern \"<_> MistOutTSSRT:<playback_id> \"[1m])) by (playback_id)",
+          "legendFormat": "{{ playback_id }}",
           "refId": "A"
-        }
-      ],
-      "thresholds": [
+        },
         {
-          "colorMode": "critical",
-          "op": "gt",
-          "value": 1,
-          "visible": true
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "expr": "sum(count_over_time({namespace=\"prod\", app=\"catalyst\"} |~ \"Packet loss detected\" | pattern \"<_> MistOutTSSRT:<playback_id> \"[1m]))",
+          "hide": false,
+          "legendFormat": "{{ playback_id }}",
+          "refId": "B"
         }
       ],
-      "title": "RabbitMQ Network Partition By region",
+      "title": "Packet Loss detected",
       "type": "timeseries"
     },
     {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                0.01
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "A",
-                "10s",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "last"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "0s",
-        "frequency": "1m",
-        "handler": 1,
-        "message": "Unknown panics increased",
-        "name": "Unknown panics alert",
-        "noDataState": "ok",
-        "notifications": [
-          {
-            "uid": "jx6jkJxnk"
-          },
-          {
-            "uid": "1HTjty-7k"
-          }
-        ]
-      },
       "datasource": {
         "type": "loki",
         "uid": "P8E80F9AEF21F6940"
@@ -1234,9 +1220,9 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 32
+        "y": 49
       },
-      "id": 16,
+      "id": 19,
       "options": {
         "legend": {
           "calcs": [],
@@ -1253,70 +1239,19 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({app!=\"bgpm-exporter\",region=~\"^(sgp|eu-metrics).+\"} |= \"panic\"[1m])) by (region)",
+          "expr": "sum(count_over_time({app=\"catalyst\"} |~ \"not allowed\"[1m])) by (region)",
+          "legendFormat": "{{ region }}",
           "refId": "A"
         }
       ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "op": "gt",
-          "value": 0.01,
-          "visible": true
-        }
-      ],
-      "title": "unknown panics",
+      "title": "Gated HLS Sessions",
       "type": "timeseries"
     },
     {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                0
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "A",
-                "10s",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "last"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "10s",
-        "frequency": "1m",
-        "handler": 1,
-        "message": "[LOPRI] KRYPTONITE DETECTED!!! 🦠",
-        "name": "KRYPTONITE alert",
-        "noDataState": "ok",
-        "notifications": [
-          {
-            "uid": "discord"
-          },
-          {
-            "uid": "1HTjty-7k"
-          }
-        ]
-      },
       "datasource": {
         "type": "loki",
         "uid": "P8E80F9AEF21F6940"
       },
-      "description": "[LOPRI] KRYPTONITE DETECTED!!! 🦠",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1371,9 +1306,9 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 32
+        "y": 49
       },
-      "id": 2,
+      "id": 21,
       "options": {
         "legend": {
           "calcs": [],
@@ -1390,155 +1325,11 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({app=~\"prod-livepeer-broadcaster.*\"} |~ \"Hit max transcode attempts: body timeout: context deadline exceeded\"[1m]))",
+          "expr": "sum(count_over_time(\n  {app=\"catalyst\", namespace=\"prod\"}\n  |~ \"MistProcLivepeer\"\n  |~ \"videorec\"\n  |~ \"Adding 1 tracks\"\n  | pattern \"<_> MistProcLivepeer:videorec+<playbackId> <_> MEDIUM: Adding 1 tracks\"[1m]\n)) by (playbackId)",
           "refId": "A"
         }
       ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "op": "gt",
-          "value": 0,
-          "visible": true
-        }
-      ],
-      "title": "KRYPTONITE",
-      "type": "timeseries"
-    },
-    {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                1
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "A",
-                "1m",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "last"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "3m",
-        "frequency": "1m",
-        "handler": 1,
-        "message": "Detected API Connection Timeouts",
-        "name": "API DB Connection Timeouts  alert",
-        "noDataState": "ok",
-        "notifications": [
-          {
-            "uid": "jx6jkJxnk"
-          },
-          {
-            "uid": "1HTjty-7k"
-          }
-        ]
-      },
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 40
-      },
-      "id": 14,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
-          "expr": "sum by (region) (count_over_time({app=\"prod-livepeer-api\"} |= \"Connection terminated due to connection timeout\"[1m]))",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "op": "gt",
-          "value": 1,
-          "visible": true
-        }
-      ],
-      "title": "API DB Connection Timeouts ",
+      "title": "videorec with no audio selection",
       "type": "timeseries"
     }
   ],
@@ -1547,16 +1338,37 @@
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "selected": true,
+          "text": ".+-test",
+          "value": ".+-test"
+        },
+        "hide": 0,
+        "label": "Exclude streams:",
+        "name": "exclude",
+        "options": [
+          {
+            "selected": true,
+            "text": ".+-test",
+            "value": ".+-test"
+          }
+        ],
+        "query": ".+-test",
+        "skipUrlSync": false,
+        "type": "textbox"
+      }
+    ]
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
-  "title": "papertrail alerts",
-  "uid": "KXVHQPJ7z",
-  "version": 47,
+  "title": "Catalyst Multi-Node",
+  "uid": "EWXkaj7Vz",
+  "version": 59,
   "weekStart": ""
 }
