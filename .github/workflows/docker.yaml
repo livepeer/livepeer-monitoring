@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   docker:
-    name: Build and publish docker images
+    name: Build and publish ${{ matrix.build.arg }} docker images
     permissions:
       packages: write
       contents: read
