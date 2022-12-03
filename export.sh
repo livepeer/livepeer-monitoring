@@ -10,7 +10,7 @@ set -euo pipefail
 full_url="$1"
 username="$(echo "${full_url}" | cut -d/ -f 3 | cut -d: -f 1)"
 base_url="$(echo "${full_url}" | cut -d@ -f 2)"
-folder="grafana/dashboards"
+folder="grafana/${2:-}/dashboards"
 
 find "$folder" -name '*.json' -type f -delete
 mkdir -p "${folder}"

@@ -10,10 +10,20 @@ on:
 
 jobs:
   backup:
-    name: Run backup script
-    runs-on: ubuntu-20.04
+    name: Run backup script for ${{ matrix.grafana.env }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        grafana:
+          - env: prod
+            url: https://eu-metrics-monitoring.livepeer.live/grafana
+            secret: GRAFANA_PROD_READ_API_KEY
+          - env: staging
+            url: https://eu-metrics-monitoring.livepeer.monster/grafana
+            secret: GRAFANA_STAGING_READ_API_KEY
     steps:
-      - name: checkout
+      - name: Check out code
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -21,16 +31,16 @@ jobs:
 
       - name: Run script to update dashboards
         env:
-          API_KEY: ${{ secrets.GRAFANA_READ_API_KEY }}
+          API_KEY: ${{ secrets[matrix.grafana.secret] }}
         run: |
-          ./export.sh https://eu-metrics-monitoring.livepeer.live/grafana
+          ./export.sh "${{ matrix.grafana.url }}" "${{ matrix.grafana.env }}"
 
       - name: Commit and push changes
         id: branch-commit
         uses: devops-infra/action-commit-push@v0.9.2
         with:
           github_token: ${{ secrets.PUSH_TOKEN }}
-          target_branch: backup/grafana
+          target_branch: backup/grafana-${{ matrix.grafana.env }}
           commit_prefix: "[AUTO-COMMIT] "
           commit_message: 'Backup grafana dashboards'
           force: true
@@ -41,7 +51,7 @@ jobs:
           github_token: ${{ secrets.PUSH_TOKEN }}
           source_branch: ${{ steps.branch-commit.outputs.branch_name }}
           target_branch: master
-          title: '[AUTO] Dashboards backup'
+          title: '[AUTO] Dashboards backup (${{ matrix.grafana.env }})'
           label: grafana
           get_diff: true
           allow_no_diff: false
