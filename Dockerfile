@@ -1,3 +1,5 @@
+ARG	GRAFANA_ENV
+
 FROM	prom/prometheus:v2.40.3	AS	prometheus
 
 FROM	grafana/loki:2.7.0	AS	loki
@@ -11,6 +13,12 @@ WORKDIR	/src
 COPY	nvidia_smi_exporter.go	./
 
 RUN	go build nvidia_smi_exporter.go
+
+FROM	scratch	AS	grafana-dashboard
+
+ARG	GRAFANA_ENV
+
+COPY	./grafana/${GRAFANA_ENV}/	/grafana
 
 FROM	grafana/grafana:9.2.6	AS	grafana
 
@@ -54,7 +62,7 @@ ENV	LP_PROMETHEUS_ENDPOINT="http://localhost:9090" \
 	LP_LOKI_ENDPOINT="http://localhost:3100" \
 	LP_NODES="localhost:7935"
 
-COPY --chown=grafana:root	./grafana/	$GF_PATHS_PROVISIONING/
+COPY --chown=grafana:root --from=grafana-dashboard	/grafana/	$GF_PATHS_PROVISIONING/
 
 COPY	supervisord.conf	/etc/supervisor.d/supervisord.conf
 

@@ -20,6 +20,14 @@ jobs:
       packages: write
       contents: read
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        build:
+          - arg: prod
+            suffix: ""
+          - arg: staging
+            suffix: "staging-"
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -44,6 +52,8 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
+          flavor: |
+            prefix=${{ matrix.build.suffix }}
           images: |
             livepeer/monitoring
             ghcr.io/${{ github.repository }}
@@ -62,6 +72,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
+          build-args: |
+            GRAFANA_ENV=${{ matrix.build.arg }}
           platforms: linux/amd64, linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
