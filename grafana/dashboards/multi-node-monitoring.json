@@ -26,46 +26,6 @@
   "liveNow": false,
   "panels": [
     {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                0
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "A",
-                "5m",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "max"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "5m",
-        "frequency": "1m",
-        "handler": 1,
-        "message": "Test Streams are down.\n\nPlease verify the data in Livepeer Explorer at https://explorer.livepeer.org/leaderboard.",
-        "name": "Test Streams Errors alert",
-        "noDataState": "ok",
-        "notifications": [
-          {
-            "uid": "jx6jkJxnk"
-          }
-        ]
-      },
       "datasource": {
         "type": "loki",
         "uid": "P8E80F9AEF21F6940"
@@ -143,24 +103,15 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({app=~\".*prod-orch-tester-orchtester.*\"} |= \"Low number of orchestrators which passed the sanity check\" [1m])) by (region)",
-          "legendFormat": "{{ region }}",
+          "expr": "sum(count_over_time({namespace=\"prod\", app=\"traefik\", stream=\"stdout\"} != \"msg=\" | json | OriginStatus = 500[1m])) by (region)",
           "refId": "A"
         }
       ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "op": "gt",
-          "value": 0,
-          "visible": true
-        }
-      ],
-      "title": "Test Stream Errors",
+      "title": "500",
       "type": "timeseries"
     }
   ],
-  "refresh": "",
+  "refresh": false,
   "schemaVersion": 34,
   "style": "dark",
   "tags": [],
@@ -168,13 +119,13 @@
     "list": []
   },
   "time": {
-    "from": "now-6h",
-    "to": "now"
+    "from": "2022-09-21T09:27:56.890Z",
+    "to": "2022-09-21T09:38:42.970Z"
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Test Streams",
-  "uid": "BxpTV8Q7z",
-  "version": 19,
+  "title": "Multi-node Monitoring",
+  "uid": "JZyr2b74z",
+  "version": 2,
   "weekStart": ""
 }

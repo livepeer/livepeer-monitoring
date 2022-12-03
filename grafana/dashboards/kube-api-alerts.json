@@ -425,6 +425,49 @@
       "type": "timeseries"
     },
     {
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                0
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "5m",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "avg"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "2m",
+        "frequency": "1m",
+        "handler": 1,
+        "message": "Node ${region}-${node} is reporting not ready!",
+        "name": "Node Not Ready alert",
+        "noDataState": "ok",
+        "notifications": [
+          {
+            "uid": "jx6jkJxnk"
+          },
+          {
+            "uid": "xIogFCs7k"
+          }
+        ]
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -499,12 +542,20 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "exemplar": true,
-          "expr": "kube_node_status_condition{condition=\"Ready\", status=\"false\"} > 0",
-          "instant": false,
+          "exemplar": false,
+          "expr": "kube_node_status_condition{condition=\"Ready\", status=~\"false|unknown\"} > 0",
+          "instant": true,
           "interval": "",
           "legendFormat": "{{ region }}-{{ node }}",
           "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "op": "gt",
+          "value": 0,
+          "visible": true
         }
       ],
       "title": "Node Not Ready",
@@ -547,10 +598,7 @@
         "noDataState": "no_data",
         "notifications": [
           {
-            "uid": "jx6jkJxnk"
-          },
-          {
-            "uid": "1HTjty-7k"
+            "uid": "discord"
           }
         ]
       },
@@ -833,6 +881,6 @@
   "timezone": "",
   "title": "Kube API Alerts",
   "uid": "jSbZINlnk",
-  "version": 23,
+  "version": 31,
   "weekStart": ""
 }

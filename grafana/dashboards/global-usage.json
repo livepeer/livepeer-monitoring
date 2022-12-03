@@ -20,7 +20,7 @@
   },
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "graphTooltip": 0,
+  "graphTooltip": 1,
   "id": null,
   "links": [],
   "liveNow": false,
@@ -187,7 +187,7 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "multi"
         }
       },
       "targets": [
@@ -199,7 +199,7 @@
           "exemplar": true,
           "expr": "sum(livepeer_current_sessions_total{node_type=\"bctr\"}) by (region)",
           "interval": "",
-          "legendFormat": "",
+          "legendFormat": "{{ region }}",
           "refId": "A"
         }
       ],
@@ -368,7 +368,7 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "multi"
         }
       },
       "targets": [
@@ -380,7 +380,7 @@
           "exemplar": true,
           "expr": "sum by (region) (rate(livepeer_segment_transcoded_total{node_type=\"orch\"}[$__rate_interval]))",
           "interval": "",
-          "legendFormat": "",
+          "legendFormat": "{{ region }}",
           "refId": "A"
         }
       ],
@@ -742,6 +742,6 @@
   "timezone": "",
   "title": "Global Usage",
   "uid": "cssTqW17k",
-  "version": 21,
+  "version": 25,
   "weekStart": ""
 }

@@ -218,7 +218,7 @@
       "maxDataPoints": 100,
       "options": {
         "colorMode": "none",
-        "graphMode": "area",
+        "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
@@ -233,10 +233,17 @@
       "pluginVersion": "8.3.3",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": false,
           "expr": "sum(up{livepeer_node_type=~\"^.*broadcaster.*$\"})",
           "format": "time_series",
           "instant": true,
+          "interval": "",
           "intervalFactor": 1,
+          "legendFormat": "",
           "refId": "A"
         }
       ],
@@ -1623,6 +1630,9 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
       "paceLength": 10,
       "percentage": false,
       "pluginVersion": "8.3.3",
@@ -1648,7 +1658,8 @@
           "fill": true,
           "line": true,
           "op": "gt",
-          "value": 10
+          "value": 10,
+          "visible": true
         }
       ],
       "timeRegions": [],
@@ -2517,7 +2528,7 @@
       }
     }
   ],
-  "refresh": false,
+  "refresh": "",
   "schemaVersion": 34,
   "style": "dark",
   "tags": [],
@@ -2556,6 +2567,6 @@
   "timezone": "",
   "title": "K8s Livepeer Overview",
   "uid": "ZsZv-B3iy",
-  "version": 3,
+  "version": 4,
   "weekStart": ""
 }

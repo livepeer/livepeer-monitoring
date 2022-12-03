@@ -20,16 +20,13 @@
   },
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "graphTooltip": 1,
+  "graphTooltip": 0,
   "id": null,
+  "iteration": 1669172760958,
   "links": [],
   "liveNow": false,
   "panels": [
     {
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -81,12 +78,12 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 9,
         "w": 12,
         "x": 0,
         "y": 0
       },
-      "id": 4,
+      "id": 2,
       "options": {
         "legend": {
           "calcs": [],
@@ -100,21 +97,32 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum(count_over_time({app=\"core-dump-handler\"} |~ \"core_dump_agent] Uploading:\" | regexp \"^.+Uploading: /home/data/core-dump-handler/cores/[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-dump-\\\\d+-(?P<segfault_pod>\\\\S+)-(?P<binary>\\\\S+)-\\\\d+-\\\\d+.zip\"[1m])) by (binary)",
+          "exemplar": true,
+          "expr": "sum(mist_sessions{sessType=\"incoming\", pod=\"$pod\", region=\"$region\", stream=~\".*vod.*\"} > 0)",
+          "interval": "",
+          "legendFormat": "VoD Streams",
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "sum(mist_sessions{sessType=\"incoming\", pod=\"$pod\", region=\"$region\", stream!~\".*vod.*\"} > 0)",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Livestreams",
+          "refId": "B"
         }
       ],
-      "title": "Segfaults by Binary",
+      "title": "Incoming Streams",
       "type": "timeseries"
     },
     {
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -166,10 +174,96 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 9,
         "w": 12,
         "x": 12,
         "y": 0
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "sum(mist_sessions{pod=\"$pod\", region=\"$region\", sessType=\"viewers\"} > 0) by (sessType)",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "title": "Viewer Count",
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 9
       },
       "id": 5,
       "options": {
@@ -185,15 +279,17 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum(count_over_time({app=\"core-dump-handler\"} |~ \"core_dump_agent] Uploading:\" | regexp \"^.+Uploading: /home/data/core-dump-handler/cores/[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-dump-\\\\d+-(?P<segfault_pod>\\\\S+)-(?P<binary>\\\\S+)-\\\\d+-\\\\d+.zip\"[1m])) ",
-          "legendFormat": "Segfaults",
+          "exemplar": true,
+          "expr": "sum(avg_over_time(mist_cpu{catalyst_node=~\"${region}-${pod}.lp-playback.studio\"}[180s])/10)",
+          "interval": "",
+          "legendFormat": "CPU",
           "refId": "A"
         }
       ],
-      "title": "Segfaults by Binary",
+      "title": "CPU Usage",
       "type": "timeseries"
     },
     {
@@ -235,6 +331,7 @@
             }
           },
           "mappings": [],
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -247,287 +344,27 @@
                 "value": 80
               }
             ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 24,
-        "x": 0,
-        "y": 8
-      },
-      "id": 2,
-      "options": {
-        "legend": {
-          "calcs": [
-            "sum"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "sortBy": "Total",
-          "sortDesc": true
-        },
-        "tooltip": {
-          "mode": "single"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({app=\"core-dump-handler\"} |~ \"core_dump_agent] Uploading:\" | regexp \"^.+Uploading: /home/data/core-dump-handler/cores/[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-dump-\\\\d+-(?P<segfault_pod>\\\\S+)-(?P<binary>\\\\S+)-\\\\d+-\\\\d+.zip\" | segfault_pod =~ \"prod.+\"[1m])) by (segfault_pod, region, binary, node_name)",
-          "legendFormat": "{{ region }}-{{node_name}}-{{ segfault_pod }}-{{ binary }}",
-          "refId": "A"
-        }
-      ],
-      "title": "Prod Segfaults",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
+          "unit": "none"
         },
         "overrides": []
       },
       "gridPos": {
         "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 18
-      },
-      "id": 7,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
-          "expr": "sum(count_over_time({app=\"core-dump-handler\"} |~ \"core_dump_agent] Uploading:\" | regexp \"^.+Uploading: /home/data/core-dump-handler/cores/[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-dump-\\\\d+-(?P<segfault_pod>\\\\S+)-(?P<binary>\\\\S+)-\\\\d+-\\\\d+.zip\" | segfault_pod =~ \"staging.+\"[1m])) by (segfault_pod, region, binary)",
-          "legendFormat": "{{ region }}-{{ segfault_pod}}-{{ binary }}",
-          "refId": "A"
-        }
-      ],
-      "title": "Staging Segfaults",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 26
-      },
-      "id": 9,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
-          "expr": "sum(count_over_time({app=\"core-dump-handler\"} |~ \"core_dump_agent] Uploading:\" | regexp \"^.+Uploading: /home/data/core-dump-handler/cores/[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-dump-\\\\d+-(?P<segfault_pod>\\\\S+)-(?P<binary>\\\\S+)-\\\\d+-\\\\d+.zip\" | segfault_pod =~ \"dp.+|canary-.+\"[1m])) by (segfault_pod, region, binary)",
-          "legendFormat": "{{ region }}-{{ segfault_pod}}-{{ binary }}",
-          "refId": "A"
-        }
-      ],
-      "title": "Canary Segfaults",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 34
+        "w": 12,
+        "x": 12,
+        "y": 9
       },
       "id": 8,
       "options": {
         "legend": {
           "calcs": [
-            "lastNotNull"
+            "lastNotNull",
+            "max"
           ],
           "displayMode": "table",
-          "placement": "right",
-          "sortBy": "Last *",
+          "placement": "bottom",
+          "sortBy": "Max",
           "sortDesc": true
         },
         "tooltip": {
@@ -540,12 +377,98 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({app=\"core-dump-handler\"} |~ \"core_dump_agent] Uploading:\" | regexp \"^.+Uploading: /home/data/core-dump-handler/cores/[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-dump-\\\\d+-(?P<segfault_pod>\\\\S+)-(?P<binary>\\\\S+)-\\\\d+-\\\\d+.zip\" | segfault_pod =~ \"staging.+\"[1m])) by (binary)",
-          "legendFormat": "{{ binary }}",
+          "expr": "sum(count_over_time(\n  {region=\"$region\", pod=\"$pod\"}\n  | regexp \"^\\\\[?(?P<timestamp>[0-9- :]+)\\\\] ?(?P<process>[a-zA-Z0-9-_]+)\"\n[1m])) by (process)",
+          "legendFormat": "{{ process }}",
           "refId": "A"
         }
       ],
-      "title": "Staging Segfaults (by binary)",
+      "title": "Log Lines by Process",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 17
+      },
+      "id": 10,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "expr": "sum(count_over_time(\n  {pod=\"$pod\", region=\"$region\"} |~ \"\\\\[DEBUG\\\\] POST http://127.0.0.1:8935\"\n  [1m]\n)) by (region, pod)",
+          "legendFormat": "VoD Segments Transcoded (per minute)",
+          "refId": "A"
+        }
+      ],
+      "title": "VoD Segments Transcoded",
       "type": "timeseries"
     }
   ],
@@ -554,7 +477,46 @@
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "nyc",
+          "value": "nyc"
+        },
+        "hide": 0,
+        "name": "region",
+        "options": [
+          {
+            "selected": false,
+            "text": "nyc",
+            "value": "nyc"
+          }
+        ],
+        "query": "nyc",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "prod-catalyst-5",
+          "value": "prod-catalyst-5"
+        },
+        "hide": 0,
+        "name": "pod",
+        "options": [
+          {
+            "selected": false,
+            "text": "prod-catalyst-5",
+            "value": "prod-catalyst-5"
+          }
+        ],
+        "query": "prod-catalyst-5",
+        "skipUrlSync": false,
+        "type": "textbox"
+      }
+    ]
   },
   "time": {
     "from": "now-6h",
@@ -562,8 +524,8 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Segfaults",
-  "uid": "oQFxlqU7k",
-  "version": 22,
+  "title": "Catalyst Node Inspector",
+  "uid": "PzbLIMd4z",
+  "version": 10,
   "weekStart": ""
 }
