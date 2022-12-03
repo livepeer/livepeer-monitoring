@@ -58,7 +58,6 @@ jobs:
             livepeer/monitoring
             ghcr.io/${{ github.repository }}
           tags: |
-            type=schedule,pattern={{date 'YYYYMMDDHHmmss'}}
             type=ref,event=branch
             type=ref,event=tag
             type=ref,event=pr
@@ -67,7 +66,7 @@ jobs:
             type=semver,pattern={{version}},prefix=v
             type=semver,pattern={{major}}.{{minor}},prefix=v
             type=raw,value=latest,enable={{is_default_branch}}
-            type=raw,value=${{ github.event.pull_request.head.ref }}
+            type=raw,value=${{ github.event.pull_request.head.ref || github.ref_name }}
 
       - name: Build and push
         uses: docker/build-push-action@v3
