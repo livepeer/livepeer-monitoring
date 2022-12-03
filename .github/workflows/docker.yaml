@@ -27,7 +27,7 @@ jobs:
           - arg: prod
             suffix: ""
           - arg: staging
-            suffix: "staging-"
+            suffix: "-staging"
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -53,7 +53,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           flavor: |
-            prefix=${{ matrix.build.suffix }}
+            suffix=${{ matrix.build.suffix }},onlatest=true
           images: |
             livepeer/monitoring
             ghcr.io/${{ github.repository }}
