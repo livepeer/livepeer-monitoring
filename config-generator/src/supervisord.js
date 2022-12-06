@@ -3,7 +3,7 @@
 const fs = require("fs");
 const ini = require("js-ini");
 
-function generate(params, defaults = "/etc/supervisor.d/supervisord.conf") {
+function generate(params, defaults = "/etc/supervisor.d/supervisord.ini") {
     let obj = ini.parse(fs.readFileSync(defaults, "utf-8"));
 
     console.log("ini obj: ", obj);

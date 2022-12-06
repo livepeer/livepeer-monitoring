@@ -64,7 +64,7 @@ ENV	LP_PROMETHEUS_ENDPOINT="http://localhost:9090" \
 
 COPY --chown=grafana:root --from=grafana-dashboard	/grafana/	$GF_PATHS_PROVISIONING/
 
-COPY	supervisord.conf	/etc/supervisor.d/supervisord.conf
+COPY	supervisord.ini	/etc/supervisor.d/supervisord.ini
 
 WORKDIR	/config-generator
 

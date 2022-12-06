@@ -146,7 +146,7 @@ function generate() {
   saveYaml('/etc/prometheus', 'prometheus.yml', promConfig)
   saveYaml('/etc/grafana/provisioning/notifiers', 'generated_notifiers.yml', grafanaNotificationChannelsConfig(argv))
   fs.writeFileSync(
-    path.join('/etc/supervisor.d', 'supervisord.conf'),
+    path.join('/etc/supervisor.d', 'supervisord.ini'),
     supervisordConfig
   )
 }
@@ -245,7 +245,7 @@ function prometheusConfig(params) {
           namespaces,
           params.prometheusKubeScrape
         )
-        
+
         if (params.prometheusLongterm) {
           if (params.prometheusRemoteEndpoint) {
             obj['remote_write'] = [{
@@ -257,7 +257,7 @@ function prometheusConfig(params) {
               url: 'http://localhost:9201/read',
               remote_timeout: '30s'
             }]
-  
+
             obj['remote_write'] = [{
               url: 'http://localhost:9201/write',
               remote_timeout: '30s'
@@ -807,13 +807,13 @@ function grafanaNotificationChannelsConfig(params) {
       name: 'prom-alertmanager',
       type: 'prometheus-alertmanager',
       uid: 'prom-alertmanager',
-      org_name: 'Main Org.',
+      org_id: 1,
       is_default: true,
       settings: {
         url: 'http://localhost:9093'
       }
     }]
-  } 
+  }
   if (params['discord-webhook']) {
     obj.notifiers.push({
       name: 'discord',
@@ -832,7 +832,7 @@ function grafanaNotificationChannelsConfig(params) {
       name: 'pagerDuty',
       type: 'pagerduty',
       uid: 'pagerDuty',
-      org_name: 'Main Org.',
+      org_id: 1,
       is_default: false,
       secure_settings: {
         integrationKey: params['pagerduty-service-key']
@@ -845,7 +845,7 @@ function grafanaNotificationChannelsConfig(params) {
       name: 'pagerDuty',
       type: 'pagerduty',
       uid: 'pagerDuty',
-      org_name: 'Main Org.',
+      org_id: 1,
       is_default: false,
       secure_settings: {
         integrationKey: params['pagerduty-lopri-service-key']
