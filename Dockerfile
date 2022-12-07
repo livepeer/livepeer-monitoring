@@ -6,7 +6,7 @@ FROM	grafana/loki:2.7.0	AS	loki
 
 FROM	prom/alertmanager:v0.24.0	AS	alertmanager
 
-FROM	golang:1.19.3-alpine3.16	AS	nvidia-builder
+FROM	golang:1.19.4-alpine3.16	AS	nvidia-builder
 
 WORKDIR	/src
 
