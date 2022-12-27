@@ -3,7 +3,10 @@
     "list": [
       {
         "builtIn": 1,
-        "datasource": "-- Grafana --",
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
@@ -26,6 +29,10 @@
   "liveNow": false,
   "panels": [
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "description": "",
       "gridPos": {
         "h": 2,
@@ -35,15 +42,33 @@
       },
       "id": 5,
       "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
         "content": "# Welcome to Livepeer",
         "mode": "markdown"
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "9.3.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "refId": "A"
+        }
+      ],
       "type": "text"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "gridPos": {
-        "h": 19,
+        "h": 84,
         "w": 12,
         "x": 0,
         "y": 2
@@ -51,6 +76,7 @@
       "id": 3,
       "links": [],
       "options": {
+        "layout": "list",
         "maxItems": 300,
         "query": "",
         "showHeadings": true,
@@ -59,12 +85,25 @@
         "showStarred": false,
         "tags": []
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "9.3.1",
       "tags": [],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "refId": "A"
+        }
+      ],
       "title": "Dashboards",
       "type": "dashlist"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "gridPos": {
         "h": 27,
         "w": 12,
@@ -73,35 +112,57 @@
       },
       "id": 9,
       "options": {
+        "alertInstanceLabelFilter": "",
         "alertName": "",
         "dashboardAlerts": false,
         "dashboardTitle": "",
+        "groupBy": [],
+        "groupMode": "default",
         "maxItems": 100,
         "showOptions": "current",
         "sortOrder": 5,
         "stateFilter": {
           "alerting": true,
+          "error": true,
           "execution_error": false,
+          "firing": true,
+          "noData": false,
           "no_data": false,
+          "normal": false,
           "ok": false,
           "paused": false,
           "pending": false
         },
-        "tags": []
+        "tags": [],
+        "viewMode": "list"
       },
       "pluginVersion": "8.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "refId": "A"
+        }
+      ],
       "title": "Current Alerts",
       "type": "alertlist"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "gridPos": {
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 21
+        "y": 86
       },
       "id": 7,
       "options": {
+        "layout": "list",
         "maxItems": 10,
         "query": "",
         "showHeadings": true,
@@ -110,13 +171,22 @@
         "showStarred": true,
         "tags": []
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "9.3.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "refId": "A"
+        }
+      ],
       "title": "More Dashboards",
       "type": "dashlist"
     }
   ],
   "refresh": "",
-  "schemaVersion": 34,
+  "schemaVersion": 37,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -156,6 +226,6 @@
   "timezone": "browser",
   "title": "Home",
   "uid": "kzV-PHJ7z",
-  "version": 7,
+  "version": 9,
   "weekStart": ""
 }
