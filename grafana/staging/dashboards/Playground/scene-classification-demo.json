@@ -97,7 +97,7 @@
         ]
       },
       "gridPos": {
-        "h": 29,
+        "h": 13,
         "w": 12,
         "x": 0,
         "y": 0
@@ -114,7 +114,7 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "9.2.5",
+      "pluginVersion": "9.3.2",
       "targets": [
         {
           "datasource": {
@@ -123,7 +123,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sort_desc(avg by(node_id) (livepeer_segment_source_emerged_total{node_type=\"bctr\"} > 0.5))",
+          "expr": "sort_desc(avg by(manifest_id) (livepeer_segment_scene_class_prob{seg_class_name=\"soccer\"} > 0.5))",
           "format": "table",
           "instant": true,
           "legendFormat": "__auto",
@@ -203,7 +203,7 @@
         ]
       },
       "gridPos": {
-        "h": 29,
+        "h": 13,
         "w": 12,
         "x": 12,
         "y": 0
@@ -220,7 +220,7 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "9.2.5",
+      "pluginVersion": "9.3.2",
       "targets": [
         {
           "datasource": {
@@ -229,7 +229,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sort_desc(avg by(node_id) (livepeer_segment_source_emerged_total{node_type=\"bctr\"} > 0.5))",
+          "expr": "sort_desc(avg by(manifest_id) (livepeer_segment_scene_class_prob{seg_class_name=\"adult\"} > 0.5))",
           "format": "table",
           "instant": true,
           "legendFormat": "__auto",
@@ -239,6 +239,98 @@
       ],
       "title": "Top Adult Streams",
       "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 24,
+        "x": 0,
+        "y": 13
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "count(livepeer_segment_scene_class_prob{})",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Content detection events",
+      "type": "timeseries"
     }
   ],
   "schemaVersion": 37,
@@ -255,6 +347,6 @@
   "timezone": "",
   "title": "Scene Classification (demo)",
   "uid": "oQZqfBd4k",
-  "version": 5,
+  "version": 12,
   "weekStart": ""
 }
