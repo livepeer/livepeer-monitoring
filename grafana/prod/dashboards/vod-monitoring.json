@@ -23,7 +23,7 @@
   },
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "graphTooltip": 0,
+  "graphTooltip": 1,
   "id": null,
   "links": [],
   "liveNow": false,
@@ -38,7 +38,9 @@
       },
       "id": 11,
       "panels": [],
-      "title": "Overall VOD Success",
+      "repeat": "pipeline",
+      "repeatDirection": "h",
+      "title": "$pipeline - Overall VOD Success",
       "type": "row"
     },
     {
@@ -69,8 +71,8 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 4,
+        "h": 4,
+        "w": 2,
         "x": 0,
         "y": 1
       },
@@ -89,7 +91,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.3.1",
+      "pluginVersion": "9.3.2",
       "targets": [
         {
           "datasource": {
@@ -98,7 +100,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(increase(vod_count{stage=\"failed\"})[5m]) or vector(0)",
+          "expr": "sum(increase(vod_count{stage=\"failed\", pipeline=~\"${pipeline:raw}\"})[5m]) or vector(0)",
           "format": "time_series",
           "instant": false,
           "legendFormat": "",
@@ -108,6 +110,138 @@
       ],
       "title": "Failed Jobs",
       "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed+area"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 0.96
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 2,
+        "y": 1
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "1 - (sum (increase(vod_count{stage=\"failed\", pipeline=~\"${pipeline:raw}\"}[15m]) or vector(0)) / sum(increase(vod_count{pipeline=~\"${pipeline:raw}\"}[15m]) or vector(0)))",
+          "legendFormat": "Success Rate",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Success Rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 9,
+        "y": 1
+      },
+      "id": 17,
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": false,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "{namespace=\"prod\", app=\"catalyst\"} |~ \"Updated transcode status\" |~ \"handler=${pipeline:raw}\" | logfmt | status = \"error\" | line_format \"{{ .request_id }} - {{ .error }}\"",
+          "queryType": "range",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Latest Errors",
+      "type": "logs"
     },
     {
       "datasource": {
@@ -133,10 +267,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 4,
-        "x": 4,
-        "y": 1
+        "h": 4,
+        "w": 2,
+        "x": 0,
+        "y": 5
       },
       "id": 5,
       "options": {
@@ -153,7 +287,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.3.1",
+      "pluginVersion": "9.3.2",
       "targets": [
         {
           "datasource": {
@@ -161,7 +295,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(increase(vod_count{stage=\"completed\"}))",
+          "expr": "sum(increase(vod_count{stage=\"completed\", pipeline=~\"${pipeline:raw}\"}))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -207,7 +341,7 @@
               "mode": "none"
             },
             "thresholdsStyle": {
-              "mode": "dashed+area"
+              "mode": "off"
             }
           },
           "mappings": [],
@@ -215,26 +349,25 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "dark-red",
+                "color": "green",
                 "value": null
               },
               {
-                "color": "green",
-                "value": 0.96
+                "color": "red",
+                "value": 80
               }
             ]
-          },
-          "unit": "percentunit"
+          }
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 8,
-        "y": 1
+        "h": 5,
+        "w": 21,
+        "x": 0,
+        "y": 9
       },
-      "id": 2,
+      "id": 24,
       "options": {
         "legend": {
           "calcs": [],
@@ -254,13 +387,13 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "1 - (sum(increase(vod_count{stage=\"failed\"}[15m]) or vector(0)) / sum(increase(vod_count{}[15m]) or vector(0)))",
-          "legendFormat": "Success Rate",
+          "expr": "sum(vod_count{pipeline=~\"${pipeline:raw}\"})",
+          "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Success Rate",
+      "title": "Count of VOD Jobs",
       "type": "timeseries"
     },
     {
@@ -268,7 +401,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 9
+        "y": 31
       },
       "id": 9,
       "title": "Storage",
@@ -335,7 +468,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 10
+        "y": 32
       },
       "id": 7,
       "options": {
@@ -372,7 +505,46 @@
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "mist",
+            "external|aws-mediaconvert"
+          ],
+          "value": [
+            "mist",
+            "external|aws-mediaconvert"
+          ]
+        },
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "name": "pipeline",
+        "options": [
+          {
+            "selected": false,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": true,
+            "text": "mist",
+            "value": "mist"
+          },
+          {
+            "selected": true,
+            "text": "external|aws-mediaconvert",
+            "value": "external|aws-mediaconvert"
+          }
+        ],
+        "query": "mist,external|aws-mediaconvert",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
   },
   "time": {
     "from": "now-30m",
@@ -382,6 +554,6 @@
   "timezone": "",
   "title": "VoD Monitoring",
   "uid": "JZNaFMv4z",
-  "version": 33,
+  "version": 70,
   "weekStart": ""
 }
