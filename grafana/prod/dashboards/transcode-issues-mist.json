@@ -4,8 +4,8 @@
       {
         "builtIn": 1,
         "datasource": {
-          "type": "datasource",
-          "uid": "grafana"
+          "type": "grafana",
+          "uid": "-- Grafana --"
         },
         "enable": true,
         "hide": true,
@@ -23,7 +23,7 @@
   },
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "graphTooltip": 0,
+  "graphTooltip": 1,
   "id": null,
   "links": [],
   "liveNow": false,
@@ -33,6 +33,7 @@
         "type": "loki",
         "uid": "P8E80F9AEF21F6940"
       },
+      "description": "",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -43,9 +44,11 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMax": 30,
+            "axisSoftMin": 0,
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 10,
+            "fillOpacity": 0,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -58,17 +61,18 @@
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "never",
-            "spanNulls": true,
+            "showPoints": "auto",
+            "spanNulls": false,
             "stacking": {
               "group": "A",
               "mode": "none"
             },
             "thresholdsStyle": {
-              "mode": "off"
+              "mode": "dashed+area"
             }
           },
           "mappings": [],
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -77,70 +81,215 @@
                 "value": null
               },
               {
-                "color": "red",
-                "value": 80
+                "color": "transparent",
+                "value": 6
+              },
+              {
+                "color": "dark-orange",
+                "value": 30
+              },
+              {
+                "color": "dark-red",
+                "value": 60
               }
             ]
-          },
-          "unit": "short"
+          }
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 13,
-        "w": 24,
+        "h": 8,
+        "w": 19,
         "x": 0,
         "y": 0
       },
       "id": 2,
       "options": {
         "legend": {
-          "calcs": [
-            "sum"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true,
-          "sortBy": "Total",
-          "sortDesc": true
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "8.3.3",
       "targets": [
         {
           "datasource": {
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time(\n  {app=\"traefik\", region!=\"eu-metrics\", container=\"prod-traefik\"} \n  | json \n  | __error__!=\"JSONParserErr\"\n  | request_Origin != \"\"\n  | line_format \"{{.request_Origin}}\"[1m]\n)) by (request_Origin) > 100",
-          "hide": false,
-          "legendFormat": "{{ request_Origin }}",
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
           "editorMode": "code",
-          "expr": "sum(count_over_time({app=\"ingress-nginx\", stream=\"stdout\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<originUrl>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>` | originUrl != \"-\" | line_format \"{{ .originUrl }}\" | pattern \"<originScheme>://<originDomain>/<originPath>\" | line_format \"{{ .originDomain }}\"[1m])) by (originDomain)",
-          "hide": false,
-          "legendFormat": "{{ originDomain }}",
+          "expr": "sum(count_over_time(({app=\"catalyst\"} |= \"MistProcLivepeer\" |= \"timed out after\")[2m])) by (region)/2",
+          "legendFormat": "{{region}}",
           "queryType": "range",
-          "refId": "B"
+          "refId": "A"
         }
       ],
-      "title": "Origins",
+      "title": "Transcode timeouts / minute",
       "type": "timeseries"
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 5,
+        "x": 19,
+        "y": 0
+      },
+      "id": 8,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "# Timeouts per minute\nThis measures the amount of attempted-transcoded-segments that are timing out, per region. The region here is the region where the transcode is being requested (e.g. the media server region), **not** the region where the transcoder is.",
+        "mode": "markdown"
+      },
+      "pluginVersion": "9.3.6",
+      "title": "Explanation",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMax": 30,
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed+area"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "transparent",
+                "value": 6
+              },
+              {
+                "color": "dark-orange",
+                "value": 30
+              },
+              {
+                "color": "dark-red",
+                "value": 60
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 19,
+        "x": 0,
+        "y": 8
+      },
+      "id": 11,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "(sum(increase(mist_trigger_count{trigger=\"LIVEPEER_SEGMENT_REJECTED\"}[5m])) by (region)) / 5",
+          "legendFormat": "{{region}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Transcode rejects / minute",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 5,
+        "x": 19,
+        "y": 8
+      },
+      "id": 12,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "# Rejections per minute\nThis measures the amount of attempted-transcoded-segments that are rejected by the transcoder(s), per region.\n\nRejections are segments the transcoder says cannot be transcoded (e.g. invalid, unsupported, etc) and should not be retried.",
+        "mode": "markdown"
+      },
+      "pluginVersion": "9.3.6",
+      "title": "Explanation",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
       },
       "fieldConfig": {
         "defaults": {
@@ -152,6 +301,7 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMin": 0,
             "barAlignment": 0,
             "drawStyle": "line",
             "fillOpacity": 0,
@@ -195,22 +345,18 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 13,
-        "w": 24,
+        "h": 7,
+        "w": 19,
         "x": 0,
-        "y": 13
+        "y": 16
       },
       "id": 4,
       "options": {
         "legend": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true,
-          "sortBy": "Last *",
-          "sortDesc": true
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -220,130 +366,48 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
-          "expr": "sum(count_over_time(\n  {app=\"traefik\", region!=\"eu-metrics\", container=\"prod-traefik\"} \n  | json \n  | __error__!=\"JSONParserErr\"\n  | origin_Origin != \"\"\n  | OriginStatus != \"404\"\n  | regexp \"/hls/(\\\\w+\\\\+)?(?P<playback_id>[^/]+).+\"\n  | playback_id != \"\" [1m]\n)) by (request_Origin, playback_id) ",
-          "legendFormat": "{{ playback_id }} - {{ request_Origin }}",
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(count_over_time({namespace=\"default\", app=\"ingress-nginx\", stream=\"stdout\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<origin>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>` | line_format \"{{ .url }}\" | pattern \"/hls/<base>+<playback_id>/\"[1m])) by (origin, playback_id)",
-          "hide": false,
-          "legendFormat": "{{ playback_id }} - {{ origin }}",
-          "queryType": "range",
-          "refId": "B"
+          "exemplar": false,
+          "expr": "sum(avg_over_time(mist_sessions_total{catalyst_node=~\".*studio\",sessType=\"incoming\"}[10m])) by (region)",
+          "legendFormat": "{{region}} total",
+          "range": true,
+          "refId": "A"
         }
       ],
-      "title": "Streams by Origin",
+      "title": "Broadcasts",
+      "transformations": [],
       "type": "timeseries"
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
       },
       "gridPos": {
-        "h": 13,
-        "w": 24,
-        "x": 0,
-        "y": 26
+        "h": 7,
+        "w": 5,
+        "x": 19,
+        "y": 16
       },
-      "id": 5,
+      "id": 7,
       "options": {
-        "legend": {
-          "calcs": [
-            "sum"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true,
-          "sortBy": "Total",
-          "sortDesc": true
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
         },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
+        "content": "# Context\nThis graph gives the context of how many streams are being processed by the MistServer nodes.\n\nIt shows both the total live streams and the stream tester related live streams.\n\nThe expectation is that broadcasts and failures are correlated. They don't seem to be, though.",
+        "mode": "markdown"
       },
-      "pluginVersion": "8.3.3",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
-          "editorMode": "code",
-          "expr": "sum(count_over_time({app=\"ingress-nginx\", stream=\"stdout\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<origin>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>`| origin != \"-\" [1m] )) by (userAgent)",
-          "hide": false,
-          "legendFormat": "{{ userAgent }}",
-          "queryType": "range",
-          "refId": "B"
-        }
-      ],
-      "title": "User Agents",
-      "type": "timeseries"
+      "pluginVersion": "9.3.6",
+      "title": "Explanation",
+      "type": "text"
     }
   ],
-  "refresh": "",
+  "refresh": false,
   "schemaVersion": 37,
   "style": "dark",
   "tags": [],
@@ -351,13 +415,13 @@
     "list": []
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-3h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Origin Analysis",
-  "uid": "smwvHksnz",
-  "version": 33,
+  "title": "Transcode issues Mist",
+  "uid": "l6Nm62b4z",
+  "version": 20,
   "weekStart": ""
 }

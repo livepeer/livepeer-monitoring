@@ -3,7 +3,10 @@
     "list": [
       {
         "builtIn": 1,
-        "datasource": "-- Grafana --",
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
@@ -22,7 +25,6 @@
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
   "id": null,
-  "iteration": 1664529717985,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -55,7 +57,9 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "{namespace=~\"prod|canary|staging\", container=\"catalyst\"} |~ \"MistProcLivepeer\" != \"Jitter\" |~ \"Livepeer transcode ID\" |~ \"$playbackId\" | pattern \"<time> MistProcLivepeer:<base>+<_>+<playback_id> \" | line_format \"kubectl --context={{ .region }}-{{ .namespace }} exec -it {{ .pod }} -- MistUtilNuke {{ .base }}+{{ .playback_id }}\"",
+          "editorMode": "code",
+          "expr": "{namespace=~\"prod|canary|staging|default\", container=\"catalyst\"} |~ \"MistProcLivepeer\" != \"Jitter\" |~ \"Livepeer transcode ID\" |~ \"$playbackId\" | pattern \"<time> MistProcLivepeer:<base>+<_>+<playback_id> \" | line_format \"kubectl --context={{ .region }}-{{ .namespace }} exec -it {{ .pod }} -- MistUtilNuke {{ .base }}+{{ .playback_id }}\"",
+          "queryType": "range",
           "refId": "A"
         }
       ],
@@ -64,7 +68,7 @@
     }
   ],
   "refresh": "",
-  "schemaVersion": 34,
+  "schemaVersion": 37,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -81,7 +85,7 @@
         "name": "playbackId",
         "options": [
           {
-            "selected": true,
+            "selected": false,
             "text": "",
             "value": ""
           }
@@ -100,6 +104,6 @@
   "timezone": "",
   "title": "Nuke Control Panel",
   "uid": "u-1kei44z",
-  "version": 13,
+  "version": 17,
   "weekStart": ""
 }
