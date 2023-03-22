@@ -72,7 +72,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.3.1",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
           "datasource": {
@@ -133,7 +133,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.3.1",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
           "datasource": {
@@ -194,7 +194,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.3.1",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
           "datasource": {
@@ -345,7 +345,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream!=\"000reallylongnonexistenstreamnamethatreallyshouldntexist000\", stream!~\"$exclude\"}[1m] ) by (stream) or on() vector(0)",
+          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream!=\"000reallylongnonexistenstreamnamethatreallyshouldntexist000\", stream!~\"$exclude\", stream!~\"catalyst_vod.+\"}[1m] ) by (stream) or on() vector(0)",
           "instant": false,
           "interval": "",
           "key": "Q-aca73aa4-50db-4a58-ab60-0460130ab40b-0",
@@ -897,8 +897,10 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({namespace=\"prod\", app=\"catalyst\"} |~ \"FAIL: onFail\" |~ \"Key duration mismatch; disconnecting\" | pattern \"<_> '<_>+<playback_id>': Key duration mismatch; disconnecting <ip> to recover\"[30m])) by (playback_id)",
+          "editorMode": "code",
+          "expr": "sum(count_over_time({namespace=\"default\", app=\"catalyst\"} |~ \"FAIL: onFail\" |~ \"Key duration mismatch; disconnecting\" | pattern \"<_> '<_>+<playback_id>': Key duration mismatch; disconnecting <ip> to recover\"[30m])) by (playback_id)",
           "legendFormat": "{{ playback_id }}",
+          "queryType": "range",
           "refId": "A"
         }
       ],
@@ -1087,8 +1089,10 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({app=\"catalyst\", namespace=\"prod\"} |~ \"Could not retrieve\" | pattern \"<_> https://<host>/\"[5m]))",
+          "editorMode": "code",
+          "expr": "sum(count_over_time({app=\"catalyst\", namespace=\"default\"} |~ \"Could not retrieve\" | pattern \"<_> https://<host>/\"[5m]))",
           "legendFormat": "{{ host }}",
+          "queryType": "range",
           "refId": "A"
         },
         {
@@ -1096,9 +1100,11 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({app=\"ingress-nginx\", namespace=\"prod\", stream=\"stderr\"} != \"sent data after final chunk\" |~ \"[error]\" | pattern `<_> upstream: \"<protocol>://<ip>:<port>/<code>.<ext>\", host: \"<upstreamHost>:<upstreamPort>\"`  | port = \"4242\" | ext = \"json\"[1m])) ",
+          "editorMode": "code",
+          "expr": "sum(count_over_time({app=\"ingress-nginx\", namespace=\"default\", stream=\"stderr\"} != \"sent data after final chunk\" |~ \"[error]\" | pattern `<_> upstream: \"<protocol>://<ip>:<port>/<code>.<ext>\", host: \"<upstreamHost>:<upstreamPort>\"` | port = \"4242\" | ext = \"json\"[1m])) ",
           "hide": false,
           "legendFormat": "Retrieval Errors",
+          "queryType": "range",
           "refId": "B"
         }
       ],
@@ -1564,8 +1570,10 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({app=\"catalyst\", namespace=\"prod\"} |~ \"Could not retrieve\" | pattern \"<_> https://<host>/\"[5m])) by (host)",
+          "editorMode": "code",
+          "expr": "sum(count_over_time({app=\"catalyst\", namespace=\"default\"} |~ \"Could not retrieve\" | pattern \"<_> https://<host>/\"[5m])) by (host)",
           "legendFormat": "{{ host }}",
+          "queryType": "range",
           "refId": "A"
         },
         {
@@ -1573,9 +1581,11 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({app=\"ingress-nginx\", namespace=\"prod\", stream=\"stderr\"} != \"sent data after final chunk\" |~ \"[error]\" | pattern `<_> upstream: \"<protocol>://<ip>:<port>/<code>.<ext>\", host: \"<upstreamHost>:<upstreamPort>\"`  | port = \"4242\" | ext = \"json\"[1m])) by (upstreamHost)",
+          "editorMode": "code",
+          "expr": "sum(count_over_time({app=\"ingress-nginx\", namespace=\"default\", stream=\"stderr\"} != \"sent data after final chunk\" |~ \"[error]\" | pattern `<_> upstream: \"<protocol>://<ip>:<port>/<code>.<ext>\", host: \"<upstreamHost>:<upstreamPort>\"`  | port = \"4242\" | ext = \"json\"[1m])) by (upstreamHost)",
           "hide": false,
           "legendFormat": "{{ upstreamHost }}",
+          "queryType": "range",
           "refId": "B"
         }
       ],
@@ -1675,7 +1685,9 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({namespace=\"prod\", app=\"ingress-nginx\", stream=\"stdout\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<originUrl>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>` | originUrl != \"-\" | line_format \"{{ .originUrl }}\" | pattern \"<originScheme>://<originDomain>/<originPath>\" | line_format \"{{ .originDomain }}\"[1m])) by (status)",
+          "editorMode": "code",
+          "expr": "sum(count_over_time({namespace=\"default\", app=\"ingress-nginx\", stream=\"stdout\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<originUrl>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>` | originUrl != \"-\" | line_format \"{{ .originUrl }}\" | pattern \"<originScheme>://<originDomain>/<originPath>\" | line_format \"{{ .originDomain }}\"[1m])) by (status)",
+          "queryType": "range",
           "refId": "A"
         }
       ],
@@ -1693,6 +1705,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -1725,7 +1739,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1751,7 +1766,8 @@
           "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.3.3",
@@ -1761,8 +1777,10 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({namespace=\"prod\", app=\"catalyst\"} |~ \"Packet loss detected\" | pattern \"<_> MistOutTSSRT:<playback_id> \"[1m])) by (playback_id)",
+          "editorMode": "code",
+          "expr": "sum(count_over_time({namespace=\"default\", app=\"catalyst\"} |~ \"Packet loss detected\" | pattern \"<_> MistOutTSSRT:<playback_id> \"[1m])) by (playback_id)",
           "legendFormat": "{{ playback_id }}",
+          "queryType": "range",
           "refId": "A"
         },
         {
@@ -1770,9 +1788,11 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({namespace=\"prod\", app=\"catalyst\"} |~ \"Packet loss detected\" | pattern \"<_> MistOutTSSRT:<playback_id> \"[1m]))",
+          "editorMode": "code",
+          "expr": "sum(count_over_time({namespace=\"default\", app=\"catalyst\"} |~ \"Packet loss detected\" | pattern \"<_> MistOutTSSRT:<playback_id> \"[1m]))",
           "hide": false,
           "legendFormat": "{{ playback_id }}",
+          "queryType": "range",
           "refId": "B"
         }
       ],
@@ -1790,6 +1810,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -1822,7 +1844,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1848,7 +1871,8 @@
           "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
@@ -1857,8 +1881,10 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({app=\"catalyst\"} |~ \"not allowed\"[1m])) by (region)",
+          "editorMode": "code",
+          "expr": "sum(count_over_time({app=\"catalyst\", namespace=\"default\"} |~ \"not allowed\"[1m])) by (region)",
           "legendFormat": "{{ region }}",
+          "queryType": "range",
           "refId": "A"
         }
       ],
@@ -1876,6 +1902,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -1908,7 +1936,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1934,7 +1963,8 @@
           "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
@@ -1943,8 +1973,10 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({app=\"catalyst\", namespace=\"prod\"} |~ \"Shutting down on Serf client failure\"[1m])) by (region, pod)",
+          "editorMode": "code",
+          "expr": "sum(count_over_time({app=\"catalyst\", namespace=\"default\"} |~ \"Shutting down on Serf client failure\"[1m])) by (region, pod)",
           "legendFormat": "{{ region }}-{{ pod }}",
+          "queryType": "range",
           "refId": "A"
         }
       ],
@@ -1962,6 +1994,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -1994,7 +2028,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2020,7 +2055,8 @@
           "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
@@ -2029,8 +2065,10 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({app=\"catalyst\"} |~ \"Global configuration options not ready\"[1m])) by (region, pod)",
+          "editorMode": "code",
+          "expr": "sum(count_over_time({app=\"catalyst\", namespace=\"default\"} |~ \"Global configuration options not ready\"[1m])) by (region, pod)",
           "legendFormat": "{{ region }}-{{ pod }}",
+          "queryType": "range",
           "refId": "A"
         }
       ],
@@ -2048,6 +2086,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -2080,7 +2120,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2106,7 +2147,8 @@
           "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
@@ -2115,7 +2157,9 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time(\n  {app=\"catalyst\", namespace=\"prod\"}\n  |~ \"MistProcLivepeer\"\n  |~ \"videorec\"\n  |~ \"Adding 1 tracks\"\n  | pattern \"<_> MistProcLivepeer:videorec+<playbackId> <_> MEDIUM: Adding 1 tracks\"[1m]\n)) by (playbackId)",
+          "editorMode": "code",
+          "expr": "sum(count_over_time(\n  {app=\"catalyst\", namespace=\"default\"}\n  |~ \"MistProcLivepeer\"\n  |~ \"videorec\"\n  |~ \"Adding 1 tracks\"\n  | pattern \"<_> MistProcLivepeer:videorec+<playbackId> <_> MEDIUM: Adding 1 tracks\"[1m]\n)) by (playbackId)",
+          "queryType": "range",
           "refId": "A"
         }
       ],
@@ -2159,6 +2203,6 @@
   "timezone": "utc",
   "title": "Catalyst Multi-Node",
   "uid": "EWXkaj7Vz",
-  "version": 86,
+  "version": 92,
   "weekStart": ""
 }
