@@ -103,7 +103,7 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({namespace=\"prod\", app=\"ingress-nginx\", stream=\"stdout\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<origin>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>` |~ \"pingdom-healthcheck\" | status != \"302\" | status =~ \"500|499\" [5m])) by (node_name, region)",
+          "expr": "sum(count_over_time({namespace=\"default\", app=\"ingress-nginx\", stream=\"stdout\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<origin>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>` |~ \"pingdom-healthcheck\" | status != \"302\" | status =~ \"500|499\" [5m])) by (node_name, region)",
           "legendFormat": "{{ region }}-{{ node_name }}",
           "refId": "A"
         }
@@ -189,7 +189,7 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({namespace=\"prod\", app=\"ingress-nginx\", stream=\"stdout\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<origin>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstream(Addr> <wtf4> <wtf5> <upstreamStatus> <requestId>` |~ \"pingdom-healthcheck\" | status != \"302\" | status =~ \"200\" [5m])) by (region, node_name)",
+          "expr": "sum(count_over_time({namespace=\"default\", app=\"ingress-nginx\", stream=\"stdout\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<origin>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstream(Addr> <wtf4> <wtf5> <upstreamStatus> <requestId>` |~ \"pingdom-healthcheck\" | status != \"302\" | status =~ \"200\" [5m])) by (region, node_name)",
           "legendFormat": "{{ region }}-{{ node_name }}",
           "refId": "A"
         }
