@@ -103,7 +103,7 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({namespace=\"prod\", app=\"traefik\", stream=\"stdout\"} != \"msg=\" | json | OriginStatus = 500[1m])) by (region)",
+          "expr": "sum(count_over_time({namespace=\"default\", app=\"traefik\", stream=\"stdout\"} != \"msg=\" | json | OriginStatus = 500[1m])) by (region)",
           "refId": "A"
         }
       ],

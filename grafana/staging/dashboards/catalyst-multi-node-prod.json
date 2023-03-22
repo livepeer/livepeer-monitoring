@@ -991,7 +991,7 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time(\n  {namespace=\"prod\", app=\"catalyst\"} |~ \"\\\\[DEBUG\\\\] POST http://127.0.0.1:8935\"\n  [1m]\n)) by (region, pod)",
+          "expr": "sum(count_over_time(\n  {namespace=\"default\", app=\"catalyst\"} |~ \"\\\\[DEBUG\\\\] POST http://127.0.0.1:8935\"\n  [1m]\n)) by (region, pod)",
           "legendFormat": "{{ region }}-{{ pod }}",
           "refId": "A"
         }
@@ -2108,7 +2108,7 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time(\n  {app=\"catalyst\", namespace=\"prod\"}\n  |~ \"MistProcLivepeer\"\n  |~ \"videorec\"\n  |~ \"Adding 1 tracks\"\n  | pattern \"<_> MistProcLivepeer:videorec+<playbackId> <_> MEDIUM: Adding 1 tracks\"[1m]\n)) by (playbackId)",
+          "expr": "sum(count_over_time(\n  {app=\"catalyst\", namespace=\"default\"}\n  |~ \"MistProcLivepeer\"\n  |~ \"videorec\"\n  |~ \"Adding 1 tracks\"\n  | pattern \"<_> MistProcLivepeer:videorec+<playbackId> <_> MEDIUM: Adding 1 tracks\"[1m]\n)) by (playbackId)",
           "refId": "A"
         }
       ],
