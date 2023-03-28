@@ -297,6 +297,13 @@
               "mode": "off"
             }
           },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "https://livepeer.com/app/stream/$stream?autoplay",
+              "url": "https://livepeer.com/app/stream/${__field.labels.stream_id}?autoplay"
+            }
+          ],
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -345,7 +352,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream!=\"000reallylongnonexistenstreamnamethatreallyshouldntexist000\", stream!~\"$exclude\", stream!~\"catalyst_vod.+\"}[1m] ) by (stream) or on() vector(0)",
+          "expr": "label_replace(sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream!=\"000reallylongnonexistenstreamnamethatreallyshouldntexist000\", stream!~\"$exclude\", stream!~\"catalyst_vod.+\"}[1m] ) by (stream) or on() vector(0), \"stream_id\", \"$1\", \"stream\", \".*\\\\+(.*)\")",
           "instant": false,
           "interval": "",
           "key": "Q-aca73aa4-50db-4a58-ab60-0460130ab40b-0",
@@ -1108,7 +1115,7 @@
           "refId": "B"
         }
       ],
-      "title": "\"Could not retrieve\" replications (prod)",
+      "title": "\"Could not retrieve\" replications",
       "type": "timeseries"
     },
     {
@@ -1597,7 +1604,7 @@
           "visible": true
         }
       ],
-      "title": "\"Could not retrieve\" replications (prod)",
+      "title": "\"Could not retrieve\" replications",
       "type": "timeseries"
     },
     {
@@ -2203,6 +2210,6 @@
   "timezone": "utc",
   "title": "Catalyst Multi-Node",
   "uid": "EWXkaj7Vz",
-  "version": 93,
+  "version": 97,
   "weekStart": ""
 }
