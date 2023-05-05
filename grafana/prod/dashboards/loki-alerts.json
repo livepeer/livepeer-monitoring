@@ -768,7 +768,7 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "count by (﻿id﻿, ﻿region﻿)﻿ ﻿(﻿count_over_time﻿(﻿{﻿app﻿=﻿\"prod-task-runner\"﻿}﻿ |= ﻿\"Starting task\"﻿ ﻿|﻿ ﻿logfmt﻿ ﻿[﻿2h﻿]﻿)﻿)﻿ > 3",
+          "expr": "count by (id, region) (count_over_time({app=\"prod-task-runner\"} |= \"Starting task\" | logfmt [2h])) > 3",
           "refId": "A"
         }
       ],
