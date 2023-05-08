@@ -159,7 +159,7 @@
         "content": "This is the maximum of the shared memory, general RAM and CPU used on the nodes, as a percentage. If this nears 100%, that means there aren't enough servers in that region to handle the load. If it nears 0% that means there isn't enough load to warrant the current deployment size.",
         "mode": "markdown"
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "9.4.7",
       "title": "Resource usage",
       "type": "text"
     },
@@ -289,7 +289,7 @@
         "content": "This should be zero/blank if all is running perfectly. The livestreams automatically abort and retry if a timeout occurs, but multiple timeouts in a row will drastically affect player experience.",
         "mode": "markdown"
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "9.4.7",
       "title": "Transcode timeouts",
       "type": "text"
     },
@@ -343,7 +343,7 @@
       },
       "paceLength": 10,
       "percentage": false,
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "9.4.7",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -425,7 +425,7 @@
         "content": "Tracks active viewers by region. In general, sudden changes here indicate a potential problem (or popular stream starting/stopping).",
         "mode": "markdown"
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "9.4.7",
       "title": "Viewers",
       "type": "text"
     },
@@ -477,7 +477,7 @@
       },
       "paceLength": 10,
       "percentage": false,
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "9.4.7",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -559,7 +559,7 @@
         "content": "This basically shows new connections to regions as a fraction of the total viewers. Consider it a view of connection \"stickiness\", where anything under 1 is generally \"very good and the higher above 1 the worse it is. People refreshing the page (or, well, not liking the stream contents) will cause this number to go up.",
         "mode": "markdown"
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "9.4.7",
       "title": "Reconnects",
       "type": "text"
     },
@@ -732,7 +732,7 @@
         "content": "Trigger failures indicate a problem with integration between the media server and the systems surrounding it. Depending on the trigger affected, there may or may not be noticible degradation of service. The most important ones are `USER_NEW` (handles viewer authorization) and `PUSH_REWRITE` (handles incoming push authorization).",
         "mode": "markdown"
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "9.4.7",
       "title": "Trigger failures",
       "type": "text"
     },
@@ -750,12 +750,320 @@
       "type": "row"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Overall"
+            },
+            "properties": [
+              {
+                "id": "custom.lineWidth",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "..."
+            },
+            "properties": [
+              {
+                "id": "custom.pointSize",
+                "value": 2
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 0.2
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 9,
+        "x": 0,
+        "y": 32
+      },
+      "id": 27,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "sum(mist_health_count{health=\"good\"}) by (region) / (sum(mist_health_count) by (region))",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "avg_over_time((sum(mist_health_count{health=\"good\"}) / sum(mist_health_count))[1h])",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Overall",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "Percentage healthy streams",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 3,
+        "x": 9,
+        "y": 32
+      },
+      "id": 29,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "This measures whether the configuration of the incoming stream is correct (e.g. user error).\nIf there is something wrong with the input that makes streaming it smoothly tricky/hard/impossible, the stream is considered unhealthy.\nStreams without problems are considered healthy. It's actually possible to query the corresponding node over API to get _why_ a stream is unhealthy, as well!",
+        "mode": "markdown"
+      },
+      "pluginVersion": "9.4.7",
+      "title": "Healthy streams",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".* bad"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".* good"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 9,
+        "x": 12,
+        "y": 32
+      },
+      "id": 28,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 1,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "xField": "Time",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "9.4.7",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(mist_health_count) by (region,health)",
+          "format": "time_series",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{region}} {{health}}",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "Incoming streams by region and health",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 3,
+        "x": 21,
+        "y": 32
+      },
+      "id": 30,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "The same data as on the left, but:\n- Raw values\n- Color-coded for visibility\n- Only the most recent datapoint",
+        "mode": "markdown"
+      },
+      "pluginVersion": "9.4.7",
+      "title": "Healthy streams, current",
+      "type": "text"
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 32
+        "y": 42
       },
       "id": 19,
       "panels": [],
@@ -830,7 +1138,7 @@
         "h": 10,
         "w": 9,
         "x": 0,
-        "y": 33
+        "y": 43
       },
       "id": 21,
       "options": {
@@ -870,7 +1178,7 @@
         "h": 10,
         "w": 3,
         "x": 9,
-        "y": 33
+        "y": 43
       },
       "id": 22,
       "options": {
@@ -882,13 +1190,14 @@
         "content": "Every concurrent viewer is given a score of \"bad\", \"okay\" and \"perfect\".\nThis graph tracks regions with 25+ viewers and shows what percentage of them had a \"perfect\" score, over time. If this is around 90%, that's considered a good result.\nMuch below it _can_ indicate a problem.\nIt's normal for this to never reach 100%, as it would require **every** viewer to have good hardware **and** a good connection, which is not likely to happen.",
         "mode": "markdown"
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "9.4.7",
       "title": "Flawless playback",
       "type": "text"
     }
   ],
-  "refresh": false,
-  "schemaVersion": 37,
+  "refresh": "",
+  "revision": 1,
+  "schemaVersion": 38,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -902,6 +1211,6 @@
   "timezone": "",
   "title": "Livestreaming Reliability Overview",
   "uid": "6aTY0Qx4k",
-  "version": 20,
+  "version": 26,
   "weekStart": ""
 }
