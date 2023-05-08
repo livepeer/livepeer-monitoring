@@ -72,7 +72,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "9.4.7",
       "targets": [
         {
           "datasource": {
@@ -133,7 +133,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "9.4.7",
       "targets": [
         {
           "datasource": {
@@ -194,7 +194,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "9.4.7",
       "targets": [
         {
           "datasource": {
@@ -1706,6 +1706,7 @@
         "type": "loki",
         "uid": "P8E80F9AEF21F6940"
       },
+      "description": "If this is occurring a lot, the pod that nodes can't find needs to be deleted.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1742,6 +1743,7 @@
             }
           },
           "mappings": [],
+          "noValue": "0",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1764,20 +1766,24 @@
         "x": 12,
         "y": 57
       },
-      "id": 13,
+      "id": 32,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
+          "calcs": [
+            "lastNotNull",
+            "sum"
+          ],
+          "displayMode": "table",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": true,
+          "sortBy": "Total",
+          "sortDesc": true
         },
         "tooltip": {
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "8.3.3",
       "targets": [
         {
           "datasource": {
@@ -1785,25 +1791,13 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "sum(count_over_time({namespace=\"default\", app=\"catalyst\"} |~ \"Packet loss detected\" | pattern \"<_> MistOutTSSRT:<playback_id> \"[1m])) by (playback_id)",
-          "legendFormat": "{{ playback_id }}",
+          "expr": "sum(count_over_time({app=\"catalyst\"} |~ \"could not find serf member\" | logfmt[5m])) by (name)",
+          "legendFormat": "{{ host }}",
           "queryType": "range",
           "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
-          "editorMode": "code",
-          "expr": "sum(count_over_time({namespace=\"default\", app=\"catalyst\"} |~ \"Packet loss detected\" | pattern \"<_> MistOutTSSRT:<playback_id> \"[1m]))",
-          "hide": false,
-          "legendFormat": "{{ playback_id }}",
-          "queryType": "range",
-          "refId": "B"
         }
       ],
-      "title": "Packet Loss detected",
+      "title": "Could not find serf member",
       "type": "timeseries"
     },
     {
@@ -1961,7 +1955,7 @@
         "x": 12,
         "y": 65
       },
-      "id": 22,
+      "id": 13,
       "options": {
         "legend": {
           "calcs": [],
@@ -1974,6 +1968,7 @@
           "sort": "none"
         }
       },
+      "pluginVersion": "8.3.3",
       "targets": [
         {
           "datasource": {
@@ -1981,13 +1976,25 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "sum(count_over_time({app=\"catalyst\", namespace=\"default\"} |~ \"Shutting down on Serf client failure\"[1m])) by (region, pod)",
-          "legendFormat": "{{ region }}-{{ pod }}",
+          "expr": "sum(count_over_time({namespace=\"default\", app=\"catalyst\"} |~ \"Packet loss detected\" | pattern \"<_> MistOutTSSRT:<playback_id> \"[1m])) by (playback_id)",
+          "legendFormat": "{{ playback_id }}",
           "queryType": "range",
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum(count_over_time({namespace=\"default\", app=\"catalyst\"} |~ \"Packet loss detected\" | pattern \"<_> MistOutTSSRT:<playback_id> \"[1m]))",
+          "hide": false,
+          "legendFormat": "{{ playback_id }}",
+          "queryType": "range",
+          "refId": "B"
         }
       ],
-      "title": "Shutting down on Serf client failure",
+      "title": "Packet Loss detected",
       "type": "timeseries"
     },
     {
@@ -2145,6 +2152,98 @@
         "x": 12,
         "y": 73
       },
+      "id": 22,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum(count_over_time({app=\"catalyst\", namespace=\"default\"} |~ \"Shutting down on Serf client failure\"[1m])) by (region, pod)",
+          "legendFormat": "{{ region }}-{{ pod }}",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Shutting down on Serf client failure",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 81
+      },
       "id": 21,
       "options": {
         "legend": {
@@ -2175,7 +2274,8 @@
     }
   ],
   "refresh": "5s",
-  "schemaVersion": 37,
+  "revision": 1,
+  "schemaVersion": 38,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -2210,6 +2310,6 @@
   "timezone": "utc",
   "title": "Catalyst Multi-Node",
   "uid": "EWXkaj7Vz",
-  "version": 97,
+  "version": 99,
   "weekStart": ""
 }

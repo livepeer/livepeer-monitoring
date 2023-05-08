@@ -91,7 +91,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.4.3",
+      "pluginVersion": "9.4.7",
       "targets": [
         {
           "datasource": {
@@ -196,7 +196,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "1 - (sum (increase(vod_count{stage=\"failed\", pipeline=~\"${pipeline:raw}\"}[15m]) or vector(0)) / sum(increase(vod_count{pipeline=~\"${pipeline:raw}\"}[15m]) or vector(0)))",
+          "expr": "1 - (sum (increase(vod_count{stage=\"failed\", pipeline=~\"${pipeline:raw}\"}[5m]) or vector(0)) / sum(increase(vod_count{pipeline=~\"${pipeline:raw}\"}[5m]) or vector(1)))",
           "legendFormat": "Success Rate",
           "range": true,
           "refId": "A"
@@ -287,7 +287,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.4.3",
+      "pluginVersion": "9.4.7",
       "targets": [
         {
           "datasource": {
@@ -387,7 +387,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(increase(vod_count{pipeline=~\"${pipeline:raw}\"}))",
+          "expr": "sum(increase(vod_count{pipeline=~\"${pipeline:raw}\"}[1m]))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -454,8 +454,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -546,8 +545,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -611,8 +609,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -644,7 +641,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.4.3",
+      "pluginVersion": "9.4.7",
       "targets": [
         {
           "datasource": {
@@ -673,12 +670,10 @@
         "current": {
           "selected": true,
           "text": [
-            "mist",
-            "external|aws-mediaconvert"
+            "All"
           ],
           "value": [
-            "mist",
-            "external|aws-mediaconvert"
+            "$__all"
           ]
         },
         "hide": 0,
@@ -687,22 +682,22 @@
         "name": "pipeline",
         "options": [
           {
-            "selected": false,
+            "selected": true,
             "text": "All",
             "value": "$__all"
           },
           {
-            "selected": true,
-            "text": "mist",
-            "value": "mist"
+            "selected": false,
+            "text": "catalyst_ffmpeg",
+            "value": "catalyst_ffmpeg"
           },
           {
-            "selected": true,
+            "selected": false,
             "text": "external|aws-mediaconvert",
             "value": "external|aws-mediaconvert"
           }
         ],
-        "query": "mist,external|aws-mediaconvert",
+        "query": "catalyst_ffmpeg,external|aws-mediaconvert",
         "queryValue": "",
         "skipUrlSync": false,
         "type": "custom"
@@ -717,6 +712,6 @@
   "timezone": "",
   "title": "VoD Monitoring",
   "uid": "JZNaFMv4z",
-  "version": 90,
+  "version": 100,
   "weekStart": ""
 }

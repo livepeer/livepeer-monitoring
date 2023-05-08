@@ -3,7 +3,10 @@
     "list": [
       {
         "builtIn": 1,
-        "datasource": "-- Grafana --",
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
@@ -26,6 +29,10 @@
   "liveNow": false,
   "panels": [
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "description": "Number of current streams on across Broadcasters minus maximum sessions across Orchestrators",
       "fieldConfig": {
         "defaults": {
@@ -87,9 +94,13 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "9.4.7",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "sum(livepeer_current_sessions_total{node_type=\"bctr\"}) - sum(livepeer_max_sessions_total{node_type=\"orch\"})",
           "format": "time_series",
           "instant": true,
@@ -101,6 +112,10 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "description": "Number of concurrent streams across all broadcasters",
       "fieldConfig": {
         "defaults": {
@@ -158,9 +173,13 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "9.4.7",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "sum(livepeer_current_sessions_total{node_type=\"bctr\"})",
           "format": "time_series",
           "intervalFactor": 1,
@@ -172,6 +191,10 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -230,7 +253,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "9.4.7",
       "targets": [
         {
           "datasource": {
@@ -251,6 +274,10 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "description": "Total number of segments emerged from segmenter.",
       "fieldConfig": {
         "defaults": {
@@ -308,9 +335,13 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "9.4.7",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "sum(livepeer_segment_source_emerged_unprocessed_total)",
           "format": "time_series",
           "intervalFactor": 1,
@@ -321,6 +352,10 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "description": "Total number of transcoded segments.",
       "fieldConfig": {
         "defaults": {
@@ -378,9 +413,13 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "9.4.7",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "sum(livepeer_segment_transcoded_unprocessed_total)",
           "format": "time_series",
           "intervalFactor": 1,
@@ -392,6 +431,10 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "description": "Percentage of streams running on Orchestrators to maxSessions of Orchestrator",
       "fieldConfig": {
         "defaults": {
@@ -453,9 +496,13 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "9.4.7",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "sum(livepeer_current_sessions_total{node_type=\"orch\"}) / sum(livepeer_max_sessions_total{node_type=\"orch\"})*100",
           "format": "time_series",
           "instant": true,
@@ -531,9 +578,13 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "9.4.7",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "sum(ALERTS)",
           "format": "time_series",
           "instant": true,
@@ -547,6 +598,10 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -603,9 +658,13 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "9.4.7",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "sum(up{livepeer_node_type=~\"^.*orchestrator.*$\"})",
           "format": "time_series",
           "instant": true,
@@ -621,6 +680,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "description": "shows the currently total active sessions for each Broadcaster.",
       "fieldConfig": {
         "defaults": {
@@ -657,7 +720,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "9.4.7",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -667,6 +730,10 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "sum(increase(livepeer_current_sessions_total{node_type=\"bctr\"}[1m])) by (node_id)",
           "hide": false,
           "interval": "",
@@ -712,6 +779,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "description": "shows the currently total active sessions for each orchestrator",
       "fieldConfig": {
         "defaults": {
@@ -748,7 +819,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "9.4.7",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -758,6 +829,10 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "sum(increase(livepeer_current_sessions_total{node_type=\"orch\"}[1m])) by (node_id)",
           "hide": false,
           "interval": "",
@@ -846,6 +921,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -881,7 +960,7 @@
       },
       "paceLength": 10,
       "percentage": false,
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "9.4.7",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -891,6 +970,10 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "sum(rate(livepeer_segment_transcoded_all_appeared_total[1m])) by (node_id) / sum(rate(livepeer_segment_source_emerged_total[1m])) by (node_id)",
           "format": "time_series",
           "interval": "",
@@ -984,6 +1067,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "description": "Latency is calculated on Broadcaster, from time source segment goes out from segmenter till transcoded segment gets inserted into manifest.",
       "fieldConfig": {
         "defaults": {
@@ -1025,7 +1112,7 @@
       },
       "paceLength": 10,
       "percentage": false,
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "9.4.7",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1035,6 +1122,10 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "sum(rate(livepeer_transcode_overall_latency_seconds_sum{node_type=\"bctr\"}[1m])) by (node_id) / sum(rate(livepeer_transcode_overall_latency_seconds_count{node_type=\"bctr\"}[1m])) by (node_id)",
           "format": "time_series",
           "instant": false,
@@ -1133,6 +1224,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "description": "Orchestrator Average Transcode Time",
       "fieldConfig": {
         "defaults": {
@@ -1176,7 +1271,7 @@
       },
       "paceLength": 10,
       "percentage": false,
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "9.4.7",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1186,6 +1281,10 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "rate(livepeer_transcode_time_seconds_sum{node_type=\"orch\"}[1m]) / rate(livepeer_transcode_time_seconds_count{node_type=\"orch\"}[1m])",
           "format": "time_series",
           "instant": false,
@@ -1242,6 +1341,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "fieldConfig": {
         "defaults": {
           "links": [
@@ -1282,7 +1385,7 @@
       },
       "paceLength": 10,
       "percentage": false,
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "9.4.7",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1292,6 +1395,10 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "histogram_quantile(0.99, sum(rate(livepeer_transcode_overall_latency_seconds_bucket[1m])) by ( le))",
           "format": "time_series",
           "instant": false,
@@ -1300,6 +1407,10 @@
           "refId": "D"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "histogram_quantile(0.95, sum(rate(livepeer_transcode_overall_latency_seconds_bucket[1m])) by (le))",
           "format": "time_series",
           "intervalFactor": 1,
@@ -1307,6 +1418,10 @@
           "refId": "A"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "histogram_quantile(0.9, sum(rate(livepeer_transcode_overall_latency_seconds_bucket[1m])) by ( le))",
           "format": "time_series",
           "intervalFactor": 1,
@@ -1314,6 +1429,10 @@
           "refId": "B"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "histogram_quantile(0.5, sum(rate(livepeer_transcode_overall_latency_seconds_bucket[1m])) by ( le))",
           "format": "time_series",
           "intervalFactor": 1,
@@ -1366,6 +1485,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "description": "Transcode times, measured at transcoder.",
       "fieldConfig": {
         "defaults": {
@@ -1417,6 +1540,10 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "histogram_quantile(0.99, sum(rate(livepeer_transcode_time_seconds_bucket{node_type=\"orch\"}[1m])) by ( le))",
           "format": "time_series",
           "intervalFactor": 1,
@@ -1424,6 +1551,10 @@
           "refId": "B"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "histogram_quantile(0.9, sum(rate(livepeer_transcode_time_seconds_bucket{node_type=\"orch\"}[1m])) by ( le))",
           "format": "time_series",
           "intervalFactor": 1,
@@ -1431,6 +1562,10 @@
           "refId": "C"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "histogram_quantile(0.95, sum(rate(livepeer_transcode_time_seconds_bucket{node_type=\"orch\"}[1m])) by ( le))",
           "format": "time_series",
           "intervalFactor": 1,
@@ -1438,6 +1573,10 @@
           "refId": "D"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "histogram_quantile(0.5, sum(rate(livepeer_transcode_time_seconds_bucket{node_type=\"orch\"}[1m])) by ( le))",
           "format": "time_series",
           "intervalFactor": 1,
@@ -1480,6 +1619,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "fieldConfig": {
         "defaults": {
           "links": []
@@ -1521,6 +1664,10 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "livepeer_success_rate{node_type=\"bctr\"} and max_over_time(livepeer_current_sessions_total{node_type=\"bctr\"}[1m]) > 0",
           "format": "time_series",
           "interval": "",
@@ -1601,6 +1748,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "fieldConfig": {
         "defaults": {
           "links": []
@@ -1645,6 +1796,10 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "sum(increase(livepeer_segment_source_upload_failed_total[1m])) by (error_code)",
           "format": "time_series",
           "intervalFactor": 1,
@@ -1739,6 +1894,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "fieldConfig": {
         "defaults": {
           "links": [
@@ -1788,6 +1947,10 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "sum(increase(livepeer_segment_transcode_failed_total[1m])) by (error_code, node_id)",
           "format": "time_series",
           "instant": false,
@@ -1842,6 +2005,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "fieldConfig": {
         "defaults": {
           "links": []
@@ -1882,6 +2049,10 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "rate(livepeer_transcode_retried[1m])",
           "format": "time_series",
           "intervalFactor": 1,
@@ -1924,6 +2095,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "fieldConfig": {
         "defaults": {
           "links": []
@@ -1965,6 +2140,10 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "increase(livepeer_discovery_errors_total[30s])",
           "format": "time_series",
           "interval": "",
@@ -2008,6 +2187,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "fieldConfig": {
         "defaults": {
           "links": [
@@ -2055,6 +2238,10 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "sum(livepeer_segment_source_upload_failed_total) by (node_id, error_code)",
           "format": "time_series",
           "interval": "",
@@ -2099,6 +2286,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "fieldConfig": {
         "defaults": {
           "links": [
@@ -2148,6 +2339,10 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "sum(livepeer_segment_transcode_failed_total) by (node_id, error_code)",
           "format": "time_series",
           "interval": "",
@@ -2192,6 +2387,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "fieldConfig": {
         "defaults": {
           "links": []
@@ -2233,12 +2432,20 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "sum(increase(livepeer_segment_source_appeared_total[30s])) - sum(increase(livepeer_segment_source_uploaded_total[30s]))\n",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "",
           "format": "time_series",
           "intervalFactor": 1,
@@ -2280,6 +2487,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "description": "Number of sessions per orchestrator",
       "fieldConfig": {
         "defaults": {
@@ -2320,6 +2531,10 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "livepeer_current_sessions_total{node_type=\"orch\"}",
           "interval": "",
           "legendFormat": "",
@@ -2361,6 +2576,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "description": "Total number of segments emerged from segmenter and total number of segments transcoded",
       "fieldConfig": {
         "defaults": {
@@ -2403,6 +2622,10 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "sum(livepeer_segment_source_emerged_unprocessed_total)",
           "format": "time_series",
           "intervalFactor": 1,
@@ -2410,6 +2633,10 @@
           "refId": "A"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "sum(livepeer_segment_transcoded_unprocessed_total)",
           "format": "time_series",
           "intervalFactor": 1,
@@ -2452,6 +2679,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "fieldConfig": {
         "defaults": {
           "links": []
@@ -2491,6 +2722,10 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "expr": "livepeer_current_sessions_total{node_type=\"bctr\"}",
           "interval": "",
           "legendFormat": "",
@@ -2529,7 +2764,8 @@
     }
   ],
   "refresh": "",
-  "schemaVersion": 34,
+  "revision": 1,
+  "schemaVersion": 38,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -2564,9 +2800,9 @@
       "30d"
     ]
   },
-  "timezone": "",
+  "timezone": "utc",
   "title": "K8s Livepeer Overview",
   "uid": "ZsZv-B3iy",
-  "version": 13,
+  "version": 15,
   "weekStart": ""
 }

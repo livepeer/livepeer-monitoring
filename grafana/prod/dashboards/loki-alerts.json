@@ -384,6 +384,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -416,7 +418,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -442,7 +445,8 @@
           "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
@@ -540,6 +544,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -572,7 +578,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -598,7 +605,8 @@
           "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
@@ -676,6 +684,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -708,7 +718,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -759,7 +770,8 @@
           "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
@@ -768,7 +780,7 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "count by (id, region) (count_over_time({app=\"prod-task-runner\"} |= \"Starting task\" | logfmt [2h])) > 3",
+          "expr": "count by (﻿id﻿, ﻿region﻿)﻿ ﻿(﻿count_over_time﻿(﻿{﻿app﻿=﻿\"prod-task-runner\"﻿}﻿ |= ﻿\"Starting task\"﻿ ﻿|﻿ ﻿logfmt﻿ ﻿[﻿2h﻿]﻿)﻿)﻿ > 3",
           "refId": "A"
         }
       ],
@@ -868,7 +880,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -976,6 +989,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -1008,7 +1023,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1034,7 +1050,8 @@
           "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
@@ -1043,7 +1060,9 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({app=\"prod-livepeer-api\"} |= \"publishing message to events.task.failed\" [2m])) by (region)",
+          "editorMode": "code",
+          "expr": "sum(count_over_time({app=\"prod-livepeer-api\"} |= \"publishing message to events.task.failed\" != \"\\\"retries\\\":0\" [2m])) by (region)",
+          "queryType": "range",
           "refId": "A"
         }
       ],
@@ -1086,16 +1105,19 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "{app=\"prod-task-runner\"} |= \"Task handler processed task\" | logfmt | error != \"%!q(<nil>)\" \n| error !~ \".+unexpected EOF\" \n| error !~ \".+stream error: stream ID.+\" \n| error !~ \"error processing ffprobe output: unsupported .+\"\n| error !~ \"(?s).*context deadline exceeded.*\" \n| error !~ \".+mp4io: parse error:.+TagSizeInvalid.+\"\n| error != \"error probing file: error running ffprobe [] exit status 1\"\n| error !~ \"bad status code from import request:.+\"\n| line_format \"{{ .error }}\"",
+          "editorMode": "code",
+          "expr": "{app=\"prod-task-runner\"} |= \"Task handler processed task\" \n| logfmt | error != \"%!q(<nil>)\" | unretriable=\"false\" \n| line_format \"{{ .error }}\"",
+          "queryType": "range",
           "refId": "A"
         }
       ],
-      "title": "Recent unknown VOD task errors",
+      "title": "Recent VOD task internal errors",
       "type": "logs"
     }
   ],
   "refresh": "",
-  "schemaVersion": 37,
+  "revision": 1,
+  "schemaVersion": 38,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -1109,6 +1131,6 @@
   "timezone": "utc",
   "title": "Loki Alerts",
   "uid": "dbme6io7k",
-  "version": 79,
+  "version": 82,
   "weekStart": ""
 }
