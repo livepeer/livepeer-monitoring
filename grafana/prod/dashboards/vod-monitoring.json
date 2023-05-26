@@ -91,7 +91,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.1",
       "targets": [
         {
           "datasource": {
@@ -234,7 +234,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "{namespace=~\"default|prod\", app=\"catalyst\"} |~ \"Updated transcode status\" |~ \"handler=${pipeline:raw}\" | logfmt | status = \"error\" | line_format \"{{ .request_id }} - {{ .error }}\"",
+          "expr": "{namespace=~\"default|prod\", app=\"catalyst\"} |~ \"Updated transcode status\" | logfmt | handler = \"${pipeline:raw}\" | status = \"error\" | line_format \"{{ .request_id }} - {{ .error }}\"",
           "queryType": "range",
           "range": true,
           "refId": "A"
@@ -287,7 +287,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.1",
       "targets": [
         {
           "datasource": {
@@ -387,13 +387,13 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(increase(vod_count{pipeline=~\"${pipeline:raw}\"}[1m]))",
+          "expr": "sum(increase(vod_count{pipeline=~\"${pipeline:raw}\"}[5m]))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Count of VOD Jobs",
+      "title": "Count of VOD Jobs (5 minute window)",
       "type": "timeseries"
     },
     {
@@ -454,7 +454,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -545,7 +546,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -609,7 +611,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -641,7 +644,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.1",
       "targets": [
         {
           "datasource": {
@@ -712,6 +715,6 @@
   "timezone": "",
   "title": "VoD Monitoring",
   "uid": "JZNaFMv4z",
-  "version": 100,
+  "version": 103,
   "weekStart": ""
 }

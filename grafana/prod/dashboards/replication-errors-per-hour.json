@@ -3,26 +3,22 @@
     "list": [
       {
         "builtIn": 1,
-        "datasource": "-- Grafana --",
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
         "name": "Annotations & Alerts",
-        "target": {
-          "limit": 100,
-          "matchAny": false,
-          "tags": [],
-          "type": "dashboard"
-        },
         "type": "dashboard"
       }
     ]
   },
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "graphTooltip": 0,
+  "graphTooltip": 1,
   "id": null,
-  "iteration": 1649858173454,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -37,6 +33,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -65,7 +63,6 @@
             }
           },
           "mappings": [],
-          "noValue": "0",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -80,27 +77,56 @@
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Faulty"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Total"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
-        "h": 9,
-        "w": 23,
+        "h": 23,
+        "w": 24,
         "x": 0,
         "y": 0
       },
-      "id": 2,
+      "id": 1,
       "options": {
         "legend": {
-          "calcs": [
-            "sum"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "sortBy": "Total",
-          "sortDesc": true
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
@@ -109,53 +135,44 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({job=\"systemd-journal\", region=~\"$region\"}[1m])) by (region, node_name) != 0",
-          "legendFormat": "{{region}}-{{ node_name }}",
-          "refId": "A"
+          "editorMode": "code",
+          "expr": "sum(count_over_time({app=\"catalyst\"} |= \"Starting /usr/local/bin/MistInDTSC\"[1h]))",
+          "legendFormat": "Total",
+          "queryType": "range",
+          "refId": "Total replication attempts"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum(count_over_time({app=\"catalyst\"} |= \"Starting /usr/local/bin/MistInDTSC\" |= \"MistOutDTSC:\" [1h]))",
+          "hide": false,
+          "legendFormat": "Faulty",
+          "queryType": "range",
+          "refId": "Failed attempts"
         }
       ],
-      "title": "journald log count",
+      "title": "Replication attempts per hour",
       "type": "timeseries"
     }
   ],
   "refresh": "",
-  "schemaVersion": 34,
+  "schemaVersion": 38,
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": [
-      {
-        "current": {
-          "selected": true,
-          "text": "All",
-          "value": "$__all"
-        },
-        "definition": "label_values(kube_node_info, region)",
-        "hide": 0,
-        "includeAll": true,
-        "multi": false,
-        "name": "region",
-        "options": [],
-        "query": {
-          "query": "label_values(kube_node_info, region)",
-          "refId": "StandardVariableQuery"
-        },
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "type": "query"
-      }
-    ]
+    "list": []
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {},
-  "timezone": "",
-  "title": "journalctl analysis",
-  "uid": "86MF7fU7k",
-  "version": 16,
+  "timezone": "utc",
+  "title": "Replication errors per hour",
+  "uid": "c3de1488-64be-4422-951a-d6dc6ac84426",
+  "version": 3,
   "weekStart": ""
 }
