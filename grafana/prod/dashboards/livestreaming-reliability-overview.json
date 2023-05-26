@@ -159,7 +159,7 @@
         "content": "This is the maximum of the shared memory, general RAM and CPU used on the nodes, as a percentage. If this nears 100%, that means there aren't enough servers in that region to handle the load. If it nears 0% that means there isn't enough load to warrant the current deployment size.",
         "mode": "markdown"
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.1",
       "title": "Resource usage",
       "type": "text"
     },
@@ -289,7 +289,7 @@
         "content": "This should be zero/blank if all is running perfectly. The livestreams automatically abort and retry if a timeout occurs, but multiple timeouts in a row will drastically affect player experience.",
         "mode": "markdown"
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.1",
       "title": "Transcode timeouts",
       "type": "text"
     },
@@ -343,7 +343,7 @@
       },
       "paceLength": 10,
       "percentage": false,
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.1",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -425,66 +425,94 @@
         "content": "Tracks active viewers by region. In general, sudden changes here indicate a potential problem (or popular stream starting/stopping).",
         "mode": "markdown"
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.1",
       "title": "Viewers",
       "type": "text"
     },
     {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
       "datasource": {
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
-      "editable": true,
-      "error": false,
+      "description": "",
       "fieldConfig": {
         "defaults": {
-          "links": []
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "links": [],
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
         },
         "overrides": []
       },
-      "fill": 1,
-      "fillGradient": 0,
-      "grid": {},
       "gridPos": {
         "h": 10,
-        "w": 9,
+        "w": 12,
         "x": 12,
         "y": 11
       },
-      "hiddenSeries": false,
-      "id": 8,
-      "legend": {
-        "alignAsTable": false,
-        "avg": true,
-        "current": false,
-        "max": false,
-        "min": false,
-        "rightSide": false,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 2,
+      "id": 31,
       "links": [],
-      "nullPointMode": "connected",
       "options": {
-        "alertThreshold": true
+        "legend": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
       },
-      "paceLength": 10,
-      "percentage": false,
-      "pluginVersion": "9.4.7",
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
+      "pluginVersion": "9.5.1",
       "targets": [
         {
           "datasource": {
@@ -493,75 +521,19 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(increase(mist_sessions_count{catalyst_node=~\".*studio\",sessType=\"viewers\"}[10m])) by (region)\n/\n(sum(mist_sessions{catalyst_node=~\".*studio\",sessType=\"viewers\"}) by (region) > 25)",
+          "expr": "sum(mist_outputs{catalyst_node=~\".*studio\",output!=\"\"}) by (region,output)",
           "format": "time_series",
           "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "{{catalyst_node}}",
+          "intervalFactor": 2,
+          "legendFormat": "{{region}} {{output}}",
           "metric": "mist_viewers_current",
           "range": true,
           "refId": "A",
-          "step": 240
+          "step": 120
         }
       ],
-      "thresholds": [],
-      "timeRegions": [],
-      "title": "Reconnects per 10 minutes per user by region",
-      "tooltip": {
-        "msResolution": false,
-        "shared": true,
-        "sort": 0,
-        "value_type": "cumulative"
-      },
-      "type": "graph",
-      "xaxis": {
-        "mode": "time",
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "$$hashKey": "object:268",
-          "format": "none",
-          "logBase": 1,
-          "min": "0",
-          "show": true
-        },
-        {
-          "$$hashKey": "object:269",
-          "format": "short",
-          "logBase": 1,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false
-      }
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 3,
-        "x": 21,
-        "y": 11
-      },
-      "id": 13,
-      "options": {
-        "code": {
-          "language": "plaintext",
-          "showLineNumbers": false,
-          "showMiniMap": false
-        },
-        "content": "This basically shows new connections to regions as a fraction of the total viewers. Consider it a view of connection \"stickiness\", where anything under 1 is generally \"very good and the higher above 1 the worse it is. People refreshing the page (or, well, not liking the stream contents) will cause this number to go up.",
-        "mode": "markdown"
-      },
-      "pluginVersion": "9.4.7",
-      "title": "Reconnects",
-      "type": "text"
+      "title": "Viewers by protocol",
+      "type": "timeseries"
     },
     {
       "alert": {
@@ -732,8 +704,142 @@
         "content": "Trigger failures indicate a problem with integration between the media server and the systems surrounding it. Depending on the trigger affected, there may or may not be noticible degradation of service. The most important ones are `USER_NEW` (handles viewer authorization) and `PUSH_REWRITE` (handles incoming push authorization).",
         "mode": "markdown"
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.1",
       "title": "Trigger failures",
+      "type": "text"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "editable": true,
+      "error": false,
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "grid": {},
+      "gridPos": {
+        "h": 10,
+        "w": 9,
+        "x": 12,
+        "y": 21
+      },
+      "hiddenSeries": false,
+      "id": 8,
+      "legend": {
+        "alignAsTable": false,
+        "avg": true,
+        "current": false,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 2,
+      "links": [],
+      "nullPointMode": "connected",
+      "options": {
+        "alertThreshold": true
+      },
+      "paceLength": 10,
+      "percentage": false,
+      "pluginVersion": "9.5.1",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "sum(increase(mist_sessions_count{catalyst_node=~\".*studio\",sessType=\"viewers\"}[10m])) by (region)\n/\n(sum(mist_sessions{catalyst_node=~\".*studio\",sessType=\"viewers\"}) by (region) > 25)",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "{{catalyst_node}}",
+          "metric": "mist_viewers_current",
+          "range": true,
+          "refId": "A",
+          "step": 240
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "Reconnects per 10 minutes per user by region",
+      "tooltip": {
+        "msResolution": false,
+        "shared": true,
+        "sort": 0,
+        "value_type": "cumulative"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:268",
+          "format": "none",
+          "logBase": 1,
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:269",
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 3,
+        "x": 21,
+        "y": 21
+      },
+      "id": 13,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "This basically shows new connections to regions as a fraction of the total viewers. Consider it a view of connection \"stickiness\", where anything under 1 is generally \"very good and the higher above 1 the worse it is. People refreshing the page (or, well, not liking the stream contents) will cause this number to go up.",
+        "mode": "markdown"
+      },
+      "pluginVersion": "9.5.1",
+      "title": "Reconnects",
       "type": "text"
     },
     {
@@ -901,7 +1007,7 @@
         "content": "This measures whether the configuration of the incoming stream is correct (e.g. user error).\nIf there is something wrong with the input that makes streaming it smoothly tricky/hard/impossible, the stream is considered unhealthy.\nStreams without problems are considered healthy. It's actually possible to query the corresponding node over API to get _why_ a stream is unhealthy, as well!",
         "mode": "markdown"
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.1",
       "title": "Healthy streams",
       "type": "text"
     },
@@ -1053,7 +1159,7 @@
         "content": "The same data as on the left, but:\n- Raw values\n- Color-coded for visibility\n- Only the most recent datapoint",
         "mode": "markdown"
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.1",
       "title": "Healthy streams, current",
       "type": "text"
     },
@@ -1190,7 +1296,7 @@
         "content": "Every concurrent viewer is given a score of \"bad\", \"okay\" and \"perfect\".\nThis graph tracks regions with 25+ viewers and shows what percentage of them had a \"perfect\" score, over time. If this is around 90%, that's considered a good result.\nMuch below it _can_ indicate a problem.\nIt's normal for this to never reach 100%, as it would require **every** viewer to have good hardware **and** a good connection, which is not likely to happen.",
         "mode": "markdown"
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.1",
       "title": "Flawless playback",
       "type": "text"
     }
@@ -1211,6 +1317,6 @@
   "timezone": "",
   "title": "Livestreaming Reliability Overview",
   "uid": "6aTY0Qx4k",
-  "version": 26,
+  "version": 28,
   "weekStart": ""
 }
