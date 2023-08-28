@@ -25,7 +25,7 @@ for db_search_json in $(curl -H "Authorization: Bearer ${API_KEY}" --fail -s "${
   db_slug=$(echo "${db_json}" | jq -r .meta.slug)
   db_title=$(echo "${db_json}" | jq -r .dashboard.title)
   filename="${folder}/${db_folder}/${db_slug}.json"
-  mkdir -p "$(dirname $filename)"
+  mkdir -p "$(dirname "$filename")"
   echo "Exporting \"${db_title}\" to \"${filename}\"..."
   echo "${db_json}" | jq -r '.dashboard | .id = null' >"${filename}"
 done

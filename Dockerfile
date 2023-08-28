@@ -2,9 +2,9 @@ ARG	GRAFANA_ENV
 
 FROM	prom/prometheus:v2.46.0	AS	prometheus
 
-FROM	grafana/loki:2.8.3	AS	loki
+FROM	grafana/loki:2.8.4	AS	loki
 
-FROM	prom/alertmanager:v0.25.0	AS	alertmanager
+FROM	prom/alertmanager:v0.26.0	AS	alertmanager
 
 FROM	golang:1.20.4-alpine3.16	AS	nvidia-builder
 
@@ -20,7 +20,7 @@ ARG	GRAFANA_ENV
 
 COPY	./grafana/${GRAFANA_ENV}/	/grafana
 
-FROM	grafana/grafana-oss:10.0.3	AS	grafana
+FROM	grafana/grafana-oss:10.1.0	AS	grafana
 
 LABEL	maintainer="Amritanshu Varshney <amritanshu+github@livepeer.org>"
 
