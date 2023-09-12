@@ -11,12 +11,6 @@
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
         "name": "Annotations & Alerts",
-        "target": {
-          "limit": 100,
-          "matchAny": false,
-          "tags": [],
-          "type": "dashboard"
-        },
         "type": "dashboard"
       }
     ]
@@ -52,6 +46,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -87,11 +82,11 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
+        "w": 10,
         "x": 0,
         "y": 0
       },
-      "id": 4,
+      "id": 1,
       "options": {
         "legend": {
           "calcs": [],
@@ -110,15 +105,44 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "container_cpu_load_average_10s{pod=~\"staging-catalyst-.*\"}",
+          "expr": "sum by(playbackID) (cdn_redirect_count)",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
           "legendFormat": "__auto",
           "range": true,
-          "refId": "A"
+          "refId": "A",
+          "useBackend": false
         }
       ],
-      "title": "Panel Title",
+      "title": "requests redirected to CDN (by playbackID)",
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 2,
+        "x": 10,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "Number of `/hls/.....m3u8` requests that were redirected to the external CDN (StackPath).",
+        "mode": "markdown"
+      },
+      "pluginVersion": "10.1.0",
+      "type": "text"
     },
     {
       "datasource": {
@@ -144,6 +168,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -178,8 +203,8 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
-        "w": 12,
+        "h": 8,
+        "w": 10,
         "x": 0,
         "y": 8
       },
@@ -202,19 +227,48 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "editorMode": "code",
-          "expr": "mist_cpu{catalyst_node=~\".*monster\"}",
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "sum(cdn_redirect_webrtc_406)",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
           "legendFormat": "__auto",
           "range": true,
-          "refId": "A"
+          "refId": "A",
+          "useBackend": false
         }
       ],
-      "title": "Panel Title",
+      "title": "webRTC requests redirected to HLS",
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 2,
+        "x": 10,
+        "y": 8
+      },
+      "id": 4,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "Number of `/webrtc/...` requests that were rejected with HTTP `406 Not Acceptable`. Player should fall back to `/hls` after receiving 406",
+        "mode": "markdown"
+      },
+      "pluginVersion": "10.1.0",
+      "type": "text"
     }
   ],
-  "refresh": "10s",
-  "schemaVersion": 37,
+  "refresh": "",
+  "schemaVersion": 38,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -226,8 +280,8 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Thom CPU Monitoring",
-  "uid": "bTuY3Ld4k",
-  "version": 10,
+  "title": "CDN redirects",
+  "uid": "f1e103a6-2ec1-44e8-bcee-d1d5f68bdbf5",
+  "version": 3,
   "weekStart": ""
 }
