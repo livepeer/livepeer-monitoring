@@ -58,7 +58,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "{namespace=~\"prod|canary|staging|default\", container=\"catalyst\"} |~ \"MistProcLivepeer\" != \"Jitter\" |~ \"Livepeer transcode ID\" |~ \"$playbackId\" | pattern \"<time> MistProcLivepeer:<base>+<_>+<playback_id> \" | line_format \"kubectl --context={{ .region }}-{{ .namespace }} exec -it {{ .pod }} -- MistUtilNuke {{ .base }}+{{ .playback_id }}\"",
+          "expr": "{namespace=~\"prod|canary|staging|default\", container=\"catalyst\"} |~ \"MistProcLivepeer\" != \"Jitter\" |~ \"Livepeer transcode ID\" |~ \"$playbackId\" | pattern \"<time> MistProcLivepeer:<base>+<_>+<playback_id> \" | line_format \"kubectl --context={{ .region }} exec -it {{ .pod }} -- MistUtilNuke {{ .base }}+{{ .playback_id }}\"",
           "queryType": "range",
           "refId": "A"
         }
@@ -68,7 +68,7 @@
     }
   ],
   "refresh": "",
-  "schemaVersion": 37,
+  "schemaVersion": 38,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -104,6 +104,6 @@
   "timezone": "",
   "title": "Nuke Control Panel",
   "uid": "u-1kei44z",
-  "version": 20,
+  "version": 22,
   "weekStart": ""
 }

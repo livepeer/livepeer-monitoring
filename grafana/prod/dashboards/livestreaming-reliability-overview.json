@@ -85,8 +85,6 @@
             }
           },
           "mappings": [],
-          "max": 100,
-          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -99,7 +97,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "percent"
         },
         "overrides": []
       },
@@ -159,7 +158,7 @@
         "content": "This is the maximum of the shared memory, general RAM and CPU used on the nodes, as a percentage. If this nears 100%, that means there aren't enough servers in that region to handle the load. If it nears 0% that means there isn't enough load to warrant the current deployment size.",
         "mode": "markdown"
       },
-      "pluginVersion": "9.5.1",
+      "pluginVersion": "9.5.2",
       "title": "Resource usage",
       "type": "text"
     },
@@ -289,7 +288,7 @@
         "content": "This should be zero/blank if all is running perfectly. The livestreams automatically abort and retry if a timeout occurs, but multiple timeouts in a row will drastically affect player experience.",
         "mode": "markdown"
       },
-      "pluginVersion": "9.5.1",
+      "pluginVersion": "9.5.2",
       "title": "Transcode timeouts",
       "type": "text"
     },
@@ -343,7 +342,7 @@
       },
       "paceLength": 10,
       "percentage": false,
-      "pluginVersion": "9.5.1",
+      "pluginVersion": "9.5.2",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -425,7 +424,7 @@
         "content": "Tracks active viewers by region. In general, sudden changes here indicate a potential problem (or popular stream starting/stopping).",
         "mode": "markdown"
       },
-      "pluginVersion": "9.5.1",
+      "pluginVersion": "9.5.2",
       "title": "Viewers",
       "type": "text"
     },
@@ -704,7 +703,7 @@
         "content": "Trigger failures indicate a problem with integration between the media server and the systems surrounding it. Depending on the trigger affected, there may or may not be noticible degradation of service. The most important ones are `USER_NEW` (handles viewer authorization) and `PUSH_REWRITE` (handles incoming push authorization).",
         "mode": "markdown"
       },
-      "pluginVersion": "9.5.1",
+      "pluginVersion": "9.5.2",
       "title": "Trigger failures",
       "type": "text"
     },
@@ -756,7 +755,7 @@
       },
       "paceLength": 10,
       "percentage": false,
-      "pluginVersion": "9.5.1",
+      "pluginVersion": "9.5.2",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -838,7 +837,7 @@
         "content": "This basically shows new connections to regions as a fraction of the total viewers. Consider it a view of connection \"stickiness\", where anything under 1 is generally \"very good and the higher above 1 the worse it is. People refreshing the page (or, well, not liking the stream contents) will cause this number to go up.",
         "mode": "markdown"
       },
-      "pluginVersion": "9.5.1",
+      "pluginVersion": "9.5.2",
       "title": "Reconnects",
       "type": "text"
     },
@@ -900,8 +899,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           },
@@ -1048,8 +1046,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           },
@@ -1223,8 +1220,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "dark-red",
-                "value": null
+                "color": "dark-red"
               },
               {
                 "color": "transparent",
@@ -1317,6 +1313,6 @@
   "timezone": "",
   "title": "Livestreaming Reliability Overview",
   "uid": "6aTY0Qx4k",
-  "version": 28,
+  "version": 31,
   "weekStart": ""
 }
