@@ -1059,7 +1059,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1154,7 +1155,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1264,7 +1266,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1363,7 +1366,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1487,7 +1491,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1630,7 +1635,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1749,7 +1755,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1841,7 +1848,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1937,7 +1945,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2028,7 +2037,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2132,7 +2142,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2223,7 +2234,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2271,6 +2283,128 @@
     },
     {
       "datasource": {
+        "type": "grafana-bigquery-datasource",
+        "uid": "f91897ee-2a89-4b04-9a4f-af55d9d05e87"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 80
+      },
+      "id": 34,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.0.3",
+      "targets": [
+        {
+          "dataset": "analytics",
+          "datasource": {
+            "type": "grafana-bigquery-datasource",
+            "uid": "f91897ee-2a89-4b04-9a4f-af55d9d05e87"
+          },
+          "editorMode": "code",
+          "format": 1,
+          "key": "Q-27eb6285-25f6-4b8d-ab39-cc66daa94fea-0",
+          "location": "US",
+          "project": "livepeer-analytics",
+          "rawQuery": true,
+          "rawSql": "select \ntimestamp_trunc(a.created_at_ts, hour) as _hour,\navg(success) as upload_success \n\nfrom analytics.studio_assets as a join analytics.studio_users as u \non a.user_id = u.user_id \n\nwhere not u.internal \nand not u.suspended \nand not excusable_error\nand a.created_at_ms >= ${__from}\nand a.created_at_ms <= ${__to}\n\ngroup by 1\norder by 1 desc",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "name": "AVG",
+                "parameters": [
+                  {
+                    "name": "success",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "studio_assets"
+        }
+      ],
+      "title": "Upload Success",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
         "type": "loki",
         "uid": "P8E80F9AEF21F6940"
       },
@@ -2314,7 +2448,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2358,6 +2493,249 @@
       ],
       "title": "videorec with no audio selection",
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-bigquery-datasource",
+        "uid": "f91897ee-2a89-4b04-9a4f-af55d9d05e87"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 88
+      },
+      "id": 35,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.0.3",
+      "targets": [
+        {
+          "dataset": "analytics",
+          "datasource": {
+            "type": "grafana-bigquery-datasource",
+            "uid": "f91897ee-2a89-4b04-9a4f-af55d9d05e87"
+          },
+          "editorMode": "code",
+          "format": 1,
+          "key": "Q-27eb6285-25f6-4b8d-ab39-cc66daa94fea-0",
+          "location": "US",
+          "project": "livepeer-analytics",
+          "rawQuery": true,
+          "rawSql": "\nSELECT timestamp_trunc(`analytics.nginx_session_summaries`.`end_session_ts`, hour, 'UTC') AS `end_session_ts`, \n(CAST(sum(CASE WHEN `analytics.nginx_session_summaries`.`any_error` = FALSE THEN 1 ELSE 0.0 END) AS float64) / CASE WHEN count(*) = 0 THEN NULL ELSE count(*) END) AS `Stream_Success_Rate`\nFROM `analytics.nginx_session_summaries`\nWHERE (\n  `analytics.nginx_session_summaries`.`stream_suspended` = FALSE\n  AND `analytics.nginx_session_summaries`.`user_suspended` = FALSE \n  and unix_millis(end_session_ts) >= ${__from}\n  and unix_millis(end_session_ts) <= ${__to}\n  )\nGROUP BY `end_session_ts`\nORDER BY `end_session_ts` ASC",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "name": "AVG",
+                "parameters": [
+                  {
+                    "name": "success",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "studio_assets"
+        }
+      ],
+      "title": "Live Stream Success Rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-bigquery-datasource",
+        "uid": "f91897ee-2a89-4b04-9a4f-af55d9d05e87"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 88
+      },
+      "id": 36,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.0.3",
+      "targets": [
+        {
+          "dataset": "analytics",
+          "datasource": {
+            "type": "grafana-bigquery-datasource",
+            "uid": "f91897ee-2a89-4b04-9a4f-af55d9d05e87"
+          },
+          "editorMode": "code",
+          "format": 1,
+          "key": "Q-27eb6285-25f6-4b8d-ab39-cc66daa94fea-0",
+          "location": "US",
+          "project": "livepeer-analytics",
+          "rawQuery": true,
+          "rawSql": "SELECT \ntimestamp_trunc(time, hour) _hour,\nAPPROX_QUANTILES(`source`.`ttff_ms`, 100)[OFFSET(75)] AS `TTFF_75th_Percentile`\n\nFROM (\n  select *\n  FROM `analytics.playback`\n  LEFT JOIN `analytics.studio_users` `Studio_Users` ON `analytics.playback`.`user_id` = `Studio_Users`.`user_id`\n\n  WHERE (`Studio_Users`.`internal` = FALSE\n     AND `analytics.playback`.`play_intent` = TRUE)\n  ) `source` \n  \nWHERE (\n  `source`.`type` = 'asset' \n  AND unix_millis(time) >= ${__from} and unix_millis(time) <= ${__to} \n  )\nGROUP BY 1 \n\nORDER BY 1 desc\n\n\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "name": "AVG",
+                "parameters": [
+                  {
+                    "name": "success",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "studio_assets"
+        }
+      ],
+      "title": "TTFF - 75th Percentile",
+      "type": "timeseries"
     }
   ],
   "refresh": "5s",
@@ -2397,6 +2775,6 @@
   "timezone": "utc",
   "title": "Catalyst Multi-Node",
   "uid": "EWXkaj7Vz",
-  "version": 103,
+  "version": 108,
   "weekStart": ""
 }
