@@ -1,6 +1,6 @@
 ARG	GRAFANA_ENV
 
-FROM	prom/prometheus:v2.46.0	AS	prometheus
+FROM	prom/prometheus:v2.47.0	AS	prometheus
 
 FROM	grafana/loki:2.8.5	AS	loki
 
