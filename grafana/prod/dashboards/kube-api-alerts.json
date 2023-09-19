@@ -994,12 +994,12 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
+        "h": 7,
         "w": 6,
         "x": 0,
         "y": 12
       },
-      "id": 12,
+      "id": 13,
       "options": {
         "legend": {
           "calcs": [],
@@ -1012,7 +1012,6 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "8.3.3",
       "targets": [
         {
           "datasource": {
@@ -1020,16 +1019,14 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "builder",
-          "exemplar": false,
-          "expr": "sum by(region) (kube_pod_container_status_waiting_reason{reason=\"CrashLoopBackOff\"} > 0)",
-          "instant": false,
-          "interval": "",
-          "legendFormat": "{{ region }}-{{ node }}",
+          "expr": "sum by(container) (kube_pod_container_status_waiting_reason{reason=\"CrashLoopBackOff\"})",
+          "instant": true,
+          "key": "Q-eeae6e48-c1b4-42d0-a63a-d56980a3b8df-0",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "CrashLoopBackOff",
+      "title": "CrashLoopBackoff (by container)",
       "type": "timeseries"
     }
   ],
@@ -1049,6 +1046,6 @@
   "timezone": "utc",
   "title": "Kube API Alerts",
   "uid": "jSbZINlnk",
-  "version": 46,
+  "version": 49,
   "weekStart": ""
 }
