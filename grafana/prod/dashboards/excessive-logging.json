@@ -46,6 +46,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -85,17 +86,13 @@
         "x": 0,
         "y": 0
       },
-      "id": 1,
+      "id": 2,
       "options": {
         "legend": {
-          "calcs": [
-            "sum"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true,
-          "sortBy": "Total",
-          "sortDesc": true
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -109,19 +106,19 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "sum(\n    count_over_time(\n        {app=~\"ingress-nginx\", stream=\"stdout\"}\n        |~ \"json_\" \n        | pattern \"<ip> - -\"\n        [1m]\n    )\n) by (ip) > 500",
-          "legendFormat": "{{ ip }}",
+          "expr": "sum(count_over_time({app=\"catalyst\"} |= \"seek/select mismatch\"[1m])) by (pod, region) > 1000",
+          "legendFormat": "{{ region }}-{{ pod }}",
           "queryType": "range",
           "refId": "A"
         }
       ],
-      "title": "Websocket requests per minute per IP",
+      "title": "seek/select mismatch log lines >= 1000",
       "type": "timeseries"
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
       },
       "fieldConfig": {
         "defaults": {
@@ -142,6 +139,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -178,16 +176,21 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 0,
-        "y": 8
+        "x": 12,
+        "y": 0
       },
-      "id": 2,
+      "id": 1,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+          "calcs": [
+            "max",
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Max",
+          "sortDesc": true
         },
         "tooltip": {
           "mode": "single",
@@ -197,21 +200,21 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "label_replace(sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream!=\"000reallylongnonexistenstreamnamethatreallyshouldntexist000\", stream!~\"$exclude\", stream!~\"catalyst_vod.+\"}[1m] ) by (region) or on() vector(0), \"stream_id\", \"$1\", \"stream\", \".*\\\\+(.*)\")",
-          "legendFormat": "__auto",
-          "range": true,
+          "expr": "sum(count_over_time({app=\"catalyst\"}[1m])) by (region, pod)",
+          "legendFormat": "{{ region }}-{{ pod }}",
+          "queryType": "range",
           "refId": "A"
         }
       ],
-      "title": "mist_sessions{}",
+      "title": "Excessive Logging",
       "type": "timeseries"
     }
   ],
-  "refresh": false,
+  "refresh": "",
   "schemaVersion": 38,
   "style": "dark",
   "tags": [],
@@ -219,13 +222,13 @@
     "list": []
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Websocket Request Spam",
-  "uid": "baaa6cb5-de0a-4e57-96c3-20d386f0bb6b",
-  "version": 5,
+  "title": "Excessive Logging",
+  "uid": "d74991af-bc7f-4070-b640-277438568b00",
+  "version": 6,
   "weekStart": ""
 }

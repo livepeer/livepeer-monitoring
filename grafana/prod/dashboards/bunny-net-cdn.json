@@ -1,0 +1,1828 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "marcusolsson-json-datasource",
+        "uid": "a5929405-ff5a-4722-a9c7-2616875bf0af"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 7,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.1.2",
+      "targets": [
+        {
+          "cacheDurationSeconds": 300,
+          "datasource": {
+            "type": "marcusolsson-json-datasource",
+            "uid": "a5929405-ff5a-4722-a9c7-2616875bf0af"
+          },
+          "fields": [
+            {
+              "jsonPath": "$.BandwidthUsedChart.*~",
+              "name": "time",
+              "type": "time"
+            },
+            {
+              "jsonPath": "$.BandwidthUsedChart[*]",
+              "language": "jsonpath",
+              "name": "BandwidthUsed",
+              "type": "number"
+            }
+          ],
+          "headers": [
+            [
+              "hourly",
+              "true"
+            ]
+          ],
+          "method": "GET",
+          "params": [
+            [
+              "hourly",
+              "true"
+            ],
+            [
+              "dateFrom",
+              "${__from:date:YYYY-MM-DD}"
+            ],
+            [
+              "dateTo",
+              "${__to:date:YYYY-MM-DD}"
+            ]
+          ],
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/statistics"
+        }
+      ],
+      "title": "BandwidthUsed",
+      "transformations": [
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "time",
+                "targetField": "time"
+              }
+            ],
+            "fields": {}
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "marcusolsson-json-datasource",
+        "uid": "a5929405-ff5a-4722-a9c7-2616875bf0af"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 7,
+        "x": 7,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.1.2",
+      "targets": [
+        {
+          "cacheDurationSeconds": 300,
+          "datasource": {
+            "type": "marcusolsson-json-datasource",
+            "uid": "a5929405-ff5a-4722-a9c7-2616875bf0af"
+          },
+          "fields": [
+            {
+              "jsonPath": "$.BandwidthCachedChart.*~",
+              "name": "time",
+              "type": "time"
+            },
+            {
+              "jsonPath": "$.BandwidthCachedChart[*]",
+              "language": "jsonpath",
+              "name": "BandwidthCached",
+              "type": "number"
+            }
+          ],
+          "headers": [
+            [
+              "hourly",
+              "true"
+            ]
+          ],
+          "method": "GET",
+          "params": [
+            [
+              "hourly",
+              "true"
+            ],
+            [
+              "dateFrom",
+              "${__from:date:YYYY-MM-DD}"
+            ],
+            [
+              "dateTo",
+              "${__to:date:YYYY-MM-DD}"
+            ]
+          ],
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/statistics"
+        }
+      ],
+      "title": "BandwidthCached",
+      "transformations": [
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "time",
+                "targetField": "time"
+              }
+            ],
+            "fields": {}
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "marcusolsson-json-datasource",
+        "uid": "a5929405-ff5a-4722-a9c7-2616875bf0af"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 7,
+        "x": 14,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.1.2",
+      "targets": [
+        {
+          "cacheDurationSeconds": 300,
+          "datasource": {
+            "type": "marcusolsson-json-datasource",
+            "uid": "a5929405-ff5a-4722-a9c7-2616875bf0af"
+          },
+          "fields": [
+            {
+              "jsonPath": "$.CacheHitRateChart.*~",
+              "name": "time",
+              "type": "time"
+            },
+            {
+              "jsonPath": "$.CacheHitRateChart[*]",
+              "language": "jsonpath",
+              "name": "CacheHitRate",
+              "type": "number"
+            }
+          ],
+          "headers": [
+            [
+              "hourly",
+              "true"
+            ]
+          ],
+          "method": "GET",
+          "params": [
+            [
+              "hourly",
+              "true"
+            ],
+            [
+              "dateFrom",
+              "${__from:date:YYYY-MM-DD}"
+            ],
+            [
+              "dateTo",
+              "${__to:date:YYYY-MM-DD}"
+            ]
+          ],
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/statistics"
+        }
+      ],
+      "title": "CacheHitRate",
+      "transformations": [
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "time",
+                "targetField": "time"
+              }
+            ],
+            "fields": {}
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "marcusolsson-json-datasource",
+        "uid": "a5929405-ff5a-4722-a9c7-2616875bf0af"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 7,
+        "x": 0,
+        "y": 9
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.1.2",
+      "targets": [
+        {
+          "cacheDurationSeconds": 300,
+          "datasource": {
+            "type": "marcusolsson-json-datasource",
+            "uid": "a5929405-ff5a-4722-a9c7-2616875bf0af"
+          },
+          "fields": [
+            {
+              "jsonPath": "$.RequestsServedChart.*~",
+              "name": "time",
+              "type": "time"
+            },
+            {
+              "jsonPath": "$.RequestsServedChart[*]",
+              "language": "jsonpath",
+              "name": "RequestsServed",
+              "type": "number"
+            }
+          ],
+          "headers": [
+            [
+              "hourly",
+              "true"
+            ]
+          ],
+          "method": "GET",
+          "params": [
+            [
+              "hourly",
+              "true"
+            ],
+            [
+              "dateFrom",
+              "${__from:date:YYYY-MM-DD}"
+            ],
+            [
+              "dateTo",
+              "${__to:date:YYYY-MM-DD}"
+            ]
+          ],
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/statistics"
+        }
+      ],
+      "title": "RequestsServed",
+      "transformations": [
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "time",
+                "targetField": "time"
+              }
+            ],
+            "fields": {}
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "marcusolsson-json-datasource",
+        "uid": "a5929405-ff5a-4722-a9c7-2616875bf0af"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 7,
+        "x": 7,
+        "y": 9
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.1.2",
+      "targets": [
+        {
+          "cacheDurationSeconds": 300,
+          "datasource": {
+            "type": "marcusolsson-json-datasource",
+            "uid": "a5929405-ff5a-4722-a9c7-2616875bf0af"
+          },
+          "fields": [
+            {
+              "jsonPath": "$.PullRequestsPulledChart.*~",
+              "name": "time",
+              "type": "time"
+            },
+            {
+              "jsonPath": "$.PullRequestsPulledChart[*]",
+              "language": "jsonpath",
+              "name": "PullRequestsPulled",
+              "type": "number"
+            }
+          ],
+          "headers": [
+            [
+              "hourly",
+              "true"
+            ]
+          ],
+          "method": "GET",
+          "params": [
+            [
+              "hourly",
+              "true"
+            ],
+            [
+              "dateFrom",
+              "${__from:date:YYYY-MM-DD}"
+            ],
+            [
+              "dateTo",
+              "${__to:date:YYYY-MM-DD}"
+            ]
+          ],
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/statistics"
+        }
+      ],
+      "title": "PullRequestsPulled",
+      "transformations": [
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "time",
+                "targetField": "time"
+              }
+            ],
+            "fields": {}
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "marcusolsson-json-datasource",
+        "uid": "a5929405-ff5a-4722-a9c7-2616875bf0af"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 7,
+        "x": 14,
+        "y": 9
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.1.2",
+      "targets": [
+        {
+          "cacheDurationSeconds": 300,
+          "datasource": {
+            "type": "marcusolsson-json-datasource",
+            "uid": "a5929405-ff5a-4722-a9c7-2616875bf0af"
+          },
+          "fields": [
+            {
+              "jsonPath": "$.UserBalanceHistoryChart.*~",
+              "name": "time",
+              "type": "time"
+            },
+            {
+              "jsonPath": "$.UserBalanceHistoryChart[*]",
+              "language": "jsonpath",
+              "name": "UserBalanceHistory",
+              "type": "number"
+            }
+          ],
+          "headers": [
+            [
+              "hourly",
+              "true"
+            ]
+          ],
+          "method": "GET",
+          "params": [
+            [
+              "hourly",
+              "true"
+            ],
+            [
+              "dateFrom",
+              "${__from:date:YYYY-MM-DD}"
+            ],
+            [
+              "dateTo",
+              "${__to:date:YYYY-MM-DD}"
+            ]
+          ],
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/statistics"
+        }
+      ],
+      "title": "UserBalanceHistory",
+      "transformations": [
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "time",
+                "targetField": "time"
+              }
+            ],
+            "fields": {}
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "marcusolsson-json-datasource",
+        "uid": "a5929405-ff5a-4722-a9c7-2616875bf0af"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 7,
+        "x": 0,
+        "y": 18
+      },
+      "id": 7,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.1.2",
+      "targets": [
+        {
+          "cacheDurationSeconds": 300,
+          "datasource": {
+            "type": "marcusolsson-json-datasource",
+            "uid": "a5929405-ff5a-4722-a9c7-2616875bf0af"
+          },
+          "fields": [
+            {
+              "jsonPath": "$.UserStorageUsedChart.*~",
+              "name": "time",
+              "type": "time"
+            },
+            {
+              "jsonPath": "$.UserStorageUsedChart[*]",
+              "language": "jsonpath",
+              "name": "UserStorageUsed",
+              "type": "number"
+            }
+          ],
+          "headers": [
+            [
+              "hourly",
+              "true"
+            ]
+          ],
+          "method": "GET",
+          "params": [
+            [
+              "hourly",
+              "true"
+            ],
+            [
+              "dateFrom",
+              "${__from:date:YYYY-MM-DD}"
+            ],
+            [
+              "dateTo",
+              "${__to:date:YYYY-MM-DD}"
+            ]
+          ],
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/statistics"
+        }
+      ],
+      "title": "UserStorageUsed",
+      "transformations": [
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "time",
+                "targetField": "time"
+              }
+            ],
+            "fields": {}
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "marcusolsson-json-datasource",
+        "uid": "a5929405-ff5a-4722-a9c7-2616875bf0af"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 7,
+        "x": 7,
+        "y": 18
+      },
+      "id": 8,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "10.1.2",
+      "targets": [
+        {
+          "cacheDurationSeconds": 300,
+          "datasource": {
+            "type": "marcusolsson-json-datasource",
+            "uid": "a5929405-ff5a-4722-a9c7-2616875bf0af"
+          },
+          "fields": [
+            {
+              "jsonPath": "$.GeoTrafficDistribution.*~",
+              "name": "region",
+              "type": "string"
+            },
+            {
+              "jsonPath": "$.GeoTrafficDistribution[*]",
+              "language": "jsonpath",
+              "name": "UserStorageUsed",
+              "type": "number"
+            }
+          ],
+          "headers": [
+            [
+              "hourly",
+              "true"
+            ]
+          ],
+          "method": "GET",
+          "params": [
+            [
+              "hourly",
+              "true"
+            ],
+            [
+              "dateFrom",
+              "${__from:date:YYYY-MM-DD}"
+            ],
+            [
+              "dateTo",
+              "${__to:date:YYYY-MM-DD}"
+            ]
+          ],
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/statistics"
+        }
+      ],
+      "title": "GeoTrafficDistribution",
+      "transformations": [
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "UserStorageUsed"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "marcusolsson-json-datasource",
+        "uid": "a5929405-ff5a-4722-a9c7-2616875bf0af"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 7,
+        "x": 14,
+        "y": 18
+      },
+      "id": 11,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.1.2",
+      "targets": [
+        {
+          "cacheDurationSeconds": 300,
+          "datasource": {
+            "type": "marcusolsson-json-datasource",
+            "uid": "a5929405-ff5a-4722-a9c7-2616875bf0af"
+          },
+          "fields": [
+            {
+              "jsonPath": "$.OriginTrafficChart.*~",
+              "name": "time",
+              "type": "time"
+            },
+            {
+              "jsonPath": "$.OriginTrafficChart[*]",
+              "language": "jsonpath",
+              "name": "OriginTraffic",
+              "type": "number"
+            }
+          ],
+          "headers": [
+            [
+              "hourly",
+              "true"
+            ]
+          ],
+          "method": "GET",
+          "params": [
+            [
+              "hourly",
+              "true"
+            ],
+            [
+              "dateFrom",
+              "${__from:date:YYYY-MM-DD}"
+            ],
+            [
+              "dateTo",
+              "${__to:date:YYYY-MM-DD}"
+            ]
+          ],
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/statistics"
+        }
+      ],
+      "title": "OriginTraffic",
+      "transformations": [
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "time",
+                "targetField": "time"
+              }
+            ],
+            "fields": {}
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "marcusolsson-json-datasource",
+        "uid": "a5929405-ff5a-4722-a9c7-2616875bf0af"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 7,
+        "x": 0,
+        "y": 27
+      },
+      "id": 9,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.1.2",
+      "targets": [
+        {
+          "cacheDurationSeconds": 300,
+          "datasource": {
+            "type": "marcusolsson-json-datasource",
+            "uid": "a5929405-ff5a-4722-a9c7-2616875bf0af"
+          },
+          "fields": [
+            {
+              "jsonPath": "$.Error3xxChart.*~",
+              "name": "time",
+              "type": "time"
+            },
+            {
+              "jsonPath": "$.Error3xxChart[*]",
+              "language": "jsonpath",
+              "name": "Error3xx",
+              "type": "number"
+            }
+          ],
+          "headers": [
+            [
+              "hourly",
+              "true"
+            ]
+          ],
+          "method": "GET",
+          "params": [
+            [
+              "hourly",
+              "true"
+            ],
+            [
+              "dateFrom",
+              "${__from:date:YYYY-MM-DD}"
+            ],
+            [
+              "dateTo",
+              "${__to:date:YYYY-MM-DD}"
+            ],
+            [
+              "loadErrors",
+              "true"
+            ]
+          ],
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/statistics"
+        }
+      ],
+      "title": "Error3xx",
+      "transformations": [
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "time",
+                "targetField": "time"
+              }
+            ],
+            "fields": {}
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "marcusolsson-json-datasource",
+        "uid": "a5929405-ff5a-4722-a9c7-2616875bf0af"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 7,
+        "x": 7,
+        "y": 27
+      },
+      "id": 10,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.1.2",
+      "targets": [
+        {
+          "cacheDurationSeconds": 300,
+          "datasource": {
+            "type": "marcusolsson-json-datasource",
+            "uid": "a5929405-ff5a-4722-a9c7-2616875bf0af"
+          },
+          "fields": [
+            {
+              "jsonPath": "$.Error3xxChart.*~",
+              "name": "time",
+              "type": "time"
+            },
+            {
+              "jsonPath": "$.Error3xxChart[*]",
+              "language": "jsonpath",
+              "name": "Error3xx",
+              "type": "number"
+            }
+          ],
+          "headers": [
+            [
+              "hourly",
+              "true"
+            ]
+          ],
+          "method": "GET",
+          "params": [
+            [
+              "hourly",
+              "true"
+            ],
+            [
+              "dateFrom",
+              "${__from:date:YYYY-MM-DD}"
+            ],
+            [
+              "dateTo",
+              "${__to:date:YYYY-MM-DD}"
+            ],
+            [
+              "loadErrors",
+              "true"
+            ]
+          ],
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/statistics"
+        },
+        {
+          "cacheDurationSeconds": 300,
+          "datasource": {
+            "type": "marcusolsson-json-datasource",
+            "uid": "a5929405-ff5a-4722-a9c7-2616875bf0af"
+          },
+          "fields": [
+            {
+              "jsonPath": "$.Error4xxChart.*~",
+              "name": "time",
+              "type": "time"
+            },
+            {
+              "jsonPath": "$.Error4xxChart[*]",
+              "language": "jsonpath",
+              "name": "Error4xx",
+              "type": "number"
+            }
+          ],
+          "headers": [
+            [
+              "hourly",
+              "true"
+            ]
+          ],
+          "hide": false,
+          "method": "GET",
+          "params": [
+            [
+              "hourly",
+              "true"
+            ],
+            [
+              "dateFrom",
+              "${__from:date:YYYY-MM-DD}"
+            ],
+            [
+              "dateTo",
+              "${__to:date:YYYY-MM-DD}"
+            ],
+            [
+              "loadErrors",
+              "true"
+            ]
+          ],
+          "queryParams": "",
+          "refId": "B",
+          "urlPath": "/statistics"
+        },
+        {
+          "cacheDurationSeconds": 300,
+          "datasource": {
+            "type": "marcusolsson-json-datasource",
+            "uid": "a5929405-ff5a-4722-a9c7-2616875bf0af"
+          },
+          "fields": [
+            {
+              "jsonPath": "$.Error5xxChart.*~",
+              "name": "time",
+              "type": "time"
+            },
+            {
+              "jsonPath": "$.Error5xxChart[*]",
+              "language": "jsonpath",
+              "name": "Error5xx",
+              "type": "number"
+            }
+          ],
+          "headers": [
+            [
+              "hourly",
+              "true"
+            ]
+          ],
+          "hide": false,
+          "method": "GET",
+          "params": [
+            [
+              "hourly",
+              "true"
+            ],
+            [
+              "dateFrom",
+              "${__from:date:YYYY-MM-DD}"
+            ],
+            [
+              "dateTo",
+              "${__to:date:YYYY-MM-DD}"
+            ],
+            [
+              "loadErrors",
+              "true"
+            ]
+          ],
+          "queryParams": "",
+          "refId": "C",
+          "urlPath": "/statistics"
+        }
+      ],
+      "title": "Errors",
+      "transformations": [
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "time",
+                "targetField": "time"
+              }
+            ],
+            "fields": {}
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "marcusolsson-json-datasource",
+        "uid": "a5929405-ff5a-4722-a9c7-2616875bf0af"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 7,
+        "x": 14,
+        "y": 27
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.1.2",
+      "targets": [
+        {
+          "cacheDurationSeconds": 300,
+          "datasource": {
+            "type": "marcusolsson-json-datasource",
+            "uid": "a5929405-ff5a-4722-a9c7-2616875bf0af"
+          },
+          "fields": [
+            {
+              "jsonPath": "$.OriginResponseTimeChart.*~",
+              "name": "time",
+              "type": "time"
+            },
+            {
+              "jsonPath": "$.OriginResponseTimeChart[*]",
+              "language": "jsonpath",
+              "name": "OriginResponseTime",
+              "type": "number"
+            }
+          ],
+          "headers": [
+            [
+              "hourly",
+              "true"
+            ]
+          ],
+          "method": "GET",
+          "params": [
+            [
+              "hourly",
+              "true"
+            ],
+            [
+              "dateFrom",
+              "${__from:date:YYYY-MM-DD}"
+            ],
+            [
+              "dateTo",
+              "${__to:date:YYYY-MM-DD}"
+            ]
+          ],
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/statistics"
+        }
+      ],
+      "title": "OriginResponseTime",
+      "transformations": [
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "time",
+                "targetField": "time"
+              }
+            ],
+            "fields": {}
+          }
+        }
+      ],
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-15m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "bunny.net CDN",
+  "uid": "dcf836d1-aa5d-4820-8616-307e46ce6be6",
+  "version": 8,
+  "weekStart": ""
+}
