@@ -3,7 +3,10 @@
     "list": [
       {
         "builtIn": 1,
-        "datasource": "-- Grafana --",
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
@@ -22,17 +25,22 @@
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
   "id": null,
-  "iteration": 1669172760958,
   "links": [],
   "liveNow": false,
   "panels": [
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -44,6 +52,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -88,10 +97,12 @@
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
@@ -100,10 +111,12 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(mist_sessions{sessType=\"incoming\", pod=\"$pod\", region=\"$region\", stream=~\".*vod.*\"} > 0)",
+          "expr": "sum(mist_sessions{sessType=\"incoming\", pod=~\"$pod\", region=\"$region\", stream=~\".*vod.*\"} > 0) by (region, pod)",
           "interval": "",
-          "legendFormat": "VoD Streams",
+          "legendFormat": "{{region}}-{{pod}}",
+          "range": true,
           "refId": "A"
         },
         {
@@ -111,11 +124,13 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(mist_sessions{sessType=\"incoming\", pod=\"$pod\", region=\"$region\", stream!~\".*vod.*\"} > 0)",
+          "expr": "sum(mist_sessions{sessType=\"incoming\", pod=~\"$pod\", region=\"$region\", stream!~\".*vod.*\"} > 0) by (region, pod)",
           "hide": false,
           "interval": "",
-          "legendFormat": "Livestreams",
+          "legendFormat": "{{region}}-{{pod}}",
+          "range": true,
           "refId": "B"
         }
       ],
@@ -123,12 +138,18 @@
       "type": "timeseries"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -140,6 +161,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -184,10 +206,12 @@
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
@@ -196,10 +220,12 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(mist_sessions{pod=\"$pod\", region=\"$region\", sessType=\"viewers\"} > 0) by (sessType)",
+          "expr": "sum(mist_sessions{pod=~\"$pod\", region=\"$region\", sessType=\"viewers\"} > 0) by (region, pod, sessType)",
           "interval": "",
-          "legendFormat": "",
+          "legendFormat": "{{region}}-{{pod}} ({{sessType}})",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -207,12 +233,18 @@
       "type": "timeseries"
     },
     {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -224,6 +256,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -241,7 +274,6 @@
             }
           },
           "mappings": [],
-          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -254,8 +286,7 @@
                 "value": 80
               }
             ]
-          },
-          "unit": "percent"
+          }
         },
         "overrides": []
       },
@@ -265,31 +296,33 @@
         "x": 0,
         "y": 9
       },
-      "id": 5,
+      "id": 10,
       "options": {
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
           },
-          "exemplar": true,
-          "expr": "sum(avg_over_time(mist_cpu{catalyst_node=~\"${region}-${pod}.lp-playback.studio\"}[180s])/10)",
-          "interval": "",
-          "legendFormat": "CPU",
+          "editorMode": "code",
+          "expr": "sum(count_over_time(\n  {pod=~\"$pod\", region=\"$region\"} |~ \"\\\\[DEBUG\\\\] POST http://127.0.0.1:8935\"\n  [1m]\n)) by (region, pod)",
+          "legendFormat": "{{region}}-{{pod}}",
+          "queryType": "range",
           "refId": "A"
         }
       ],
-      "title": "CPU Usage",
+      "title": "VoD Segments Transcoded (per minute)",
       "type": "timeseries"
     },
     {
@@ -303,6 +336,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -314,6 +349,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -364,11 +400,13 @@
           ],
           "displayMode": "table",
           "placement": "bottom",
+          "showLegend": true,
           "sortBy": "Max",
           "sortDesc": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
@@ -377,8 +415,10 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time(\n  {region=\"$region\", pod=\"$pod\"}\n  | regexp \"^\\\\[?(?P<timestamp>[0-9- :]+)\\\\] ?(?P<process>[a-zA-Z0-9-_]+)\"\n[1m])) by (process)",
+          "editorMode": "code",
+          "expr": "sum(count_over_time(\n  {region=\"$region\", pod=~\"$pod\"}\n  | regexp \"^\\\\[?(?P<timestamp>[0-9- :]+)\\\\] ?(?P<process>[a-zA-Z0-9-_]+)\"\n[1m])) by (process)",
           "legendFormat": "{{ process }}",
+          "queryType": "range",
           "refId": "A"
         }
       ],
@@ -387,8 +427,8 @@
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
       },
       "fieldConfig": {
         "defaults": {
@@ -396,6 +436,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -407,6 +449,104 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 17
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "sum(avg_over_time(mist_cpu{catalyst_node=~\"${region}-${pod}.lp-playback.studio\"}[30s])/10) by (catalyst_node)",
+          "interval": "",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "CPU Usage",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Memory (%)",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -436,44 +576,50 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "percent"
         },
         "overrides": []
       },
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 0,
+        "x": 12,
         "y": 17
       },
-      "id": 10,
+      "id": 11,
       "options": {
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum(count_over_time(\n  {pod=\"$pod\", region=\"$region\"} |~ \"\\\\[DEBUG\\\\] POST http://127.0.0.1:8935\"\n  [1m]\n)) by (region, pod)",
-          "legendFormat": "VoD Segments Transcoded (per minute)",
+          "editorMode": "code",
+          "expr": "100 * sum(avg_over_time(mist_mem_used{catalyst_node=~\"${region}-${pod}.lp-playback.studio\"}[180s])/10) by (catalyst_node)\n/ \nsum(avg_over_time(mist_mem_total{catalyst_node=~\"${region}-${pod}.lp-playback.studio\"}[180s])/10) by (catalyst_node)",
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
           "refId": "A"
         }
       ],
-      "title": "VoD Segments Transcoded",
+      "title": "Memory Usage",
       "type": "timeseries"
     }
   ],
-  "refresh": "",
-  "schemaVersion": 34,
+  "refresh": false,
+  "schemaVersion": 38,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -481,38 +627,38 @@
       {
         "current": {
           "selected": false,
-          "text": "nyc",
-          "value": "nyc"
+          "text": "fra",
+          "value": "fra"
         },
         "hide": 0,
         "name": "region",
         "options": [
           {
             "selected": false,
-            "text": "nyc",
-            "value": "nyc"
+            "text": "fra",
+            "value": "fra"
           }
         ],
-        "query": "nyc",
+        "query": "fra",
         "skipUrlSync": false,
         "type": "textbox"
       },
       {
         "current": {
           "selected": false,
-          "text": "prod-catalyst-5",
-          "value": "prod-catalyst-5"
+          "text": "prod-catalyst-.+",
+          "value": "prod-catalyst-.+"
         },
         "hide": 0,
         "name": "pod",
         "options": [
           {
             "selected": false,
-            "text": "prod-catalyst-5",
-            "value": "prod-catalyst-5"
+            "text": "prod-catalyst-.+",
+            "value": "prod-catalyst-.+"
           }
         ],
-        "query": "prod-catalyst-5",
+        "query": "prod-catalyst-.+",
         "skipUrlSync": false,
         "type": "textbox"
       }
@@ -526,6 +672,6 @@
   "timezone": "",
   "title": "Catalyst Node Inspector",
   "uid": "PzbLIMd4z",
-  "version": 24,
+  "version": 28,
   "weekStart": ""
 }

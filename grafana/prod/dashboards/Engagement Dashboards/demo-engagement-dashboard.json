@@ -62,7 +62,7 @@
             },
             "lineInterpolation": "linear",
             "lineWidth": 1,
-            "pointSize": 5,
+            "pointSize": 1,
             "scaleDistribution": {
               "type": "linear"
             },
@@ -192,18 +192,17 @@
         "type": "marcusolsson-json-datasource",
         "uid": "cb157d33-dfc6-49a2-af79-0ce8edcb72f3"
       },
-      "description": "Number of views and watch time for each video. Sorted by view count.",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
           "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "inspect": false
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
           },
           "mappings": [],
           "thresholds": {
@@ -228,26 +227,69 @@
         "x": 12,
         "y": 1
       },
-      "id": 19,
+      "id": 21,
       "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": [
-            "sum"
-          ],
-          "show": false
+        "controls": {
+          "mouseWheelZoom": true,
+          "showAttribution": true,
+          "showDebug": false,
+          "showMeasure": false,
+          "showScale": false,
+          "showZoom": true
         },
-        "showHeader": true,
-        "sortBy": [
+        "layers": [
           {
-            "desc": true,
-            "displayName": "viewCount"
+            "config": {
+              "showLegend": true,
+              "style": {
+                "color": {
+                  "fixed": "dark-green"
+                },
+                "opacity": 0.4,
+                "rotation": {
+                  "fixed": 0,
+                  "max": 360,
+                  "min": -360,
+                  "mode": "mod"
+                },
+                "size": {
+                  "fixed": 5,
+                  "max": 15,
+                  "min": 2
+                },
+                "symbol": {
+                  "fixed": "img/icons/marker/circle.svg",
+                  "mode": "fixed"
+                },
+                "textConfig": {
+                  "fontSize": 12,
+                  "offsetX": 0,
+                  "offsetY": 0,
+                  "textAlign": "center",
+                  "textBaseline": "middle"
+                }
+              }
+            },
+            "location": {
+              "mode": "auto"
+            },
+            "name": "Layer 1",
+            "tooltip": true,
+            "type": "markers"
           }
-        ]
+        ],
+        "tooltip": {
+          "mode": "details"
+        },
+        "view": {
+          "allLayers": true,
+          "id": "zero",
+          "lat": 0,
+          "lon": 0,
+          "zoom": 1
+        }
       },
-      "pluginVersion": "9.5.2",
+      "pluginVersion": "10.0.3",
       "targets": [
         {
           "cacheDurationSeconds": 300,
@@ -257,15 +299,10 @@
           },
           "fields": [
             {
-              "jsonPath": "$[*].playbackId"
+              "jsonPath": "$[*].geohash"
             },
             {
               "jsonPath": "$[*].viewCount",
-              "language": "jsonpath",
-              "name": ""
-            },
-            {
-              "jsonPath": "$[*].playtimeMins",
               "language": "jsonpath",
               "name": ""
             }
@@ -274,7 +311,7 @@
           "params": [
             [
               "breakdownBy[]",
-              "deviceType"
+              "geohash"
             ],
             [
               "from",
@@ -288,51 +325,33 @@
           "queryParams": "",
           "refId": "A",
           "urlPath": ""
-        },
-        {
-          "cacheDurationSeconds": 300,
-          "datasource": {
-            "type": "marcusolsson-json-datasource",
-            "uid": "cb157d33-dfc6-49a2-af79-0ce8edcb72f3"
-          },
-          "fields": [
-            {
-              "jsonPath": "$[*].playbackId"
-            },
-            {
-              "jsonPath": "$[*].viewCount",
-              "language": "jsonpath",
-              "name": ""
-            },
-            {
-              "jsonPath": "$[*].playtimeMins",
-              "language": "jsonpath",
-              "name": ""
-            }
-          ],
-          "hide": false,
-          "method": "GET",
-          "params": [
-            [
-              "breakdownBy[]",
-              "deviceType"
-            ],
-            [
-              "from",
-              "$__from"
-            ],
-            [
-              "to",
-              "$__to"
-            ]
-          ],
-          "queryParams": "",
-          "refId": "B",
-          "urlPath": ""
         }
       ],
-      "title": "Views and Watch Time by Video",
-      "type": "table"
+      "title": "Views by Geography",
+      "transformations": [
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "country": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "geohash": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "viewCount": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              }
+            }
+          }
+        }
+      ],
+      "type": "geomap"
     },
     {
       "datasource": {
@@ -370,7 +389,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
+        "h": 8,
         "w": 12,
         "x": 0,
         "y": 9
@@ -394,7 +413,7 @@
           }
         ]
       },
-      "pluginVersion": "9.5.2",
+      "pluginVersion": "10.0.3",
       "targets": [
         {
           "cacheDurationSeconds": 300,
@@ -471,7 +490,7 @@
         "type": "marcusolsson-json-datasource",
         "uid": "cb157d33-dfc6-49a2-af79-0ce8edcb72f3"
       },
-      "description": "Number of views and minutes of watch time by the type of device used. \"None\" is the User-Agent did not have an device associated with it.",
+      "description": "Number of views and watch time for each video. Sorted by view count.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -485,7 +504,6 @@
             "inspect": false
           },
           "mappings": [],
-          "noValue": "None",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -503,12 +521,12 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
+        "h": 8,
         "w": 12,
         "x": 12,
         "y": 9
       },
-      "id": 20,
+      "id": 19,
       "options": {
         "cellHeight": "sm",
         "footer": {
@@ -527,7 +545,7 @@
           }
         ]
       },
-      "pluginVersion": "9.5.2",
+      "pluginVersion": "10.0.3",
       "targets": [
         {
           "cacheDurationSeconds": 300,
@@ -537,7 +555,7 @@
           },
           "fields": [
             {
-              "jsonPath": "$[*].device"
+              "jsonPath": "$[*].playbackId"
             },
             {
               "jsonPath": "$[*].viewCount",
@@ -554,7 +572,7 @@
           "params": [
             [
               "breakdownBy[]",
-              "device"
+              "playbackId"
             ],
             [
               "from",
@@ -571,31 +589,6 @@
         }
       ],
       "title": "Views and Watch Time by Video",
-      "transformations": [
-        {
-          "id": "groupBy",
-          "options": {
-            "fields": {
-              "device": {
-                "aggregations": [],
-                "operation": "groupby"
-              },
-              "playtimeMins": {
-                "aggregations": [
-                  "sum"
-                ],
-                "operation": "aggregate"
-              },
-              "viewCount": {
-                "aggregations": [
-                  "sum"
-                ],
-                "operation": "aggregate"
-              }
-            }
-          }
-        }
-      ],
       "type": "table"
     },
     {
@@ -637,7 +630,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 16
+        "y": 17
       },
       "id": 5,
       "options": {
@@ -659,7 +652,7 @@
           }
         ]
       },
-      "pluginVersion": "9.5.2",
+      "pluginVersion": "10.0.3",
       "targets": [
         {
           "cacheDurationSeconds": 300,
@@ -751,7 +744,7 @@
         "type": "marcusolsson-json-datasource",
         "uid": "cb157d33-dfc6-49a2-af79-0ce8edcb72f3"
       },
-      "description": "Number of views and minutes of watch time by the timezone they originated from. ",
+      "description": "Number of views and minutes of watch time by the type of device used. \"None\" is the User-Agent did not have an device associated with it.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -765,6 +758,7 @@
             "inspect": false
           },
           "mappings": [],
+          "noValue": "None",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -785,7 +779,137 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 16
+        "y": 17
+      },
+      "id": 20,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "viewCount"
+          }
+        ]
+      },
+      "pluginVersion": "10.0.3",
+      "targets": [
+        {
+          "cacheDurationSeconds": 300,
+          "datasource": {
+            "type": "marcusolsson-json-datasource",
+            "uid": "cb157d33-dfc6-49a2-af79-0ce8edcb72f3"
+          },
+          "fields": [
+            {
+              "jsonPath": "$[*].device"
+            },
+            {
+              "jsonPath": "$[*].viewCount",
+              "language": "jsonpath",
+              "name": ""
+            },
+            {
+              "jsonPath": "$[*].playtimeMins",
+              "language": "jsonpath",
+              "name": ""
+            }
+          ],
+          "method": "GET",
+          "params": [
+            [
+              "breakdownBy[]",
+              "device"
+            ],
+            [
+              "from",
+              "$__from"
+            ],
+            [
+              "to",
+              "$__to"
+            ]
+          ],
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": ""
+        }
+      ],
+      "title": "Views and Watch Time by Video",
+      "transformations": [
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "device": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "playtimeMins": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              },
+              "viewCount": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              }
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "marcusolsson-json-datasource",
+        "uid": "cb157d33-dfc6-49a2-af79-0ce8edcb72f3"
+      },
+      "description": "Number of views and minutes of watch time by the timezone they originated from. ",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 25
       },
       "id": 6,
       "options": {
@@ -806,7 +930,7 @@
           }
         ]
       },
-      "pluginVersion": "9.5.2",
+      "pluginVersion": "10.0.3",
       "targets": [
         {
           "cacheDurationSeconds": 300,
@@ -883,7 +1007,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 24
+        "y": 33
       },
       "id": 9,
       "panels": [],
@@ -899,45 +1023,14 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
+            "mode": "thresholds"
           },
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -951,24 +1044,24 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
+        "w": 4,
         "x": 0,
-        "y": 25
+        "y": 34
       },
-      "id": 12,
+      "id": 22,
       "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
         },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
       },
-      "pluginVersion": "9.5.2",
+      "pluginVersion": "10.0.3",
       "targets": [
         {
           "cacheDurationSeconds": 300,
@@ -978,13 +1071,89 @@
           },
           "fields": [
             {
-              "jsonPath": "$[*].timestamp",
+              "jsonPath": "$[*].rebufferRatio",
               "language": "jsonpath",
               "name": "",
-              "type": "time"
-            },
+              "type": "number"
+            }
+          ],
+          "method": "GET",
+          "params": [
+            [
+              "from",
+              "$__from"
+            ],
+            [
+              "to",
+              "$__to"
+            ]
+          ],
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": ""
+        }
+      ],
+      "title": "Rebuffering",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "marcusolsson-json-datasource",
+        "uid": "cb157d33-dfc6-49a2-af79-0ce8edcb72f3"
+      },
+      "description": "Percentage of view sessions in which the viewer experienced an error.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 4,
+        "x": 4,
+        "y": 34
+      },
+      "id": 23,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "10.0.3",
+      "targets": [
+        {
+          "cacheDurationSeconds": 300,
+          "datasource": {
+            "type": "marcusolsson-json-datasource",
+            "uid": "cb157d33-dfc6-49a2-af79-0ce8edcb72f3"
+          },
+          "fields": [
             {
-              "jsonPath": "$[*].rebufferRatio",
+              "jsonPath": "$[*].errorRate",
               "language": "jsonpath",
               "name": ""
             },
@@ -992,6 +1161,89 @@
               "jsonPath": "",
               "language": "jsonpath",
               "name": ""
+            }
+          ],
+          "method": "GET",
+          "params": [
+            [
+              "from",
+              "$__from"
+            ],
+            [
+              "to",
+              "$__to"
+            ]
+          ],
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": ""
+        }
+      ],
+      "title": "Error Rate",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "marcusolsson-json-datasource",
+        "uid": "cb157d33-dfc6-49a2-af79-0ce8edcb72f3"
+      },
+      "description": "Average number of milliseconds before the before the first frame was ready to be viewed. ",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 4,
+        "x": 8,
+        "y": 34
+      },
+      "id": 24,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "10.0.3",
+      "targets": [
+        {
+          "cacheDurationSeconds": 300,
+          "datasource": {
+            "type": "marcusolsson-json-datasource",
+            "uid": "cb157d33-dfc6-49a2-af79-0ce8edcb72f3"
+          },
+          "fields": [
+            {
+              "jsonPath": "timestamp",
+              "language": "jsonata",
+              "name": "timestamp",
+              "type": "time"
+            },
+            {
+              "jsonPath": "ttffMs",
+              "language": "jsonata",
+              "name": "ttffMs"
             }
           ],
           "method": "GET",
@@ -1014,8 +1266,63 @@
           "urlPath": ""
         }
       ],
-      "title": "Rebuffering",
-      "type": "timeseries"
+      "title": "Time to First Frame",
+      "transformations": [
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "result0": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "result1": {
+                "aggregations": [
+                  "mean"
+                ],
+                "operation": "aggregate"
+              },
+              "timestamp": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "ttffMs": {
+                "aggregations": [
+                  "mean"
+                ],
+                "operation": "aggregate"
+              }
+            }
+          }
+        },
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": 50000
+                  }
+                },
+                "fieldName": "ttffMs (mean)"
+              }
+            ],
+            "match": "any",
+            "type": "exclude"
+          }
+        },
+        {
+          "id": "reduce",
+          "options": {
+            "reducers": [
+              "mean"
+            ]
+          }
+        }
+      ],
+      "type": "gauge"
     },
     {
       "datasource": {
@@ -1063,8 +1370,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1080,7 +1386,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 25
+        "y": 34
       },
       "id": 14,
       "options": {
@@ -1149,7 +1455,7 @@
         "type": "marcusolsson-json-datasource",
         "uid": "cb157d33-dfc6-49a2-af79-0ce8edcb72f3"
       },
-      "description": "The number of times a user left before the video played. Can be an indication of long loading times.",
+      "description": "Average percentage of time the viewer experienced rebuffering.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1161,7 +1467,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
-            "drawStyle": "bars",
+            "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
             "hideFrom": {
@@ -1190,8 +1496,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1199,7 +1504,7 @@
               }
             ]
           },
-          "unit": "none"
+          "unit": "percentunit"
         },
         "overrides": []
       },
@@ -1207,9 +1512,9 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 33
+        "y": 42
       },
-      "id": 15,
+      "id": 12,
       "options": {
         "legend": {
           "calcs": [],
@@ -1222,7 +1527,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.5.2",
+      "pluginVersion": "10.0.1",
       "targets": [
         {
           "cacheDurationSeconds": 300,
@@ -1238,14 +1543,10 @@
               "type": "time"
             },
             {
-              "jsonPath": "$[*].existsBeforeStart",
+              "jsonPath": "$[*].rebufferRatio",
               "language": "jsonpath",
-              "name": ""
-            },
-            {
-              "jsonPath": "",
-              "language": "jsonpath",
-              "name": ""
+              "name": "",
+              "type": "number"
             }
           ],
           "method": "GET",
@@ -1268,7 +1569,7 @@
           "urlPath": ""
         }
       ],
-      "title": "Exits Before Starts",
+      "title": "Rebuffering",
       "type": "timeseries"
     },
     {
@@ -1317,8 +1618,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1334,7 +1634,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 33
+        "y": 42
       },
       "id": 11,
       "options": {
@@ -1426,33 +1726,56 @@
         "type": "marcusolsson-json-datasource",
         "uid": "cb157d33-dfc6-49a2-af79-0ce8edcb72f3"
       },
-      "description": "Primary performance metrics by Operating System (os)",
+      "description": "The number of times a user left before the video played. Can be an indication of long loading times.",
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "palette-classic"
           },
           "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 99,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
             },
-            "inspect": false
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "none"
         },
         "overrides": []
       },
@@ -1460,20 +1783,20 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 41
+        "y": 50
       },
-      "id": 10,
+      "id": 15,
       "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": [
-            "sum"
-          ],
-          "show": false
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
         },
-        "showHeader": true
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
       },
       "pluginVersion": "9.5.2",
       "targets": [
@@ -1485,20 +1808,18 @@
           },
           "fields": [
             {
-              "jsonPath": "$[*].os"
+              "jsonPath": "$[*].timestamp",
+              "language": "jsonpath",
+              "name": "",
+              "type": "time"
             },
             {
-              "jsonPath": "$[*].errorRate",
+              "jsonPath": "$[*].exitsBeforeStart",
               "language": "jsonpath",
               "name": ""
             },
             {
-              "jsonPath": "$[*].rebufferRatio",
-              "language": "jsonpath",
-              "name": ""
-            },
-            {
-              "jsonPath": "$[*].ttffMs",
+              "jsonPath": "",
               "language": "jsonpath",
               "name": ""
             }
@@ -1506,8 +1827,8 @@
           "method": "GET",
           "params": [
             [
-              "breakdownBy[]",
-              "os"
+              "timeStep",
+              "hour"
             ],
             [
               "from",
@@ -1523,39 +1844,8 @@
           "urlPath": ""
         }
       ],
-      "title": "Performance by Os",
-      "transformations": [
-        {
-          "id": "groupBy",
-          "options": {
-            "fields": {
-              "errorRate": {
-                "aggregations": [
-                  "mean"
-                ],
-                "operation": "aggregate"
-              },
-              "os": {
-                "aggregations": [],
-                "operation": "groupby"
-              },
-              "rebufferRatio": {
-                "aggregations": [
-                  "mean"
-                ],
-                "operation": "aggregate"
-              },
-              "ttffMs": {
-                "aggregations": [
-                  "mean"
-                ],
-                "operation": "aggregate"
-              }
-            }
-          }
-        }
-      ],
-      "type": "table"
+      "title": "Exits Before Starts",
+      "type": "timeseries"
     },
     {
       "datasource": {
@@ -1580,8 +1870,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1597,7 +1886,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 41
+        "y": 50
       },
       "id": 16,
       "options": {
@@ -1618,7 +1907,7 @@
           }
         ]
       },
-      "pluginVersion": "9.5.2",
+      "pluginVersion": "10.0.3",
       "targets": [
         {
           "cacheDurationSeconds": 300,
@@ -1631,7 +1920,7 @@
               "jsonPath": "$[*].continent"
             },
             {
-              "jsonPath": "$[*].existsBeforeStart",
+              "jsonPath": "$[*].exitsBeforeStart",
               "language": "jsonpath",
               "name": "exitsBeforeStarts"
             },
@@ -1722,7 +2011,7 @@
         "type": "marcusolsson-json-datasource",
         "uid": "cb157d33-dfc6-49a2-af79-0ce8edcb72f3"
       },
-      "description": "Primary performance metrics by the Browser used to view the video.",
+      "description": "Primary performance metrics by Operating System (os)",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1740,16 +2029,14 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
                 "value": 80
               }
             ]
-          },
-          "unit": "none"
+          }
         },
         "overrides": []
       },
@@ -1757,9 +2044,9 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 49
+        "y": 58
       },
-      "id": 17,
+      "id": 10,
       "options": {
         "cellHeight": "sm",
         "footer": {
@@ -1770,15 +2057,9 @@
           ],
           "show": false
         },
-        "showHeader": true,
-        "sortBy": [
-          {
-            "desc": true,
-            "displayName": "rebufferRatio (mean)"
-          }
-        ]
+        "showHeader": true
       },
-      "pluginVersion": "9.5.2",
+      "pluginVersion": "10.0.3",
       "targets": [
         {
           "cacheDurationSeconds": 300,
@@ -1788,17 +2069,7 @@
           },
           "fields": [
             {
-              "jsonPath": "$[*].browser"
-            },
-            {
-              "jsonPath": "$[*].existsBeforeStart",
-              "language": "jsonpath",
-              "name": "exitsBeforeStarts"
-            },
-            {
-              "jsonPath": "$[*].rebufferRatio",
-              "language": "jsonpath",
-              "name": ""
+              "jsonPath": "$[*].os"
             },
             {
               "jsonPath": "$[*].errorRate",
@@ -1806,7 +2077,17 @@
               "name": ""
             },
             {
+              "jsonPath": "$[*].rebufferRatio",
+              "language": "jsonpath",
+              "name": ""
+            },
+            {
               "jsonPath": "$[*].ttffMs",
+              "language": "jsonpath",
+              "name": ""
+            },
+            {
+              "jsonPath": "$[*].exitsBeforeStart",
               "language": "jsonpath",
               "name": ""
             }
@@ -1815,7 +2096,7 @@
           "params": [
             [
               "breakdownBy[]",
-              "browser"
+              "os"
             ],
             [
               "from",
@@ -1831,37 +2112,27 @@
           "urlPath": ""
         }
       ],
-      "title": "Browser",
+      "title": "Performance by Os",
       "transformations": [
         {
           "id": "groupBy",
           "options": {
             "fields": {
-              "browser": {
-                "aggregations": [],
-                "operation": "groupby"
-              },
-              "continent": {
-                "aggregations": [],
-                "operation": "groupby"
-              },
               "errorRate": {
                 "aggregations": [
                   "mean"
                 ],
                 "operation": "aggregate"
               },
-              "existsBeforeStart": {
+              "exitsBeforeStart": {
                 "aggregations": [
                   "sum"
                 ],
                 "operation": "aggregate"
               },
-              "exitsBeforeStarts": {
-                "aggregations": [
-                  "sum"
-                ],
-                "operation": "aggregate"
+              "os": {
+                "aggregations": [],
+                "operation": "groupby"
               },
               "rebufferRatio": {
                 "aggregations": [
@@ -1905,8 +2176,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1922,7 +2192,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 49
+        "y": 58
       },
       "id": 18,
       "options": {
@@ -1943,7 +2213,7 @@
           }
         ]
       },
-      "pluginVersion": "9.5.2",
+      "pluginVersion": "10.0.3",
       "targets": [
         {
           "cacheDurationSeconds": 300,
@@ -1956,7 +2226,7 @@
               "jsonPath": "$[*].device"
             },
             {
-              "jsonPath": "$[*].existsBeforeStart",
+              "jsonPath": "$[*].exitsBeforeStart",
               "language": "jsonpath",
               "name": "exitsBeforeStarts"
             },
@@ -2049,9 +2319,172 @@
         }
       ],
       "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "marcusolsson-json-datasource",
+        "uid": "cb157d33-dfc6-49a2-af79-0ce8edcb72f3"
+      },
+      "description": "Primary performance metrics by the Browser used to view the video.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 66
+      },
+      "id": 17,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "rebufferRatio (mean)"
+          }
+        ]
+      },
+      "pluginVersion": "10.0.3",
+      "targets": [
+        {
+          "cacheDurationSeconds": 300,
+          "datasource": {
+            "type": "marcusolsson-json-datasource",
+            "uid": "cb157d33-dfc6-49a2-af79-0ce8edcb72f3"
+          },
+          "fields": [
+            {
+              "jsonPath": "$[*].browser"
+            },
+            {
+              "jsonPath": "$[*].exitsBeforeStart",
+              "language": "jsonpath",
+              "name": "exitsBeforeStarts"
+            },
+            {
+              "jsonPath": "$[*].rebufferRatio",
+              "language": "jsonpath",
+              "name": ""
+            },
+            {
+              "jsonPath": "$[*].errorRate",
+              "language": "jsonpath",
+              "name": ""
+            },
+            {
+              "jsonPath": "$[*].ttffMs",
+              "language": "jsonpath",
+              "name": ""
+            }
+          ],
+          "method": "GET",
+          "params": [
+            [
+              "breakdownBy[]",
+              "browser"
+            ],
+            [
+              "from",
+              "$__from"
+            ],
+            [
+              "to",
+              "$__to"
+            ]
+          ],
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": ""
+        }
+      ],
+      "title": "Browser",
+      "transformations": [
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "browser": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "continent": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "errorRate": {
+                "aggregations": [
+                  "mean"
+                ],
+                "operation": "aggregate"
+              },
+              "existsBeforeStart": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              },
+              "exitsBeforeStarts": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              },
+              "rebufferRatio": {
+                "aggregations": [
+                  "mean"
+                ],
+                "operation": "aggregate"
+              },
+              "ttffMs": {
+                "aggregations": [
+                  "mean"
+                ],
+                "operation": "aggregate"
+              }
+            }
+          }
+        }
+      ],
+      "type": "table"
     }
   ],
-  "refresh": false,
+  "refresh": "",
   "schemaVersion": 38,
   "style": "dark",
   "tags": [],
@@ -2059,13 +2492,13 @@
     "list": []
   },
   "time": {
-    "from": "2023-06-27T01:17:54.358Z",
-    "to": "2023-06-27T13:17:54.358Z"
+    "from": "now-7d",
+    "to": "now"
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Engagement Template v3",
-  "uid": "db85abf2-fc92-432c-acdf-a8c525423658",
-  "version": 2,
+  "title": "Demo Engagement Dashboard",
+  "uid": "cb157d33-dfc6-49a2-af79-0ce8edcb72f3",
+  "version": 3,
   "weekStart": ""
 }

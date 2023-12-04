@@ -17,7 +17,7 @@
   },
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "graphTooltip": 0,
+  "graphTooltip": 1,
   "id": null,
   "links": [],
   "liveNow": false,
@@ -60,7 +60,7 @@
               "mode": "none"
             },
             "thresholdsStyle": {
-              "mode": "off"
+              "mode": "area"
             }
           },
           "mappings": [],
@@ -72,130 +72,12 @@
                 "value": null
               },
               {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 10,
-        "x": 0,
-        "y": 0
-      },
-      "id": 1,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "sum by(playbackID) (increase(cdn_redirect_count[1m]))",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "requests redirected to CDN (by playbackID)",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 2,
-        "x": 10,
-        "y": 0
-      },
-      "id": 3,
-      "options": {
-        "code": {
-          "language": "plaintext",
-          "showLineNumbers": false,
-          "showMiniMap": false
-        },
-        "content": "Number of `/hls/.....m3u8` requests that were redirected to the external CDN (Bunny).",
-        "mode": "markdown"
-      },
-      "pluginVersion": "10.1.2",
-      "type": "text"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
+                "color": "#EAB839",
+                "value": 70
               },
               {
                 "color": "red",
-                "value": 80
+                "value": 90
               }
             ]
           }
@@ -203,10 +85,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 10,
+        "h": 10,
+        "w": 13,
         "x": 0,
-        "y": 8
+        "y": 0
       },
       "id": 2,
       "options": {
@@ -227,49 +109,21 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "sum by(playbackID) (increase(cdn_redirect_webrtc_406[1m]))",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
+          "editorMode": "code",
+          "expr": "100 - (avg by (instance, region) (irate(node_cpu_seconds_total{region != \"eu-metrics\", mode=\"idle\", instance=~\".+:9100\"}[1m])) * 100 * on(instance) group_left(nodename) node_uname_info) > $CPUThreshold",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
-          "refId": "A",
-          "useBackend": false
+          "refId": "A"
         }
       ],
-      "title": "webRTC requests redirected to HLS (per playbackId)",
+      "title": "CPU",
       "type": "timeseries"
     },
     {
       "datasource": {
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 2,
-        "x": 10,
-        "y": 8
-      },
-      "id": 4,
-      "options": {
-        "code": {
-          "language": "plaintext",
-          "showLineNumbers": false,
-          "showMiniMap": false
-        },
-        "content": "Number of `/webrtc/...` requests that were rejected with HTTP `406 Not Acceptable`. Player should fall back to `/hls` after receiving 406",
-        "mode": "markdown"
-      },
-      "pluginVersion": "10.1.2",
-      "type": "text"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
       },
       "fieldConfig": {
         "defaults": {
@@ -304,7 +158,7 @@
               "mode": "none"
             },
             "thresholdsStyle": {
-              "mode": "off"
+              "mode": "area"
             }
           },
           "mappings": [],
@@ -316,8 +170,12 @@
                 "value": null
               },
               {
+                "color": "#EAB839",
+                "value": 500
+              },
+              {
                 "color": "red",
-                "value": 80
+                "value": 1000
               }
             ]
           }
@@ -325,12 +183,12 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 10,
+        "h": 10,
+        "w": 13,
         "x": 0,
-        "y": 16
+        "y": 10
       },
-      "id": 6,
+      "id": 1,
       "options": {
         "legend": {
           "calcs": [],
@@ -346,46 +204,24 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum by(playbackId) (count_over_time({app=\"ingress-nginx\"} |~ `GET /mist/.*\\.m3u8` | regexp `.*/mist/hls/(?P<playbackId>[^/]*)/.*` [1m]))",
-          "queryType": "range",
+          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream!~\"$exclude\", stream!~\"$exclude\"}) by (node_name, region) > $ViewersPerNodeThreshold",
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
           "refId": "A"
         }
       ],
-      "title": "mist HLS .m3u8 requests from CDN (per playbackId)",
+      "title": "> $ViewersPerNodeThreshold viewer per node",
       "type": "timeseries"
     },
     {
       "datasource": {
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 2,
-        "x": 10,
-        "y": 16
-      },
-      "id": 7,
-      "options": {
-        "code": {
-          "language": "plaintext",
-          "showLineNumbers": false,
-          "showMiniMap": false
-        },
-        "content": "Number of `/mist/hls/...m3u8` requests from CDN (based on ingress-nginx logs). These requests aren't cached by CDN - they pass-through.",
-        "mode": "markdown"
-      },
-      "pluginVersion": "10.1.2",
-      "type": "text"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
       },
       "fieldConfig": {
         "defaults": {
@@ -423,6 +259,13 @@
               "mode": "off"
             }
           },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "https://livepeer.com/app/stream/$stream?autoplay",
+              "url": "https://livepeer.com/app/stream/${__field.labels.stream_id}?autoplay"
+            }
+          ],
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -442,15 +285,17 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 10,
+        "w": 13,
         "x": 0,
-        "y": 24
+        "y": 20
       },
-      "id": 5,
+      "id": 3,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
+          "calcs": [
+            "last"
+          ],
+          "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
         },
@@ -462,58 +307,223 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
           },
-          "editorMode": "builder",
-          "expr": "sum by(playbackId) (count_over_time({app=\"ingress-nginx\"} |~ `GET /mist/.*\\.ts` | regexp `.*/mist/hls/(?P<playbackId>[^/]*)/.*` [1m]))",
-          "queryType": "range",
+          "editorMode": "code",
+          "expr": "label_replace(sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream!~\"$exclude\", stream!~\"$exclude\"}[1m] ) by (stream) or on() vector(0), \"stream_id\", \"$1\", \"stream\", \".*\\\\+(.*)\") > $ViewersPerNodeThreshold",
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
           "refId": "A"
         }
       ],
-      "title": "mist HLS .ts requests from CDN (per playbackId)",
+      "title": "viewers",
       "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 2,
-        "x": 10,
-        "y": 24
-      },
-      "id": 8,
-      "options": {
-        "code": {
-          "language": "plaintext",
-          "showLineNumbers": false,
-          "showMiniMap": false
-        },
-        "content": "Number of `/mist/hls/...ts` requests from CDN (based on ingress-nginx logs)",
-        "mode": "markdown"
-      },
-      "pluginVersion": "10.1.2",
-      "type": "text"
     }
   ],
-  "refresh": "10s",
+  "refresh": false,
   "schemaVersion": 38,
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "selected": true,
+          "text": "60",
+          "value": "60"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "CPU Threshold",
+        "multi": false,
+        "name": "CPUThreshold",
+        "options": [
+          {
+            "selected": true,
+            "text": "10",
+            "value": "10"
+          },
+          {
+            "selected": false,
+            "text": "20",
+            "value": "20"
+          },
+          {
+            "selected": false,
+            "text": "30",
+            "value": "30"
+          },
+          {
+            "selected": false,
+            "text": "40",
+            "value": "40"
+          },
+          {
+            "selected": false,
+            "text": "50",
+            "value": "50"
+          },
+          {
+            "selected": false,
+            "text": "60",
+            "value": "60"
+          },
+          {
+            "selected": false,
+            "text": "70",
+            "value": "70"
+          },
+          {
+            "selected": false,
+            "text": "80",
+            "value": "80"
+          },
+          {
+            "selected": false,
+            "text": "90",
+            "value": "90"
+          }
+        ],
+        "query": "10,20,30,40,50,60,70,80,90",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "200",
+          "value": "200"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Viewers Per Node Threshold",
+        "multi": false,
+        "name": "ViewersPerNodeThreshold",
+        "options": [
+          {
+            "selected": false,
+            "text": "0",
+            "value": "0"
+          },
+          {
+            "selected": false,
+            "text": "50",
+            "value": "50"
+          },
+          {
+            "selected": false,
+            "text": "100",
+            "value": "100"
+          },
+          {
+            "selected": false,
+            "text": "150",
+            "value": "150"
+          },
+          {
+            "selected": true,
+            "text": "200",
+            "value": "200"
+          },
+          {
+            "selected": false,
+            "text": "250",
+            "value": "250"
+          },
+          {
+            "selected": false,
+            "text": "300",
+            "value": "300"
+          },
+          {
+            "selected": false,
+            "text": "350",
+            "value": "350"
+          },
+          {
+            "selected": false,
+            "text": "400",
+            "value": "400"
+          },
+          {
+            "selected": false,
+            "text": "450",
+            "value": "450"
+          },
+          {
+            "selected": false,
+            "text": "500",
+            "value": "500"
+          },
+          {
+            "selected": false,
+            "text": "550",
+            "value": "550"
+          },
+          {
+            "selected": false,
+            "text": "600",
+            "value": "600"
+          },
+          {
+            "selected": false,
+            "text": "650",
+            "value": "650"
+          },
+          {
+            "selected": false,
+            "text": "700",
+            "value": "700"
+          },
+          {
+            "selected": false,
+            "text": "750",
+            "value": "750"
+          },
+          {
+            "selected": false,
+            "text": "800",
+            "value": "800"
+          },
+          {
+            "selected": false,
+            "text": "850",
+            "value": "850"
+          },
+          {
+            "selected": false,
+            "text": "900",
+            "value": "900"
+          },
+          {
+            "selected": false,
+            "text": "950",
+            "value": "950"
+          },
+          {
+            "selected": false,
+            "text": "1000",
+            "value": "1000"
+          }
+        ],
+        "query": "0,50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800,850,900,950,1000",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
   },
   "time": {
-    "from": "2023-09-14T08:16:36.170Z",
-    "to": "2023-09-14T08:26:51.910Z"
+    "from": "now-1M/M",
+    "to": "now-1M/M"
   },
   "timepicker": {},
   "timezone": "",
-  "title": "CDN redirects",
-  "uid": "f1e103a6-2ec1-44e8-bcee-d1d5f68bdbf5",
-  "version": 4,
+  "title": "CPU / viewers",
+  "uid": "e7a45fbe-21f9-42a4-88cb-8654844a06bb",
+  "version": 8,
   "weekStart": ""
 }

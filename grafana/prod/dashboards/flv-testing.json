@@ -46,7 +46,11 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
@@ -85,17 +89,13 @@
         "x": 0,
         "y": 0
       },
-      "id": 1,
+      "id": 3,
       "options": {
         "legend": {
-          "calcs": [
-            "sum"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true,
-          "sortBy": "Total",
-          "sortDesc": true
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -109,13 +109,12 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "sum(\n    count_over_time(\n        {app=~\"ingress-nginx\", stream=\"stdout\"}\n        |~ \"json_\" \n        | pattern \"<ip> - -\"\n        [1m]\n    )\n) by (ip) > 500",
-          "legendFormat": "{{ ip }}",
+          "expr": "sum(count_over_time({namespace=\"default\", app=\"ingress-nginx\", stream=\"stdout\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<originUrl>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>` | originUrl != \"-\" | url =~ \"^/video.*.flv.*\" | line_format \"{{ .originUrl }}\" | pattern \"<originScheme>://<originDomain>/<originPath>\" | line_format \"{{ .status }}\"[1m])) by (status, region)",
           "queryType": "range",
           "refId": "A"
         }
       ],
-      "title": "Websocket requests per minute per IP",
+      "title": "FLV Response Codes",
       "type": "timeseries"
     },
     {
@@ -142,6 +141,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -173,10 +173,35 @@
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "FLV"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
-        "h": 8,
+        "h": 7,
         "w": 12,
         "x": 0,
         "y": 8
@@ -184,10 +209,14 @@
       "id": 2,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+          "calcs": [
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Last",
+          "sortDesc": true
         },
         "tooltip": {
           "mode": "single",
@@ -201,17 +230,21 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "label_replace(sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream!=\"000reallylongnonexistenstreamnamethatreallyshouldntexist000\", stream!~\"$exclude\", stream!~\"catalyst_vod.+\"}[1m] ) by (region) or on() vector(0), \"stream_id\", \"$1\", \"stream\", \".*\\\\+(.*)\")",
-          "legendFormat": "__auto",
+          "exemplar": false,
+          "expr": "sum(mist_outputs{catalyst_node=~\".*studio\", output=\"FLV\"}) by (region)",
+          "instant": false,
+          "interval": "",
+          "key": "Q-aca73aa4-50db-4a58-ab60-0460130ab40b-0",
+          "legendFormat": "{{ stream }}",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "mist_sessions{}",
+      "title": "FLV Viewers by Region",
       "type": "timeseries"
     }
   ],
-  "refresh": false,
+  "refresh": "",
   "schemaVersion": 38,
   "style": "dark",
   "tags": [],
@@ -219,13 +252,13 @@
     "list": []
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Websocket Request Spam",
-  "uid": "baaa6cb5-de0a-4e57-96c3-20d386f0bb6b",
-  "version": 5,
+  "title": "FLV Testing",
+  "uid": "a2d110e6-2bba-4c6d-a72b-7565aeac5452",
+  "version": 2,
   "weekStart": ""
 }
