@@ -23,6 +23,19 @@
   "liveNow": false,
   "panels": [
     {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 5,
+      "panels": [],
+      "title": "Row title",
+      "type": "row"
+    },
+    {
       "datasource": {
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
@@ -63,6 +76,12 @@
               "mode": "off"
             }
           },
+          "links": [
+            {
+              "title": "https://livepeer.com/app/stream/$stream?autoplay",
+              "url": "https://livepeer.com/app/stream/${__field.labels.stream_id}?autoplay"
+            }
+          ],
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -81,17 +100,19 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 10,
+        "h": 12,
+        "w": 11,
         "x": 0,
-        "y": 0
+        "y": 1
       },
       "id": 1,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
+          "calcs": [
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "right",
           "showLegend": true
         },
         "tooltip": {
@@ -106,43 +127,19 @@
             "uid": "PBFA97CFB590B2093"
           },
           "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "sum by(playbackID) (increase(cdn_redirect_count[1m]))",
+          "editorMode": "code",
+          "expr": "label_replace(sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream=~\"${ROOMS:pipe}\"}[1m] ) by (stream) or on() vector(0), \"stream_id\", \"$1\", \"stream\", \".*\\\\+(.*)\")",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "{{stream}}",
           "range": true,
           "refId": "A",
           "useBackend": false
         }
       ],
-      "title": "requests redirected to CDN (by playbackID)",
+      "title": "Viewers per room",
       "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 2,
-        "x": 10,
-        "y": 0
-      },
-      "id": 3,
-      "options": {
-        "code": {
-          "language": "plaintext",
-          "showLineNumbers": false,
-          "showMiniMap": false
-        },
-        "content": "Number of `/hls/.....m3u8` requests that were redirected to the external CDN (Bunny).",
-        "mode": "markdown"
-      },
-      "pluginVersion": "10.1.2",
-      "type": "text"
     },
     {
       "datasource": {
@@ -204,16 +201,18 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 10,
+        "w": 11,
         "x": 0,
-        "y": 8
+        "y": 13
       },
       "id": 2,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
+          "calcs": [
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "right",
           "showLegend": true
         },
         "tooltip": {
@@ -227,49 +226,21 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "sum by(playbackID) (increase(cdn_redirect_webrtc_406[1m]))",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
+          "editorMode": "code",
+          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream=~\"${ROOMS:pipe}\"}) by (region)",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
-          "refId": "A",
-          "useBackend": false
+          "refId": "A"
         }
       ],
-      "title": "webRTC requests redirected to HLS (per playbackId)",
+      "title": "Viewers per region",
       "type": "timeseries"
     },
     {
       "datasource": {
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 2,
-        "x": 10,
-        "y": 8
-      },
-      "id": 4,
-      "options": {
-        "code": {
-          "language": "plaintext",
-          "showLineNumbers": false,
-          "showMiniMap": false
-        },
-        "content": "Number of `/webrtc/...` requests that were rejected with HTTP `406 Not Acceptable`. Player should fall back to `/hls` after receiving 406",
-        "mode": "markdown"
-      },
-      "pluginVersion": "10.1.2",
-      "type": "text"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
       },
       "fieldConfig": {
         "defaults": {
@@ -325,17 +296,19 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 10,
+        "h": 12,
+        "w": 11,
         "x": 0,
-        "y": 16
+        "y": 21
       },
-      "id": 6,
+      "id": 3,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
+          "calcs": [
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "right",
           "showLegend": true
         },
         "tooltip": {
@@ -346,174 +319,139 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
           },
-          "editorMode": "builder",
-          "expr": "max by(playbackId) (count_over_time({app=\"ingress-nginx\", stream=\"stdout\"} |~ `GET /mist/.*\\.m3u8` | regexp `.*/mist/hls/(?P<playbackId>[^/]*)/.*` [1m]))",
-          "queryType": "range",
+          "editorMode": "code",
+          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream=~\"${ROOMS:pipe}\"}[1m] ) by (catalyst_node) ",
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
           "refId": "A"
         }
       ],
-      "title": "mist HLS .m3u8 requests from CDN (per playbackId)",
+      "title": "Viewers per node",
       "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 2,
-        "x": 10,
-        "y": 16
-      },
-      "id": 7,
-      "options": {
-        "code": {
-          "language": "plaintext",
-          "showLineNumbers": false,
-          "showMiniMap": false
-        },
-        "content": "Number of `/mist/hls/...m3u8` requests from CDN (based on ingress-nginx logs). These requests aren't cached by CDN - they pass-through.",
-        "mode": "markdown"
-      },
-      "pluginVersion": "10.1.2",
-      "type": "text"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 10,
-        "x": 0,
-        "y": 24
-      },
-      "id": 5,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
-          "editorMode": "builder",
-          "expr": "max by(playbackId) (count_over_time({app=\"ingress-nginx\", stream=\"stdout\"} |~ `GET /mist/.*\\.ts` | regexp `.*/mist/hls/(?P<playbackId>[^/]*)/.*` [1m]))",
-          "queryType": "range",
-          "refId": "A"
-        }
-      ],
-      "title": "mist HLS .ts requests from CDN (per playbackId)",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 2,
-        "x": 10,
-        "y": 24
-      },
-      "id": 8,
-      "options": {
-        "code": {
-          "language": "plaintext",
-          "showLineNumbers": false,
-          "showMiniMap": false
-        },
-        "content": "Number of `/mist/hls/...ts` requests from CDN (based on ingress-nginx logs)",
-        "mode": "markdown"
-      },
-      "pluginVersion": "10.1.2",
-      "type": "text"
     }
   ],
-  "refresh": false,
+  "refresh": "",
   "schemaVersion": 38,
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "allValue": "",
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "name": "ROOMS",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": false,
+            "text": ".*fca9fz1pvns5f7qv",
+            "value": ".*fca9fz1pvns5f7qv"
+          },
+          {
+            "selected": false,
+            "text": ".*3eb4mll2jrdt99jb",
+            "value": ".*3eb4mll2jrdt99jb"
+          },
+          {
+            "selected": false,
+            "text": ".*31b47qeszq0xueoo",
+            "value": ".*31b47qeszq0xueoo"
+          },
+          {
+            "selected": false,
+            "text": ".*f9934rpx9wkuoulf",
+            "value": ".*f9934rpx9wkuoulf"
+          },
+          {
+            "selected": false,
+            "text": ".*68b8mdxle4jtgwfe",
+            "value": ".*68b8mdxle4jtgwfe"
+          },
+          {
+            "selected": false,
+            "text": ".*526d2dcxd0lr6i4z",
+            "value": ".*526d2dcxd0lr6i4z"
+          },
+          {
+            "selected": false,
+            "text": ".*f3c1n4zuqsqy6wvb",
+            "value": ".*f3c1n4zuqsqy6wvb"
+          },
+          {
+            "selected": false,
+            "text": ".*6f06zkobg5cgxc95",
+            "value": ".*6f06zkobg5cgxc95"
+          },
+          {
+            "selected": false,
+            "text": ".*1d12zldyh0jmhqxd",
+            "value": ".*1d12zldyh0jmhqxd"
+          },
+          {
+            "selected": false,
+            "text": ".*e618njb23zzsrw24",
+            "value": ".*e618njb23zzsrw24"
+          },
+          {
+            "selected": false,
+            "text": ".*9b10xxzabnbd2zon",
+            "value": ".*9b10xxzabnbd2zon"
+          },
+          {
+            "selected": false,
+            "text": ".*7ab7jmupinhio7wo",
+            "value": ".*7ab7jmupinhio7wo"
+          },
+          {
+            "selected": false,
+            "text": ".*aa496s10brdddagd",
+            "value": ".*aa496s10brdddagd"
+          },
+          {
+            "selected": false,
+            "text": ".*f03393v3pti4z7ok",
+            "value": ".*f03393v3pti4z7ok"
+          },
+          {
+            "selected": false,
+            "text": ".*854cx0awr3bpmxz",
+            "value": ".*854cx0awr3bpmxz"
+          }
+        ],
+        "query": ".*fca9fz1pvns5f7qv,.*3eb4mll2jrdt99jb,.*31b47qeszq0xueoo,.*f9934rpx9wkuoulf,.*68b8mdxle4jtgwfe,.*526d2dcxd0lr6i4z,.*f3c1n4zuqsqy6wvb,.*6f06zkobg5cgxc95,.*1d12zldyh0jmhqxd,.*e618njb23zzsrw24,.*9b10xxzabnbd2zon,.*7ab7jmupinhio7wo,.*aa496s10brdddagd,.*f03393v3pti4z7ok,.*854cx0awr3bpmxz",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
   },
   "time": {
-    "from": "now-1d",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
-  "title": "CDN redirects",
-  "uid": "f1e103a6-2ec1-44e8-bcee-d1d5f68bdbf5",
-  "version": 7,
+  "title": "Fishtank",
+  "uid": "cce96324-988b-4a9b-8165-07b72cf8d481",
+  "version": 9,
   "weekStart": ""
 }
