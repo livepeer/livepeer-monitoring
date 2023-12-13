@@ -39,6 +39,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -113,7 +114,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(mist_sessions{sessType=\"incoming\", pod=~\"$pod\", region=\"$region\", stream=~\".*vod.*\"} > 0) by (region, pod)",
+          "expr": "sum(mist_sessions{sessType=\"incoming\", pod=~\"$pod\", region=~\"$region\", stream=~\".*vod.*\"} > 0) by (region, pod)",
           "interval": "",
           "legendFormat": "{{region}}-{{pod}}",
           "range": true,
@@ -126,7 +127,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(mist_sessions{sessType=\"incoming\", pod=~\"$pod\", region=\"$region\", stream!~\".*vod.*\"} > 0) by (region, pod)",
+          "expr": "sum(mist_sessions{sessType=\"incoming\", pod=~\"$pod\", region=~\"$region\", stream!~\".*vod.*\"} > 0) by (region, pod)",
           "hide": false,
           "interval": "",
           "legendFormat": "{{region}}-{{pod}}",
@@ -148,6 +149,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -222,7 +224,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(mist_sessions{pod=~\"$pod\", region=\"$region\", sessType=\"viewers\"} > 0) by (region, pod, sessType)",
+          "expr": "sum(mist_sessions{pod=~\"$pod\", region=~\"$region\", sessType=\"viewers\"} > 0) by (region, pod, sessType)",
           "interval": "",
           "legendFormat": "{{region}}-{{pod}} ({{sessType}})",
           "range": true,
@@ -243,6 +245,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -316,7 +319,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "sum(count_over_time(\n  {pod=~\"$pod\", region=\"$region\"} |~ \"\\\\[DEBUG\\\\] POST http://127.0.0.1:8935\"\n  [1m]\n)) by (region, pod)",
+          "expr": "sum(count_over_time(\n  {pod=~\"$pod\", region=~\"$region\"} |~ \"\\\\[DEBUG\\\\] POST http://127.0.0.1:8935\"\n  [1m]\n)) by (region, pod)",
           "legendFormat": "{{region}}-{{pod}}",
           "queryType": "range",
           "refId": "A"
@@ -336,6 +339,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -416,7 +420,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "sum(count_over_time(\n  {region=\"$region\", pod=~\"$pod\"}\n  | regexp \"^\\\\[?(?P<timestamp>[0-9- :]+)\\\\] ?(?P<process>[a-zA-Z0-9-_]+)\"\n[1m])) by (process)",
+          "expr": "sum(count_over_time(\n  {region=~\"$region\", pod=~\"$pod\"}\n  | regexp \"^\\\\[?(?P<timestamp>[0-9- :]+)\\\\] ?(?P<process>[a-zA-Z0-9-_]+)\"\n[1m])) by (process)",
           "legendFormat": "{{ process }}",
           "queryType": "range",
           "refId": "A"
@@ -436,6 +440,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -533,6 +538,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "Memory (%)",
@@ -618,9 +624,8 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "",
+  "refresh": "5s",
   "schemaVersion": 38,
-  "style": "dark",
   "tags": [],
   "templating": {
     "list": [
@@ -672,6 +677,6 @@
   "timezone": "",
   "title": "Catalyst Node Inspector",
   "uid": "PzbLIMd4z",
-  "version": 3,
+  "version": 7,
   "weekStart": ""
 }
