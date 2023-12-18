@@ -17,22 +17,140 @@
   },
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "graphTooltip": 0,
+  "graphTooltip": 1,
   "id": null,
   "links": [],
   "liveNow": false,
   "panels": [
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "{status=\"502\"}"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 11,
+        "x": 0,
+        "y": 0
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum(count_over_time({namespace=\"default\", app=\"ingress-nginx\", stream=\"stdout\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" |~ \"${ROOMS:pipe}\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<originUrl>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>` | originUrl != \"-\" | line_format \"{{ .originUrl }}\" | pattern \"<originScheme>://<originDomain>/<originPath>\" | line_format \"{{ .originDomain }}\"[1m])) by (status)",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Status code (nginx)",
+      "type": "timeseries"
+    },
     {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 0
+        "y": 8
       },
       "id": 5,
       "panels": [],
-      "title": "Row title",
+      "title": "Viewership breakdown",
       "type": "row"
     },
     {
@@ -46,6 +164,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -95,15 +214,225 @@
                 "value": 80
               }
             ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 13,
+        "x": 0,
+        "y": 9
+      },
+      "id": 7,
+      "options": {
+        "legend": {
+          "calcs": [
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Last",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "label_replace(sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream=~\"${ROOMS:pipe}\"}[1m] ) by () or on() vector(0), \"stream_id\", \"$1\", \"stream\", \".*\\\\+(.*)\")",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{stream}}",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Viewers globally",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
           }
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 12,
+        "h": 11,
         "w": 11,
+        "x": 13,
+        "y": 9
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Last",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream=~\"${ROOMS:pipe}\"}[1m] ) by (catalyst_node) ",
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Viewers per node",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "links": [
+            {
+              "title": "https://livepeer.com/app/stream/$stream?autoplay",
+              "url": "https://livepeer.com/app/stream/${__field.labels.stream_id}?autoplay"
+            }
+          ],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 16,
+        "w": 13,
         "x": 0,
-        "y": 1
+        "y": 20
       },
       "id": 1,
       "options": {
@@ -113,7 +442,9 @@
           ],
           "displayMode": "table",
           "placement": "right",
-          "showLegend": true
+          "showLegend": true,
+          "sortBy": "Last",
+          "sortDesc": true
         },
         "tooltip": {
           "mode": "single",
@@ -152,6 +483,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -200,10 +532,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 16,
         "w": 11,
-        "x": 0,
-        "y": 13
+        "x": 13,
+        "y": 20
       },
       "id": 2,
       "options": {
@@ -213,7 +545,9 @@
           ],
           "displayMode": "table",
           "placement": "right",
-          "showLegend": true
+          "showLegend": true,
+          "sortBy": "Last",
+          "sortDesc": true
         },
         "tooltip": {
           "mode": "single",
@@ -236,107 +570,10 @@
       ],
       "title": "Viewers per region",
       "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 12,
-        "w": 11,
-        "x": 0,
-        "y": 21
-      },
-      "id": 3,
-      "options": {
-        "legend": {
-          "calcs": [
-            "last"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "editorMode": "code",
-          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream=~\"${ROOMS:pipe}\"}[1m] ) by (catalyst_node) ",
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Viewers per node",
-      "type": "timeseries"
     }
   ],
-  "refresh": "",
+  "refresh": "10s",
   "schemaVersion": 38,
-  "style": "dark",
   "tags": [],
   "templating": {
     "list": [
@@ -363,81 +600,86 @@
           },
           {
             "selected": false,
-            "text": ".*fca9fz1pvns5f7qv",
-            "value": ".*fca9fz1pvns5f7qv"
+            "text": "Living Room",
+            "value": ".*2289jf6f37kq3put"
           },
           {
             "selected": false,
-            "text": ".*3eb4mll2jrdt99jb",
-            "value": ".*3eb4mll2jrdt99jb"
+            "text": "Upstairs Bathroom",
+            "value": ".*c00a95tv3rysf9ji"
           },
           {
             "selected": false,
-            "text": ".*31b47qeszq0xueoo",
-            "value": ".*31b47qeszq0xueoo"
+            "text": "Kitchen",
+            "value": ".*f355shnx2w9xkhxo"
           },
           {
             "selected": false,
-            "text": ".*f9934rpx9wkuoulf",
-            "value": ".*f9934rpx9wkuoulf"
+            "text": "Upstairs Hallway",
+            "value": ".*1bcd83gg4ang03l8"
           },
           {
             "selected": false,
-            "text": ".*68b8mdxle4jtgwfe",
-            "value": ".*68b8mdxle4jtgwfe"
+            "text": "Bar",
+            "value": ".*9cfeeodtu023cb91"
           },
           {
             "selected": false,
-            "text": ".*526d2dcxd0lr6i4z",
-            "value": ".*526d2dcxd0lr6i4z"
+            "text": "Lounge",
+            "value": ".*33d25dz3mqilw1lp"
           },
           {
             "selected": false,
-            "text": ".*f3c1n4zuqsqy6wvb",
-            "value": ".*f3c1n4zuqsqy6wvb"
+            "text": "Bedroom 1",
+            "value": ".*a12bmexn0h5td3kh"
           },
           {
             "selected": false,
-            "text": ".*6f06zkobg5cgxc95",
-            "value": ".*6f06zkobg5cgxc95"
+            "text": "Downstairs Hallway",
+            "value": ".*cc92intolqvyf117"
           },
           {
             "selected": false,
-            "text": ".*1d12zldyh0jmhqxd",
-            "value": ".*1d12zldyh0jmhqxd"
+            "text": "Master Bathroom",
+            "value": ".*052cnzsasax9c10b"
           },
           {
             "selected": false,
-            "text": ".*e618njb23zzsrw24",
-            "value": ".*e618njb23zzsrw24"
+            "text": "Bedroom 3",
+            "value": ".*d7a07saeijthkqqk"
           },
           {
             "selected": false,
-            "text": ".*9b10xxzabnbd2zon",
-            "value": ".*9b10xxzabnbd2zon"
+            "text": "Dog House",
+            "value": ".*2ef11errf17as0df"
           },
           {
             "selected": false,
-            "text": ".*7ab7jmupinhio7wo",
-            "value": ".*7ab7jmupinhio7wo"
+            "text": "Bedroom 2",
+            "value": ".*d01cpugvvx04448x"
           },
           {
             "selected": false,
-            "text": ".*aa496s10brdddagd",
-            "value": ".*aa496s10brdddagd"
+            "text": "Downstairs Bathroom",
+            "value": ".*b0739nzrqm6m8k1k"
           },
           {
             "selected": false,
-            "text": ".*f03393v3pti4z7ok",
-            "value": ".*f03393v3pti4z7ok"
+            "text": "The Bunk",
+            "value": ".*cbcbvq7hgf5vwti2"
           },
           {
             "selected": false,
-            "text": ".*854cx0awr3bpmxz",
-            "value": ".*854cx0awr3bpmxz"
+            "text": "Attic",
+            "value": ".*0b6a2wuaxm56yhkr"
+          },
+          {
+            "selected": false,
+            "text": "Launch",
+            "value": ".*c0967lxltr0zkftj"
           }
         ],
-        "query": ".*fca9fz1pvns5f7qv,.*3eb4mll2jrdt99jb,.*31b47qeszq0xueoo,.*f9934rpx9wkuoulf,.*68b8mdxle4jtgwfe,.*526d2dcxd0lr6i4z,.*f3c1n4zuqsqy6wvb,.*6f06zkobg5cgxc95,.*1d12zldyh0jmhqxd,.*e618njb23zzsrw24,.*9b10xxzabnbd2zon,.*7ab7jmupinhio7wo,.*aa496s10brdddagd,.*f03393v3pti4z7ok,.*854cx0awr3bpmxz",
+        "query": "Living Room : .*2289jf6f37kq3put,Upstairs Bathroom : .*c00a95tv3rysf9ji,Kitchen : .*f355shnx2w9xkhxo,Upstairs Hallway : .*1bcd83gg4ang03l8,Bar : .*9cfeeodtu023cb91,Lounge : .*33d25dz3mqilw1lp,Bedroom 1 : .*a12bmexn0h5td3kh,Downstairs Hallway : .*cc92intolqvyf117,Master Bathroom : .*052cnzsasax9c10b,Bedroom 3 : .*d7a07saeijthkqqk,Dog House : .*2ef11errf17as0df,Bedroom 2 : .*d01cpugvvx04448x,Downstairs Bathroom : .*b0739nzrqm6m8k1k,The Bunk : .*cbcbvq7hgf5vwti2,Attic : .*0b6a2wuaxm56yhkr,Launch : .*c0967lxltr0zkftj",
         "queryValue": "",
         "skipUrlSync": false,
         "type": "custom"
@@ -445,13 +687,13 @@
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-3h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Fishtank",
   "uid": "cce96324-988b-4a9b-8165-07b72cf8d481",
-  "version": 9,
+  "version": 24,
   "weekStart": ""
 }
