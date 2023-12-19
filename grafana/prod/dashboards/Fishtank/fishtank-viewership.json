@@ -19,7 +19,32 @@
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
   "id": null,
-  "links": [],
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": true,
+      "title": "Shared fishtank configurations",
+      "tooltip": "",
+      "type": "link",
+      "url": "https://www.notion.so/livepeer/Livestream-Configuration-d5a950e93c5546f783b6ef9a53628e42"
+    },
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": true,
+      "title": "Debugging/handling",
+      "tooltip": "",
+      "type": "link",
+      "url": "https://www.notion.so/livepeer/Fishtank-4ccaf094677942f0adf8a965a639e58a"
+    }
+  ],
   "liveNow": false,
   "panels": [
     {
@@ -141,6 +166,99 @@
       "type": "timeseries"
     },
     {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum(count_over_time({app=\"catalyst\"} |~ \"Playback access control\" | pattern `<_> Playback access control <status> `[1m])) by (status)",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Access Control Allow vs Deny",
+      "type": "timeseries"
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
@@ -195,12 +313,7 @@
               "mode": "off"
             }
           },
-          "links": [
-            {
-              "title": "https://livepeer.com/app/stream/$stream?autoplay",
-              "url": "https://livepeer.com/app/stream/${__field.labels.stream_id}?autoplay"
-            }
-          ],
+          "links": [],
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -208,10 +321,6 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           },
@@ -250,7 +359,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "label_replace(sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream=~\"${ROOMS:pipe}\"}[1m] ) by () or on() vector(0), \"stream_id\", \"$1\", \"stream\", \".*\\\\+(.*)\")",
+          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream=~\".*(${ROOMS:pipe})\"}[1m])",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -312,10 +421,6 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
@@ -352,7 +457,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream=~\"${ROOMS:pipe}\"}[1m] ) by (catalyst_node) ",
+          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream=~\".*(${ROOMS:pipe})\"}[1m] ) by (catalyst_node)",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -406,27 +511,217 @@
           },
           "links": [
             {
-              "title": "https://livepeer.com/app/stream/$stream?autoplay",
+              "targetBlank": true,
+              "title": "admin dashboard",
               "url": "https://livepeer.com/app/stream/${__field.labels.stream_id}?autoplay"
             }
           ],
           "mappings": [],
           "thresholds": {
-            "mode": "absolute",
+            "mode": "percentage",
             "steps": [
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           },
           "unit": "none"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+2289jf6f37kq3put"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Living Room"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+c00a95tv3rysf9ji"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Upstairs Bathroom"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+f355shnx2w9xkhxo"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Kitchen"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+1bcd83gg4ang03l8"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Upstairs Hallway"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+9cfeeodtu023cb91"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Bar"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+33d25dz3mqilw1lp"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Lounge"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+a12bmexn0h5td3kh"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Bedroom 1"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+cc92intolqvyf117"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Downstairs Hallway"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+052cnzsasax9c10b"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Master Bathroom"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+d7a07saeijthkqqk"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Bedroom 3"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+2ef11errf17as0df"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Dog House"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+d01cpugvvx04448x"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Bedroom 2"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+b0739nzrqm6m8k1k"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Downstairs Bathroom"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+cbcbvq7hgf5vwti2"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "The Bunk"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+0b6a2wuaxm56yhkr"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Attic"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+c0967lxltr0zkftj"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Launch"
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 16,
@@ -459,7 +754,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "label_replace(sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream=~\"${ROOMS:pipe}\"}[1m] ) by (stream) or on() vector(0), \"stream_id\", \"$1\", \"stream\", \".*\\\\+(.*)\")",
+          "expr": "label_replace(sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream=~\".*(${ROOMS:pipe})\"}[1m] ) by (stream) or on() vector(0), \"stream_id\", \"$1\", \"stream\", \".*\\\\+(.*)\")",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -514,6 +809,7 @@
               "mode": "off"
             }
           },
+          "links": [],
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -561,7 +857,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream=~\"${ROOMS:pipe}\"}) by (region)",
+          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream=~\".*(${ROOMS:pipe})\"}) by (region)",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -574,7 +870,13 @@
   ],
   "refresh": "10s",
   "schemaVersion": 38,
-  "tags": [],
+  "tags": [
+    "fishtank",
+    "viewership",
+    "metrics",
+    "observe",
+    "2023"
+  ],
   "templating": {
     "list": [
       {
@@ -601,85 +903,85 @@
           {
             "selected": false,
             "text": "Living Room",
-            "value": ".*2289jf6f37kq3put"
+            "value": "2289jf6f37kq3put"
           },
           {
             "selected": false,
             "text": "Upstairs Bathroom",
-            "value": ".*c00a95tv3rysf9ji"
+            "value": "c00a95tv3rysf9ji"
           },
           {
             "selected": false,
             "text": "Kitchen",
-            "value": ".*f355shnx2w9xkhxo"
+            "value": "f355shnx2w9xkhxo"
           },
           {
             "selected": false,
             "text": "Upstairs Hallway",
-            "value": ".*1bcd83gg4ang03l8"
+            "value": "1bcd83gg4ang03l8"
           },
           {
             "selected": false,
             "text": "Bar",
-            "value": ".*9cfeeodtu023cb91"
+            "value": "9cfeeodtu023cb91"
           },
           {
             "selected": false,
             "text": "Lounge",
-            "value": ".*33d25dz3mqilw1lp"
+            "value": "33d25dz3mqilw1lp"
           },
           {
             "selected": false,
             "text": "Bedroom 1",
-            "value": ".*a12bmexn0h5td3kh"
+            "value": "a12bmexn0h5td3kh"
           },
           {
             "selected": false,
             "text": "Downstairs Hallway",
-            "value": ".*cc92intolqvyf117"
+            "value": "cc92intolqvyf117"
           },
           {
             "selected": false,
             "text": "Master Bathroom",
-            "value": ".*052cnzsasax9c10b"
+            "value": "052cnzsasax9c10b"
           },
           {
             "selected": false,
             "text": "Bedroom 3",
-            "value": ".*d7a07saeijthkqqk"
+            "value": "d7a07saeijthkqqk"
           },
           {
             "selected": false,
             "text": "Dog House",
-            "value": ".*2ef11errf17as0df"
+            "value": "2ef11errf17as0df"
           },
           {
             "selected": false,
             "text": "Bedroom 2",
-            "value": ".*d01cpugvvx04448x"
+            "value": "d01cpugvvx04448x"
           },
           {
             "selected": false,
             "text": "Downstairs Bathroom",
-            "value": ".*b0739nzrqm6m8k1k"
+            "value": "b0739nzrqm6m8k1k"
           },
           {
             "selected": false,
             "text": "The Bunk",
-            "value": ".*cbcbvq7hgf5vwti2"
+            "value": "cbcbvq7hgf5vwti2"
           },
           {
             "selected": false,
             "text": "Attic",
-            "value": ".*0b6a2wuaxm56yhkr"
+            "value": "0b6a2wuaxm56yhkr"
           },
           {
             "selected": false,
             "text": "Launch",
-            "value": ".*c0967lxltr0zkftj"
+            "value": "c0967lxltr0zkftj"
           }
         ],
-        "query": "Living Room : .*2289jf6f37kq3put,Upstairs Bathroom : .*c00a95tv3rysf9ji,Kitchen : .*f355shnx2w9xkhxo,Upstairs Hallway : .*1bcd83gg4ang03l8,Bar : .*9cfeeodtu023cb91,Lounge : .*33d25dz3mqilw1lp,Bedroom 1 : .*a12bmexn0h5td3kh,Downstairs Hallway : .*cc92intolqvyf117,Master Bathroom : .*052cnzsasax9c10b,Bedroom 3 : .*d7a07saeijthkqqk,Dog House : .*2ef11errf17as0df,Bedroom 2 : .*d01cpugvvx04448x,Downstairs Bathroom : .*b0739nzrqm6m8k1k,The Bunk : .*cbcbvq7hgf5vwti2,Attic : .*0b6a2wuaxm56yhkr,Launch : .*c0967lxltr0zkftj",
+        "query": "Living Room : 2289jf6f37kq3put,Upstairs Bathroom : c00a95tv3rysf9ji,Kitchen : f355shnx2w9xkhxo,Upstairs Hallway : 1bcd83gg4ang03l8,Bar : 9cfeeodtu023cb91,Lounge : 33d25dz3mqilw1lp,Bedroom 1 : a12bmexn0h5td3kh,Downstairs Hallway : cc92intolqvyf117,Master Bathroom : 052cnzsasax9c10b,Bedroom 3 : d7a07saeijthkqqk,Dog House : 2ef11errf17as0df,Bedroom 2 : d01cpugvvx04448x,Downstairs Bathroom : b0739nzrqm6m8k1k,The Bunk : cbcbvq7hgf5vwti2,Attic : 0b6a2wuaxm56yhkr,Launch : c0967lxltr0zkftj",
         "queryValue": "",
         "skipUrlSync": false,
         "type": "custom"
@@ -692,8 +994,8 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Fishtank",
+  "title": "Fishtank viewership",
   "uid": "cce96324-988b-4a9b-8165-07b72cf8d481",
-  "version": 24,
+  "version": 30,
   "weekStart": ""
 }
