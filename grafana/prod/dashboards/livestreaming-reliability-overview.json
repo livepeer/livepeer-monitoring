@@ -53,6 +53,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -159,7 +160,7 @@
         "content": "This is the maximum of the shared memory, general RAM and CPU used on the nodes, as a percentage. If this nears 100%, that means there aren't enough servers in that region to handle the load. If it nears 0% that means there isn't enough load to warrant the current deployment size.",
         "mode": "markdown"
       },
-      "pluginVersion": "10.1.2",
+      "pluginVersion": "10.2.2",
       "title": "Resource usage",
       "type": "text"
     },
@@ -175,6 +176,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -290,7 +292,7 @@
         "content": "This should be zero/blank if all is running perfectly. The livestreams automatically abort and retry if a timeout occurs, but multiple timeouts in a row will drastically affect player experience.",
         "mode": "markdown"
       },
-      "pluginVersion": "10.1.2",
+      "pluginVersion": "10.2.2",
       "title": "Transcode timeouts",
       "type": "text"
     },
@@ -306,6 +308,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -371,7 +374,9 @@
           ],
           "displayMode": "table",
           "placement": "right",
-          "showLegend": true
+          "showLegend": true,
+          "sortBy": "Last *",
+          "sortDesc": true
         },
         "tooltip": {
           "mode": "multi",
@@ -398,7 +403,7 @@
           "step": 120
         }
       ],
-      "title": "Viewers",
+      "title": "Viewers by region",
       "type": "timeseries"
     },
     {
@@ -422,7 +427,7 @@
         "content": "Tracks active viewers by region. In general, sudden changes here indicate a potential problem (or popular stream starting/stopping).",
         "mode": "markdown"
       },
-      "pluginVersion": "10.1.2",
+      "pluginVersion": "10.2.2",
       "title": "Viewers",
       "type": "text"
     },
@@ -438,6 +443,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -519,7 +525,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(mist_outputs{catalyst_node=~\".*studio\",output!=\"\"}) by (region,output)",
+          "expr": "sum(mist_outputs{catalyst_node=~\".*studio\",output!=\"\"}) by (output)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -581,6 +587,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -703,7 +710,7 @@
         "content": "Trigger failures indicate a problem with integration between the media server and the systems surrounding it. Depending on the trigger affected, there may or may not be noticible degradation of service. The most important ones are `USER_NEW` (handles viewer authorization) and `PUSH_REWRITE` (handles incoming push authorization).",
         "mode": "markdown"
       },
-      "pluginVersion": "10.1.2",
+      "pluginVersion": "10.2.2",
       "title": "Trigger failures",
       "type": "text"
     },
@@ -718,6 +725,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -834,7 +842,7 @@
         "content": "This basically shows new connections to regions as a fraction of the total viewers. Consider it a view of connection \"stickiness\", where anything under 1 is generally \"very good and the higher above 1 the worse it is. People refreshing the page (or, well, not liking the stream contents) will cause this number to go up.",
         "mode": "markdown"
       },
-      "pluginVersion": "10.1.2",
+      "pluginVersion": "10.2.2",
       "title": "Reconnects",
       "type": "text"
     },
@@ -862,6 +870,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -897,8 +906,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           },
@@ -1004,7 +1012,7 @@
         "content": "This measures whether the configuration of the incoming stream is correct (e.g. user error).\nIf there is something wrong with the input that makes streaming it smoothly tricky/hard/impossible, the stream is considered unhealthy.\nStreams without problems are considered healthy. It's actually possible to query the corresponding node over API to get _why_ a stream is unhealthy, as well!",
         "mode": "markdown"
       },
-      "pluginVersion": "10.1.2",
+      "pluginVersion": "10.2.2",
       "title": "Healthy streams",
       "type": "text"
     },
@@ -1019,6 +1027,7 @@
             "mode": "thresholds"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -1045,8 +1054,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           },
@@ -1156,7 +1164,7 @@
         "content": "The same data as on the left, but:\n- Raw values\n- Color-coded for visibility\n- Only the most recent datapoint",
         "mode": "markdown"
       },
-      "pluginVersion": "10.1.2",
+      "pluginVersion": "10.2.2",
       "title": "Healthy streams, current",
       "type": "text"
     },
@@ -1184,6 +1192,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -1221,8 +1230,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "dark-red",
-                "value": null
+                "color": "dark-red"
               },
               {
                 "color": "transparent",
@@ -1294,7 +1302,7 @@
         "content": "Every concurrent viewer is given a score of \"bad\", \"okay\" and \"perfect\".\nThis graph tracks regions with 25+ viewers and shows what percentage of them had a \"perfect\" score, over time. If this is around 90%, that's considered a good result.\nMuch below it _can_ indicate a problem.\nIt's normal for this to never reach 100%, as it would require **every** viewer to have good hardware **and** a good connection, which is not likely to happen.",
         "mode": "markdown"
       },
-      "pluginVersion": "10.1.2",
+      "pluginVersion": "10.2.2",
       "title": "Flawless playback",
       "type": "text"
     },
@@ -1309,6 +1317,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -1344,8 +1353,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1397,19 +1405,18 @@
   "refresh": "",
   "revision": 1,
   "schemaVersion": 38,
-  "style": "dark",
   "tags": [],
   "templating": {
     "list": []
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-3h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Livestreaming Reliability Overview",
   "uid": "6aTY0Qx4k",
-  "version": 36,
+  "version": 38,
   "weekStart": ""
 }
