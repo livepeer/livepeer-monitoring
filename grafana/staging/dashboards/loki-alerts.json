@@ -139,8 +139,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -277,8 +276,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -384,6 +382,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -397,6 +396,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -455,8 +455,10 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({app=~\"prod-.+\",app!=\"prod-livepeer-monitoring\"} |= \"username or password not allowed\" [1m])) by (app, region)",
+          "editorMode": "code",
+          "expr": "sum(count_over_time({app=~\"prod-.+\",app!=\"prod-monitoring\"} |= \"username or password not allowed\" [1m])) by (app, region)",
           "legendFormat": "{{region}}-{{app}}",
+          "queryType": "range",
           "refId": "A"
         }
       ],
@@ -585,8 +587,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -727,8 +728,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -849,8 +849,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -898,7 +897,6 @@
   ],
   "refresh": "",
   "schemaVersion": 38,
-  "style": "dark",
   "tags": [],
   "templating": {
     "list": []
@@ -911,6 +909,6 @@
   "timezone": "",
   "title": "Loki Alerts",
   "uid": "dbme6io7k",
-  "version": 22,
+  "version": 24,
   "weekStart": ""
 }
