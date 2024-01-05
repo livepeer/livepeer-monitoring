@@ -202,8 +202,8 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "editorMode": "builder",
-          "expr": "sum by(app) (count_over_time({region=\"nyc\", app=\"base-analytics-dbt\"} |= `Completed with` [5m]))",
+          "editorMode": "code",
+          "expr": "sum by(app) (count_over_time({region=\"nyc\", app=\"base-analytics-dbt\"} |= `Completed with` !~ `Completed with \\d+ warnings?:` [5m]))",
           "legendFormat": "{{ app }}",
           "queryType": "range",
           "refId": "A"
@@ -604,7 +604,7 @@
     }
   ],
   "refresh": "",
-  "schemaVersion": 38,
+  "schemaVersion": 39,
   "tags": [
     "discord",
     "engagement",
@@ -622,6 +622,6 @@
   "timezone": "",
   "title": "Analytics Monitoring Dashboard",
   "uid": "e16531c0-6706-44a8-b6bf-428e72af60a0",
-  "version": 25,
+  "version": 27,
   "weekStart": ""
 }
