@@ -110,7 +110,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "builder",
-          "expr": "sum(count_over_time({app=\"discord-bot\", region=\"nyc\"} [5m]))",
+          "expr": "sum by(container) (count_over_time({app=\"discord-bot\", region=\"analytics\"} [5m]))",
           "queryType": "range",
           "refId": "A"
         }
@@ -202,8 +202,8 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "editorMode": "code",
-          "expr": "sum by(app) (count_over_time({region=\"nyc\", app=\"base-analytics-dbt\"} |= `Completed with` !~ `Completed with \\d+ warnings?:` [5m]))",
+          "editorMode": "builder",
+          "expr": "sum by(app) (count_over_time({region=\"analytics\", app=\"base-analytics-dbt\"} |= `Completed with` [5m]))",
           "legendFormat": "{{ app }}",
           "queryType": "range",
           "refId": "A"
@@ -392,7 +392,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "builder",
-          "expr": "sum by(app) (count_over_time({region=\"nyc\", app=\"base-analytics-dbt\", namespace=\"base\"} [5m]))",
+          "expr": "sum by(app) (count_over_time({region=\"analytics\", app=\"base-analytics-dbt\"} [5m]))",
           "legendFormat": "{{ app }}",
           "queryType": "range",
           "refId": "A"
@@ -593,7 +593,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "builder",
-          "expr": "sum by(app) (count_over_time({region=\"nyc\", app=\"base-analytics-dbt\", namespace=\"base\"} |= `Completed successfully` [1m]))",
+          "expr": "sum by(app) (count_over_time({region=\"analytics\", app=\"base-analytics-dbt\"} |= `Completed successfully` [1m]))",
           "legendFormat": "{{ app }}",
           "queryType": "range",
           "refId": "A"
@@ -622,6 +622,6 @@
   "timezone": "",
   "title": "Analytics Monitoring Dashboard",
   "uid": "e16531c0-6706-44a8-b6bf-428e72af60a0",
-  "version": 27,
+  "version": 33,
   "weekStart": ""
 }
