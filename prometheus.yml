@@ -1,14 +1,14 @@
 global:
-  scrape_interval: 30s
+  scrape_interval: 5s
   scrape_timeout: 5s
-  evaluation_interval: 30s
+  evaluation_interval: 5s
 scrape_configs:
   - job_name: grafana-image-rendering-service
     static_configs:
       - targets:
           - localhost:8081
   - job_name: kubernetes-apiservers
-    scrape_interval: 30s
+    scrape_interval: 5s
     scrape_timeout: 5s
     metrics_path: /metrics
     scheme: https
@@ -34,7 +34,7 @@ scrape_configs:
         replacement: $1
         action: keep
   - job_name: kubernetes-nodes
-    scrape_interval: 30s
+    scrape_interval: 5s
     scrape_timeout: 5s
     metrics_path: /metrics
     scheme: https
@@ -65,7 +65,7 @@ scrape_configs:
         replacement: /api/v1/nodes/${1}/proxy/metrics
         action: replace
   - job_name: kubernetes-pods
-    scrape_interval: 30s
+    scrape_interval: 5s
     scrape_timeout: 5s
     metrics_path: /metrics
     scheme: http
@@ -111,7 +111,7 @@ scrape_configs:
         replacement: $1
         action: replace
   - job_name: kubernetes-cadvisor
-    scrape_interval: 30s
+    scrape_interval: 5s
     scrape_timeout: 5s
     metrics_path: /metrics
     scheme: https
@@ -142,7 +142,7 @@ scrape_configs:
         replacement: /api/v1/nodes/${1}/proxy/metrics/cadvisor
         action: replace
   - job_name: kubernetes-service-endpoints
-    scrape_interval: 30s
+    scrape_interval: 5s
     scrape_timeout: 5s
     metrics_path: /metrics
     scheme: http
