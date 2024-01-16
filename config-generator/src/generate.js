@@ -169,10 +169,6 @@ function prometheusConfig(params) {
         region: params.region
       },
     },
-    queue_config: {
-      max_samples_per_send: 10000,
-      batch_send_deadline: '30s'
-    },
     scrape_configs: [],
     rule_files: ['rules.yml'],
     alerting: {
