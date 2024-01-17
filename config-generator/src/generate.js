@@ -162,7 +162,7 @@ generate()
 function prometheusConfig(params) {
   let obj = {
     global: {
-      scrape_interval: '5s',
+      scrape_interval: '30s',
       scrape_timeout: '5s',
       evaluation_interval: '5s',
       external_labels: {
@@ -247,10 +247,16 @@ function prometheusConfig(params) {
         )
 
         if (params.prometheusLongterm) {
+          let queue_config = {
+            capacity: 50000,
+            max_samples_per_send: 10000,
+            batch_send_deadline: '30s'
+          }
           if (params.prometheusRemoteEndpoint) {
             obj['remote_write'] = [{
               url: params.prometheusRemoteEndpoint,
-              remote_timeout: '30s'
+              remote_timeout: '30s',
+              queue_config: queue_config
             }]
           } else {
             obj['remote_read'] = [{
@@ -260,7 +266,8 @@ function prometheusConfig(params) {
 
             obj['remote_write'] = [{
               url: 'http://localhost:9201/write',
-              remote_timeout: '30s'
+              remote_timeout: '30s',
+              queue_config: queue_config
             }]
           }
         }
@@ -321,7 +328,7 @@ function prometheusConfig(params) {
 function getPromKubeJobs(namespaces, promKubeScrape) {
   return [{
       job_name: 'kubernetes-apiservers',
-      scrape_interval: '5s',
+      scrape_interval: '30s',
       scrape_timeout: '5s',
       metrics_path: '/metrics',
       scheme: 'https',
@@ -351,7 +358,7 @@ function getPromKubeJobs(namespaces, promKubeScrape) {
     },
     {
       job_name: 'kubernetes-nodes',
-      scrape_interval: '5s',
+      scrape_interval: '30s',
       scrape_timeout: '5s',
       metrics_path: '/metrics',
       scheme: 'https',
@@ -392,7 +399,7 @@ function getPromKubeJobs(namespaces, promKubeScrape) {
     },
     {
       job_name: 'kubernetes-pods',
-      scrape_interval: '5s',
+      scrape_interval: '30s',
       scrape_timeout: '5s',
       metrics_path: '/metrics',
       scheme: 'http',
@@ -459,7 +466,7 @@ function getPromKubeJobs(namespaces, promKubeScrape) {
     },
     {
       job_name: 'kubernetes-cadvisor',
-      scrape_interval: '5s',
+      scrape_interval: '30s',
       scrape_timeout: '5s',
       metrics_path: '/metrics',
       scheme: 'https',
@@ -500,7 +507,7 @@ function getPromKubeJobs(namespaces, promKubeScrape) {
     },
     {
       job_name: 'kubernetes-service-endpoints',
-      scrape_interval: '5s',
+      scrape_interval: '30s',
       scrape_timeout: '5s',
       metrics_path: '/metrics',
       scheme: 'http',
