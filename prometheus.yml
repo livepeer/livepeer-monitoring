@@ -64,6 +64,8 @@ scrape_configs:
         target_label: __metrics_path__
         replacement: /api/v1/nodes/${1}/proxy/metrics
         action: replace
+      - action: labeldrop
+        regex: ((beta_)?kubernetes_io_(arch|os)|cloud_google_com_gke_(max_pods_per_node|os_distribution|logging_variant|container_runtime|boot_disk|cpu_scaling_level|provisioning)|cloud_google_com_private_node)
   - job_name: kubernetes-pods
     scrape_interval: 5s
     scrape_timeout: 5s
@@ -110,6 +112,8 @@ scrape_configs:
         target_label: kubernetes_pod_name
         replacement: $1
         action: replace
+      - action: labeldrop
+        regex: ((beta_)?kubernetes_io_(arch|os)|cloud_google_com_gke_(max_pods_per_node|os_distribution|logging_variant|container_runtime|boot_disk|cpu_scaling_level|provisioning)|cloud_google_com_private_node)
   - job_name: kubernetes-cadvisor
     scrape_interval: 5s
     scrape_timeout: 5s
@@ -141,6 +145,8 @@ scrape_configs:
         target_label: __metrics_path__
         replacement: /api/v1/nodes/${1}/proxy/metrics/cadvisor
         action: replace
+      - action: labeldrop
+        regex: ((beta_)?kubernetes_io_(arch|os)|cloud_google_com_gke_(max_pods_per_node|os_distribution|logging_variant|container_runtime|boot_disk|cpu_scaling_level|provisioning)|cloud_google_com_private_node)
   - job_name: kubernetes-service-endpoints
     scrape_interval: 5s
     scrape_timeout: 5s
@@ -201,3 +207,5 @@ scrape_configs:
         target_label: livepeer_node_type
         replacement: $1
         action: replace
+      - action: labeldrop
+        regex: ((beta_)?kubernetes_io_(arch|os)|cloud_google_com_gke_(max_pods_per_node|os_distribution|logging_variant|container_runtime|boot_disk|cpu_scaling_level|provisioning)|cloud_google_com_private_node)
