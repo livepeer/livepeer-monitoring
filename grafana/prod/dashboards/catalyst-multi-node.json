@@ -43,7 +43,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               }
             ]
           }
@@ -72,7 +73,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.2.2",
+      "pluginVersion": "10.2.3",
       "targets": [
         {
           "datasource": {
@@ -104,7 +105,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               }
             ]
           }
@@ -133,7 +135,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.2.2",
+      "pluginVersion": "10.2.3",
       "targets": [
         {
           "datasource": {
@@ -165,7 +167,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               }
             ]
           }
@@ -194,7 +197,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.2.2",
+      "pluginVersion": "10.2.3",
       "targets": [
         {
           "datasource": {
@@ -423,6 +426,66 @@
                 "value": "Fishtank Auto (fce7bmzmyigqg3s7)"
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+b905oqz6q3czq6pb"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Confessionals (b905oqz6q3czq6pb)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+1bcd83gg4ang03l8"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Hallway Upstairs (1bcd83gg4ang03l8)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+0b6a2wuaxm56yhkr"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Attic (0b6a2wuaxm56yhkr)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+052cnzsasax9c10b"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Master Bathroom (052cnzsasax9c10b)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+c00a95tv3rysf9ji"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Upstairs Bathroom c00a95tv3rysf9ji"
+              }
+            ]
           }
         ]
       },
@@ -517,7 +580,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               }
             ]
           }
@@ -608,7 +672,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               }
             ]
           }
@@ -743,7 +808,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -865,7 +931,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -969,7 +1036,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1096,7 +1164,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1144,9 +1213,10 @@
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
       },
+      "description": "vod_transcoded_segments",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1189,7 +1259,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1207,6 +1278,12 @@
         "y": 32
       },
       "id": 27,
+      "links": [
+        {
+          "title": "VoD Monitoring dashboard",
+          "url": "https://eu-metrics-monitoring.livepeer.live/grafana/d/JZNaFMv4z/vod-monitoring"
+        }
+      ],
       "options": {
         "legend": {
           "calcs": [
@@ -1227,12 +1304,17 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum(count_over_time(\n  {namespace=\"default\", app=\"catalyst\"} |~ \"\\\\[DEBUG\\\\] POST http://127.0.0.1:8935\"\n  [1m]\n)) by (region, pod)",
-          "legendFormat": "{{ region }}-{{ pod }}",
-          "refId": "A"
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "sum by(catalyst_node) (increase(vod_transcoded_segments[1m]))",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "range": true,
+          "refId": "A",
+          "useBackend": false
         }
       ],
       "title": "VoD Segments Transcoded",
@@ -1286,7 +1368,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2882,7 +2965,7 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "10s",
+  "refresh": false,
   "revision": 1,
   "schemaVersion": 39,
   "tags": [],
@@ -2930,6 +3013,6 @@
   "timezone": "utc",
   "title": "Catalyst Multi-Node",
   "uid": "EWXkaj7Vz",
-  "version": 139,
+  "version": 145,
   "weekStart": ""
 }
