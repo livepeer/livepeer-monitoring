@@ -28,7 +28,7 @@
         "type": "loki",
         "uid": "P8E80F9AEF21F6940"
       },
-      "description": "Messages logged on discord",
+      "description": "",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -89,7 +89,7 @@
         "x": 0,
         "y": 0
       },
-      "id": 1,
+      "id": 5,
       "options": {
         "legend": {
           "calcs": [],
@@ -102,7 +102,6 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "10.1.2",
       "targets": [
         {
           "datasource": {
@@ -110,12 +109,13 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "builder",
-          "expr": "sum by(container) (count_over_time({app=\"discord-bot\", region=\"analytics\"} [5m]))",
+          "expr": "sum by(app) (count_over_time({app=\"catalyst\"} |= `error writing postgres metrics` [5m]))",
+          "legendFormat": "{{ app }}",
           "queryType": "range",
           "refId": "A"
         }
       ],
-      "title": "Discord Bot: Logged messages",
+      "title": "Catalyst <> Analytics Postgres Write Errors",
       "type": "timeseries"
     },
     {
@@ -214,10 +214,9 @@
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
       },
-      "description": "",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -278,7 +277,7 @@
         "x": 0,
         "y": 8
       },
-      "id": 5,
+      "id": 6,
       "options": {
         "legend": {
           "calcs": [],
@@ -294,17 +293,30 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
           },
-          "editorMode": "builder",
-          "expr": "sum by(app) (count_over_time({app=\"catalyst\"} |= `error writing postgres metrics` [5m]))",
-          "legendFormat": "{{ app }}",
-          "queryType": "range",
+          "editorMode": "code",
+          "expr": "quantile(.5, mist_transcode_latency[5m]) / 1000 + quantile(.5, mist_transcode_jitter[5m])/ 1000 + quantile(.5, mist_latency[5m]) / 1000",
+          "instant": true,
+          "legendFormat": "Total latency for transcoded tracks",
+          "range": true,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "quantile(.5, mist_latency[5m]) / 1000",
+          "instant": true,
+          "legendFormat": "Replication latency",
+          "range": true,
+          "refId": "B"
         }
       ],
-      "title": "Catalyst <> Analytics Postgres Write Errors",
+      "title": "Stream Latency",
       "type": "timeseries"
     },
     {
@@ -399,113 +411,6 @@
         }
       ],
       "title": "Viewership DBT Cron Log Counts",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 16
-      },
-      "id": 6,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "editorMode": "code",
-          "expr": "quantile(.5, mist_transcode_latency[5m]) / 1000 + quantile(.5, mist_transcode_jitter[5m])/ 1000 + quantile(.5, mist_latency[5m]) / 1000",
-          "instant": true,
-          "legendFormat": "Total latency for transcoded tracks",
-          "range": true,
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "editorMode": "code",
-          "expr": "quantile(.5, mist_latency[5m]) / 1000",
-          "instant": true,
-          "legendFormat": "Replication latency",
-          "range": true,
-          "refId": "B"
-        }
-      ],
-      "title": "Stream Latency",
       "type": "timeseries"
     },
     {
@@ -622,6 +527,6 @@
   "timezone": "",
   "title": "Analytics Monitoring Dashboard",
   "uid": "e16531c0-6706-44a8-b6bf-428e72af60a0",
-  "version": 37,
+  "version": 39,
   "weekStart": ""
 }
