@@ -33,12 +33,14 @@
         "type": "loki",
         "uid": "P8E80F9AEF21F6940"
       },
+      "description": "referer headers",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -52,6 +54,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -127,14 +130,14 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "sum(count_over_time({app=\"ingress-nginx\", stream=\"stdout\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<originUrl>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>` | originUrl != \"-\" | line_format \"{{ .originUrl }}\" | pattern \"<originScheme>://<originDomain>/<originPath>\" | line_format \"{{ .originDomain }}\"[1m])) by (originDomain)",
+          "expr": "sum(count_over_time({app=\"ingress-nginx\", stream=\"stdout\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<referer>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>` | referer != \"-\" | line_format \"{{ .referer }}\" | pattern \"<refererScheme>://<refererDomain>/<refererPath>\" | line_format \"{{ .refererDomain }}\"[1m])) by (refererDomain)",
           "hide": false,
           "legendFormat": "{{ originDomain }}",
           "queryType": "range",
           "refId": "B"
         }
       ],
-      "title": "Origins",
+      "title": "Referes",
       "type": "timeseries"
     },
     {
@@ -148,6 +151,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -161,6 +165,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -223,24 +228,15 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time(\n  {app=\"traefik\", region!=\"eu-metrics\", container=\"prod-traefik\"} \n  | json \n  | __error__!=\"JSONParserErr\"\n  | origin_Origin != \"\"\n  | OriginStatus != \"404\"\n  | regexp \"/hls/(\\\\w+\\\\+)?(?P<playback_id>[^/]+).+\"\n  | playback_id != \"\" [1m]\n)) by (request_Origin, playback_id) ",
-          "legendFormat": "{{ playback_id }} - {{ request_Origin }}",
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
           "editorMode": "code",
-          "expr": "sum(\n    count_over_time(\n        {namespace=\"default\", app=\"ingress-nginx\", stream=\"stdout\"}\n        != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\"\n        | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<origin>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>`\n        | line_format \"{{ .url }}\"\n        | pattern \"/hls/<base>+<playback_id>/\"\n        [1m]\n    )\n) by (origin, playback_id)",
+          "expr": "sum by(referer, playback_id, upstream) (count_over_time({namespace=\"default\", app=\"ingress-nginx\", stream=\"stdout\"} != `51eebae3-9b8e-48bc-89ca-5340c4074a48.json` | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<referer>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>` | line_format `{{ .url }}` | pattern `/hls/<base>+<playback_id>/` | playback_id != \"\" | upstream =~ `.*(catalyst|livepeer-api).*` [1m]))",
           "hide": false,
-          "legendFormat": "{{ playback_id }} - {{ origin }}",
+          "legendFormat": "{{ playback_id }} - {{ referer }}",
           "queryType": "range",
           "refId": "B"
         }
       ],
-      "title": "Streams by Origin",
+      "title": "Streams by Referer",
       "type": "timeseries"
     },
     {
@@ -254,6 +250,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -267,6 +264,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -332,7 +330,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "sum(count_over_time({app=\"ingress-nginx\", stream=\"stdout\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<origin>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>`| origin != \"-\" [1m] )) by (userAgent)",
+          "expr": "sum(count_over_time({app=\"ingress-nginx\", stream=\"stdout\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<referer>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>`| referer != \"-\" [1m] )) by (userAgent)",
           "hide": false,
           "legendFormat": "{{ userAgent }}",
           "queryType": "range",
@@ -344,8 +342,7 @@
     }
   ],
   "refresh": "",
-  "schemaVersion": 38,
-  "style": "dark",
+  "schemaVersion": 39,
   "tags": [],
   "templating": {
     "list": []
@@ -356,8 +353,8 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Origin Analysis",
+  "title": "Referer Analysis",
   "uid": "smwvHksnz",
-  "version": 49,
+  "version": 52,
   "weekStart": ""
 }

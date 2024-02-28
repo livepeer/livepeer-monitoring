@@ -1046,32 +1046,7 @@
             ]
           }
         },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "nyc-prod-catalyst-6.lp-playback.studio"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -1930,8 +1905,8 @@
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
       },
       "fieldConfig": {
         "defaults": {
@@ -1997,6 +1972,12 @@
         "y": 56
       },
       "id": 17,
+      "links": [
+        {
+          "title": "nginx 5XX",
+          "url": "https://eu-metrics-monitoring.livepeer.live/grafana/d/f74066bf-c68e-4303-a9c4-81423738f8a3/nginx-5xx?orgId=1"
+        }
+      ],
       "options": {
         "legend": {
           "calcs": [],
@@ -2012,12 +1993,13 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(count_over_time({namespace=\"default\", app=\"ingress-nginx\", stream=\"stdout\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<originUrl>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>` | originUrl != \"-\" | line_format \"{{ .originUrl }}\" | pattern \"<originScheme>://<originDomain>/<originPath>\" | line_format \"{{ .originDomain }}\"[1m])) by (status)",
-          "queryType": "range",
+          "expr": "sum(rate(nginx_ingress_controller_requests[2m])) by (status)",
+          "legendFormat": "__auto",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -3077,7 +3059,7 @@
       "type": "timeseries"
     }
   ],
-  "refresh": false,
+  "refresh": "",
   "revision": 1,
   "schemaVersion": 39,
   "tags": [],
@@ -3125,6 +3107,6 @@
   "timezone": "utc",
   "title": "Catalyst Multi-Node",
   "uid": "EWXkaj7Vz",
-  "version": 149,
+  "version": 155,
   "weekStart": ""
 }

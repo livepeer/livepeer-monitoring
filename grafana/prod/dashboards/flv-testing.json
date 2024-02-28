@@ -33,6 +33,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -109,7 +110,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "sum(count_over_time({namespace=\"default\", app=\"ingress-nginx\", stream=\"stdout\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<originUrl>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>` | originUrl != \"-\" | url =~ \"^/video.*.flv.*\" | line_format \"{{ .originUrl }}\" | pattern \"<originScheme>://<originDomain>/<originPath>\" | line_format \"{{ .status }}\"[1m])) by (status, region)",
+          "expr": "sum(count_over_time({namespace=\"default\", app=\"ingress-nginx\", stream=\"stdout\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<referer>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>` | referer != \"-\" | url =~ \"^/video.*.flv.*\" | line_format \"{{ .referer }}\" | pattern \"<refererScheme>://<refererDomain>/<refererPath>\" | line_format \"{{ .status }}\"[1m])) by (status, region)",
           "queryType": "range",
           "refId": "A"
         }
@@ -128,6 +129,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -245,8 +247,7 @@
     }
   ],
   "refresh": "",
-  "schemaVersion": 38,
-  "style": "dark",
+  "schemaVersion": 39,
   "tags": [],
   "templating": {
     "list": []
@@ -259,6 +260,6 @@
   "timezone": "",
   "title": "FLV Testing",
   "uid": "a2d110e6-2bba-4c6d-a72b-7565aeac5452",
-  "version": 12,
+  "version": 14,
   "weekStart": ""
 }
