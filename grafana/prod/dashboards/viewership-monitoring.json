@@ -3,7 +3,10 @@
     "list": [
       {
         "builtIn": 1,
-        "datasource": "-- Grafana --",
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
@@ -36,6 +39,9 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -47,6 +53,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -91,10 +98,12 @@
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
@@ -103,8 +112,10 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({namespace=\"default\", app=\"ingress-nginx\", stream=\"stdout\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<origin>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>` |~ \"pingdom-healthcheck\" | status != \"302\" | status =~ \"500|499\" [5m])) by (node_name, region)",
+          "editorMode": "code",
+          "expr": "sum(count_over_time({namespace=\"default\", app=\"ingress-nginx\", stream=\"stdout\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<referer>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>` |~ \"pingdom-healthcheck\" | status != \"302\" | status =~ \"500|499\" [5m])) by (node_name, region)",
           "legendFormat": "{{ region }}-{{ node_name }}",
+          "queryType": "range",
           "refId": "A"
         }
       ],
@@ -122,6 +133,9 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -133,6 +147,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -177,10 +192,12 @@
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
@@ -189,8 +206,10 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "sum(count_over_time({namespace=\"default\", app=\"ingress-nginx\", stream=\"stdout\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<origin>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstream(Addr> <wtf4> <wtf5> <upstreamStatus> <requestId>` |~ \"pingdom-healthcheck\" | status != \"302\" | status =~ \"200\" [5m])) by (region, node_name)",
+          "editorMode": "code",
+          "expr": "sum(count_over_time({namespace=\"default\", app=\"ingress-nginx\", stream=\"stdout\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<referer>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstream(Addr> <wtf4> <wtf5> <upstreamStatus> <requestId>` |~ \"pingdom-healthcheck\" | status != \"302\" | status =~ \"200\" [5m])) by (region, node_name)",
           "legendFormat": "{{ region }}-{{ node_name }}",
+          "queryType": "range",
           "refId": "A"
         }
       ],
@@ -199,8 +218,7 @@
     }
   ],
   "refresh": "",
-  "schemaVersion": 34,
-  "style": "dark",
+  "schemaVersion": 39,
   "tags": [],
   "templating": {
     "list": []
@@ -213,6 +231,6 @@
   "timezone": "",
   "title": "Viewership Monitoring",
   "uid": "y35Ydx44z",
-  "version": 25,
+  "version": 27,
   "weekStart": ""
 }

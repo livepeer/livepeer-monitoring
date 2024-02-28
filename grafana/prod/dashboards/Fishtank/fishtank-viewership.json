@@ -157,7 +157,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "sum(count_over_time({namespace=\"default\", app=\"ingress-nginx\", stream=\"stdout\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" |~ \"${ROOMS:pipe}\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<originUrl>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>` | originUrl != \"-\" | line_format \"{{ .originUrl }}\" | pattern \"<originScheme>://<originDomain>/<originPath>\" | line_format \"{{ .originDomain }}\"[1m])) by (status)",
+          "expr": "sum(count_over_time({namespace=\"default\", app=\"ingress-nginx\", stream=\"stdout\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" |~ \"${ROOMS:pipe}\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<referer>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>` | line_format \"{{ .referer }}\" | pattern \"<refererScheme>://<refererDomain>/<refererPath>\" | line_format \"{{ .refererDomain }}\"[1m])) by (status)",
           "queryType": "range",
           "refId": "A"
         }
@@ -1107,6 +1107,6 @@
   "timezone": "",
   "title": "Fishtank viewership",
   "uid": "cce96324-988b-4a9b-8165-07b72cf8d481",
-  "version": 13,
+  "version": 15,
   "weekStart": ""
 }

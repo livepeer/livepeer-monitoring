@@ -46,6 +46,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -59,6 +60,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -148,7 +150,7 @@
         "content": "# mist_session{}\n\nIn this chart, we see the mist_session count for this stream. Seems pretty bad after we deploy!",
         "mode": "markdown"
       },
-      "pluginVersion": "9.5.1",
+      "pluginVersion": "10.2.3",
       "type": "text"
     },
     {
@@ -162,6 +164,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -175,6 +178,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -268,7 +272,7 @@
         "content": "# Websocket Requests\n\nThis panel tracks the number of requests for a `json_stream.js` websocket from the same IP addresses. This should be a small number, but it's huge!",
         "mode": "markdown"
       },
-      "pluginVersion": "9.5.1",
+      "pluginVersion": "10.2.3",
       "type": "text"
     },
     {
@@ -282,6 +286,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -295,6 +300,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -354,7 +360,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "sum(\n    count_over_time(\n        {namespace=\"default\", app=\"ingress-nginx\", stream=\"stdout\"}\n        != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\"\n        | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<origin>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>`\n        | line_format \"{{ .url }}\"\n        | pattern \"/hls/<base>+<playback_id>/\"\n        | playback_id = \"$playback_id\"\n        [1m]\n    )\n) by (status, playback_id)",
+          "expr": "sum(\n    count_over_time(\n        {namespace=\"default\", app=\"ingress-nginx\", stream=\"stdout\"}\n        != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\"\n        | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<referer>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>`\n        | line_format \"{{ .url }}\"\n        | pattern \"/hls/<base>+<playback_id>/\"\n        | playback_id = \"$playback_id\"\n        [1m]\n    )\n) by (status, playback_id)",
           "legendFormat": "{{ playback_id }} ({{ status }})",
           "queryType": "range",
           "refId": "A"
@@ -384,7 +390,7 @@
         "content": "# nginx requests\n\nBut in this chart, we can see that there weren't actually actually very many HTTP requests going out; not many users were actually watching the stream!",
         "mode": "markdown"
       },
-      "pluginVersion": "9.5.1",
+      "pluginVersion": "10.2.3",
       "type": "text"
     },
     {
@@ -398,6 +404,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -411,6 +418,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -471,7 +479,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "sum(sum(count_over_time(\n\n        {namespace=\"default\", app=\"ingress-nginx\", stream=\"stdout\"}\n        != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\"\n        | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<origin>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>`\n        | line_format \"{{ .url }}\"\n        | pattern \"/hls/<base>+<playback_id>/\"\n        | playback_id = \"$playback_id\"\n        | line_format \"{{ .ip }}\"\n        [1m]\n\n)) by (ip) ^ 0)",
+          "expr": "sum(sum(count_over_time(\n\n        {namespace=\"default\", app=\"ingress-nginx\", stream=\"stdout\"}\n        != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\"\n        | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<referer>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>`\n        | line_format \"{{ .url }}\"\n        | pattern \"/hls/<base>+<playback_id>/\"\n        | playback_id = \"$playback_id\"\n        | line_format \"{{ .ip }}\"\n        [1m]\n\n)) by (ip) ^ 0)",
           "legendFormat": "Unique IPs",
           "queryType": "range",
           "refId": "A"
@@ -491,6 +499,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -504,6 +513,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -564,7 +574,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "sum(sum_over_time(\n\n        {namespace=\"default\", app=\"ingress-nginx\", stream=\"stdout\"}\n        != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\"\n        | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<origin>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>`\n        | line_format \"{{ .url }}\"\n        | pattern \"/hls/<base>+<playback_id>/\"\n        | playback_id = \"$playback_id\"\n        | unwrap bytes\n        [1m]\n\n)) * 8 / 60",
+          "expr": "sum(sum_over_time(\n\n        {namespace=\"default\", app=\"ingress-nginx\", stream=\"stdout\"}\n        != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\"\n        | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<referer>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>`\n        | line_format \"{{ .url }}\"\n        | pattern \"/hls/<base>+<playback_id>/\"\n        | playback_id = \"$playback_id\"\n        | unwrap bytes\n        [1m]\n\n)) * 8 / 60",
           "legendFormat": "{{ playback_id }} ({{ status }})",
           "queryType": "range",
           "refId": "A"
@@ -574,9 +584,8 @@
       "type": "timeseries"
     }
   ],
-  "refresh": false,
-  "schemaVersion": 38,
-  "style": "dark",
+  "refresh": "",
+  "schemaVersion": 39,
   "tags": [],
   "templating": {
     "list": [
@@ -609,6 +618,6 @@
   "timezone": "",
   "title": "Stream Drop Investigation",
   "uid": "bb10b4bf-dba1-4f87-82bc-6b36d26c7d44",
-  "version": 32,
+  "version": 34,
   "weekStart": ""
 }

@@ -11,12 +11,6 @@
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
         "name": "Annotations & Alerts",
-        "target": {
-          "limit": 100,
-          "matchAny": false,
-          "tags": [],
-          "type": "dashboard"
-        },
         "type": "dashboard"
       }
     ]
@@ -25,9 +19,35 @@
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
   "id": null,
-  "links": [],
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": true,
+      "title": "Trovo support guide",
+      "tooltip": "Trovo support guide",
+      "type": "link",
+      "url": "https://www.notion.so/livepeer/Trovo-05ab9ca9b54245888bf2292c1bc463ea"
+    }
+  ],
   "liveNow": false,
   "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 5,
+      "panels": [],
+      "title": "Viewership breakdown",
+      "type": "row"
+    },
     {
       "datasource": {
         "type": "prometheus",
@@ -39,6 +59,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -52,6 +73,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -68,38 +90,38 @@
               "mode": "off"
             }
           },
+          "links": [],
           "mappings": [],
-          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           },
-          "unit": "gbytes"
+          "unit": "none"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
-        "w": 8,
+        "h": 11,
+        "w": 13,
         "x": 0,
-        "y": 0
+        "y": 1
       },
-      "id": 2,
+      "id": 7,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+          "calcs": [
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Last",
+          "sortDesc": true
         },
         "tooltip": {
           "mode": "single",
@@ -112,38 +134,19 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "(node_memory_MemTotal_bytes{} - node_memory_MemFree_bytes{} - node_memory_Buffers_bytes{} - node_memory_Cached_bytes{}) / 1024/ 1024 / 1024 * on(instance) group_left(nodename) node_uname_info{nodename=\"$node\"}",
-          "legendFormat": "node_memory",
+          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", user_id=\"${TROVO_USER_ID}\"})",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{stream}}",
           "range": true,
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "editorMode": "code",
-          "expr": "mist_mem_used{node_name=\"$node\"} / 1024 / 1024",
-          "hide": false,
-          "legendFormat": "mist_mem_used",
-          "range": true,
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "editorMode": "code",
-          "expr": "mist_mem_total{node_name=\"$node\"} / 1024 / 1024",
-          "hide": false,
-          "legendFormat": "mist_mem_total",
-          "range": true,
-          "refId": "C"
+          "refId": "A",
+          "useBackend": false
         }
       ],
-      "title": "MEMORY",
+      "title": "Viewers globally",
       "type": "timeseries"
     },
     {
@@ -157,6 +160,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -170,6 +174,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -187,37 +192,35 @@
             }
           },
           "mappings": [],
-          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
-          },
-          "unit": "percent"
+          }
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 8,
-        "y": 0
+        "h": 11,
+        "w": 11,
+        "x": 13,
+        "y": 1
       },
       "id": 3,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+          "calcs": [
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Last",
+          "sortDesc": true
         },
         "tooltip": {
           "mode": "single",
@@ -231,13 +234,14 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(avg_over_time(mist_cpu{node_name=\"$node\"}[180s])/10)",
-          "legendFormat": "mist_cpu",
+          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", user_id=\"${TROVO_USER_ID}\"}[1m] ) by (catalyst_node)",
+          "instant": false,
+          "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "CPU",
+      "title": "Viewers per node",
       "type": "timeseries"
     },
     {
@@ -251,24 +255,23 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 100,
+            "fillOpacity": 0,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
-            "lineStyle": {
-              "fill": "solid"
-            },
-            "lineWidth": 2,
+            "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
@@ -283,18 +286,20 @@
               "mode": "off"
             }
           },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "admin dashboard",
+              "url": "https://livepeer.com/app/stream/${__field.labels.stream_id}?autoplay"
+            }
+          ],
           "mappings": [],
-          "min": 0,
           "thresholds": {
-            "mode": "absolute",
+            "mode": "percentage",
             "steps": [
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           },
@@ -304,78 +309,226 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Not Ready"
+              "options": "video+2289jf6f37kq3put"
             },
             "properties": [
               {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-red",
-                  "mode": "fixed"
-                }
+                "id": "displayName",
+                "value": "Living Room"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "Ready"
+              "options": "video+c00a95tv3rysf9ji"
             },
             "properties": [
               {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-green",
-                  "mode": "fixed"
-                }
+                "id": "displayName",
+                "value": "Upstairs Bathroom"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "ready=false"
+              "options": "video+f355shnx2w9xkhxo"
             },
             "properties": [
               {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-red",
-                  "mode": "fixed"
-                }
+                "id": "displayName",
+                "value": "Kitchen"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "ready=unknown"
+              "options": "video+1bcd83gg4ang03l8"
             },
             "properties": [
               {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-orange",
-                  "mode": "fixed"
-                }
+                "id": "displayName",
+                "value": "Upstairs Hallway"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+9cfeeodtu023cb91"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Bar"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+33d25dz3mqilw1lp"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Lounge"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+a12bmexn0h5td3kh"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Bedroom 1"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+cc92intolqvyf117"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Downstairs Hallway"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+052cnzsasax9c10b"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Master Bathroom"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+d7a07saeijthkqqk"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Bedroom 3"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+2ef11errf17as0df"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Dog House"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+d01cpugvvx04448x"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Bedroom 2"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+b0739nzrqm6m8k1k"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Downstairs Bathroom"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+cbcbvq7hgf5vwti2"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "The Bunk"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+0b6a2wuaxm56yhkr"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Attic"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+c0967lxltr0zkftj"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Launch"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+b905oqz6q3czq6pb"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Confessionals"
               }
             ]
           }
         ]
       },
       "gridPos": {
-        "h": 4,
-        "w": 8,
-        "x": 16,
-        "y": 0
+        "h": 16,
+        "w": 13,
+        "x": 0,
+        "y": 12
       },
-      "id": 4,
+      "id": 1,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+          "calcs": [
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Last",
+          "sortDesc": true
         },
         "tooltip": {
           "mode": "single",
@@ -388,38 +541,19 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sum(kube_node_status_condition{condition=\"Ready\", status=~\"true\", node=\"$node\"} > 0)",
-          "legendFormat": "ready=true",
+          "expr": "label_replace(sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", user_id=\"${TROVO_USER_ID}\"}[1m] ) by (stream) or on() vector(0), \"stream_id\", \"$1\", \"stream\", \".*\\\\+(.*)\")",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{stream_id}}",
           "range": true,
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "editorMode": "code",
-          "expr": "sum(kube_node_status_condition{condition=\"Ready\", status=~\"false\", node=\"$node\"} > 0)",
-          "hide": false,
-          "legendFormat": "ready=false",
-          "range": true,
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "editorMode": "code",
-          "expr": "sum(kube_node_status_condition{condition=\"Ready\", status=~\"unknown\", node=\"$node\"} > 0)",
-          "hide": false,
-          "legendFormat": "ready=unknown",
-          "range": true,
-          "refId": "C"
+          "refId": "A",
+          "useBackend": false
         }
       ],
-      "title": "Node Not Ready",
+      "title": "Viewers per stream",
       "type": "timeseries"
     },
     {
@@ -433,24 +567,123 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 100,
+            "fillOpacity": 0,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
-            "lineStyle": {
-              "fill": "solid"
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
             },
-            "lineWidth": 2,
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "links": [],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 16,
+        "w": 11,
+        "x": 13,
+        "y": 12
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Last",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", user_id=\"${TROVO_USER_ID}\"}) by (region)",
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Viewers per region",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
@@ -466,7 +699,6 @@
             }
           },
           "mappings": [],
-          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -479,77 +711,15 @@
                 "value": 80
               }
             ]
-          },
-          "unit": "none"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Not Ready"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-red",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Ready"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-green",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "ready=false"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-red",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "ready=unknown"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-orange",
-                  "mode": "fixed"
-                }
-              }
-            ]
           }
-        ]
+        },
+        "overrides": []
       },
       "gridPos": {
-        "h": 4,
-        "w": 8,
-        "x": 16,
-        "y": 4
+        "h": 10,
+        "w": 13,
+        "x": 0,
+        "y": 28
       },
       "id": 9,
       "options": {
@@ -570,336 +740,50 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "mist_cpu{node_name=\"$node\"} * 0 + 1",
-          "legendFormat": "{{ catalyst_node }}",
+          "expr": "count by(catalyst_node) (mist_sessions{sessType=\"incoming\", user_id=\"${TROVO_USER_ID}\"}) > 0",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
           "range": true,
-          "refId": "A"
+          "refId": "A",
+          "useBackend": false
         }
       ],
-      "title": "Node Identity",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 100,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 0,
-        "y": 7
-      },
-      "id": 6,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
-          "editorMode": "code",
-          "expr": "sum(count_over_time({node_name=\"$node\", job=\"systemd-journal\", unit=\"\"} |~ \"invoked oom-killer\"[1m]))",
-          "legendFormat": "OOM Killer",
-          "queryType": "range",
-          "refId": "A"
-        }
-      ],
-      "title": "OOM Killer",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 8,
-        "y": 7
-      },
-      "id": 7,
-      "options": {
-        "legend": {
-          "calcs": [
-            "max"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true,
-          "sortBy": "Max",
-          "sortDesc": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
-          "editorMode": "code",
-          "expr": "sum(count_over_time({node_name=\"$node\", job=\"systemd-journal\"} [1m])) ",
-          "legendFormat": "{{ unit }}",
-          "queryType": "range",
-          "refId": "A"
-        }
-      ],
-      "title": "Logs by Unit",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 16,
-        "y": 8
-      },
-      "id": 10,
-      "options": {
-        "legend": {
-          "calcs": [
-            "max"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true,
-          "sortBy": "Max",
-          "sortDesc": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "editorMode": "code",
-          "expr": "sum(mist_sessions{node_name=\"$node\", sessType=\"incoming\"})",
-          "legendFormat": "Stream Count",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Incoming Streams",
+      "title": "Origin server",
       "type": "timeseries"
     }
   ],
-  "refresh": false,
-  "schemaVersion": 37,
-  "style": "dark",
-  "tags": [],
+  "refresh": "10s",
+  "schemaVersion": 39,
+  "tags": [
+    "viewership",
+    "metrics",
+    "observe",
+    "2023",
+    "trovo"
+  ],
   "templating": {
     "list": [
       {
-        "current": {
-          "selected": false,
-          "text": "",
-          "value": ""
-        },
-        "hide": 0,
-        "name": "node",
-        "options": [
-          {
-            "selected": false,
-            "text": "",
-            "value": ""
-          }
-        ],
-        "query": "",
+        "hide": 2,
+        "name": "TROVO_USER_ID",
+        "query": "a7833805-e313-452b-8c72-18923137f48d",
         "skipUrlSync": false,
-        "type": "textbox"
+        "type": "constant"
       }
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-3h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Memory Sluething",
-  "uid": "28h-CpcVz",
-  "version": 20,
+  "title": "Trovo viewership",
+  "uid": "fea1f415-fb66-4a69-a9a4-869def254322",
+  "version": 11,
   "weekStart": ""
 }
