@@ -39,6 +39,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -148,6 +149,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -234,8 +236,8 @@
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
       },
       "fieldConfig": {
         "defaults": {
@@ -243,6 +245,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -312,14 +315,18 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
           },
+          "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sum(count_over_time(\n  {pod=~\"$pod\", region=~\"$region\"} |~ \"\\\\[DEBUG\\\\] POST http://127.0.0.1:8935\"\n  [1m]\n)) by (region, pod)",
-          "legendFormat": "{{region}}-{{pod}}",
-          "queryType": "range",
-          "refId": "A"
+          "expr": "sum by(region, pod) (increase(vod_transcoded_segments{pod=~\"$pod\", region=~\"$region\"}[1m]))",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "legendFormat": "{{ region }}-{{ pod }}",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
         }
       ],
       "title": "VoD Segments Transcoded (per minute)",
@@ -336,6 +343,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -436,6 +444,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -533,6 +542,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "Memory (%)",
@@ -619,27 +629,26 @@
     }
   ],
   "refresh": "5s",
-  "schemaVersion": 38,
-  "style": "dark",
+  "schemaVersion": 39,
   "tags": [],
   "templating": {
     "list": [
       {
         "current": {
           "selected": false,
-          "text": "fra",
-          "value": "fra"
+          "text": ".+",
+          "value": ".+"
         },
         "hide": 0,
         "name": "region",
         "options": [
           {
-            "selected": false,
-            "text": "fra",
-            "value": "fra"
+            "selected": true,
+            "text": ".+",
+            "value": ".+"
           }
         ],
-        "query": "fra",
+        "query": ".+",
         "skipUrlSync": false,
         "type": "textbox"
       },
@@ -653,7 +662,7 @@
         "name": "pod",
         "options": [
           {
-            "selected": false,
+            "selected": true,
             "text": "prod-catalyst-.+",
             "value": "prod-catalyst-.+"
           }
@@ -672,6 +681,6 @@
   "timezone": "",
   "title": "Catalyst Node Inspector",
   "uid": "PzbLIMd4z",
-  "version": 40,
+  "version": 42,
   "weekStart": ""
 }
