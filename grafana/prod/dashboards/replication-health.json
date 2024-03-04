@@ -65,8 +65,6 @@
             }
           },
           "mappings": [],
-          "min": 0,
-          "noValue": "0",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -81,50 +79,15 @@
             ]
           }
         },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byRegexp",
-              "options": "/Faulty .*/"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "red",
-                  "mode": "fixed"
-                }
-              },
-              {
-                "id": "custom.drawStyle",
-                "value": "bars"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byRegexp",
-              "options": "/Total .*/"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "green",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 11,
-        "w": 10,
+        "w": 12,
         "x": 0,
         "y": 0
       },
-      "id": 1,
+      "id": 2,
       "options": {
         "legend": {
           "calcs": [],
@@ -143,26 +106,14 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "editorMode": "code",
-          "expr": "sum(count_over_time({app=\"catalyst\"} |= \"Starting /usr/local/bin/MistInDTSC\"[5m])) by (region)",
-          "legendFormat": "Total {{region}}",
+          "editorMode": "builder",
+          "expr": "sum(count_over_time({app=\"catalyst\"} |= \"MistUtilLoad\" |= \".json\" != \"Monitoring\"[5m])) by (pod, region)",
+          "legendFormat": "{{region}}-{{pod}}",
           "queryType": "range",
-          "refId": "Total replication attempts"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
-          "editorMode": "code",
-          "expr": "sum(count_over_time({app=\"catalyst\"} |= \"Starting /usr/local/bin/MistInDTSC\" |= \"MistOutDTSC:\" [5m])) by (region)",
-          "hide": false,
-          "legendFormat": "Faulty {{region}}",
-          "queryType": "range",
-          "refId": "Failed attempts"
+          "refId": "A"
         }
       ],
-      "title": "Replication attempts / 5m",
+      "title": "Problems reading stats on node / 5m",
       "type": "timeseries"
     },
     {
@@ -227,10 +178,141 @@
       "gridPos": {
         "h": 11,
         "w": 12,
-        "x": 10,
+        "x": 12,
         "y": 0
       },
-      "id": 2,
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "builder",
+          "expr": "sum by(FromHostname) (count_over_time({app=\"catalyst\"} |= `MistUtilLoad` |= `.json` != `Monitoring` | pattern `<_>://<FromHostname>/<_>` [5m]))",
+          "legendFormat": "{{FromHostname}}",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Problems reading stats from node / 5m",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/Faulty .*/"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.drawStyle",
+                "value": "bars"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/Total .*/"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 12,
+        "x": 0,
+        "y": 11
+      },
+      "id": 1,
       "options": {
         "legend": {
           "calcs": [],
@@ -250,18 +332,30 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "sum(count_over_time({app=\"catalyst\"} |= \"MistUtilLoad\" |= \".json\" != \"Monitoring\"[5m])) by (region)",
-          "legendFormat": "{{region}}",
+          "expr": "sum(count_over_time({app=\"catalyst\"} |= \"Starting /usr/local/bin/MistInDTSC\"[5m])) by (region)",
+          "legendFormat": "Total {{region}}",
           "queryType": "range",
-          "refId": "A"
+          "refId": "Total replication attempts"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum(count_over_time({app=\"catalyst\"} |= \"Starting /usr/local/bin/MistInDTSC\" |= \"MistOutDTSC:\" [5m])) by (region)",
+          "hide": false,
+          "legendFormat": "Faulty {{region}}",
+          "queryType": "range",
+          "refId": "Failed attempts"
         }
       ],
-      "title": "Problems reading stats from remote nodes / 5m",
+      "title": "Replication attempts / 5m",
       "type": "timeseries"
     }
   ],
-  "refresh": "",
-  "schemaVersion": 38,
+  "refresh": false,
+  "schemaVersion": 39,
   "tags": [],
   "templating": {
     "list": []
@@ -274,6 +368,6 @@
   "timezone": "utc",
   "title": "Replication health",
   "uid": "c3de1488-64be-4422-951a-d6dc6ac84426",
-  "version": 10,
+  "version": 11,
   "weekStart": ""
 }
