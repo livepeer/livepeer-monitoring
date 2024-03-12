@@ -79,8 +79,7 @@
                 "value": 80
               }
             ]
-          },
-          "unitScale": true
+          }
         },
         "overrides": []
       },
@@ -121,8 +120,8 @@
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
       },
       "fieldConfig": {
         "defaults": {
@@ -174,10 +173,116 @@
                 "value": 80
               }
             ]
-          },
-          "unitScale": true
+          }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "prod-analytics-dbt-28492810",
+                  "prod-analytics-dbt-28492815",
+                  "prod-analytics-dbt-28492820",
+                  "prod-analytics-dbt-28492825",
+                  "prod-analytics-dbt-28492835",
+                  "prod-analytics-dbt-28492840",
+                  "prod-analytics-dbt-28492845",
+                  "prod-analytics-dbt-28492850",
+                  "prod-analytics-dbt-28492855",
+                  "prod-analytics-dbt-28492860",
+                  "prod-analytics-dbt-28492865",
+                  "prod-analytics-dbt-28492870",
+                  "prod-analytics-dbt-28492875",
+                  "prod-analytics-dbt-28492880",
+                  "prod-analytics-dbt-28492885",
+                  "prod-orch-tester-orchtester-27954480",
+                  "prod-orch-tester-orchtester-28034340",
+                  "prod-orch-tester-orchtester-28059180",
+                  "prod-orch-tester-orchtester-28125240",
+                  "prod-orch-tester-orchtester-28129140",
+                  "prod-orch-tester-orchtester-28192740",
+                  "prod-orch-tester-orchtester-28201800",
+                  "prod-orch-tester-orchtester-28201860",
+                  "prod-orch-tester-orchtester-28201920",
+                  "prod-orch-tester-orchtester-28201980",
+                  "prod-orch-tester-orchtester-28202100",
+                  "prod-orch-tester-orchtester-28202160",
+                  "prod-orch-tester-orchtester-28202220",
+                  "prod-orch-tester-orchtester-28202400",
+                  "prod-orch-tester-orchtester-28202460",
+                  "prod-orch-tester-orchtester-28202520",
+                  "prod-orch-tester-orchtester-28202580",
+                  "prod-orch-tester-orchtester-28202700",
+                  "prod-orch-tester-orchtester-28202760",
+                  "prod-orch-tester-orchtester-28202820",
+                  "prod-orch-tester-orchtester-28202880",
+                  "prod-orch-tester-orchtester-28362900",
+                  "prod-orch-tester-orchtester-28373040",
+                  "prod-orch-tester-orchtester-28373100",
+                  "prod-orch-tester-orchtester-28377600",
+                  "prod-orch-tester-orchtester-28377660",
+                  "prod-orch-tester-orchtester-28491240",
+                  "prod-orch-tester-orchtester-28491270",
+                  "prod-orch-tester-orchtester-28491300",
+                  "prod-orch-tester-orchtester-28491330",
+                  "prod-orch-tester-orchtester-28491360",
+                  "prod-orch-tester-orchtester-28491390",
+                  "prod-orch-tester-orchtester-28491420",
+                  "prod-orch-tester-orchtester-28491450",
+                  "prod-orch-tester-orchtester-28491480",
+                  "prod-orch-tester-orchtester-28491540",
+                  "prod-orch-tester-orchtester-28491600",
+                  "prod-orch-tester-orchtester-28491690",
+                  "prod-orch-tester-orchtester-28491750",
+                  "prod-orch-tester-orchtester-28491810",
+                  "prod-orch-tester-orchtester-28491840",
+                  "prod-orch-tester-orchtester-28491870",
+                  "prod-orch-tester-orchtester-28491900",
+                  "prod-orch-tester-orchtester-28491960",
+                  "prod-orch-tester-orchtester-28492020",
+                  "prod-orch-tester-orchtester-28492050",
+                  "prod-orch-tester-orchtester-28492080",
+                  "prod-orch-tester-orchtester-28492140",
+                  "prod-orch-tester-orchtester-28492200",
+                  "prod-orch-tester-orchtester-28492260",
+                  "prod-orch-tester-orchtester-28492290",
+                  "prod-orch-tester-orchtester-28492320",
+                  "prod-orch-tester-orchtester-28492350",
+                  "prod-orch-tester-orchtester-28492380",
+                  "prod-orch-tester-orchtester-28492410",
+                  "prod-orch-tester-orchtester-28492440",
+                  "prod-orch-tester-orchtester-28492470",
+                  "prod-orch-tester-orchtester-28492500",
+                  "prod-orch-tester-orchtester-28492560",
+                  "prod-orch-tester-orchtester-28492620",
+                  "prod-orch-tester-orchtester-28492680",
+                  "prod-orch-tester-orchtester-28492710",
+                  "prod-orch-tester-orchtester-28492740",
+                  "prod-orch-tester-orchtester-28492770",
+                  "prod-orch-tester-orchtester-28492800",
+                  "prod-orch-tester-orchtester-28492830",
+                  "prod-orch-tester-orchtester-28492860",
+                  "prod-orch-tester-orchtester-test-update-go-livepeer"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -201,14 +306,19 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
           },
+          "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum by(app) (count_over_time({region=\"analytics\", app=\"prod-analytics-dbt\"} |= `Completed with` [5m]))",
-          "legendFormat": "{{ app }}",
-          "queryType": "range",
-          "refId": "A"
+          "expr": "sum by(job_name) (increase(kube_job_status_failed{job_name=~\"prod-analytics-dbt-.*\"}[$__interval])) > 0",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
         }
       ],
       "title": "Viewership Cron Errors",
@@ -269,8 +379,7 @@
                 "value": 80
               }
             ]
-          },
-          "unitScale": true
+          }
         },
         "overrides": []
       },
@@ -377,8 +486,7 @@
                 "value": 80
               }
             ]
-          },
-          "unitScale": true
+          }
         },
         "overrides": []
       },
@@ -419,8 +527,8 @@
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
       },
       "fieldConfig": {
         "defaults": {
@@ -472,8 +580,7 @@
                 "value": 80
               }
             ]
-          },
-          "unitScale": true
+          }
         },
         "overrides": []
       },
@@ -499,18 +606,65 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
           },
+          "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum by(app) (count_over_time({region=\"analytics\", app=\"prod-analytics-dbt\"} |= `Completed successfully` [1m]))",
-          "legendFormat": "{{ app }}",
-          "queryType": "range",
-          "refId": "A"
+          "expr": "sum(increase(kube_job_status_succeeded{job_name=~\"prod-analytics-dbt-.*\"}[$__interval]))",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "legendFormat": "kube_pod_status_ready",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
         }
       ],
       "title": "Successful Viewership Cron Runs",
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 24
+      },
+      "id": 7,
+      "links": [
+        {
+          "title": "Explore logs",
+          "url": "https://eu-metrics-monitoring.livepeer.live/grafana/explore?schemaVersion=1&panes=%7B%22CAI%22:%7B%22datasource%22:%22P8E80F9AEF21F6940%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22expr%22:%22%7Bapp%3D%5C%22prod-analytics-dbt%5C%22%7D%22,%22queryType%22:%22range%22,%22datasource%22:%7B%22type%22:%22loki%22,%22uid%22:%22P8E80F9AEF21F6940%22%7D,%22editorMode%22:%22code%22%7D%5D,%22range%22:%7B%22from%22:%22${__from}%22,%22to%22:%22${__to}%22%7D%7D%7D&orgId=1"
+        }
+      ],
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": false,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "{app=\"prod-analytics-dbt\"}",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "analytics-dbt logs",
+      "type": "logs"
     }
   ],
   "refresh": "",
@@ -532,6 +686,6 @@
   "timezone": "",
   "title": "Analytics Monitoring Dashboard",
   "uid": "e16531c0-6706-44a8-b6bf-428e72af60a0",
-  "version": 41,
+  "version": 47,
   "weekStart": ""
 }
