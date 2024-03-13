@@ -1043,12 +1043,16 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum by(container) (kube_pod_container_status_waiting_reason{reason=\"CrashLoopBackOff\"})",
+          "expr": "sum by(container, region) (kube_pod_container_status_waiting_reason{reason=\"CrashLoopBackOff\"})",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
           "instant": true,
           "key": "Q-eeae6e48-c1b4-42d0-a63a-d56980a3b8df-0",
           "range": true,
-          "refId": "A"
+          "refId": "A",
+          "useBackend": false
         }
       ],
       "title": "CrashLoopBackoff (by container)",
@@ -1166,6 +1170,6 @@
   "timezone": "utc",
   "title": "Kube API Alerts",
   "uid": "jSbZINlnk",
-  "version": 65,
+  "version": 66,
   "weekStart": ""
 }
