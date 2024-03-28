@@ -101,9 +101,35 @@
               }
             ]
           },
-          "unit": "none"
+          "unit": "none",
+          "unitScale": true
         },
-        "overrides": []
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "Trovo"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 11,
@@ -115,7 +141,8 @@
       "options": {
         "legend": {
           "calcs": [
-            "last"
+            "last",
+            "max"
           ],
           "displayMode": "table",
           "placement": "right",
@@ -140,7 +167,7 @@
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
-          "legendFormat": "{{stream}}",
+          "legendFormat": "Trovo",
           "range": true,
           "refId": "A",
           "useBackend": false
@@ -200,7 +227,8 @@
                 "value": null
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -214,7 +242,8 @@
       "options": {
         "legend": {
           "calcs": [
-            "last"
+            "last",
+            "max"
           ],
           "displayMode": "table",
           "placement": "right",
@@ -303,7 +332,8 @@
               }
             ]
           },
-          "unit": "none"
+          "unit": "none",
+          "unitScale": true
         },
         "overrides": [
           {
@@ -522,7 +552,8 @@
       "options": {
         "legend": {
           "calcs": [
-            "last"
+            "last",
+            "max"
           ],
           "displayMode": "table",
           "placement": "right",
@@ -612,7 +643,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -626,7 +658,8 @@
       "options": {
         "legend": {
           "calcs": [
-            "last"
+            "last",
+            "max"
           ],
           "displayMode": "table",
           "placement": "right",
@@ -711,7 +744,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -724,10 +758,15 @@
       "id": 9,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+          "calcs": [
+            "last",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Last",
+          "sortDesc": true
         },
         "tooltip": {
           "mode": "single",
@@ -780,10 +819,11 @@
     "from": "now-3h",
     "to": "now"
   },
+  "timeRangeUpdatedDuringEditOrView": false,
   "timepicker": {},
   "timezone": "",
   "title": "Trovo viewership",
   "uid": "fea1f415-fb66-4a69-a9a4-869def254322",
-  "version": 11,
+  "version": 14,
   "weekStart": ""
 }

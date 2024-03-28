@@ -47,7 +47,8 @@
                 "value": null
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -70,10 +71,11 @@
           "fields": "",
           "values": false
         },
+        "showPercentChange": false,
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.2.3",
+      "pluginVersion": "10.3.4",
       "targets": [
         {
           "datasource": {
@@ -109,7 +111,8 @@
                 "value": null
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -132,10 +135,11 @@
           "fields": "",
           "values": false
         },
+        "showPercentChange": false,
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.2.3",
+      "pluginVersion": "10.3.4",
       "targets": [
         {
           "datasource": {
@@ -171,7 +175,8 @@
                 "value": null
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -194,10 +199,11 @@
           "fields": "",
           "values": false
         },
+        "showPercentChange": false,
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.2.3",
+      "pluginVersion": "10.3.4",
       "targets": [
         {
           "datasource": {
@@ -219,6 +225,7 @@
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
+      "description": "Viewer sessions as reported by mist for each active stream",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -246,7 +253,7 @@
               "fill": "solid"
             },
             "lineWidth": 1,
-            "pointSize": 4,
+            "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
             },
@@ -263,8 +270,8 @@
           "links": [
             {
               "targetBlank": true,
-              "title": "https://livepeer.com/app/stream/$stream?autoplay",
-              "url": "https://livepeer.com/app/stream/${__field.labels.stream_id}?autoplay"
+              "title": "admin panel",
+              "url": "https://livepeer.com/app/stream/${__field.labels.stream}"
             }
           ],
           "mappings": [],
@@ -277,221 +284,31 @@
               },
               {
                 "color": "red",
-                "value": 80
+                "value": 300
               }
             ]
-          }
+          },
+          "unit": "none",
+          "unitScale": true
         },
         "overrides": [
           {
             "matcher": {
               "id": "byName",
-              "options": "video+f355shnx2w9xkhxo"
+              "options": "85c28sa2o8wppm58"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Kitchen (f355shnx2w9xkhxo)"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "video+d01cpugvvx04448x"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Bedroom 2 (d01cpugvvx04448x)"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "video+2289jf6f37kq3put"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Living Room (2289jf6f37kq3put)"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "video+cbcbvq7hgf5vwti2"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "The Bunk (cbcbvq7hgf5vwti2)"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "video+9cfeeodtu023cb91"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Bar (9cfeeodtu023cb91)"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "video+d7a07saeijthkqqk"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Bedroom 3 (d7a07saeijthkqqk)"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "video+33d25dz3mqilw1lp"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Lounge (33d25dz3mqilw1lp)"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "video+a12bmexn0h5td3kh"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Bedroom 1 (a12bmexn0h5td3kh)"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "video+85c28sa2o8wppm58"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "LotRadio (85c28sa2o8wppm58)"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "video+2ef11errf17as0df"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Dog House (2ef11errf17as0df)"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "video+cc92intolqvyf117"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Hallway Downstairs (cc92intolqvyf117)"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "video+fce7bmzmyigqg3s7"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Fishtank Auto (fce7bmzmyigqg3s7)"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "video+b905oqz6q3czq6pb"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Confessionals (b905oqz6q3czq6pb)"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "video+1bcd83gg4ang03l8"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Hallway Upstairs (1bcd83gg4ang03l8)"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "video+0b6a2wuaxm56yhkr"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Attic (0b6a2wuaxm56yhkr)"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "video+052cnzsasax9c10b"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Master Bathroom (052cnzsasax9c10b)"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "video+c00a95tv3rysf9ji"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Upstairs Bathroom c00a95tv3rysf9ji"
+                "value": "LotRadio 85c28sa2o8wppm58"
               }
             ]
           }
         ]
       },
       "gridPos": {
-        "h": 10,
-        "w": 24,
+        "h": 12,
+        "w": 17,
         "x": 0,
         "y": 7
       },
@@ -509,7 +326,7 @@
         },
         "tooltip": {
           "mode": "single",
-          "sort": "none"
+          "sort": "asc"
         }
       },
       "targets": [
@@ -520,16 +337,152 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "label_replace(sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream!=\"000reallylongnonexistenstreamnamethatreallyshouldntexist000\", stream!~\"$exclude\", stream!~\"catalyst_vod.+\"}[1m] ) by (stream) or on() vector(0), \"stream_id\", \"$1\", \"stream\", \".*\\\\+(.*)\")",
+          "expr": "label_replace(sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream!=\"000reallylongnonexistenstreamnamethatreallyshouldntexist000\", stream!~\"$exclude\", stream!~\"catalyst_vod.+\"}[1m] ) by (stream) or on() vector(0), \"playback_id\", \"$1\", \"stream\", \".*[+](.*)\")",
           "instant": false,
           "interval": "",
           "key": "Q-aca73aa4-50db-4a58-ab60-0460130ab40b-0",
-          "legendFormat": "{{ stream }}",
+          "legendFormat": "{{playback_id}}",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Viewers by Stream",
+      "title": "Viewers by stream",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "description": "Viewer sessions as reported by catalyst for each active streaming user",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Sessions count",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed"
+            }
+          },
+          "fieldMinMax": false,
+          "links": [],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1000
+              }
+            ]
+          },
+          "unit": "none",
+          "unitScale": true
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "a7833805-e313-452b-8c72-18923137f48d"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Trovo (a7833805-e313-452b-8c72-18923137f48d)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "0999528e-5194-4bc0-8dd5-fdccbbf2068b"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "LotRadio (0999528e-5194-4bc0-8dd5-fdccbbf2068b)"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 7,
+        "x": 17,
+        "y": 7
+      },
+      "id": 39,
+      "options": {
+        "legend": {
+          "calcs": [
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "sortBy": "Last",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "asc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream!=\"000reallylongnonexistenstreamnamethatreallyshouldntexist000\", stream!~\"$exclude\", stream!~\"catalyst_vod.+\"}[1m] ) by (user_id)",
+          "instant": false,
+          "interval": "",
+          "key": "Q-aca73aa4-50db-4a58-ab60-0460130ab40b-0",
+          "legendFormat": "{{user_id}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Viewers by user_id",
       "type": "timeseries"
     },
     {
@@ -584,7 +537,8 @@
                 "value": null
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -592,7 +546,7 @@
         "h": 7,
         "w": 6,
         "x": 0,
-        "y": 17
+        "y": 19
       },
       "id": 30,
       "options": {
@@ -676,7 +630,8 @@
                 "value": null
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -684,7 +639,7 @@
         "h": 7,
         "w": 6,
         "x": 6,
-        "y": 17
+        "y": 19
       },
       "id": 31,
       "options": {
@@ -816,7 +771,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -824,7 +780,7 @@
         "h": 7,
         "w": 6,
         "x": 12,
-        "y": 17
+        "y": 19
       },
       "id": 3,
       "options": {
@@ -939,7 +895,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -947,7 +904,7 @@
         "h": 7,
         "w": 6,
         "x": 18,
-        "y": 17
+        "y": 19
       },
       "id": 33,
       "options": {
@@ -1044,7 +1001,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -1052,7 +1010,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 24
+        "y": 26
       },
       "id": 14,
       "options": {
@@ -1147,7 +1105,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -1155,7 +1114,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 24
+        "y": 26
       },
       "id": 12,
       "options": {
@@ -1242,7 +1201,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -1250,7 +1210,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 32
+        "y": 34
       },
       "id": 27,
       "links": [
@@ -1351,7 +1311,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": [
           {
@@ -1384,7 +1345,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 32
+        "y": 34
       },
       "id": 28,
       "options": {
@@ -1481,7 +1442,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -1489,7 +1451,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 40
+        "y": 42
       },
       "id": 25,
       "options": {
@@ -1627,7 +1589,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -1635,7 +1598,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 40
+        "y": 42
       },
       "id": 10,
       "options": {
@@ -1738,14 +1701,16 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -1753,7 +1718,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 48
+        "y": 50
       },
       "id": 2,
       "options": {
@@ -1841,14 +1806,16 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -1856,7 +1823,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 48
+        "y": 50
       },
       "id": 32,
       "options": {
@@ -1942,14 +1909,16 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -1957,7 +1926,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 56
+        "y": 58
       },
       "id": 17,
       "links": [
@@ -2041,14 +2010,16 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -2056,7 +2027,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 56
+        "y": 58
       },
       "id": 22,
       "options": {
@@ -2134,14 +2105,16 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -2149,7 +2122,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 64
+        "y": 66
       },
       "id": 19,
       "options": {
@@ -2227,14 +2200,16 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -2242,7 +2217,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 64
+        "y": 66
       },
       "id": 13,
       "options": {
@@ -2333,14 +2308,16 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -2348,7 +2325,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 72
+        "y": 74
       },
       "id": 24,
       "options": {
@@ -2426,14 +2403,16 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -2441,7 +2420,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 72
+        "y": 74
       },
       "id": 21,
       "options": {
@@ -2518,7 +2497,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2526,7 +2506,8 @@
               }
             ]
           },
-          "unit": "percentunit"
+          "unit": "percentunit",
+          "unitScale": true
         },
         "overrides": []
       },
@@ -2534,7 +2515,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 80
+        "y": 82
       },
       "id": 34,
       "options": {
@@ -2641,14 +2622,16 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -2656,7 +2639,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 80
+        "y": 82
       },
       "id": 36,
       "options": {
@@ -2763,7 +2746,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2771,7 +2755,8 @@
               }
             ]
           },
-          "unit": "percentunit"
+          "unit": "percentunit",
+          "unitScale": true
         },
         "overrides": []
       },
@@ -2779,7 +2764,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 88
+        "y": 90
       },
       "id": 35,
       "options": {
@@ -2887,14 +2872,16 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -2902,9 +2889,16 @@
         "h": 11,
         "w": 12,
         "x": 0,
-        "y": 96
+        "y": 98
       },
       "id": 38,
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "Explore logs",
+          "url": "https://eu-metrics-monitoring.livepeer.live/grafana/explore?schemaVersion=1&panes=%7B%22wsD%22:%7B%22datasource%22:%22P8E80F9AEF21F6940%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22expr%22:%22sum%20by%28app%29%20%28rate%28%7Bapp%3D~%5C%22.%2B%5C%22%7D%20%5B$__auto%5D%29%29%22,%22queryType%22:%22range%22,%22datasource%22:%7B%22type%22:%22loki%22,%22uid%22:%22P8E80F9AEF21F6940%22%7D,%22editorMode%22:%22code%22%7D%5D,%22range%22:%7B%22from%22:%22${__from}%22,%22to%22:%22${__to}%22%7D%7D%7D&orgId=1"
+        }
+      ],
       "options": {
         "legend": {
           "calcs": [
@@ -2937,7 +2931,7 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "15m",
+  "refresh": "5m",
   "revision": 1,
   "schemaVersion": 39,
   "tags": [],
@@ -2969,6 +2963,7 @@
     "from": "now-1h",
     "to": "now"
   },
+  "timeRangeUpdatedDuringEditOrView": false,
   "timepicker": {
     "refresh_intervals": [
       "10s",
@@ -2985,6 +2980,6 @@
   "timezone": "utc",
   "title": "Catalyst Multi-Node",
   "uid": "EWXkaj7Vz",
-  "version": 162,
+  "version": 168,
   "weekStart": ""
 }
