@@ -17,15 +17,15 @@
   },
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "graphTooltip": 1,
+  "graphTooltip": 0,
   "id": null,
   "links": [],
   "liveNow": false,
   "panels": [
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
       },
       "fieldConfig": {
         "defaults": {
@@ -33,202 +33,7 @@
             "mode": "palette-classic"
           },
           "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "area"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "#EAB839",
-                "value": 70
-              },
-              {
-                "color": "red",
-                "value": 90
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 13,
-        "x": 0,
-        "y": 0
-      },
-      "id": 2,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "editorMode": "code",
-          "expr": "100 - (avg by (instance, region) (irate(node_cpu_seconds_total{region != \"eu-metrics\", mode=\"idle\", instance=~\".+:9100\"}[1m])) * 100 * on(instance) group_left(nodename) node_uname_info) > $CPUThreshold",
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "CPU",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "area"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "#EAB839",
-                "value": 500
-              },
-              {
-                "color": "red",
-                "value": 1000
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 13,
-        "x": 0,
-        "y": 10
-      },
-      "id": 1,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "editorMode": "code",
-          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream!~\"$exclude\", stream!~\"$exclude\"}) by (node_name, region) > $ViewersPerNodeThreshold",
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "> $ViewersPerNodeThreshold viewer per node",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -259,13 +64,6 @@
               "mode": "off"
             }
           },
-          "links": [
-            {
-              "targetBlank": true,
-              "title": "https://livepeer.com/app/stream/$stream?autoplay",
-              "url": "https://livepeer.com/app/stream/${__field.labels.stream_id}?autoplay"
-            }
-          ],
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -279,23 +77,116 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
       "gridPos": {
         "h": 8,
-        "w": 13,
+        "w": 12,
         "x": 0,
-        "y": 20
+        "y": 0
       },
       "id": 3,
       "options": {
         "legend": {
-          "calcs": [
-            "last"
-          ],
-          "displayMode": "table",
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "count by(node_name, region) (rate({job=\"systemd-journal\", region=~\"${region:pipe}\",  node_name=~\"${datapacket_instance:text}\"} |~ `took too long.*[0-9]s\",\"expected` [$__auto]))\n\n",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "etcd operation took too longer than 1s",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unitScale": true
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 23,
+        "x": 0,
+        "y": 8
+      },
+      "id": 1,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
         },
@@ -310,83 +201,322 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "label_replace(sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream!~\"$exclude\", stream!~\"$exclude\"}[1m] ) by (stream) or on() vector(0), \"stream_id\", \"$1\", \"stream\", \".*\\\\+(.*)\") > $ViewersPerNodeThreshold",
+          "expr": "sum by(region, instance) (increase(node_disk_io_time_weighted_seconds_total{instance=~\"${datapacket_instance:pipe:value}\", region=~\"${region:pipe}\"}[$__interval]))",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "{{region}} {{ instance }}",
           "range": true,
-          "refId": "A"
+          "refId": "A",
+          "useBackend": false
         }
       ],
-      "title": "viewers",
+      "title": "node_disk_io_time_weighted_seconds_total",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unitScale": true
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 23,
+        "x": 0,
+        "y": 21
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum by(region, instance) (increase(node_disk_write_time_seconds_total{instance=~\"${datapacket_instance:pipe:value}\", region=~\"${region:pipe}\"}[$__interval]))",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{region}} {{ instance }}",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "node_disk_write_time_seconds_total",
       "type": "timeseries"
     }
   ],
-  "refresh": false,
-  "schemaVersion": 38,
-  "style": "dark",
+  "refresh": "",
+  "schemaVersion": 39,
   "tags": [],
   "templating": {
     "list": [
       {
+        "allValue": ".+",
         "current": {
-          "selected": true,
-          "text": "60",
-          "value": "60"
+          "selected": false,
+          "text": "dp2495: 185.246.209.222",
+          "value": "dp2495: 185.246.209.222"
         },
         "hide": 0,
         "includeAll": false,
-        "label": "CPU Threshold",
+        "label": "Datapacket instance",
         "multi": false,
-        "name": "CPUThreshold",
+        "name": "datapacket_instance",
         "options": [
           {
             "selected": true,
-            "text": "10",
-            "value": "10"
+            "text": "dp2495: 185.246.209.222",
+            "value": "dp2495: 185.246.209.222"
           },
           {
             "selected": false,
-            "text": "20",
-            "value": "20"
+            "text": "dp4392: 185.246.209.224",
+            "value": "dp4392: 185.246.209.224"
           },
           {
             "selected": false,
-            "text": "30",
-            "value": "30"
+            "text": "dp4611: 185.246.209.223",
+            "value": "dp4611: 185.246.209.223"
           },
           {
             "selected": false,
-            "text": "40",
-            "value": "40"
+            "text": "dp8312: 79.127.221.98",
+            "value": "dp8312: 79.127.221.98"
           },
           {
             "selected": false,
-            "text": "50",
-            "value": "50"
+            "text": "dp12606: 79.127.221.97",
+            "value": "dp12606: 79.127.221.97"
           },
           {
             "selected": false,
-            "text": "60",
-            "value": "60"
+            "text": "dp8128: 79.127.197.177",
+            "value": "dp8128: 79.127.197.177"
           },
           {
             "selected": false,
-            "text": "70",
-            "value": "70"
+            "text": "dp12551: 79.127.197.178",
+            "value": "dp12551: 79.127.197.178"
           },
           {
             "selected": false,
-            "text": "80",
-            "value": "80"
+            "text": "dp9334: 79.127.199.49",
+            "value": "dp9334: 79.127.199.49"
           },
           {
             "selected": false,
-            "text": "90",
-            "value": "90"
+            "text": "dp18052: 79.127.199.50",
+            "value": "dp18052: 79.127.199.50"
+          },
+          {
+            "selected": false,
+            "text": "dp1856: 143.244.61.193",
+            "value": "dp1856: 143.244.61.193"
+          },
+          {
+            "selected": false,
+            "text": "dp3214: 143.244.60.234",
+            "value": "dp3214: 143.244.60.234"
+          },
+          {
+            "selected": false,
+            "text": "dp5631: 143.244.60.233",
+            "value": "dp5631: 143.244.60.233"
+          },
+          {
+            "selected": false,
+            "text": "dp5773: 89.187.181.163",
+            "value": "dp5773: 89.187.181.163"
+          },
+          {
+            "selected": false,
+            "text": "dp13079: 79.127.201.97",
+            "value": "dp13079: 79.127.201.97"
+          },
+          {
+            "selected": false,
+            "text": "dp19409: 79.127.201.98",
+            "value": "dp19409: 79.127.201.98"
+          },
+          {
+            "selected": false,
+            "text": "dp6442: 138.199.36.76",
+            "value": "dp6442: 138.199.36.76"
+          },
+          {
+            "selected": false,
+            "text": "dp7744: 195.181.174.186",
+            "value": "dp7744: 195.181.174.186"
+          },
+          {
+            "selected": false,
+            "text": "dp4821: 195.181.174.33",
+            "value": "dp4821: 195.181.174.33"
+          },
+          {
+            "selected": false,
+            "text": "dp5254: 169.150.243.18",
+            "value": "dp5254: 169.150.243.18"
+          },
+          {
+            "selected": false,
+            "text": "dp6281: 143.244.33.56",
+            "value": "dp6281: 143.244.33.56"
+          },
+          {
+            "selected": false,
+            "text": "dp9532: 169.150.243.19",
+            "value": "dp9532: 169.150.243.19"
+          },
+          {
+            "selected": false,
+            "text": "dp9534: 169.150.243.17",
+            "value": "dp9534: 169.150.243.17"
+          },
+          {
+            "selected": false,
+            "text": "dp7009: 169.150.243.20",
+            "value": "dp7009: 169.150.243.20"
+          },
+          {
+            "selected": false,
+            "text": "dp6883: 79.127.219.1",
+            "value": "dp6883: 79.127.219.1"
+          },
+          {
+            "selected": false,
+            "text": "dp10448: 79.127.219.2",
+            "value": "dp10448: 79.127.219.2"
+          },
+          {
+            "selected": false,
+            "text": "dp3366: 79.127.219.9",
+            "value": "dp3366: 79.127.219.9"
+          },
+          {
+            "selected": false,
+            "text": "dp12589: 79.127.219.3",
+            "value": "dp12589: 79.127.219.3"
+          },
+          {
+            "selected": false,
+            "text": "dp6448: 84.17.50.98",
+            "value": "dp6448: 84.17.50.98"
+          },
+          {
+            "selected": false,
+            "text": "dp6449: 84.17.50.99",
+            "value": "dp6449: 84.17.50.99"
+          },
+          {
+            "selected": false,
+            "text": "dp6638: 185.59.221.179",
+            "value": "dp6638: 185.59.221.179"
+          },
+          {
+            "selected": false,
+            "text": "dp1312: 212.102.38.92",
+            "value": "dp1312: 212.102.38.92"
+          },
+          {
+            "selected": false,
+            "text": "dp5585: 89.187.185.251",
+            "value": "dp5585: 89.187.185.251"
+          },
+          {
+            "selected": false,
+            "text": "dp6179: 89.187.185.153",
+            "value": "dp6179: 89.187.185.153"
+          },
+          {
+            "selected": false,
+            "text": "dp6748: 138.199.4.161",
+            "value": "dp6748: 138.199.4.161"
+          },
+          {
+            "selected": false,
+            "text": "dp12874: 121.127.46.158",
+            "value": "dp12874: 121.127.46.158"
+          },
+          {
+            "selected": false,
+            "text": "dp6247: 121.127.47.9",
+            "value": "dp6247: 121.127.47.9"
           }
         ],
-        "query": "10,20,30,40,50,60,70,80,90",
+        "query": "All : .+, dp2495 : 185.246.209.222:9100, dp4392 : 185.246.209.224:9100, dp4611 : 185.246.209.223:9100, dp8312 : 79.127.221.98:9100, dp12606 : 79.127.221.97:9100, dp8128 : 79.127.197.177:9100, dp12551 : 79.127.197.178:9100, dp9334 : 79.127.199.49:9100, dp18052 : 79.127.199.50:9100, dp1856 : 143.244.61.193:9100, dp3214 : 143.244.60.234:9100, dp5631 : 143.244.60.233:9100, dp5773 : 89.187.181.163:9100, dp13079 : 79.127.201.97:9100, dp19409 : 79.127.201.98:9100, dp6442 : 138.199.36.76:9100, dp7744 : 195.181.174.186:9100, dp4821 : 195.181.174.33:9100, dp5254 : 169.150.243.18:9100, dp6281 : 143.244.33.56:9100, dp9532 : 169.150.243.19:9100, dp9534 : 169.150.243.17:9100, dp7009 : 169.150.243.20:9100, dp6883 : 79.127.219.1:9100, dp10448 : 79.127.219.2:9100, dp3366 : 79.127.219.9:9100, dp12589 : 79.127.219.3:9100, dp6448 : 84.17.50.98:9100, dp6449 : 84.17.50.99:9100, dp6638 : 185.59.221.179:9100, dp1312 : 212.102.38.92:9100, dp5585 : 89.187.185.251:9100, dp6179 : 89.187.185.153:9100, dp6748 : 138.199.4.161:9100, dp12874 : 121.127.46.158:9100, dp6247 : 121.127.47.9,",
         "queryValue": "",
         "skipUrlSync": false,
         "type": "custom"
@@ -394,136 +524,41 @@
       {
         "current": {
           "selected": true,
-          "text": "200",
-          "value": "200"
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
         },
+        "definition": "label_values(kube_node_labels{region!=\"analytics\"},region)",
         "hide": 0,
-        "includeAll": false,
-        "label": "Viewers Per Node Threshold",
-        "multi": false,
-        "name": "ViewersPerNodeThreshold",
-        "options": [
-          {
-            "selected": false,
-            "text": "0",
-            "value": "0"
-          },
-          {
-            "selected": false,
-            "text": "50",
-            "value": "50"
-          },
-          {
-            "selected": false,
-            "text": "100",
-            "value": "100"
-          },
-          {
-            "selected": false,
-            "text": "150",
-            "value": "150"
-          },
-          {
-            "selected": true,
-            "text": "200",
-            "value": "200"
-          },
-          {
-            "selected": false,
-            "text": "250",
-            "value": "250"
-          },
-          {
-            "selected": false,
-            "text": "300",
-            "value": "300"
-          },
-          {
-            "selected": false,
-            "text": "350",
-            "value": "350"
-          },
-          {
-            "selected": false,
-            "text": "400",
-            "value": "400"
-          },
-          {
-            "selected": false,
-            "text": "450",
-            "value": "450"
-          },
-          {
-            "selected": false,
-            "text": "500",
-            "value": "500"
-          },
-          {
-            "selected": false,
-            "text": "550",
-            "value": "550"
-          },
-          {
-            "selected": false,
-            "text": "600",
-            "value": "600"
-          },
-          {
-            "selected": false,
-            "text": "650",
-            "value": "650"
-          },
-          {
-            "selected": false,
-            "text": "700",
-            "value": "700"
-          },
-          {
-            "selected": false,
-            "text": "750",
-            "value": "750"
-          },
-          {
-            "selected": false,
-            "text": "800",
-            "value": "800"
-          },
-          {
-            "selected": false,
-            "text": "850",
-            "value": "850"
-          },
-          {
-            "selected": false,
-            "text": "900",
-            "value": "900"
-          },
-          {
-            "selected": false,
-            "text": "950",
-            "value": "950"
-          },
-          {
-            "selected": false,
-            "text": "1000",
-            "value": "1000"
-          }
-        ],
-        "query": "0,50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800,850,900,950,1000",
-        "queryValue": "",
+        "includeAll": true,
+        "multi": true,
+        "name": "region",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(kube_node_labels{region!=\"analytics\"},region)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
         "skipUrlSync": false,
-        "type": "custom"
+        "sort": 0,
+        "type": "query"
       }
     ]
   },
   "time": {
-    "from": "now-1M/M",
-    "to": "now-1M/M"
+    "from": "now-6h",
+    "to": "now"
   },
+  "timeRangeUpdatedDuringEditOrView": false,
   "timepicker": {},
   "timezone": "",
-  "title": "CPU / viewers",
-  "uid": "e7a45fbe-21f9-42a4-88cb-8654844a06bb",
-  "version": 20,
+  "title": "high IO issue",
+  "uid": "aa2c9d25-116e-4672-87d8-2831582d7d34",
+  "version": 7,
   "weekStart": ""
 }
