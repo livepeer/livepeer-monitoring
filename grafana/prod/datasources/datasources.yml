@@ -13,8 +13,11 @@ datasources:
     url: $LP_LOKI_URL
     basicAuth: true
     basicAuthUser: $LP_LOKI_BASIC_AUTH_USER
+    jsonData:
+      httpHeaderName1: "X-Scope-OrgID"
     secureJsonData:
       basicAuthPassword: $LP_LOKI_BASIC_AUTH_PASS
+      httpHeaderValue1: $LP_LOKI_SCOPE_ORGID
   - access: proxy
     isDefault: false
     name: Loki-report
