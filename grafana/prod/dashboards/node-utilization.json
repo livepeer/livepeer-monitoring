@@ -24,8 +24,8 @@
   "panels": [
     {
       "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
       },
       "fieldConfig": {
         "defaults": {
@@ -77,7 +77,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -90,14 +91,10 @@
       "id": 2,
       "options": {
         "legend": {
-          "calcs": [
-            "max"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true,
-          "sortBy": "Max",
-          "sortDesc": true
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -107,22 +104,26 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(count_over_time({app=\"ingress-nginx\", stream=\"stdout\", region=\"mia\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<referer>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>` | referer != \"-\" | line_format \"{{ .referer }}\" | pattern \"<refererScheme>://<refererDomain>/<refererPath>\" | line_format \"{{ .refererDomain }}\"[1m])) by (ip) > 150",
-          "queryType": "range",
-          "refId": "A"
+          "expr": "1 - (avg(node_memory_MemFree_bytes{region != \"eu-metrics\", instance=~\".+:9100\"}[1m]) by (instance, region) / avg(node_memory_MemAvailable_bytes{region != \"eu-metrics\", instance=~\".+:9100\"}[1m]) by (instance, region))",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "D"
         }
       ],
-      "title": "MIA highest IP address",
+      "title": "Memory Usage",
+      "transformations": [],
       "type": "timeseries"
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
       },
       "fieldConfig": {
         "defaults": {
@@ -174,15 +175,16 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 12,
-        "y": 0
+        "x": 0,
+        "y": 8
       },
       "id": 1,
       "options": {
@@ -200,18 +202,20 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(count_over_time({app=\"ingress-nginx\", stream=\"stdout\"} |~ \"24.152.50.114\" [1m])) by (region)",
+          "expr": "1 - avg by (instance, region) (irate(node_cpu_seconds_total{region != \"eu-metrics\", mode=\"idle\", instance=~\".+:9100\"}[1m]))",
           "hide": false,
-          "legendFormat": "",
-          "queryType": "range",
-          "refId": "B"
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "E"
         }
       ],
-      "title": "24.152.50.114",
+      "title": "CPU Usage",
+      "transformations": [],
       "type": "timeseries"
     }
   ],
@@ -222,13 +226,14 @@
     "list": []
   },
   "time": {
-    "from": "2023-12-26T16:58:16.000Z",
-    "to": "2023-12-26T17:01:16.000Z"
+    "from": "now-2d",
+    "to": "now"
   },
+  "timeRangeUpdatedDuringEditOrView": false,
   "timepicker": {},
   "timezone": "",
-  "title": "Fishtank DDOS",
-  "uid": "efe696d4-0794-4551-8aff-42dc4eca929e",
-  "version": 15,
+  "title": "Node Utilization",
+  "uid": "cdba2fab-34bc-4482-9877-bc22ed78d9c4",
+  "version": 4,
   "weekStart": ""
 }

@@ -58,6 +58,7 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMin": 0,
             "barAlignment": 0,
             "drawStyle": "line",
             "fillOpacity": 0,
@@ -98,7 +99,8 @@
               }
             ]
           },
-          "unit": "percentunit"
+          "unit": "percentunit",
+          "unitScale": true
         },
         "overrides": [
           {
@@ -274,7 +276,8 @@
               }
             ]
           },
-          "unit": "reqps"
+          "unit": "reqps",
+          "unitScale": true
         },
         "overrides": [
           {
@@ -421,7 +424,8 @@
               }
             ]
           },
-          "unit": "none"
+          "unit": "none",
+          "unitScale": true
         },
         "overrides": [
           {
@@ -526,7 +530,7 @@
           "disableTextWrap": false,
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "sum by(path, host, method) (increase(nginx_ingress_controller_requests{ingress=~\"${ingress:pipe}\", region=~\"${region:pipe}\", host=~\"${host:pipe}\", status=~\"${status:pipe}\"}[$__interval]))",
+          "expr": "sum by(path, host, method) (increase(nginx_ingress_controller_requests{ingress=~\"${ingress:pipe}\", region=~\"${region:pipe}\", host=~\"${host:pipe}\", status=~\"${status:pipe}\", path!=\"/51eebae3-9b8e-48bc-89ca-5340c4074a48.json\"}[$__interval]))",
           "format": "time_series",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
@@ -600,7 +604,8 @@
               }
             ]
           },
-          "unit": "none"
+          "unit": "none",
+          "unitScale": true
         },
         "overrides": [
           {
@@ -777,7 +782,8 @@
               }
             ]
           },
-          "unit": "none"
+          "unit": "none",
+          "unitScale": true
         },
         "overrides": [
           {
@@ -953,7 +959,8 @@
               }
             ]
           },
-          "unit": "none"
+          "unit": "none",
+          "unitScale": true
         },
         "overrides": [
           {
@@ -1118,8 +1125,8 @@
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
+        "type": "datasource",
+        "uid": "-- Mixed --"
       },
       "fieldConfig": {
         "defaults": {
@@ -1172,7 +1179,8 @@
               }
             ]
           },
-          "unit": "none"
+          "unit": "none",
+          "unitScale": true
         },
         "overrides": [
           {
@@ -1269,20 +1277,22 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
           },
+          "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum by(node_name, referer) (count_over_time({app=\"ingress-nginx\", stream=\"stdout\"} | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<referer>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>` | status = `503` | status =~ `${status:pipe}` | upstream =~ `.*catalyst.*` [1s])) > 1",
+          "expr": "sum by(ingress) (increase(nginx_ingress_controller_requests{region!=\"fra\", status=\"429\", ingress=~\"$ingress\"}[$__interval]))",
+          "fullMetaSearch": false,
           "hide": false,
-          "legendFormat": "{{ ip }} {{ referer }} {{ node_name }}",
-          "queryType": "range",
-          "refId": "A",
-          "splitDuration": "1d",
-          "step": ""
+          "includeNullMetadata": true,
+          "legendFormat": "{{ingress}}",
+          "range": true,
+          "refId": "B",
+          "useBackend": false
         }
       ],
-      "title": "503 - IP-address rate limited (probably)",
+      "title": "429 code - IP-address rate limited",
       "type": "timeseries"
     },
     {
@@ -1303,14 +1313,14 @@
           "showLineNumbers": false,
           "showMiniMap": false
         },
-        "content": "* We don't collect `/health`, `/healthz`, `/{{ UUID }}.json`, `/loki/api/v1/push`, `/insert/420/prometheus` logs.\nSo even you can see prometheus metrics related to these endpoints the logs are missing\n* Too narrow time range may filter out some logs while showing prometheus metrics on charts as metrics and logs might have slightly different datetimes.\n* 503 may come from pods or be returned from nginx when per IP address limits are hit\n* [Explore nginx logs](https://eu-metrics-monitoring.livepeer.live/grafana/explore?schemaVersion=1&panes=%7B%22D32%22:%7B%22datasource%22:%22P8E80F9AEF21F6940%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22expr%22:%22%7Bapp%3D%5C%22ingress-nginx%5C%22,%20namespace%3D%5C%22default%5C%22,%20stream%3D%5C%22stdout%5C%22,%20region%3D~%5C%22${region:pipe}%5C%22%7D%20%7C%20pattern%20%60%3Cip%3E%20-%20-%20%3Ctimestamp%3E%20%5C%22%3Cmethod%3E%20%3Curl%3E%20%3Cprotocol%3E%5C%22%20%3Cstatus%3E%20%3Cbytes%3E%20%5C%22%3Corigin%3E%5C%22%20%5C%22%3CuserAgent%3E%5C%22%20%3Cwtf1%3E%20%3Cwtf2%3E%20%5B%3Cupstream%3E%5D%20%5B%3Cwtf3%3E%5D%20%3CupstreamAddr%3E%20%3Cwtf4%3E%20%3Cwtf5%3E%20%3CupstreamStatus%3E%20%3CrequestId%3E%60%20%7C%20upstream%20%3D~%20%60default-%28${ingress:pipe}%29-.%2A%60%20%7C%20status%20%3D~%20%60${status:pipe}%60%22,%22queryType%22:%22range%22,%22datasource%22:%7B%22type%22:%22loki%22,%22uid%22:%22P8E80F9AEF21F6940%22%7D,%22editorMode%22:%22code%22%7D%5D,%22range%22:%7B%22from%22:%22${__from}%22,%22to%22:%22${__to}%22%7D%7D%7D&orgId=1)",
+        "content": "* We don't collect `/health`, `/healthz`, `/{{ UUID }}.json`, `/loki/api/v1/push`, `/insert/420/prometheus` logs.\nSo even you can see prometheus metrics related to these endpoints the logs are missing\n* Too narrow time range may filter out some logs while showing prometheus metrics on charts as metrics and logs might have slightly different datetimes.\n* [Explore nginx logs](https://eu-metrics-monitoring.livepeer.live/grafana/explore?schemaVersion=1&panes=%7B%22D32%22:%7B%22datasource%22:%22P8E80F9AEF21F6940%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22expr%22:%22%7Bapp%3D%5C%22ingress-nginx%5C%22,%20namespace%3D%5C%22default%5C%22,%20stream%3D%5C%22stdout%5C%22,%20region%3D~%5C%22${region:pipe}%5C%22%7D%20%7C%20pattern%20%60%3Cip%3E%20-%20-%20%3Ctimestamp%3E%20%5C%22%3Cmethod%3E%20%3Curl%3E%20%3Cprotocol%3E%5C%22%20%3Cstatus%3E%20%3Cbytes%3E%20%5C%22%3Corigin%3E%5C%22%20%5C%22%3CuserAgent%3E%5C%22%20%3Cwtf1%3E%20%3Cwtf2%3E%20%5B%3Cupstream%3E%5D%20%5B%3Cwtf3%3E%5D%20%3CupstreamAddr%3E%20%3Cwtf4%3E%20%3Cwtf5%3E%20%3CupstreamStatus%3E%20%3CrequestId%3E%60%20%7C%20upstream%20%3D~%20%60default-%28${ingress:pipe}%29-.%2A%60%20%7C%20status%20%3D~%20%60${status:pipe}%60%22,%22queryType%22:%22range%22,%22datasource%22:%7B%22type%22:%22loki%22,%22uid%22:%22P8E80F9AEF21F6940%22%7D,%22editorMode%22:%22code%22%7D%5D,%22range%22:%7B%22from%22:%22${__from}%22,%22to%22:%22${__to}%22%7D%7D%7D&orgId=1)",
         "mode": "markdown"
       },
-      "pluginVersion": "10.2.3",
+      "pluginVersion": "10.3.4",
       "type": "text"
     }
   ],
-  "refresh": "",
+  "refresh": false,
   "schemaVersion": 39,
   "tags": [
     "nginx"
@@ -1470,10 +1480,11 @@
     "from": "now-3h",
     "to": "now"
   },
+  "timeRangeUpdatedDuringEditOrView": false,
   "timepicker": {},
   "timezone": "",
   "title": "nginx 5XX",
   "uid": "f74066bf-c68e-4303-a9c4-81423738f8a3",
-  "version": 43,
+  "version": 49,
   "weekStart": ""
 }

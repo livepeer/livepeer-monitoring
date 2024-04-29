@@ -36,12 +36,117 @@
   "liveNow": false,
   "panels": [
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unitScale": true
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 13,
+        "x": 0,
+        "y": 0
+      },
+      "id": 9,
+      "options": {
+        "legend": {
+          "calcs": [
+            "last",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Last",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "count by(catalyst_node) (mist_sessions{sessType=\"incoming\", user_id=\"${TROVO_USER_ID}\", region=~\"${region:pipe}\"}) > 0",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Origin server",
+      "type": "timeseries"
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 0
+        "y": 10
       },
       "id": 5,
       "panels": [],
@@ -101,21 +206,48 @@
               }
             ]
           },
-          "unit": "none"
+          "unit": "none",
+          "unitScale": true
         },
-        "overrides": []
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "Trovo"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 11,
         "w": 13,
         "x": 0,
-        "y": 1
+        "y": 11
       },
       "id": 7,
       "options": {
         "legend": {
           "calcs": [
-            "last"
+            "last",
+            "max"
           ],
           "displayMode": "table",
           "placement": "right",
@@ -136,11 +268,11 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", user_id=\"${TROVO_USER_ID}\"})",
+          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", user_id=\"${TROVO_USER_ID}\", region=~\"${region:pipe}\"})",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
-          "legendFormat": "{{stream}}",
+          "legendFormat": "Trovo",
           "range": true,
           "refId": "A",
           "useBackend": false
@@ -200,7 +332,8 @@
                 "value": null
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -208,13 +341,14 @@
         "h": 11,
         "w": 11,
         "x": 13,
-        "y": 1
+        "y": 11
       },
       "id": 3,
       "options": {
         "legend": {
           "calcs": [
-            "last"
+            "last",
+            "max"
           ],
           "displayMode": "table",
           "placement": "right",
@@ -234,7 +368,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", user_id=\"${TROVO_USER_ID}\"}[1m] ) by (catalyst_node)",
+          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", user_id=\"${TROVO_USER_ID}\", region=~\"${region:pipe}\"}[1m] ) by (catalyst_node)",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -303,7 +437,8 @@
               }
             ]
           },
-          "unit": "none"
+          "unit": "none",
+          "unitScale": true
         },
         "overrides": [
           {
@@ -516,13 +651,14 @@
         "h": 16,
         "w": 13,
         "x": 0,
-        "y": 12
+        "y": 22
       },
       "id": 1,
       "options": {
         "legend": {
           "calcs": [
-            "last"
+            "last",
+            "max"
           ],
           "displayMode": "table",
           "placement": "right",
@@ -543,7 +679,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "label_replace(sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", user_id=\"${TROVO_USER_ID}\"}[1m] ) by (stream) or on() vector(0), \"stream_id\", \"$1\", \"stream\", \".*\\\\+(.*)\")",
+          "expr": "label_replace(sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", user_id=\"${TROVO_USER_ID}\", region=~\"${region:pipe}\"}[1m] ) by (stream) or on() vector(0), \"stream_id\", \"$1\", \"stream\", \".*\\\\+(.*)\")",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -612,7 +748,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -620,13 +757,14 @@
         "h": 16,
         "w": 11,
         "x": 13,
-        "y": 12
+        "y": 22
       },
       "id": 2,
       "options": {
         "legend": {
           "calcs": [
-            "last"
+            "last",
+            "max"
           ],
           "displayMode": "table",
           "placement": "right",
@@ -646,7 +784,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", user_id=\"${TROVO_USER_ID}\"}) by (region)",
+          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", user_id=\"${TROVO_USER_ID}\", region=~\"${region:pipe}\"}) by (region)",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -655,114 +793,14 @@
       ],
       "title": "Viewers per region",
       "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 13,
-        "x": 0,
-        "y": 28
-      },
-      "id": 9,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "count by(catalyst_node) (mist_sessions{sessType=\"incoming\", user_id=\"${TROVO_USER_ID}\"}) > 0",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "Origin server",
-      "type": "timeseries"
     }
   ],
-  "refresh": "10s",
+  "refresh": "1m",
   "schemaVersion": 39,
   "tags": [
     "viewership",
     "metrics",
     "observe",
-    "2023",
     "trovo"
   ],
   "templating": {
@@ -773,17 +811,51 @@
         "query": "a7833805-e313-452b-8c72-18923137f48d",
         "skipUrlSync": false,
         "type": "constant"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "definition": "label_values(mist_sessions{user_id=\"$TROVO_USER_ID\"},region)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "region",
+        "multi": true,
+        "name": "region",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(mist_sessions{user_id=\"$TROVO_USER_ID\"},region)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
       }
     ]
   },
   "time": {
-    "from": "now-3h",
+    "from": "now-24h",
     "to": "now"
   },
+  "timeRangeUpdatedDuringEditOrView": false,
   "timepicker": {},
   "timezone": "",
   "title": "Trovo viewership",
   "uid": "fea1f415-fb66-4a69-a9a4-869def254322",
-  "version": 11,
+  "version": 20,
   "weekStart": ""
 }
