@@ -97,7 +97,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -193,7 +194,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -289,7 +291,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -385,7 +388,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -494,7 +498,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -590,7 +595,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -686,7 +692,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -785,7 +792,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -880,9 +888,60 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
-        "overrides": []
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "MistServer",
+                  "base-exporter-node",
+                  "base-kube-state-metrics",
+                  "base-record-tester-prod-fra",
+                  "base-record-tester-prod-lowpri-mia",
+                  "base-record-tester-prod-lowpri-prg",
+                  "base-record-tester-prod-lowpri-sao",
+                  "base-record-tester-prod-lowpri-sea",
+                  "base-record-tester-prod-lowpri-sto",
+                  "base-record-tester-prod-lowpri-syd",
+                  "base-record-tester-prod-mdw",
+                  "base-record-tester-prod-mos",
+                  "base-record-tester-prod-nyc",
+                  "base-record-tester-prod-offset-lax",
+                  "base-record-tester-prod-offset-lon",
+                  "base-record-tester-prod-offset-sin",
+                  "base-record-tester-staging-fra-staging",
+                  "base-record-tester-staging-mdw-staging",
+                  "base-record-tester-staging-sin-staging",
+                  "catalyst-api",
+                  "prod-livepeer-analyzer",
+                  "prod-livepeer-api",
+                  "prod-livepeer-broadcaster",
+                  "prod-livepeer-recording",
+                  "prod-livepeer-transactor",
+                  "prod-task-runner"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -910,17 +969,17 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "count by (app) (\n    sum by (version, app) (\n        label_replace(\n            label_replace(\n                label_replace(\n                    {__name__=~\".*version(s)?\", region!=\"bgw\"}, \n                    \"app\", \"$1\", \"livepeer_live_app\", \"(.+)\"\n                ), \"app\", \"$1\", \"livepeer_node_type\", \"(.+)\"\n            ), \"version\", \"$1\", \"livepeerversion\", \"(.+)\"\n        )\n    )\n)",
+          "expr": "count by (app) (\n    sum by (version, app) (\n        label_replace(\n            label_replace(\n                label_replace(\n                    {__name__=~\".*versions?\"}, \n                    \"app\", \"$1\", \"livepeer_live_app\", \"(.+)\"\n                ), \"app\", \"$1\", \"livepeer_node_type\", \"(.+)\"\n            ), \"version\", \"$1\", \"livepeerversion\", \"(.+)\"\n        )\n    )\n)",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Concurrent Versions by App (excluding bgw)",
+      "title": "Concurrent Versions by App",
       "type": "timeseries"
     }
   ],
-  "refresh": "5s",
+  "refresh": "1m",
   "revision": 1,
   "schemaVersion": 39,
   "tags": [],
@@ -931,10 +990,11 @@
     "from": "now-1h",
     "to": "now"
   },
+  "timeRangeUpdatedDuringEditOrView": false,
   "timepicker": {},
   "timezone": "utc",
   "title": "App Versions",
   "uid": "L7BdzGh4z",
-  "version": 41,
+  "version": 45,
   "weekStart": ""
 }
