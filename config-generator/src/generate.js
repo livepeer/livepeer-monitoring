@@ -400,9 +400,7 @@ function prometheusConfig(params) {
       },
       metrics_path: "/v2/metrics/cloud/export",
       params: {
-        "resource.kafka.id": [
-          params.prometheusKafkaMonitorResources.split(","),
-        ],
+        "resource.kafka.id": params.prometheusKafkaMonitorResources.split(","),
       },
     });
   }
