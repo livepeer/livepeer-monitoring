@@ -91,8 +91,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "transparent",
-                "value": null
+                "color": "transparent"
               },
               {
                 "color": "red",
@@ -119,6 +118,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -160,7 +160,7 @@
         "content": "This is the maximum of the shared memory, general RAM and CPU used on the nodes, as a percentage. If this nears 100%, that means there aren't enough servers in that region to handle the load. If it nears 0% that means there isn't enough load to warrant the current deployment size.",
         "mode": "markdown"
       },
-      "pluginVersion": "10.2.2",
+      "pluginVersion": "11.0.0",
       "title": "Resource usage",
       "type": "text"
     },
@@ -215,8 +215,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "transparent",
@@ -251,6 +250,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -292,7 +292,7 @@
         "content": "This should be zero/blank if all is running perfectly. The livestreams automatically abort and retry if a timeout occurs, but multiple timeouts in a row will drastically affect player experience.",
         "mode": "markdown"
       },
-      "pluginVersion": "10.2.2",
+      "pluginVersion": "11.0.0",
       "title": "Transcode timeouts",
       "type": "text"
     },
@@ -346,8 +346,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -366,7 +365,6 @@
         "y": 11
       },
       "id": 6,
-      "links": [],
       "options": {
         "legend": {
           "calcs": [
@@ -379,6 +377,7 @@
           "sortDesc": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
@@ -427,7 +426,7 @@
         "content": "Tracks active viewers by region. In general, sudden changes here indicate a potential problem (or popular stream starting/stopping).",
         "mode": "markdown"
       },
-      "pluginVersion": "10.2.2",
+      "pluginVersion": "11.0.0",
       "title": "Viewers",
       "type": "text"
     },
@@ -481,8 +480,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -501,7 +499,6 @@
         "y": 11
       },
       "id": 31,
-      "links": [],
       "options": {
         "legend": {
           "calcs": [
@@ -512,6 +509,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
@@ -627,7 +625,7 @@
           "links": [],
           "mappings": [],
           "thresholds": {
-            "mode": "absolute",
+            "mode": "percentage",
             "steps": [
               {
                 "color": "green",
@@ -635,11 +633,11 @@
               },
               {
                 "color": "transparent",
-                "value": 0.05
+                "value": 5
               },
               {
                 "color": "red",
-                "value": 0.2
+                "value": 20
               }
             ]
           },
@@ -654,15 +652,19 @@
         "y": 21
       },
       "id": 2,
-      "links": [],
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
+          "calcs": [
+            "lastNotNull"
+          ],
+          "displayMode": "table",
           "placement": "right",
-          "showLegend": true
+          "showLegend": true,
+          "sortBy": "Last *",
+          "sortDesc": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "multi",
           "sort": "desc"
         }
@@ -681,7 +683,7 @@
           "instant": false,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{region}}: {{trigger}}",
+          "legendFormat": "{{ region  }}: {{ trigger }}",
           "refId": "A"
         }
       ],
@@ -710,7 +712,7 @@
         "content": "Trigger failures indicate a problem with integration between the media server and the systems surrounding it. Depending on the trigger affected, there may or may not be noticible degradation of service. The most important ones are `USER_NEW` (handles viewer authorization) and `PUSH_REWRITE` (handles incoming push authorization).",
         "mode": "markdown"
       },
-      "pluginVersion": "10.2.2",
+      "pluginVersion": "11.0.0",
       "title": "Trigger failures",
       "type": "text"
     },
@@ -763,8 +765,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -783,7 +784,6 @@
         "y": 21
       },
       "id": 8,
-      "links": [],
       "options": {
         "legend": {
           "calcs": [
@@ -794,6 +794,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
@@ -842,7 +843,7 @@
         "content": "This basically shows new connections to regions as a fraction of the total viewers. Consider it a view of connection \"stickiness\", where anything under 1 is generally \"very good and the higher above 1 the worse it is. People refreshing the page (or, well, not liking the stream contents) will cause this number to go up.",
         "mode": "markdown"
       },
-      "pluginVersion": "10.2.2",
+      "pluginVersion": "11.0.0",
       "title": "Reconnects",
       "type": "text"
     },
@@ -958,6 +959,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -1012,7 +1014,7 @@
         "content": "This measures whether the configuration of the incoming stream is correct (e.g. user error).\nIf there is something wrong with the input that makes streaming it smoothly tricky/hard/impossible, the stream is considered unhealthy.\nStreams without problems are considered healthy. It's actually possible to query the corresponding node over API to get _why_ a stream is unhealthy, as well!",
         "mode": "markdown"
       },
-      "pluginVersion": "10.2.2",
+      "pluginVersion": "11.0.0",
       "title": "Healthy streams",
       "type": "text"
     },
@@ -1115,6 +1117,7 @@
         "showValue": "auto",
         "stacking": "none",
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         },
@@ -1164,7 +1167,7 @@
         "content": "The same data as on the left, but:\n- Raw values\n- Color-coded for visibility\n- Only the most recent datapoint",
         "mode": "markdown"
       },
-      "pluginVersion": "10.2.2",
+      "pluginVersion": "11.0.0",
       "title": "Healthy streams, current",
       "type": "text"
     },
@@ -1261,6 +1264,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -1302,7 +1306,7 @@
         "content": "Every concurrent viewer is given a score of \"bad\", \"okay\" and \"perfect\".\nThis graph tracks regions with 25+ viewers and shows what percentage of them had a \"perfect\" score, over time. If this is around 90%, that's considered a good result.\nMuch below it _can_ indicate a problem.\nIt's normal for this to never reach 100%, as it would require **every** viewer to have good hardware **and** a good connection, which is not likely to happen.",
         "mode": "markdown"
       },
-      "pluginVersion": "10.2.2",
+      "pluginVersion": "11.0.0",
       "title": "Flawless playback",
       "type": "text"
     },
@@ -1380,6 +1384,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -1404,7 +1409,7 @@
   ],
   "refresh": "",
   "revision": 1,
-  "schemaVersion": 38,
+  "schemaVersion": 39,
   "tags": [],
   "templating": {
     "list": []
@@ -1413,10 +1418,11 @@
     "from": "now-3h",
     "to": "now"
   },
+  "timeRangeUpdatedDuringEditOrView": false,
   "timepicker": {},
   "timezone": "",
   "title": "Livestreaming Reliability Overview",
   "uid": "6aTY0Qx4k",
-  "version": 50,
+  "version": 54,
   "weekStart": ""
 }
