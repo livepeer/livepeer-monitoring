@@ -78,8 +78,7 @@
                 "value": 80
               }
             ]
-          },
-          "unitScale": true
+          }
         },
         "overrides": []
       },
@@ -175,8 +174,7 @@
                 "value": 80
               }
             ]
-          },
-          "unitScale": true
+          }
         },
         "overrides": []
       },
@@ -206,7 +204,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "count by(node_name, region) (rate({job=\"systemd-journal\", region=~\"${region:pipe}\", node_name=~\"${node:pipe}\"} |~ `Started Lightweight Kubernetes` [$__auto]))",
+          "expr": "count by(node_name, region) (rate({job=\"systemd-journal\", region=~\"${region:pipe}\", node_name=~\"${node:pipe}\"} |= `Started Lightweight Kubernetes` [$__auto]))",
           "legendFormat": "{{region}}-{{node_name}}",
           "queryType": "range",
           "refId": "A"
@@ -254,9 +252,10 @@
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
       },
+      "description": "",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -307,8 +306,7 @@
                 "value": 80
               }
             ]
-          },
-          "unitScale": true
+          }
         },
         "overrides": []
       },
@@ -318,7 +316,7 @@
         "x": 0,
         "y": 9
       },
-      "id": 3,
+      "id": 12,
       "options": {
         "legend": {
           "calcs": [],
@@ -334,17 +332,19 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "count by(node_name, region) (rate({job=\"systemd-journal\", region=~\"${region:pipe}\", node_name=~\"${node:pipe}\"} |~ `took too long.*[0-9]s\",\"expected` [$__auto]))",
-          "legendFormat": "{{region}}-{{node_name}}",
-          "queryType": "range",
+          "expr": "sum by(ingress, region) (increase(nginx_ingress_controller_requests{ingress=~\"prod-catalyst.*\", status=~\"5..\", region=~\"${region:pipe}\"}[$__rate_interval]))\n\n",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "{{ingress}} {{region}}",
+          "range": true,
           "refId": "A"
         }
       ],
-      "title": "etcd operation took too longer than 1s",
+      "title": "nginx 5XX ",
       "type": "timeseries"
     },
     {
@@ -402,8 +402,7 @@
                 "value": 80
               }
             ]
-          },
-          "unitScale": true
+          }
         },
         "overrides": []
       },
@@ -471,7 +470,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "{job=\"systemd-journal\", region=~\"${region:pipe}\", node_name=~\"${node:pipe}\"}",
+          "expr": "{job=\"systemd-journal\", region=~\"${region:pipe}\", node_name=~\"${node:pipe}\", unit!=\"ssh.service\"}",
           "queryType": "range",
           "refId": "A"
         }
@@ -481,8 +480,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
       },
       "fieldConfig": {
         "defaults": {
@@ -534,18 +533,17 @@
                 "value": 80
               }
             ]
-          },
-          "unitScale": true
+          }
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 11,
+        "h": 9,
         "w": 6,
         "x": 0,
         "y": 18
       },
-      "id": 1,
+      "id": 3,
       "options": {
         "legend": {
           "calcs": [],
@@ -561,19 +559,17 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "sum by(region, nodename) (increase(node_disk_io_time_weighted_seconds_total{nodename=~\"${node:pipe}\", region=~\"${region:pipe}\"} * on(instance) group_left(nodename) (node_uname_info)))",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "{{region}}-{{nodename}}",
-          "range": true,
-          "refId": "B"
+          "expr": "count by(node_name, region) (rate({job=\"systemd-journal\", region=~\"${region:pipe}\", node_name=~\"${node:pipe}\"} |~ `took too long.*[0-9]s\",\"expected` [$__auto]))",
+          "legendFormat": "{{region}}-{{node_name}}",
+          "queryType": "range",
+          "refId": "A"
         }
       ],
-      "title": "node_disk_io_time_weighted_seconds_total",
+      "title": "etcd operation took too longer than 1s",
       "type": "timeseries"
     },
     {
@@ -631,8 +627,7 @@
                 "value": 80
               }
             ]
-          },
-          "unitScale": true
+          }
         },
         "overrides": []
       },
@@ -641,6 +636,127 @@
         "w": 6,
         "x": 6,
         "y": 18
+      },
+      "id": 13,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "sum by(region, nodename) (increase(node_disk_read_time_seconds_total{nodename=~\"${node:pipe}\", region=~\"${region:pipe}\"} * on(instance) group_left(nodename) (node_uname_info)))",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "{{region}}-{{nodename}}",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "node_disk_read_time_seconds_total",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "lax-dp5585"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 6,
+        "x": 0,
+        "y": 27
       },
       "id": 11,
       "options": {
@@ -728,8 +844,7 @@
                 "value": 80
               }
             ]
-          },
-          "unitScale": true
+          }
         },
         "overrides": []
       },
@@ -775,16 +890,116 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "editorMode": "code",
-          "expr": "sum by(region, instance, container) (increase(container_fs_writes_bytes_total{instance=~\"${node:pipe}\", region=~\"${region:pipe}\"}))",
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "sum by(region, instance, container) (increase(container_fs_writes_bytes_total{instance=~\"${node:pipe}\", region=~\"${region:pipe}\"}[5m]))",
+          "fullMetaSearch": false,
           "hide": false,
+          "includeNullMetadata": true,
           "instant": false,
-          "legendFormat": "{{region}}-{{instance}}-{{container}}",
+          "legendFormat": "{{ region }}-{{ instance }}-{{ container }}",
           "range": true,
-          "refId": "A"
+          "refId": "A",
+          "useBackend": false
         }
       ],
       "title": "container_fs_writes_bytes_total",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 6,
+        "x": 0,
+        "y": 38
+      },
+      "id": 1,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "sum by(region, nodename) (increase(node_disk_io_time_weighted_seconds_total{nodename=~\"${node:pipe}\", region=~\"${region:pipe}\"} * on(instance) group_left(nodename) (node_uname_info)))",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "{{region}}-{{nodename}}",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "node_disk_io_time_weighted_seconds_total",
       "type": "timeseries"
     }
   ],
@@ -862,11 +1077,10 @@
     "from": "now-6h",
     "to": "now"
   },
-  "timeRangeUpdatedDuringEditOrView": false,
   "timepicker": {},
   "timezone": "",
   "title": "kubernetes Restarts Issue",
   "uid": "aa2c9d25-116e-4672-87d8-2831582d7d34",
-  "version": 19,
+  "version": 25,
   "weekStart": ""
 }

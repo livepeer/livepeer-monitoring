@@ -15,7 +15,6 @@
       }
     ]
   },
-  "description": "Viewership metrics for all streams from fishtank",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
@@ -105,32 +104,7 @@
             ]
           }
         },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "{status=\"502\"}"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -159,7 +133,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "sum(count_over_time({namespace=\"default\", app=\"ingress-nginx\", stream=\"stdout\", region=~\"${region:pipe}\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" |~ \"${ROOMS:pipe}\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<referer>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>` | line_format \"{{ .referer }}\" | pattern \"<refererScheme>://<refererDomain>/<refererPath>\" | line_format \"{{ .refererDomain }}\"[1m])) by (status)",
+          "expr": "sum(count_over_time({namespace=\"default\", app=\"ingress-nginx\", stream=\"stdout\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" |~ \"${ROOMS:pipe}\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<referer>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>` | line_format \"{{ .referer }}\" | pattern \"<refererScheme>://<refererDomain>/<refererPath>\" | line_format \"{{ .refererDomain }}\"[1m])) by (status)",
           "queryType": "range",
           "refId": "A"
         }
@@ -209,7 +183,6 @@
               "mode": "off"
             }
           },
-          "fieldMinMax": false,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -223,8 +196,7 @@
                 "value": 80
               }
             ]
-          },
-          "unit": "none"
+          }
         },
         "overrides": []
       },
@@ -235,7 +207,6 @@
         "y": 0
       },
       "id": 8,
-      "interval": "30s",
       "options": {
         "legend": {
           "calcs": [],
@@ -256,14 +227,127 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "sum by(status) (count_over_time({app=\"catalyst\", region=~\"${region:pipe}\"} |~ `(?i)playback access control` | logfmt | playback_id =~ `${ROOMS:pipe}` | line_format `{{ .msg }}` | pattern `<_> control <status>` [$__interval]))",
-          "legendFormat": "{{ status }}",
+          "expr": "sum(count_over_time({app=\"catalyst\"} |~ \"Playback access control\" |~ \"${ROOMS:pipe}\" | pattern `<_> Playback access control <status> `[1m])) by (status)",
           "queryType": "range",
-          "refId": "A",
-          "splitDuration": "1d"
+          "refId": "A"
         }
       ],
       "title": "Access Control Allow vs Deny",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 5,
+      "panels": [],
+      "title": "Viewership breakdown",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "links": [],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 13,
+        "x": 0,
+        "y": 9
+      },
+      "id": 7,
+      "options": {
+        "legend": {
+          "calcs": [
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Last",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "maxHeight": 600,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream=~\".*(${ROOMS:pipe})\"}[1m])",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{stream}}",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Viewers globally",
       "type": "timeseries"
     },
     {
@@ -280,7 +364,7 @@
             "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
-            "axisLabel": "Rebuffer rate",
+            "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
@@ -310,33 +394,37 @@
           },
           "mappings": [],
           "thresholds": {
-            "mode": "percentage",
+            "mode": "absolute",
             "steps": [
               {
                 "color": "green",
                 "value": null
               }
             ]
-          },
-          "unit": "percentunit"
+          }
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 8
+        "h": 11,
+        "w": 11,
+        "x": 13,
+        "y": 9
       },
-      "id": 10,
+      "id": 3,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
+          "calcs": [
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Last",
+          "sortDesc": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -348,28 +436,15 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum by() (analytics_logs_buffer_time_ms_sum{user_id=\"${USER_ID}\", region=~\"${region:pipe}\"}) / (sum(analytics_logs_playtime_ms_sum{user_id=\"${USER_ID}\",region=~\"${region:pipe}\"}) + sum by() (analytics_logs_buffer_time_ms_sum{user_id=\"${USER_ID}\", region=~\"${region:pipe}\"}))",
+          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream=~\".*(${ROOMS:pipe})\"}[1m] ) by (catalyst_node)",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Rebuffer rate",
+      "title": "Viewers per node",
       "type": "timeseries"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 16
-      },
-      "id": 5,
-      "panels": [],
-      "title": "Viewership breakdown",
-      "type": "row"
     },
     {
       "datasource": {
@@ -436,214 +511,226 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "video+2289jf6f37kq3put"
+              "options": "video+07fch8nrf09oduwq"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Living Room"
+                "value": "player-1 07fch8nrf09oduwq"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+c00a95tv3rysf9ji"
+              "options": "video+4f5emzrc3tdk2z0f"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Upstairs Bathroom"
+                "value": "player-2 4f5emzrc3tdk2z0f"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+f355shnx2w9xkhxo"
+              "options": "video+58d0z7ikrmex1cf4"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Kitchen"
+                "value": "player-3 58d0z7ikrmex1cf4"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+1bcd83gg4ang03l8"
+              "options": "video+1eb96gqvcvdkvpxn"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Upstairs Hallway"
+                "value": "player-4 1eb96gqvcvdkvpxn"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+9cfeeodtu023cb91"
+              "options": "video+d462hhgt0dm70v4i"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Bar"
+                "value": "player-5 d462hhgt0dm70v4i"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+33d25dz3mqilw1lp"
+              "options": "video+c1c1gl1g3hatuqxy"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Lounge"
+                "value": "player-6 c1c1gl1g3hatuqxy"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+a12bmexn0h5td3kh"
+              "options": "video+fce7bmzmyigqg3s7"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Bedroom 1"
+                "value": "Director fce7bmzmyigqg3s7"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+cc92intolqvyf117"
+              "options": "video+6265nisbyp5yzb1y"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Downstairs Hallway"
+                "value": "Basecamp 6265nisbyp5yzb1y"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+052cnzsasax9c10b"
+              "options": "video+a100z3up7fjutopo"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Master Bathroom"
+                "value": "Schitty a100z3up7fjutopo"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+d7a07saeijthkqqk"
+              "options": "video+1588xv96xxrzf58t"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Bedroom 3"
+                "value": "Merchant 1588xv96xxrzf58t"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+2ef11errf17as0df"
+              "options": "video+9437407ypzr2rtb9"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Dog House"
+                "value": "The Downs 9437407ypzr2rtb9"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+d01cpugvvx04448x"
+              "options": "video+052ejcod22mw7dm3"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Bedroom 2"
+                "value": "Campgrounds 052ejcod22mw7dm3"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+b0739nzrqm6m8k1k"
+              "options": "video+eeb1bdrakm4jms72"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Downstairs Bathroom"
+                "value": "Soda Tent eeb1bdrakm4jms72"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+cbcbvq7hgf5vwti2"
+              "options": "video+47adl83vpkg634z5"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "The Bunk"
+                "value": "Beaver Street 47adl83vpkg634z5"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+0b6a2wuaxm56yhkr"
+              "options": "video+96c2sfx928fptosp"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Attic"
+                "value": "Bus 96c2sfx928fptosp"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+c0967lxltr0zkftj"
+              "options": "video+58b6y7otmf3nz3m2"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Launch"
+                "value": "Area A 58b6y7otmf3nz3m2"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+b905oqz6q3czq6pb"
+              "options": "video+b03e3glkp2h91ivm"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Confessionals"
+                "value": "Area B b03e3glkp2h91ivm"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+e9b4a7e4l397sngc"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Wildlands Cave e9b4a7e4l397sngc"
               }
             ]
           }
         ]
       },
       "gridPos": {
-        "h": 9,
-        "w": 24,
+        "h": 16,
+        "w": 13,
         "x": 0,
-        "y": 17
+        "y": 20
       },
       "id": 1,
       "options": {
@@ -671,7 +758,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "label_replace(sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", user_id=\"$USER_ID\", region=~\"${region:pipe}\", stream=~\"video\\\\+(${ROOMS:pipe})\"}[1m] ) by (stream) or on() vector(0), \"stream_id\", \"$1\", \"stream\", \".*\\\\+(.*)\")",
+          "expr": "label_replace(sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream=~\".*(${ROOMS:pipe})\"}[1m] ) by (stream) or on() vector(0), \"stream_id\", \"$1\", \"stream\", \".*\\\\+(.*)\")",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -734,107 +821,6 @@
               {
                 "color": "green",
                 "value": null
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 7,
-        "x": 0,
-        "y": 26
-      },
-      "id": 7,
-      "options": {
-        "legend": {
-          "calcs": [
-            "last"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true,
-          "sortBy": "Last",
-          "sortDesc": true
-        },
-        "tooltip": {
-          "maxHeight": 600,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", user_id=\"$USER_ID\", region=~\"${region:pipe}\", stream=~\"video\\\\+(${ROOMS:pipe})\"}[1m])",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "{{stream}}",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "Viewers globally",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
               },
               {
                 "color": "red",
@@ -846,207 +832,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 10,
-        "w": 6,
-        "x": 7,
-        "y": 26
-      },
-      "id": 9,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "maxHeight": 600,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "count by(catalyst_node) (mist_sessions{sessType=\"incoming\", user_id=\"$USER_ID\", region=~\"${region:pipe}\", stream=~\"video\\\\+(${ROOMS:pipe})\"} > 0)",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "Origin server",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 17,
+        "h": 16,
         "w": 11,
         "x": 13,
-        "y": 26
-      },
-      "id": 3,
-      "options": {
-        "legend": {
-          "calcs": [
-            "last"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true,
-          "sortBy": "Last",
-          "sortDesc": true
-        },
-        "tooltip": {
-          "maxHeight": 600,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "editorMode": "code",
-          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", user_id=\"$USER_ID\", region=~\"${region:pipe}\", stream=~\"video\\\\+(${ROOMS:pipe})\"}[1m] ) by (catalyst_node)",
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Viewers per node",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "links": [],
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 11,
-        "w": 13,
-        "x": 0,
-        "y": 36
+        "y": 20
       },
       "id": 2,
       "options": {
@@ -1073,7 +862,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", user_id=\"$USER_ID\", region=~\"${region:pipe}\", stream=~\"video\\\\+(${ROOMS:pipe})\"}) by (region)",
+          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream=~\".*(${ROOMS:pipe})\"}) by (region)",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -1081,6 +870,105 @@
         }
       ],
       "title": "Viewers per region",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 13,
+        "x": 0,
+        "y": 36
+      },
+      "id": 9,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "maxHeight": 600,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "sum by(catalyst_node) (mist_sessions{sessType=\"incoming\", stream=~\"video(rec)?\\\\+(${ROOMS:pipe})\"}) > 0",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Origin server",
       "type": "timeseries"
     }
   ],
@@ -1090,12 +978,13 @@
     "fishtank",
     "viewership",
     "metrics",
-    "observe"
+    "observe",
+    "2023"
   ],
   "templating": {
     "list": [
       {
-        "allValue": ".*",
+        "allValue": "",
         "current": {
           "selected": true,
           "text": [
@@ -1105,79 +994,128 @@
             "$__all"
           ]
         },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "PBFA97CFB590B2093"
-        },
-        "definition": "label_values(mist_sessions{user_id=\"$USER_ID\", region=~\"${region:pipe}\"},stream)",
         "hide": 0,
         "includeAll": true,
         "multi": true,
         "name": "ROOMS",
-        "options": [],
-        "query": {
-          "qryType": 1,
-          "query": "label_values(mist_sessions{user_id=\"$USER_ID\", region=~\"${region:pipe}\"},stream)",
-          "refId": "PrometheusVariableQueryEditor-VariableQuery"
-        },
-        "refresh": 1,
-        "regex": "/\\+(?<value>\\S+)/",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": false,
+            "text": "player-1",
+            "value": "07fch8nrf09oduwq"
+          },
+          {
+            "selected": false,
+            "text": "player-2",
+            "value": "4f5emzrc3tdk2z0f"
+          },
+          {
+            "selected": false,
+            "text": "player-3",
+            "value": "58d0z7ikrmex1cf4"
+          },
+          {
+            "selected": false,
+            "text": "player-4",
+            "value": "1eb96gqvcvdkvpxn"
+          },
+          {
+            "selected": false,
+            "text": "player-5",
+            "value": "d462hhgt0dm70v4i"
+          },
+          {
+            "selected": false,
+            "text": "player-6",
+            "value": "c1c1gl1g3hatuqxy"
+          },
+          {
+            "selected": false,
+            "text": "Director",
+            "value": "fce7bmzmyigqg3s7"
+          },
+          {
+            "selected": false,
+            "text": "Basecamp",
+            "value": "6265nisbyp5yzb1y"
+          },
+          {
+            "selected": false,
+            "text": "Schitty",
+            "value": "a100z3up7fjutopo"
+          },
+          {
+            "selected": false,
+            "text": "Merchant",
+            "value": "1588xv96xxrzf58t"
+          },
+          {
+            "selected": false,
+            "text": "The Downs",
+            "value": "9437407ypzr2rtb9"
+          },
+          {
+            "selected": false,
+            "text": "Campgrounds",
+            "value": "052ejcod22mw7dm3"
+          },
+          {
+            "selected": false,
+            "text": "Soda Tent",
+            "value": "eeb1bdrakm4jms72"
+          },
+          {
+            "selected": false,
+            "text": "Beaver Street",
+            "value": "47adl83vpkg634z5"
+          },
+          {
+            "selected": false,
+            "text": "Bus",
+            "value": "96c2sfx928fptosp"
+          },
+          {
+            "selected": false,
+            "text": "Area A",
+            "value": "58b6y7otmf3nz3m2"
+          },
+          {
+            "selected": false,
+            "text": "Area B",
+            "value": "b03e3glkp2h91ivm"
+          },
+          {
+            "selected": false,
+            "text": "Wildlands Cave",
+            "value": "e9b4a7e4l397sngc"
+          },
+          {
+            "selected": false,
+            "text": "Gulch",
+            "value": "c801faefbhz3zeoj"
+          }
+        ],
+        "query": "player-1 : 07fch8nrf09oduwq,player-2 : 4f5emzrc3tdk2z0f,player-3 : 58d0z7ikrmex1cf4,player-4 : 1eb96gqvcvdkvpxn,player-5 : d462hhgt0dm70v4i,player-6 : c1c1gl1g3hatuqxy,Director : fce7bmzmyigqg3s7,Basecamp : 6265nisbyp5yzb1y,Schitty : a100z3up7fjutopo,Merchant : 1588xv96xxrzf58t,The Downs : 9437407ypzr2rtb9,Campgrounds : 052ejcod22mw7dm3,Soda Tent : eeb1bdrakm4jms72,Beaver Street : 47adl83vpkg634z5,Bus : 96c2sfx928fptosp,Area A : 58b6y7otmf3nz3m2,Area B : b03e3glkp2h91ivm,Wildlands Cave : e9b4a7e4l397sngc,Gulch : c801faefbhz3zeoj",
+        "queryValue": "",
         "skipUrlSync": false,
-        "sort": 0,
-        "type": "query"
-      },
-      {
-        "description": "Livepeer API user id for the user (devs@fishtank.live): https://livepeer.studio/dashboard/app/admin/user/c73e1d03-743e-4313-9612-6a760fb4d82c",
-        "hide": 2,
-        "label": "devs@fishtank.live",
-        "name": "USER_ID",
-        "query": "c73e1d03-743e-4313-9612-6a760fb4d82c",
-        "skipUrlSync": false,
-        "type": "constant"
-      },
-      {
-        "allValue": ".*",
-        "current": {
-          "selected": true,
-          "text": [
-            "All"
-          ],
-          "value": [
-            "$__all"
-          ]
-        },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "PBFA97CFB590B2093"
-        },
-        "definition": "label_values(mist_sessions{user_id=\"$USER_ID\"},region)",
-        "hide": 0,
-        "includeAll": true,
-        "label": "Region",
-        "multi": true,
-        "name": "region",
-        "options": [],
-        "query": {
-          "qryType": 1,
-          "query": "label_values(mist_sessions{user_id=\"$USER_ID\"},region)",
-          "refId": "PrometheusVariableQueryEditor-VariableQuery"
-        },
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 1,
-        "type": "query"
+        "type": "custom"
       }
     ]
   },
   "time": {
-    "from": "now-3h",
+    "from": "2024-06-25T12:00:00.000Z",
     "to": "now"
   },
+  "timeRangeUpdatedDuringEditOrView": false,
   "timepicker": {},
   "timezone": "",
-  "title": "Fishtank viewership",
-  "uid": "cce96324-988b-4a9b-8165-07b72cf8d481",
-  "version": 43,
+  "title": "Fishtank 2.5 viewership",
+  "uid": "72050760-2e1b-11ef-95ba-12760f078f74",
+  "version": 8,
   "weekStart": ""
 }

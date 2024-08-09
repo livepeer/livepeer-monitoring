@@ -136,8 +136,7 @@
               }
             ]
           },
-          "unit": "percent",
-          "unitScale": true
+          "unit": "percent"
         },
         "overrides": []
       },
@@ -148,7 +147,6 @@
         "y": 0
       },
       "id": 4,
-      "links": [],
       "options": {
         "legend": {
           "calcs": [
@@ -161,6 +159,7 @@
           "sortDesc": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -245,8 +244,7 @@
               }
             ]
           },
-          "unit": "percent",
-          "unitScale": true
+          "unit": "percent"
         },
         "overrides": []
       },
@@ -257,7 +255,6 @@
         "y": 7
       },
       "id": 5,
-      "links": [],
       "options": {
         "legend": {
           "calcs": [
@@ -268,6 +265,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
@@ -351,8 +349,7 @@
               }
             ]
           },
-          "unit": "decbytes",
-          "unitScale": true
+          "unit": "decbytes"
         },
         "overrides": []
       },
@@ -363,7 +360,6 @@
         "y": 14
       },
       "id": 13,
-      "links": [],
       "options": {
         "legend": {
           "calcs": [
@@ -374,6 +370,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
@@ -457,8 +454,7 @@
               }
             ]
           },
-          "unit": "decbytes",
-          "unitScale": true
+          "unit": "decbytes"
         },
         "overrides": []
       },
@@ -469,7 +465,6 @@
         "y": 14
       },
       "id": 14,
-      "links": [],
       "options": {
         "legend": {
           "calcs": [
@@ -480,6 +475,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
@@ -593,7 +589,7 @@
           "links": [],
           "mappings": [],
           "max": 100,
-          "min": 90,
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -603,12 +599,11 @@
               },
               {
                 "color": "red",
-                "value": 95
+                "value": 85
               }
             ]
           },
-          "unit": "percent",
-          "unitScale": true
+          "unit": "percent"
         },
         "overrides": []
       },
@@ -619,7 +614,6 @@
         "y": 21
       },
       "id": 1,
-      "links": [],
       "options": {
         "legend": {
           "calcs": [
@@ -627,9 +621,12 @@
           ],
           "displayMode": "table",
           "placement": "right",
-          "showLegend": true
+          "showLegend": true,
+          "sortBy": "Last *",
+          "sortDesc": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
@@ -641,16 +638,18 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "editorMode": "code",
           "exemplar": true,
-          "expr": "sum by (region, mountpoint, nodename) (\n    ((100.0 - 100 * ((node_filesystem_avail_bytes[1m] / 1000 / 1000 ) / (node_filesystem_size_bytes{mountpoint != \"/var/mnt/core-dump-handler/cores\", mountpoint != \"/home/data/core-dump-handler/cores\", mountpoint !~ \"/run/k3s.+\", region=~\"lax|mdw|nyc|sao|lon|fra|prg|sin|ams\"}[1m]  / 1024 / 1024))))\n        * on(instance) group_left(nodename) node_uname_info\n    )",
+          "expr": "sum by (region, mountpoint, nodename) (\n    ((100.0 - 100 * ((node_filesystem_avail_bytes[1m] / 1024 / 1024 ) / (node_filesystem_size_bytes{mountpoint != \"/var/mnt/core-dump-handler/cores\", mountpoint != \"/home/data/core-dump-handler/cores\", mountpoint !~ \"/run/k3s.+\", region=~\"lax|mdw|nyc|sao|lon|fra|prg|sin|ams\"}[1m]  / 1024 / 1024))))\n        * on(instance) group_left(nodename) node_uname_info\n    )",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
           "legendFormat": "{{region}}-{{nodename}}: {{mountpoint}}",
+          "range": true,
           "refId": "A"
         }
       ],
-      "title": "Nodes Disk Usage (> 90%)",
+      "title": "Nodes Disk Usage",
       "transparent": true,
       "type": "timeseries"
     },
@@ -753,8 +752,7 @@
                 "value": 80
               }
             ]
-          },
-          "unitScale": true
+          }
         },
         "overrides": []
       },
@@ -777,6 +775,7 @@
           "sortDesc": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -903,8 +902,7 @@
                 "value": 80
               }
             ]
-          },
-          "unitScale": true
+          }
         },
         "overrides": []
       },
@@ -927,6 +925,7 @@
           "sortDesc": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -937,10 +936,12 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "editorMode": "code",
           "exemplar": true,
-          "expr": "sum by (region, nodename) (\n        node_load1{} \n        * on(instance) group_left(nodename) node_uname_info\n    )",
+          "expr": "sum by (region, nodename) (\n        node_load1{} \n        * on(instance) group_left(nodename) node_uname_info\n    )\n       /\ncount by(region, nodename) (\n    node_cpu_seconds_total{mode=\"system\"}\n    * on(instance) group_left(nodename) node_uname_info\n    )\n",
           "interval": "",
           "legendFormat": "{{ region }}-{{ nodename }}",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -952,7 +953,7 @@
           "visible": true
         }
       ],
-      "title": "System Load (1m)",
+      "title": "System Load (1m) %",
       "type": "timeseries"
     },
     {
@@ -1010,8 +1011,7 @@
                 "value": 80
               }
             ]
-          },
-          "unitScale": true
+          }
         },
         "overrides": []
       },
@@ -1030,6 +1030,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -1105,8 +1106,7 @@
                 "value": 80
               }
             ]
-          },
-          "unitScale": true
+          }
         },
         "overrides": []
       },
@@ -1125,6 +1125,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -1200,8 +1201,7 @@
                 "value": 80
               }
             ]
-          },
-          "unitScale": true
+          }
         },
         "overrides": []
       },
@@ -1220,6 +1220,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -1295,8 +1296,7 @@
                 "value": 80
               }
             ]
-          },
-          "unitScale": true
+          }
         },
         "overrides": []
       },
@@ -1315,6 +1315,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -1388,8 +1389,7 @@
                 "value": 80
               }
             ]
-          },
-          "unitScale": true
+          }
         },
         "overrides": []
       },
@@ -1408,6 +1408,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -1429,7 +1430,7 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "",
+  "refresh": "1m",
   "schemaVersion": 39,
   "tags": [
     "alerts",
@@ -1439,7 +1440,7 @@
     "list": []
   },
   "time": {
-    "from": "now-30m",
+    "from": "now-12h",
     "to": "now"
   },
   "timeRangeUpdatedDuringEditOrView": false,
@@ -1471,6 +1472,6 @@
   "timezone": "utc",
   "title": "Alerts - Nodes",
   "uid": "100000012",
-  "version": 64,
+  "version": 70,
   "weekStart": ""
 }
