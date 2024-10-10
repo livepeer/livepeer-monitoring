@@ -744,6 +744,7 @@
     },
     {
       "datasource": {
+        "default": true,
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
@@ -829,7 +830,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(livepeer_versions{catalyst!=\"true\", node_type=\"bctr\", livepeer_node_type!=\"prod-livepeer-recording\", }) by (livepeerversion)",
+          "expr": "sum(livepeer_versions{catalyst!=\"true\", node_type=\"bctr\", livepeer_node_type!=\"staging-livepeer-recording\", livepeer_node_type!=\"staging-livepeer-ai-gateway\"}) by (livepeerversion)",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -932,6 +933,103 @@
         }
       ],
       "title": "go-livepeer (Recording Broadcasters)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 60,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 18,
+        "y": 14
+      },
+      "id": 21,
+      "interval": "1m",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "sum(livepeer_versions{catalyst!=\"true\", node_type=\"bctr\", livepeer_node_type=~\".+-livepeer-ai-gateway\"}) by (livepeerversion)",
+          "legendFormat": "{{ livepeerversion }}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "go-livepeer (AI Gateway)",
       "type": "timeseries"
     },
     {
