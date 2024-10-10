@@ -136,7 +136,8 @@
               }
             ]
           },
-          "unit": "percent"
+          "unit": "percent",
+          "unitScale": true
         },
         "overrides": []
       },
@@ -147,11 +148,11 @@
         "y": 0
       },
       "id": 4,
+      "links": [],
       "options": {
         "legend": {
           "calcs": [
-            "lastNotNull",
-            "max"
+            "lastNotNull"
           ],
           "displayMode": "table",
           "placement": "right",
@@ -244,7 +245,8 @@
               }
             ]
           },
-          "unit": "percent"
+          "unit": "percent",
+          "unitScale": true
         },
         "overrides": []
       },
@@ -255,6 +257,7 @@
         "y": 7
       },
       "id": 5,
+      "links": [],
       "options": {
         "legend": {
           "calcs": [
@@ -348,7 +351,8 @@
               }
             ]
           },
-          "unit": "decbytes"
+          "unit": "decbytes",
+          "unitScale": true
         },
         "overrides": []
       },
@@ -359,6 +363,7 @@
         "y": 14
       },
       "id": 13,
+      "links": [],
       "options": {
         "legend": {
           "calcs": [
@@ -452,7 +457,8 @@
               }
             ]
           },
-          "unit": "decbytes"
+          "unit": "decbytes",
+          "unitScale": true
         },
         "overrides": []
       },
@@ -463,6 +469,7 @@
         "y": 14
       },
       "id": 14,
+      "links": [],
       "options": {
         "legend": {
           "calcs": [
@@ -600,7 +607,8 @@
               }
             ]
           },
-          "unit": "percent"
+          "unit": "percent",
+          "unitScale": true
         },
         "overrides": []
       },
@@ -611,6 +619,7 @@
         "y": 21
       },
       "id": 1,
+      "links": [],
       "options": {
         "legend": {
           "calcs": [
@@ -618,9 +627,7 @@
           ],
           "displayMode": "table",
           "placement": "right",
-          "showLegend": true,
-          "sortBy": "Last *",
-          "sortDesc": true
+          "showLegend": true
         },
         "tooltip": {
           "mode": "multi",
@@ -634,14 +641,12 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "editorMode": "code",
           "exemplar": true,
-          "expr": "sum by (region, mountpoint, nodename) (\n    ((100.0 - 100 * ((node_filesystem_avail_bytes[1m] / 1000 / 1000 ) / (node_filesystem_size_bytes{mountpoint != \"/var/mnt/core-dump-handler/cores\", mountpoint != \"/home/data/core-dump-handler/cores\", mountpoint !~ \"/run/k3s.+\"}[1m]  / 1024 / 1024))))\n        * on(instance) group_left(nodename) node_uname_info\n    )",
+          "expr": "sum by (region, mountpoint, nodename) (\n    ((100.0 - 100 * ((node_filesystem_avail_bytes[1m] / 1000 / 1000 ) / (node_filesystem_size_bytes{mountpoint != \"/var/mnt/core-dump-handler/cores\", mountpoint != \"/home/data/core-dump-handler/cores\", mountpoint !~ \"/run/k3s.+\", region=~\"lax|mdw|nyc|sao|lon|fra|prg|sin|ams\"}[1m]  / 1024 / 1024))))\n        * on(instance) group_left(nodename) node_uname_info\n    )",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
           "legendFormat": "{{region}}-{{nodename}}: {{mountpoint}}",
-          "range": true,
           "refId": "A"
         }
       ],
@@ -748,7 +753,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -897,7 +903,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -1003,7 +1010,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -1097,7 +1105,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -1191,7 +1200,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -1285,7 +1295,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -1377,7 +1388,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -1430,6 +1442,7 @@
     "from": "now-30m",
     "to": "now"
   },
+  "timeRangeUpdatedDuringEditOrView": false,
   "timepicker": {
     "refresh_intervals": [
       "5s",
@@ -1458,6 +1471,6 @@
   "timezone": "utc",
   "title": "Alerts - Nodes",
   "uid": "100000012",
-  "version": 3,
+  "version": 1,
   "weekStart": ""
 }
