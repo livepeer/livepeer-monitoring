@@ -57,7 +57,7 @@
         "content": "--------\n# Tickets\n-------",
         "mode": "markdown"
       },
-      "pluginVersion": "11.1.3",
+      "pluginVersion": "11.2.0",
       "transparent": true,
       "type": "text"
     },
@@ -83,7 +83,7 @@
         "content": "_____\n# Model stats\n_____",
         "mode": "markdown"
       },
-      "pluginVersion": "11.1.3",
+      "pluginVersion": "11.2.0",
       "transparent": true,
       "type": "text"
     },
@@ -155,7 +155,7 @@
         "textMode": "value",
         "wideLayout": true
       },
-      "pluginVersion": "11.1.3",
+      "pluginVersion": "11.2.0",
       "targets": [
         {
           "datasource": {
@@ -373,6 +373,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 70,
             "gradientMode": "hue",
@@ -537,7 +538,7 @@
         "content": "_____\n# Job stats\n_____",
         "mode": "markdown"
       },
-      "pluginVersion": "11.1.3",
+      "pluginVersion": "11.2.0",
       "transparent": true,
       "type": "text"
     },
@@ -594,7 +595,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.1.3",
+      "pluginVersion": "11.2.0",
       "targets": [
         {
           "datasource": {
@@ -666,7 +667,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.1.3",
+      "pluginVersion": "11.2.0",
       "targets": [
         {
           "datasource": {
@@ -738,7 +739,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.1.3",
+      "pluginVersion": "11.2.0",
       "targets": [
         {
           "datasource": {
@@ -776,6 +777,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "bars",
             "fillOpacity": 70,
             "gradientMode": "none",
@@ -915,7 +917,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.1.3",
+      "pluginVersion": "11.2.0",
       "targets": [
         {
           "datasource": {
@@ -1112,6 +1114,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "bars",
             "fillOpacity": 70,
             "gradientMode": "none",
@@ -1145,7 +1148,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "transparent"
+                "color": "transparent",
+                "value": null
               }
             ]
           },
@@ -1327,7 +1331,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "transparent"
+                "color": "transparent",
+                "value": null
               }
             ]
           },
@@ -1394,7 +1399,7 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "11.1.3",
+      "pluginVersion": "11.2.0",
       "targets": [
         {
           "datasource": {
@@ -1531,7 +1536,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "transparent"
+                "color": "transparent",
+                "value": null
               }
             ]
           },
@@ -1596,7 +1602,7 @@
         },
         "showHeader": true
       },
-      "pluginVersion": "11.1.3",
+      "pluginVersion": "11.2.0",
       "targets": [
         {
           "datasource": {
@@ -1835,7 +1841,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "transparent"
+                "color": "transparent",
+                "value": null
               }
             ]
           },
@@ -1882,7 +1889,7 @@
           }
         ]
       },
-      "pluginVersion": "11.1.3",
+      "pluginVersion": "11.2.0",
       "targets": [
         {
           "datasource": {
@@ -1945,6 +1952,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -1977,7 +1985,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "transparent"
+                "color": "transparent",
+                "value": null
               }
             ]
           },
@@ -2124,6 +2133,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -2154,7 +2164,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2167,7 +2178,7 @@
       },
       "gridPos": {
         "h": 10,
-        "w": 9,
+        "w": 10,
         "x": 0,
         "y": 76
       },
@@ -2228,8 +2239,8 @@
       "description": "excludes `Polling blocks` log lines",
       "gridPos": {
         "h": 10,
-        "w": 15,
-        "x": 9,
+        "w": 14,
+        "x": 10,
         "y": 76
       },
       "id": 23763572331,
@@ -2266,21 +2277,22 @@
     },
     {
       "datasource": {
+        "default": false,
         "type": "loki",
         "uid": "P8E80F9AEF21F6940"
       },
       "description": "",
       "gridPos": {
-        "h": 10,
-        "w": 15,
-        "x": 9,
+        "h": 7,
+        "w": 10,
+        "x": 0,
         "y": 86
       },
-      "id": 23763572332,
+      "id": 23763572333,
       "links": [
         {
           "title": "Explore logs",
-          "url": "/grafana/explore?schemaVersion=1&panes=%7B%2203k%22:%7B%22datasource%22:%22P8E80F9AEF21F6940%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22expr%22:%22%7Bapp%3D~%5C%22.%2Alivepeer-api%5C%22%7D%20%7C%3D%20%60%2Fapi%2Fbeta%2Fgenerate%2F%60%22,%22queryType%22:%22range%22,%22datasource%22:%7B%22type%22:%22loki%22,%22uid%22:%22P8E80F9AEF21F6940%22%7D,%22editorMode%22:%22code%22%7D%5D,%22range%22:%7B%22from%22:%22${__from}%22,%22to%22:%22${__to}%22%7D%7D%7D&orgId=1"
+          "url": "/grafana/explore?schemaVersion=1&panes=%7B%2203k%22:%7B%22datasource%22:%22P8E80F9AEF21F6940%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22expr%22:%22%7Bapp%3D%5C%22ingress-nginx%5C%22,%20region%21~%5C%22eu-metrics%7Canalytics%5C%22%7D%20%7C%3D%20%60livepeer-api%60%20%7C~%20%60%2Fapi%2F.%2Agenerate%2F%60%22,%22queryType%22:%22range%22,%22datasource%22:%7B%22type%22:%22loki%22,%22uid%22:%22P8E80F9AEF21F6940%22%7D,%22editorMode%22:%22code%22%7D%5D,%22range%22:%7B%22from%22:%22${__from}%22,%22to%22:%22${__to}%22%7D%7D%7D&orgId=1"
         }
       ],
       "options": {
@@ -2300,7 +2312,52 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "{app=~\".*livepeer-api\"} |= `/api/beta/generate/`",
+          "expr": "{app=\"ingress-nginx\", region!~\"eu-metrics|analytics\"} |= `livepeer-api` |~ `/api/.*generate/`",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Livepeer API logs",
+      "type": "logs"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "description": "",
+      "gridPos": {
+        "h": 7,
+        "w": 14,
+        "x": 10,
+        "y": 86
+      },
+      "id": 23763572332,
+      "links": [
+        {
+          "title": "Explore logs",
+          "url": "/grafana/explore?schemaVersion=1&panes=%7B%2203k%22:%7B%22datasource%22:%22P8E80F9AEF21F6940%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22expr%22:%22%7Bapp%3D~%5C%22.%2Alivepeer-api%5C%22%7D%20%7C~%20%60%2Fapi%2F.%2Agenerate%2F%60%22,%22queryType%22:%22range%22,%22datasource%22:%7B%22type%22:%22loki%22,%22uid%22:%22P8E80F9AEF21F6940%22%7D,%22editorMode%22:%22code%22%7D%5D,%22range%22:%7B%22from%22:%22${__from}%22,%22to%22:%22${__to}%22%7D%7D%7D&orgId=1"
+        }
+      ],
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "{app=~\".*livepeer-api\"} |~ `/api/.*generate/`",
           "queryType": "range",
           "refId": "A"
         }
@@ -2427,7 +2484,7 @@
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-2d",
     "to": "now"
   },
   "timepicker": {
@@ -2439,6 +2496,6 @@
   "timezone": "",
   "title": "AI Gateway",
   "uid": "Livepeer-Gateway-AI",
-  "version": 8,
+  "version": 2,
   "weekStart": "monday"
 }
