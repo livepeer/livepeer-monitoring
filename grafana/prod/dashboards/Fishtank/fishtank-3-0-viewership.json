@@ -30,7 +30,7 @@
       "title": "Shared fishtank configurations",
       "tooltip": "",
       "type": "link",
-      "url": "https://www.notion.so/livepeer/Livestream-Configuration-d5a950e93c5546f783b6ef9a53628e42"
+      "url": "https://www.notion.so/livepeer/Shared-Season-3-Configuration-b2069e23b90d44558d85d226a5a465d3"
     },
     {
       "asDropdown": false,
@@ -42,13 +42,14 @@
       "title": "Debugging/handling",
       "tooltip": "",
       "type": "link",
-      "url": "https://www.notion.so/livepeer/Fishtank-4ccaf094677942f0adf8a965a639e58a"
+      "url": "https://www.notion.so/livepeer/Fishtank-Season-3-c06fe74dfcf843788589260f5630bd03?pvs=4#fdfadd7c19f148f384260ffb15fa1fbe"
     }
   ],
   "liveNow": false,
   "panels": [
     {
       "datasource": {
+        "default": false,
         "type": "loki",
         "uid": "P8E80F9AEF21F6940"
       },
@@ -64,6 +65,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -104,32 +106,7 @@
             ]
           }
         },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "{status=\"502\"}"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -146,6 +123,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -157,7 +135,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "sum(count_over_time({namespace=\"default\", app=\"ingress-nginx\", stream=\"stdout\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" |~ \"${ROOMS:pipe}\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<referer>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>` | line_format \"{{ .referer }}\" | pattern \"<refererScheme>://<refererDomain>/<refererPath>\" | line_format \"{{ .refererDomain }}\"[1m])) by (status)",
+          "expr": "sum(count_over_time({namespace=\"default\", app=\"ingress-nginx\", stream=\"stdout\", region!=\"eu-metrics\", region!=\"analytics\"} != \"51eebae3-9b8e-48bc-89ca-5340c4074a48.json\" |~ \"${ROOMS:pipe}\" | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<referer>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>` | line_format \"{{ .referer }}\" | pattern \"<refererScheme>://<refererDomain>/<refererPath>\" | line_format \"{{ .refererDomain }}\"[1m])) by (status)",
           "queryType": "range",
           "refId": "A"
         }
@@ -182,6 +160,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -239,6 +218,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -288,6 +268,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -347,6 +328,7 @@
           "sortDesc": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -389,6 +371,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -446,6 +429,7 @@
           "sortDesc": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -469,6 +453,7 @@
     },
     {
       "datasource": {
+        "default": true,
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
@@ -484,6 +469,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -513,7 +499,7 @@
             {
               "targetBlank": true,
               "title": "admin dashboard",
-              "url": "https://livepeer.com/app/stream/${__field.labels.stream_id}?autoplay"
+              "url": "https://livepeer.com/dashboard/app/stream/${__field.labels.stream_id}?autoplay"
             }
           ],
           "mappings": [],
@@ -532,204 +518,504 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "video+2289jf6f37kq3put"
+              "options": "f77b5hz939s8z89b"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Living Room"
+                "value": "Bar (f77b5hz939s8z89b)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+c00a95tv3rysf9ji"
+              "options": "4fb8to1674q6ht0m"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Upstairs Bathroom"
+                "value": "Flat (4fb8to1674q6ht0m)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+f355shnx2w9xkhxo"
+              "options": "110bhp7ka9dbr86h"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Kitchen"
+                "value": "Greenroom (110bhp7ka9dbr86h)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+1bcd83gg4ang03l8"
+              "options": "b65269ekvyvfkous"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Upstairs Hallway"
+                "value": "Bedroom 1 (b65269ekvyvfkous)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+9cfeeodtu023cb91"
+              "options": "36708jd80gr91018"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Bar"
+                "value": "Bedroom 2 (36708jd80gr91018)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+33d25dz3mqilw1lp"
+              "options": "44daqjc6r1dfxd2e"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Lounge"
+                "value": "Bedroom 3 (44daqjc6r1dfxd2e)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+a12bmexn0h5td3kh"
+              "options": "68f8q4hl8cys37n2"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Bedroom 1"
+                "value": "Vanity (68f8q4hl8cys37n2)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+cc92intolqvyf117"
+              "options": "3760543f053u6c5m"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Downstairs Hallway"
+                "value": "Hallway (3760543f053u6c5m)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+052cnzsasax9c10b"
+              "options": "84485q0ve58ckwm2"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Master Bathroom"
+                "value": "Mail Room (84485q0ve58ckwm2)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+d7a07saeijthkqqk"
+              "options": "8c8btla37r6nux8f"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Bedroom 3"
+                "value": "Kitchen (8c8btla37r6nux8f)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+2ef11errf17as0df"
+              "options": "eac7ihz7d6ya9v1y"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Dog House"
+                "value": "Kitchen PTZ (eac7ihz7d6ya9v1y)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+d01cpugvvx04448x"
+              "options": "afacw5eipuyfsfny"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Bedroom 2"
+                "value": "Dining Room (afacw5eipuyfsfny)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+b0739nzrqm6m8k1k"
+              "options": "21aflvcz5puavd2e"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Downstairs Bathroom"
+                "value": "Confessional (21aflvcz5puavd2e)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+cbcbvq7hgf5vwti2"
+              "options": "9f41r40060icglir"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "The Bunk"
+                "value": "Lounge (9f41r40060icglir)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+0b6a2wuaxm56yhkr"
+              "options": "7d3e7e9s5qm5l1uf"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Attic"
+                "value": "Locker Room (7d3e7e9s5qm5l1uf)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+c0967lxltr0zkftj"
+              "options": "0c0bun9tebd65k3j"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Launch"
+                "value": "Penthouse (0c0bun9tebd65k3j)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+b905oqz6q3czq6pb"
+              "options": "122bkgvyrj1f7pk4"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Confessionals"
+                "value": "Jacuzzi (122bkgvyrj1f7pk4)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "9d5ckl8snb01ba6i"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Loft (9d5ckl8snb01ba6i)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "d678xcnkn2slngkx"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Den (d678xcnkn2slngkx)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "8e1arf44e86qa7ru"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Den PTZ (8e1arf44e86qa7ru)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "b4e4iknxyd1u4g0c"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Deck (b4e4iknxyd1u4g0c)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "580elsslerqmt28u"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Catwalk (580elsslerqmt28u)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "4ab29ayc51cmiu7k"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Front Yard (4ab29ayc51cmiu7k)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "38847hg4plyxhzlf"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Back Yard (38847hg4plyxhzlf)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+07fch8nrf09oduwq"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "player-1 07fch8nrf09oduwq"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+4f5emzrc3tdk2z0f"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "player-2 4f5emzrc3tdk2z0f"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+58d0z7ikrmex1cf4"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "player-3 58d0z7ikrmex1cf4"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+1eb96gqvcvdkvpxn"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "player-4 1eb96gqvcvdkvpxn"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+d462hhgt0dm70v4i"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "player-5 d462hhgt0dm70v4i"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+c1c1gl1g3hatuqxy"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "player-6 c1c1gl1g3hatuqxy"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+fce7bmzmyigqg3s7"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Director fce7bmzmyigqg3s7"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+6265nisbyp5yzb1y"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Basecamp 6265nisbyp5yzb1y"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+a100z3up7fjutopo"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Schitty a100z3up7fjutopo"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+1588xv96xxrzf58t"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Merchant 1588xv96xxrzf58t"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+9437407ypzr2rtb9"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "The Downs 9437407ypzr2rtb9"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+052ejcod22mw7dm3"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Campgrounds 052ejcod22mw7dm3"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+eeb1bdrakm4jms72"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Soda Tent eeb1bdrakm4jms72"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+47adl83vpkg634z5"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Beaver Street 47adl83vpkg634z5"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+96c2sfx928fptosp"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Bus 96c2sfx928fptosp"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+58b6y7otmf3nz3m2"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Area A 58b6y7otmf3nz3m2"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+b03e3glkp2h91ivm"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Area B b03e3glkp2h91ivm"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "video+e9b4a7e4l397sngc"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Wildlands Cave e9b4a7e4l397sngc"
               }
             ]
           }
@@ -754,6 +1040,7 @@
           "sortDesc": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -770,7 +1057,7 @@
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
-          "legendFormat": "{{stream}}",
+          "legendFormat": "{{ stream_id }}",
           "range": true,
           "refId": "A",
           "useBackend": false
@@ -796,6 +1083,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -858,6 +1146,7 @@
           "sortDesc": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -896,6 +1185,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -953,6 +1243,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -965,7 +1256,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "count by(catalyst_node) (mist_sessions{sessType=\"incoming\", stream=~\"video(rec)?\\\\+(${ROOMS:pipe})\"} > 0)",
+          "expr": "sum by(catalyst_node) (mist_sessions{sessType=\"incoming\", stream=~\"video(rec)?\\\\+(${ROOMS:pipe})\"}) > 0",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -979,7 +1270,7 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "10s",
+  "refresh": "1m",
   "schemaVersion": 39,
   "tags": [
     "fishtank",
@@ -1013,86 +1304,126 @@
           },
           {
             "selected": false,
-            "text": "Living Room",
-            "value": "2289jf6f37kq3put"
-          },
-          {
-            "selected": false,
-            "text": "Upstairs Bathroom",
-            "value": "c00a95tv3rysf9ji"
-          },
-          {
-            "selected": false,
-            "text": "Kitchen",
-            "value": "f355shnx2w9xkhxo"
-          },
-          {
-            "selected": false,
-            "text": "Upstairs Hallway",
-            "value": "1bcd83gg4ang03l8"
-          },
-          {
-            "selected": false,
             "text": "Bar",
-            "value": "9cfeeodtu023cb91"
+            "value": "f77b5hz939s8z89b"
           },
           {
             "selected": false,
-            "text": "Lounge",
-            "value": "33d25dz3mqilw1lp"
+            "text": "Flat",
+            "value": "4fb8to1674q6ht0m"
+          },
+          {
+            "selected": false,
+            "text": "Greenroom",
+            "value": "110bhp7ka9dbr86h"
           },
           {
             "selected": false,
             "text": "Bedroom 1",
-            "value": "a12bmexn0h5td3kh"
-          },
-          {
-            "selected": false,
-            "text": "Downstairs Hallway",
-            "value": "cc92intolqvyf117"
-          },
-          {
-            "selected": false,
-            "text": "Master Bathroom",
-            "value": "052cnzsasax9c10b"
-          },
-          {
-            "selected": false,
-            "text": "Bedroom 3",
-            "value": "d7a07saeijthkqqk"
-          },
-          {
-            "selected": false,
-            "text": "Dog House",
-            "value": "2ef11errf17as0df"
+            "value": "b65269ekvyvfkous"
           },
           {
             "selected": false,
             "text": "Bedroom 2",
-            "value": "d01cpugvvx04448x"
+            "value": "36708jd80gr91018"
           },
           {
             "selected": false,
-            "text": "Downstairs Bathroom",
-            "value": "b0739nzrqm6m8k1k"
+            "text": "Bedroom 3",
+            "value": "44daqjc6r1dfxd2e"
           },
           {
             "selected": false,
-            "text": "The Bunk",
-            "value": "cbcbvq7hgf5vwti2"
+            "text": "Vanity",
+            "value": "68f8q4hl8cys37n2"
           },
           {
             "selected": false,
-            "text": "Attic",
-            "value": "0b6a2wuaxm56yhkr"
+            "text": "Hallway",
+            "value": "3760543f053u6c5m"
           },
           {
             "selected": false,
-            "text": "Launch",
-            "value": "c0967lxltr0zkftj"
+            "text": "Mail Room",
+            "value": "84485q0ve58ckwm2"
+          },
+          {
+            "selected": false,
+            "text": "Kitchen",
+            "value": "8c8btla37r6nux8f"
+          },
+          {
+            "selected": false,
+            "text": "Kitchen PTZ",
+            "value": "eac7ihz7d6ya9v1y"
+          },
+          {
+            "selected": false,
+            "text": "Dining Room",
+            "value": "afacw5eipuyfsfny"
+          },
+          {
+            "selected": false,
+            "text": "Confessional",
+            "value": "21aflvcz5puavd2e"
+          },
+          {
+            "selected": false,
+            "text": "Lounge",
+            "value": "9f41r40060icglir"
+          },
+          {
+            "selected": false,
+            "text": "Locker Room",
+            "value": "7d3e7e9s5qm5l1uf"
+          },
+          {
+            "selected": false,
+            "text": "Penthouse",
+            "value": "0c0bun9tebd65k3j"
+          },
+          {
+            "selected": false,
+            "text": "Jacuzzi",
+            "value": "122bkgvyrj1f7pk4"
+          },
+          {
+            "selected": false,
+            "text": "Loft",
+            "value": "9d5ckl8snb01ba6i"
+          },
+          {
+            "selected": false,
+            "text": "Den",
+            "value": "d678xcnkn2slngkx"
+          },
+          {
+            "selected": false,
+            "text": "Den PTZ",
+            "value": "8e1arf44e86qa7ru"
+          },
+          {
+            "selected": false,
+            "text": "Deck",
+            "value": "b4e4iknxyd1u4g0c"
+          },
+          {
+            "selected": false,
+            "text": "Catwalk",
+            "value": "580elsslerqmt28u"
+          },
+          {
+            "selected": false,
+            "text": "Front Yard",
+            "value": "4ab29ayc51cmiu7k"
+          },
+          {
+            "selected": false,
+            "text": "Back Yard",
+            "value": "38847hg4plyxhzlf"
           }
         ],
-        "query": "Living Room : 2289jf6f37kq3put,Upstairs Bathroom : c00a95tv3rysf9ji,Kitchen : f355shnx2w9xkhxo,Upstairs Hallway : 1bcd83gg4ang03l8,Bar : 9cfeeodtu023cb91,Lounge : 33d25dz3mqilw1lp,Bedroom 1 : a12bmexn0h5td3kh,Downstairs Hallway : cc92intolqvyf117,Master Bathroom : 052cnzsasax9c10b,Bedroom 3 : d7a07saeijthkqqk,Dog House : 2ef11errf17as0df,Bedroom 2 : d01cpugvvx04448x,Downstairs Bathroom : b0739nzrqm6m8k1k,The Bunk : cbcbvq7hgf5vwti2,Attic : 0b6a2wuaxm56yhkr,Launch : c0967lxltr0zkftj,Confessionals : b905oqz6q3czq6pb",
+        "query": "Bar : f77b5hz939s8z89b,Flat : 4fb8to1674q6ht0m,Greenroom : 110bhp7ka9dbr86h,Bedroom 1 : b65269ekvyvfkous,Bedroom 2 : 36708jd80gr91018,Bedroom 3 : 44daqjc6r1dfxd2e,Vanity : 68f8q4hl8cys37n2,Hallway : 3760543f053u6c5m,Mail Room : 84485q0ve58ckwm2,Kitchen : 8c8btla37r6nux8f,Kitchen PTZ : eac7ihz7d6ya9v1y,Dining Room : afacw5eipuyfsfny,Confessional : 21aflvcz5puavd2e,Lounge : 9f41r40060icglir,Locker Room : 7d3e7e9s5qm5l1uf,Penthouse : 0c0bun9tebd65k3j,Jacuzzi : 122bkgvyrj1f7pk4,Loft : 9d5ckl8snb01ba6i,Den : d678xcnkn2slngkx,Den PTZ : 8e1arf44e86qa7ru,Deck : b4e4iknxyd1u4g0c,Catwalk : 580elsslerqmt28u,Front Yard : 4ab29ayc51cmiu7k,Back Yard : 38847hg4plyxhzlf",
         "queryValue": "",
         "skipUrlSync": false,
         "type": "custom"
@@ -1100,13 +1431,13 @@
     ]
   },
   "time": {
-    "from": "now-3h",
+    "from": "now-12h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Fishtank viewership",
-  "uid": "cce96324-988b-4a9b-8165-07b72cf8d481",
-  "version": 1,
+  "title": "Fishtank 3.0 viewership",
+  "uid": "e10512da-8f7e-11ef-bb6e-12760f078f72",
+  "version": 9,
   "weekStart": ""
 }
