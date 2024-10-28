@@ -60,6 +60,7 @@
             "axisPlacement": "auto",
             "axisSoftMin": 0,
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -235,6 +236,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
@@ -381,6 +383,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -559,6 +562,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -735,6 +739,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -910,6 +915,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "bars",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -1113,6 +1119,7 @@
     },
     {
       "datasource": {
+        "default": false,
         "type": "datasource",
         "uid": "-- Mixed --"
       },
@@ -1128,6 +1135,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -1267,8 +1275,8 @@
             "uid": "PBFA97CFB590B2093"
           },
           "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "sum by(ingress) (increase(nginx_ingress_controller_requests{region!=\"fra\", status=\"429\", ingress=~\"$ingress\"}[$__interval]))",
+          "editorMode": "code",
+          "expr": "sum by(ingress) (increase(nginx_ingress_controller_requests{region=~\"${region:pipe}\", status=\"429\", ingress=~\"$ingress\"}[$__interval]))",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
@@ -1302,7 +1310,7 @@
         "content": "* We don't collect `/health`, `/healthz`, `/{{ UUID }}.json`, `/loki/api/v1/push`, `/insert/420/prometheus` logs.\nSo even you can see prometheus metrics related to these endpoints the logs are missing\n* Too narrow time range may filter out some logs while showing prometheus metrics on charts as metrics and logs might have slightly different datetimes.\n* [Explore nginx logs](/grafana/explore?schemaVersion=1&panes=%7B%22D32%22:%7B%22datasource%22:%22P8E80F9AEF21F6940%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22expr%22:%22%7Bapp%3D%5C%22ingress-nginx%5C%22,%20namespace%3D%5C%22default%5C%22,%20stream%3D%5C%22stdout%5C%22,%20region%3D~%5C%22${region:pipe}%5C%22%7D%20%7C%20pattern%20%60%3Cip%3E%20-%20-%20%3Ctimestamp%3E%20%5C%22%3Cmethod%3E%20%3Curl%3E%20%3Cprotocol%3E%5C%22%20%3Cstatus%3E%20%3Cbytes%3E%20%5C%22%3Corigin%3E%5C%22%20%5C%22%3CuserAgent%3E%5C%22%20%3Cwtf1%3E%20%3Cwtf2%3E%20%5B%3Cupstream%3E%5D%20%5B%3Cwtf3%3E%5D%20%3CupstreamAddr%3E%20%3Cwtf4%3E%20%3Cwtf5%3E%20%3CupstreamStatus%3E%20%3CrequestId%3E%60%20%7C%20upstream%20%3D~%20%60default-%28${ingress:pipe}%29-.%2A%60%20%7C%20status%20%3D~%20%60${status:pipe}%60%22,%22queryType%22:%22range%22,%22datasource%22:%7B%22type%22:%22loki%22,%22uid%22:%22P8E80F9AEF21F6940%22%7D,%22editorMode%22:%22code%22%7D%5D,%22range%22:%7B%22from%22:%22${__from}%22,%22to%22:%22${__to}%22%7D%7D%7D&orgId=1)",
         "mode": "markdown"
       },
-      "pluginVersion": "11.1.3",
+      "pluginVersion": "11.2.0",
       "type": "text"
     }
   ],
@@ -1686,6 +1694,6 @@
   "timezone": "",
   "title": "nginx 5XX",
   "uid": "f74066bf-c68e-4303-a9c4-81423738f8a3",
-  "version": 4,
+  "version": 2,
   "weekStart": ""
 }
