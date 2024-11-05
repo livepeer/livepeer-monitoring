@@ -224,6 +224,7 @@
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
+      "description": "All the requests (all response statuses)",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -367,6 +368,7 @@
     },
     {
       "datasource": {
+        "default": true,
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
@@ -527,14 +529,15 @@
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum by(path, host, method) (increase(nginx_ingress_controller_requests{ingress=~\"${ingress:pipe}\", region=~\"${region:pipe}\", host=~\"${host:pipe}\", status=~\"${status:pipe}\", method=~\"${method:pipe}\", path=~\"${path:pipe}\", path!=\"/51eebae3-9b8e-48bc-89ca-5340c4074a48.json\"}[$__interval]))",
+          "expr": "sum by(region) (increase(nginx_ingress_controller_requests{ingress=~\"${ingress:pipe}\", region=~\"${region:pipe}\", host=~\"${host:pipe}\", status=~\"${status:pipe}\", method=~\"${method:pipe}\", path=~\"${path:pipe}\"}[$__interval]))",
           "format": "time_series",
           "fullMetaSearch": false,
+          "hide": false,
           "includeNullMetadata": true,
           "instant": false,
           "interval": "10s",
           "intervalFactor": 1,
-          "legendFormat": "{{ host }} {{ method }} {{ path }}",
+          "legendFormat": "__auto",
           "metric": "container_memory_usage:sort_desc",
           "range": true,
           "refId": "A",
@@ -723,6 +726,7 @@
     },
     {
       "datasource": {
+        "default": true,
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
@@ -1312,9 +1316,199 @@
       },
       "pluginVersion": "11.2.0",
       "type": "text"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "description": "All the requests (all response statuses)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "max - istio-proxy"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#890f02",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "max - master"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#bf1b00",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "max - prometheus"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#bf1b00",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byValue",
+              "options": {
+                "op": "gte",
+                "reducer": "allIsZero",
+                "value": 0
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": true,
+                  "tooltip": true,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 40
+      },
+      "id": 14,
+      "options": {
+        "legend": {
+          "calcs": [
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Max",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "asc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum by(region) (increase(nginx_ingress_controller_response_size_sum{ingress=~\"${ingress:pipe}\", region=~\"${region:pipe}\", host=~\"${host:pipe}\", method=~\"${method:pipe}\", path=~\"${path:pipe}\"}[$__interval]))",
+          "format": "time_series",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "interval": "10s",
+          "intervalFactor": 1,
+          "legendFormat": "read {{region}}",
+          "metric": "container_memory_usage:sort_desc",
+          "refId": "A",
+          "step": 10,
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "sum by(region) (increase(nginx_ingress_controller_bytes_sent_sum{ingress=~\"${ingress:pipe}\", region=~\"${region:pipe}\", host=~\"${host:pipe}\", method=~\"${method:pipe}\", path=~\"${path:pipe}\"}[$__interval]))",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "write {{region}}",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "Total bytes per region",
+      "type": "timeseries"
     }
   ],
-  "refresh": false,
+  "refresh": "",
   "schemaVersion": 39,
   "tags": [
     "nginx"
@@ -1694,6 +1888,6 @@
   "timezone": "",
   "title": "nginx 5XX",
   "uid": "f74066bf-c68e-4303-a9c4-81423738f8a3",
-  "version": 2,
+  "version": 4,
   "weekStart": ""
 }
