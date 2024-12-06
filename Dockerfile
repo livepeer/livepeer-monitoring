@@ -20,7 +20,7 @@ ARG	GRAFANA_ENV
 
 COPY	./grafana/${GRAFANA_ENV}/	/grafana
 
-FROM	grafana/grafana-oss:11.2.0	AS	grafana
+FROM	grafana/grafana-oss:11.4.0	AS	grafana
 
 LABEL	maintainer="Amritanshu Varshney <amritanshu+github@livepeer.org>"
 
