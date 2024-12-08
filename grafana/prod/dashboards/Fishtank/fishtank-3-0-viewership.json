@@ -253,6 +253,7 @@
     },
     {
       "datasource": {
+        "default": true,
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
@@ -341,7 +342,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream=~\".*(${ROOMS:pipe})\"}[1m])",
+          "expr": "sum by() (mist_sessions{catalyst=\"true\", sessType=\"viewers\",  user_id=\"$FISHTANK_USER_ID\", stream=~\".*(${ROOMS:pipe})\"})",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -356,6 +357,7 @@
     },
     {
       "datasource": {
+        "default": true,
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
@@ -441,7 +443,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream=~\".*(${ROOMS:pipe})\"}[1m] ) by (catalyst_node)",
+          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\",  user_id=\"$FISHTANK_USER_ID\", stream=~\".*(${ROOMS:pipe})\"}[1m] ) by (catalyst_node)",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -1018,6 +1020,18 @@
                 "value": "Wildlands Cave e9b4a7e4l397sngc"
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "9b249j7qlqu0fypg"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Director (9b249j7qlqu0fypg)"
+              }
+            ]
           }
         ]
       },
@@ -1053,7 +1067,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "label_replace(sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream=~\".*(${ROOMS:pipe})\"}[1m] ) by (stream) or on() vector(0), \"stream_id\", \"$1\", \"stream\", \".*\\\\+(.*)\")",
+          "expr": "label_replace(sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", user_id=\"$FISHTANK_USER_ID\", stream=~\".*(${ROOMS:pipe})\"}[1m] ) by (stream) or on() vector(0), \"stream_id\", \"$1\", \"stream\", \".*\\\\+(.*)\")",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -1068,6 +1082,7 @@
     },
     {
       "datasource": {
+        "default": true,
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
@@ -1158,7 +1173,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream=~\".*(${ROOMS:pipe})\"}) by (region)",
+          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", user_id=\"$FISHTANK_USER_ID\", stream=~\".*(${ROOMS:pipe})\"}) by (region)",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -1170,6 +1185,7 @@
     },
     {
       "datasource": {
+        "default": true,
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
@@ -1256,7 +1272,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum by(catalyst_node) (mist_sessions{sessType=\"incoming\", stream=~\"video(rec)?\\\\+(${ROOMS:pipe})\"}) > 0",
+          "expr": "sum by(catalyst_node) (mist_sessions{sessType=\"incoming\", user_id=\"$FISHTANK_USER_ID\"}) > 0",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -1270,14 +1286,14 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "1m",
+  "refresh": "",
   "schemaVersion": 39,
   "tags": [
     "fishtank",
     "viewership",
     "metrics",
     "observe",
-    "2023"
+    "2024"
   ],
   "templating": {
     "list": [
@@ -1423,10 +1439,17 @@
             "value": "38847hg4plyxhzlf"
           }
         ],
-        "query": "Bar : f77b5hz939s8z89b,Flat : 4fb8to1674q6ht0m,Greenroom : 110bhp7ka9dbr86h,Bedroom 1 : b65269ekvyvfkous,Bedroom 2 : 36708jd80gr91018,Bedroom 3 : 44daqjc6r1dfxd2e,Vanity : 68f8q4hl8cys37n2,Hallway : 3760543f053u6c5m,Mail Room : 84485q0ve58ckwm2,Kitchen : 8c8btla37r6nux8f,Kitchen PTZ : eac7ihz7d6ya9v1y,Dining Room : afacw5eipuyfsfny,Confessional : 21aflvcz5puavd2e,Lounge : 9f41r40060icglir,Locker Room : 7d3e7e9s5qm5l1uf,Penthouse : 0c0bun9tebd65k3j,Jacuzzi : 122bkgvyrj1f7pk4,Loft : 9d5ckl8snb01ba6i,Den : d678xcnkn2slngkx,Den PTZ : 8e1arf44e86qa7ru,Deck : b4e4iknxyd1u4g0c,Catwalk : 580elsslerqmt28u,Front Yard : 4ab29ayc51cmiu7k,Back Yard : 38847hg4plyxhzlf, Director : 9b249j7qlqu0fypg",
+        "query": "Bar : f77b5hz939s8z89b,Flat : 4fb8to1674q6ht0m,Greenroom : 110bhp7ka9dbr86h,Bedroom 1 : b65269ekvyvfkous,Bedroom 2 : 36708jd80gr91018,Bedroom 3 : 44daqjc6r1dfxd2e,Vanity : 68f8q4hl8cys37n2,Hallway : 3760543f053u6c5m,Mail Room : 84485q0ve58ckwm2,Kitchen : 8c8btla37r6nux8f,Kitchen PTZ : eac7ihz7d6ya9v1y,Dining Room : afacw5eipuyfsfny,Confessional : 21aflvcz5puavd2e,Lounge : 9f41r40060icglir,Locker Room : 7d3e7e9s5qm5l1uf,Penthouse : 0c0bun9tebd65k3j,Jacuzzi : 122bkgvyrj1f7pk4,Loft : 9d5ckl8snb01ba6i,Den : d678xcnkn2slngkx,Den PTZ : 8e1arf44e86qa7ru,Deck : b4e4iknxyd1u4g0c,Catwalk : 580elsslerqmt28u,Front Yard : 4ab29ayc51cmiu7k,Back Yard : 38847hg4plyxhzlf,Director : 9b249j7qlqu0fypg,Stream Grid : 2351d1qe6dufdswt,Island : d578z2acldqyww5x,Yard : 8ac015orral0pm4c,Yard PTZ : b51399w8tr5qa0v1,Director Mode 2 : 744asdp4ulr0qqaa",
         "queryValue": "",
         "skipUrlSync": false,
         "type": "custom"
+      },
+      {
+        "hide": 2,
+        "name": "FISHTANK_USER_ID",
+        "query": "c73e1d03-743e-4313-9612-6a760fb4d82c",
+        "skipUrlSync": false,
+        "type": "constant"
       }
     ]
   },
@@ -1438,6 +1461,6 @@
   "timezone": "",
   "title": "Fishtank 3.0 viewership",
   "uid": "e10512da-8f7e-11ef-bb6e-12760f078f72",
-  "version": 12,
+  "version": 17,
   "weekStart": ""
 }
