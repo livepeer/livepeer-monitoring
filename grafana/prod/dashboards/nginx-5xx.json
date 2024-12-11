@@ -529,7 +529,7 @@
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum by(region) (increase(nginx_ingress_controller_requests{ingress=~\"${ingress:pipe}\", region=~\"${region:pipe}\", host=~\"${host:pipe}\", status=~\"${status:pipe}\", method=~\"${method:pipe}\", path=~\"${path:pipe}\"}[$__interval]))",
+          "expr": "sum by(host, method, path) (increase(nginx_ingress_controller_requests{ingress=~\"${ingress:pipe}\", region=~\"${region:pipe}\", host=~\"${host:pipe}\", status=~\"${status:pipe}\", method=~\"${method:pipe}\", path=~\"${path:pipe}\"}[$__interval]))",
           "format": "time_series",
           "fullMetaSearch": false,
           "hide": false,
@@ -537,7 +537,7 @@
           "instant": false,
           "interval": "10s",
           "intervalFactor": 1,
-          "legendFormat": "__auto",
+          "legendFormat": "{{method}} {{host}} {{path}}",
           "metric": "container_memory_usage:sort_desc",
           "range": true,
           "refId": "A",
@@ -1508,7 +1508,6 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "",
   "schemaVersion": 39,
   "tags": [
     "nginx"
@@ -1888,6 +1887,6 @@
   "timezone": "",
   "title": "nginx 5XX",
   "uid": "f74066bf-c68e-4303-a9c4-81423738f8a3",
-  "version": 4,
+  "version": 5,
   "weekStart": ""
 }
