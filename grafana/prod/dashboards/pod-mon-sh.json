@@ -1,0 +1,712 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 13,
+        "x": 0,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Max",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum by(catalyst_node) (avg_over_time(mist_cpu{region=~\"${region:pipe}\", catalyst_node=~\".*${catalyst:pipe}.*\"}[180s])) / 10",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "CPU",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "description": "average number of cores used per process. 1.0 -> single CPU core used in 100%",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "area"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 70
+              },
+              {
+                "color": "red",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 17,
+        "w": 13,
+        "x": 0,
+        "y": 8
+      },
+      "id": 1,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Max",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\", pod=~\"${catalyst:pipe}\"} |= `[pod-mon]` | regexp `{\"process\": \"MistController\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > $treshold",
+          "legendFormat": "{{region}}-{{pod}} MistController",
+          "queryType": "range",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\", pod=~\"${catalyst:pipe}\"} |= `[pod-mon]` | regexp `{\"process\": \"MistProcLivepeer\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > $treshold",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistProcLivepeer",
+          "queryType": "range",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\", pod=~\"${catalyst:pipe}\"} |= `[pod-mon]` | regexp `{\"process\": \"MistUtilLoad\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > $treshold",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistUtilLoad",
+          "queryType": "range",
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\", pod=~\"${catalyst:pipe}\"} |= `[pod-mon]` | regexp `{\"process\": \"MistOutWebRTC\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > $treshold",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistOutWebRTC",
+          "queryType": "range",
+          "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\", pod=~\"${catalyst:pipe}\"} |= `[pod-mon]` | regexp `{\"process\": \"MistInDTSC\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > $treshold",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistInDTSC",
+          "queryType": "range",
+          "refId": "E"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\", pod=~\"${catalyst:pipe}\"} |= `[pod-mon]` | regexp `{\"process\": \"MistOutDTSC\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > $treshold",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistOutDTSC",
+          "queryType": "range",
+          "refId": "F"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\", pod=~\"${catalyst:pipe}\"} |= `[pod-mon]` | regexp `{\"process\": \"MistOutFLV\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > $treshold",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistOutFLV",
+          "queryType": "range",
+          "refId": "G"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\", pod=~\"${catalyst:pipe}\"} |= `[pod-mon]` | regexp `{\"process\": \"MistInFLV\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > $treshold",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistInFLV",
+          "queryType": "range",
+          "refId": "H"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\", pod=~\"${catalyst:pipe}\"} |= `[pod-mon]` | regexp `{\"process\": \"MistInBuffer\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > $treshold",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistInBuffer",
+          "queryType": "range",
+          "refId": "I"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\", pod=~\"${catalyst:pipe}\"} |= `[pod-mon]` | regexp `{\"process\": \"MistOutHTTPTS\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > $treshold",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistOutHTTPTS",
+          "queryType": "range",
+          "refId": "J"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\", pod=~\"${catalyst:pipe}\"} |= `[pod-mon]` | regexp `{\"process\": \"catalyst-api\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > $treshold",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} catalyst-api",
+          "queryType": "range",
+          "refId": "K"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\", pod=~\"${catalyst:pipe}\"} |= `[pod-mon]` | regexp `{\"process\": \"catalyst-uploader\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > $treshold",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} catalyst-uploader",
+          "queryType": "range",
+          "refId": "L"
+        }
+      ],
+      "title": "avg_cpu_per_core",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "description": "max number of cores used per process",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "area"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 70
+              },
+              {
+                "color": "red",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 17,
+        "w": 13,
+        "x": 0,
+        "y": 25
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Max",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\", pod=~\"${catalyst:pipe}\"} |= `[pod-mon]` | regexp `{\"process\": \"MistController\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": (?P<max_cpu_per_core>[\\d\\.]+), \"avg_mem_per_process\": [\\d\\.]+}` | unwrap max_cpu_per_core [$__auto])) > $treshold",
+          "legendFormat": "{{region}}-{{pod}} MistController",
+          "queryType": "range",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\", pod=~\"${catalyst:pipe}\"} |= `[pod-mon]` | regexp `{\"process\": \"MistProcLivepeer\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>\\d+.\\d+), \"max_cpu_per_core\": (?P<max_cpu_per_core>[\\d\\.]+), \"avg_mem_per_process\": \\d+.\\d+}` | unwrap max_cpu_per_core [$__auto])) > $treshold",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistProcLivepeer",
+          "queryType": "range",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\", pod=~\"${catalyst:pipe}\"} |= `[pod-mon]` | regexp `{\"process\": \"MistUtilLoad\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": (?P<max_cpu_per_core>[\\d\\.]+), \"avg_mem_per_process\": [\\d\\.]+}` | unwrap max_cpu_per_core [$__auto])) > $treshold",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistUtilLoad",
+          "queryType": "range",
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\", pod=~\"${catalyst:pipe}\"} |= `[pod-mon]` | regexp `{\"process\": \"MistOutWebRTC\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": (?P<max_cpu_per_core>[\\d\\.]+), \"avg_mem_per_process\": [\\d\\.]+}` | unwrap max_cpu_per_core [$__auto])) > $treshold",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistOutWebRTC",
+          "queryType": "range",
+          "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\", pod=~\"${catalyst:pipe}\"} |= `[pod-mon]` | regexp `{\"process\": \"MistInDTSC\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": (?P<max_cpu_per_core>[\\d\\.]+), \"avg_mem_per_process\": [\\d\\.]+}` | unwrap max_cpu_per_core [$__auto])) > $treshold",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistInDTSC",
+          "queryType": "range",
+          "refId": "E"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\", pod=~\"${catalyst:pipe}\"} |= `[pod-mon]` | regexp `{\"process\": \"MistOutDTSC\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": (?P<max_cpu_per_core>[\\d\\.]+), \"avg_mem_per_process\": [\\d\\.]+}` | unwrap max_cpu_per_core [$__auto])) > $treshold",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistOutDTSC",
+          "queryType": "range",
+          "refId": "F"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\", pod=~\"${catalyst:pipe}\"} |= `[pod-mon]` | regexp `{\"process\": \"MistOutFLV\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": (?P<max_cpu_per_core>[\\d\\.]+), \"avg_mem_per_process\": [\\d\\.]+}` | unwrap max_cpu_per_core [$__auto])) > $treshold",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistOutFLV",
+          "queryType": "range",
+          "refId": "G"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\", pod=~\"${catalyst:pipe}\"} |= `[pod-mon]` | regexp `{\"process\": \"MistInFLV\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": (?P<max_cpu_per_core>[\\d\\.]+), \"avg_mem_per_process\": [\\d\\.]+}` | unwrap max_cpu_per_core [$__auto])) > $treshold",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistInFLV",
+          "queryType": "range",
+          "refId": "H"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\", pod=~\"${catalyst:pipe}\"} |= `[pod-mon]` | regexp `{\"process\": \"MistInBuffer\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": (?P<max_cpu_per_core>[\\d\\.]+), \"avg_mem_per_process\": [\\d\\.]+}` | unwrap max_cpu_per_core [$__auto])) > $treshold",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistInBuffer",
+          "queryType": "range",
+          "refId": "I"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\", pod=~\"${catalyst:pipe}\"} |= `[pod-mon]` | regexp `{\"process\": \"MistOutHTTPTS\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": (?P<max_cpu_per_core>[\\d\\.]+), \"avg_mem_per_process\": [\\d\\.]+}` | unwrap max_cpu_per_core [$__auto])) > $treshold",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistOutHTTPTS",
+          "queryType": "range",
+          "refId": "J"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\", pod=~\"${catalyst:pipe}\"} |= `[pod-mon]` | regexp `{\"process\": \"catalyst-api\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": (?P<max_cpu_per_core>[\\d\\.]+), \"avg_mem_per_process\": [\\d\\.]+}` | unwrap max_cpu_per_core [$__auto])) > $treshold",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} catalyst-api",
+          "queryType": "range",
+          "refId": "K"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\", pod=~\"${catalyst:pipe}\"} |= `[pod-mon]` | regexp `{\"process\": \"catalyst-uploader\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": (?P<max_cpu_per_core>[\\d\\.]+), \"avg_mem_per_process\": [\\d\\.]+}` | unwrap max_cpu_per_core [$__auto])) > $treshold",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} catalyst-uploader",
+          "queryType": "range",
+          "refId": "L"
+        }
+      ],
+      "title": "max_cpu_per_core",
+      "type": "timeseries"
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "0.9",
+          "value": "0.9"
+        },
+        "description": "single core CPU usage above which we would display data",
+        "hide": 0,
+        "label": "treshold",
+        "name": "treshold",
+        "options": [
+          {
+            "selected": true,
+            "text": "0.9",
+            "value": "0.9"
+          }
+        ],
+        "query": "0.9",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
+      {
+        "allValue": ".+",
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "loki",
+          "uid": "P8E80F9AEF21F6940"
+        },
+        "definition": "",
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "name": "region",
+        "options": [],
+        "query": {
+          "label": "region",
+          "refId": "LokiVariableQueryEditor-VariableQuery",
+          "stream": "{app=\"catalyst\"}",
+          "type": 1
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": ".+",
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "loki",
+          "uid": "P8E80F9AEF21F6940"
+        },
+        "definition": "",
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "name": "catalyst",
+        "options": [],
+        "query": {
+          "label": "pod",
+          "refId": "LokiVariableQueryEditor-VariableQuery",
+          "stream": "{app=\"catalyst\", region=~\"${region:pipe}\"}",
+          "type": 1
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-30m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "utc",
+  "title": "pod-mon.sh",
+  "uid": "fe4i3n6gsyyo0f",
+  "version": 16,
+  "weekStart": ""
+}
