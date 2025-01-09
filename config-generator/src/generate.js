@@ -80,6 +80,16 @@ function generate() {
         default: "0",
         type: "string",
       },
+      "prometheus-pipelines-monitor-enabled": {
+        describe: "Enable pipelines monitoring through prometheus",
+        default: false,
+        type: "boolean",
+      },
+      "prometheus-pipelines-domain": {
+        describe: "Comma separated domain(s) for pipelines metrics aggregator",
+        default: false,
+        type: "string",
+      },
       "prometheus-kafka-monitor-enabled": {
         describe: "Enable kafka monitoring through prometheus",
         default: false,
@@ -383,7 +393,20 @@ function prometheusConfig(params) {
           `mode ${params.mode} does not have a defined prometheus.yml config`
         );
     }
-  } else {
+  }
+
+  if (params && params.prometheusPipelinesMonitorEnabled) {
+    obj.scrape_configs.push({
+      job_name: "Pipelines version metrics.",
+      scrape_interval: "1m",
+      scrape_timeout: "1m",
+      honor_timestamps: true,
+      static_configs: [
+        { targets: [params.prometheusPipelinesDomain.split(",")] },
+      ],
+      scheme: "https",
+      metrics_path: "/api/metrics",
+    });
   }
 
   if (params && params.prometheusKafkaMonitorEnabled) {
