@@ -24,6 +24,7 @@
   "panels": [
     {
       "datasource": {
+        "default": true,
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
@@ -39,6 +40,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -111,7 +113,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "100 - (avg by (instance, region) (irate(node_cpu_seconds_total{region != \"eu-metrics\", mode=\"idle\", instance=~\".+:9100\"}[1m])) * 100 * on(instance) group_left(nodename) node_uname_info) > $CPUThreshold",
+          "expr": "100 - (avg by (instance, region) (irate(node_cpu_seconds_total{region!=\"eu-metrics\", region=~\"${region:pipe}\", mode=\"idle\", instance=~\".+:9100\"}[1m])) * 100 * on(instance) group_left(nodename) node_uname_info{}) > $CPUThreshold",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -123,6 +125,246 @@
     },
     {
       "datasource": {
+        "default": false,
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "area"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 70
+              },
+              {
+                "color": "red",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 13,
+        "x": 0,
+        "y": 10
+      },
+      "id": 6,
+      "links": [
+        {
+          "title": "pod-mon dashboard",
+          "url": "/grafana/d/fe4i3n6gsyyo0f/pod-mon-sh"
+        }
+      ],
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\"} |= `[pod-mon]` | regexp `{\"process\": \"MistController\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > 0.9",
+          "legendFormat": "{{region}}-{{pod}} MistController",
+          "queryType": "range",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\"} |= `[pod-mon]` | regexp `{\"process\": \"MistProcLivepeer\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > 0.9",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistProcLivepeer",
+          "queryType": "range",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\"} |= `[pod-mon]` | regexp `{\"process\": \"MistUtilLoad\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > 0.9",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistUtilLoad",
+          "queryType": "range",
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\"} |= `[pod-mon]` | regexp `{\"process\": \"MistOutWebRTC\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > 0.9",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistOutWebRTC",
+          "queryType": "range",
+          "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\"} |= `[pod-mon]` | regexp `{\"process\": \"MistInDTSC\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > 0.9",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistInDTSC",
+          "queryType": "range",
+          "refId": "E"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\"} |= `[pod-mon]` | regexp `{\"process\": \"MistOutDTSC\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > 0.9",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistOutDTSC",
+          "queryType": "range",
+          "refId": "F"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\"} |= `[pod-mon]` | regexp `{\"process\": \"MistOutFLV\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > 0.9",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistOutFLV",
+          "queryType": "range",
+          "refId": "G"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\"} |= `[pod-mon]` | regexp `{\"process\": \"MistInFLV\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > 0.9",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistInFLV",
+          "queryType": "range",
+          "refId": "H"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\"} |= `[pod-mon]` | regexp `{\"process\": \"MistInBuffer\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > 0.9",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistInBuffer",
+          "queryType": "range",
+          "refId": "I"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\"} |= `[pod-mon]` | regexp `{\"process\": \"MistOutHTTPTS\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > 0.9",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistOutHTTPTS",
+          "queryType": "range",
+          "refId": "J"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\"} |= `[pod-mon]` | regexp `{\"process\": \"catalyst-api\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > 0.9",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} catalyst-api",
+          "queryType": "range",
+          "refId": "K"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\"} |= `[pod-mon]` | regexp `{\"process\": \"catalyst-uploader\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > 0.9",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} catalyst-uploader",
+          "queryType": "range",
+          "refId": "L"
+        }
+      ],
+      "title": "high CPU usage per process (pod-mon.sh)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": true,
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
@@ -138,6 +380,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -188,7 +431,7 @@
         "h": 10,
         "w": 13,
         "x": 0,
-        "y": 10
+        "y": 20
       },
       "id": 1,
       "options": {
@@ -210,7 +453,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream!~\"$exclude\", stream!~\"$exclude\"}) by (node_name, region) > $ViewersPerNodeThreshold",
+          "expr": "sum(mist_sessions{region!=\"eu-metrics\", region=~\"${region:pipe}\", catalyst=\"true\", sessType=\"viewers\"}) by (node_name, region) > $ViewersPerNodeThreshold",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -222,6 +465,7 @@
     },
     {
       "datasource": {
+        "default": true,
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
@@ -237,6 +481,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -290,7 +535,7 @@
         "h": 8,
         "w": 13,
         "x": 0,
-        "y": 20
+        "y": 30
       },
       "id": 3,
       "options": {
@@ -314,7 +559,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "label_replace(sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream!~\"$exclude\", stream!~\"$exclude\"}[1m] ) by (stream) or on() vector(0), \"stream_id\", \"$1\", \"stream\", \".*\\\\+(.*)\") > $ViewersPerNodeThreshold",
+          "expr": "label_replace(sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", region!=\"eu-metrics\", region=~\"${region:pipe}\"}[1m] ) by (stream) or on() vector(0), \"stream_id\", \"$1\", \"stream\", \".*\\\\+(.*)\") > $ViewersPerNodeThreshold",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -326,6 +571,7 @@
     },
     {
       "datasource": {
+        "default": true,
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
@@ -341,111 +587,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 13,
-        "x": 0,
-        "y": 28
-      },
-      "id": 5,
-      "options": {
-        "legend": {
-          "calcs": [
-            "last",
-            "max"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true,
-          "sortBy": "Last",
-          "sortDesc": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "count by(node_name, region) (mist_sessions{sessType=\"incoming\"}) > 0",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "Origin server",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "description": "vod_transcoded_segments",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -483,8 +625,113 @@
                 "value": 80
               }
             ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 13,
+        "x": 0,
+        "y": 38
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": [
+            "last",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "sortBy": "Last",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
           },
-          "unitScale": true
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "count by(node_name, region) (mist_sessions{sessType=\"incoming\", region!=\"eu-metrics\", region=~\"${region:pipe}\"}) > 0",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Origin server",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "description": "vod_transcoded_segments",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
         },
         "overrides": []
       },
@@ -492,7 +739,7 @@
         "h": 8,
         "w": 13,
         "x": 0,
-        "y": 38
+        "y": 48
       },
       "id": 4,
       "links": [
@@ -525,8 +772,8 @@
             "uid": "PBFA97CFB590B2093"
           },
           "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "sum by(catalyst_node) (increase(vod_transcoded_segments[1m]))",
+          "editorMode": "code",
+          "expr": "sum by(catalyst_node) (increase(vod_transcoded_segments{region!=\"eu-metrics\", region=~\"${region:pipe}\"}[1m]))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "__auto",
@@ -539,7 +786,6 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "",
   "schemaVersion": 39,
   "tags": [],
   "templating": {
@@ -729,17 +975,49 @@
         "queryValue": "",
         "skipUrlSync": false,
         "type": "custom"
+      },
+      {
+        "allValue": ".+",
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "definition": "label_values(node_cpu_seconds_total{region!=\"eu-metrics\"},region)",
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "name": "region",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(node_cpu_seconds_total{region!=\"eu-metrics\"},region)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
       }
     ]
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "CPU / viewers",
   "uid": "e7a45fbe-21f9-42a4-88cb-8654844a06bb",
-  "version": 1,
+  "version": 10,
   "weekStart": ""
 }
