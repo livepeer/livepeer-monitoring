@@ -2310,8 +2310,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "transparent",
-                "value": null
+                "color": "transparent"
               },
               {
                 "color": "red",
@@ -2417,8 +2416,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2564,8 +2562,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2788,11 +2785,14 @@
       "options": {
         "legend": {
           "calcs": [
-            "lastNotNull"
+            "lastNotNull",
+            "max"
           ],
           "displayMode": "table",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": true,
+          "sortBy": "Max",
+          "sortDesc": true
         },
         "tooltip": {
           "mode": "multi",
@@ -2870,8 +2870,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2881,7 +2880,32 @@
           },
           "unit": "short"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "Value"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 7,
@@ -2971,8 +2995,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3073,8 +3096,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3178,8 +3200,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3299,8 +3320,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3419,8 +3439,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3527,8 +3546,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3637,8 +3655,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3785,8 +3802,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3823,7 +3839,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "((sum(increase(mist_packets_total{pkttype=\"lost\",region=~\"${region:pipe}\",catalyst_node=~\"${catalyst_node:pipe}\"}[5m])) by (catalyst_node) / 300) / on(catalyst_node) (mist_outputs{output=\"WebRTC\",region=~\"${region:pipe}\",catalyst_node=~\"${catalyst_node:pipe}\"} > 100)) > 10000",
+          "expr": "((sum(increase(mist_packets_total{pkttype=\"lost\",region=~\"${region:pipe}\",catalyst_node=~\"${catalyst_node:pipe}\"}[5m])) by (catalyst_node) / 300) / on(catalyst_node) (mist_outputs{output=\"WebRTC\",region=~\"${region:pipe}\",catalyst_node=~\"${catalyst_node:pipe}\"} > 100))",
           "instant": false,
           "legendFormat": "{{catalyst_node}}",
           "range": true,
@@ -3832,8 +3848,443 @@
       ],
       "title": "Lost packets per viewer per second",
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 6,
+        "x": 6,
+        "y": 65
+      },
+      "id": 40,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "builder",
+          "expr": "sum by(region, node_name, process_name) (count_over_time({job=\"systemd-journal\", region=~\"${region:pipe}\"} |= `Out of memory` | regexp `Out of memory\\: Killed process .+ \\((?P<process_name>.+)\\)` [$__auto]))",
+          "legendFormat": "{{region}} {{node_name}} {{process_name}}",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Out-of-memory killed processes (in region)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 6,
+        "x": 12,
+        "y": 65
+      },
+      "id": 41,
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Total",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "builder",
+          "expr": "sum by(segfault_pod, region, binary, node_name) (count_over_time({app=\"core-dump-handler\", region=~\"${region:pipe}\"} |~ `core_dump_agent] Uploading:` | regexp `^.+Uploading: /home/data/core-dump-handler/cores/[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-dump-\\d+-(?P<segfault_pod>\\S+)-(?P<binary>\\S+)-\\d+-\\d+.zip` | segfault_pod =~ `prod.+` [1m]))",
+          "legendFormat": "{{ region }}-{{node_name}}-{{ segfault_pod }}-{{ binary }}",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Segfaults in region",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "description": "average number of cores used by a process",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "area"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "#EAB839",
+                "value": 70
+              },
+              {
+                "color": "red",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 6,
+        "x": 18,
+        "y": 65
+      },
+      "id": 43,
+      "links": [
+        {
+          "title": "pod-mon dashboard",
+          "url": "/grafana/d/fe4i3n6gsyyo0f/pod-mon-sh"
+        }
+      ],
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\"} |= `[pod-mon]` | regexp `{\"process\": \"MistController\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > 0.9",
+          "legendFormat": "{{region}}-{{pod}} MistController",
+          "queryType": "range",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\"} |= `[pod-mon]` | regexp `{\"process\": \"MistProcLivepeer\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > 0.9",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistProcLivepeer",
+          "queryType": "range",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\"} |= `[pod-mon]` | regexp `{\"process\": \"MistUtilLoad\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > 0.9",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistUtilLoad",
+          "queryType": "range",
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\"} |= `[pod-mon]` | regexp `{\"process\": \"MistOutWebRTC\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > 0.9",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistOutWebRTC",
+          "queryType": "range",
+          "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\"} |= `[pod-mon]` | regexp `{\"process\": \"MistInDTSC\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > 0.9",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistInDTSC",
+          "queryType": "range",
+          "refId": "E"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\"} |= `[pod-mon]` | regexp `{\"process\": \"MistOutDTSC\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > 0.9",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistOutDTSC",
+          "queryType": "range",
+          "refId": "F"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\"} |= `[pod-mon]` | regexp `{\"process\": \"MistOutFLV\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > 0.9",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistOutFLV",
+          "queryType": "range",
+          "refId": "G"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\"} |= `[pod-mon]` | regexp `{\"process\": \"MistInFLV\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > 0.9",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistInFLV",
+          "queryType": "range",
+          "refId": "H"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\"} |= `[pod-mon]` | regexp `{\"process\": \"MistInBuffer\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > 0.9",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistInBuffer",
+          "queryType": "range",
+          "refId": "I"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\"} |= `[pod-mon]` | regexp `{\"process\": \"MistOutHTTPTS\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > 0.9",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} MistOutHTTPTS",
+          "queryType": "range",
+          "refId": "J"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\"} |= `[pod-mon]` | regexp `{\"process\": \"catalyst-api\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > 0.9",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} catalyst-api",
+          "queryType": "range",
+          "refId": "K"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(pod, process, region) (avg_over_time({region!=\"eu-metrics\", region=~\"${region:pipe}\", app=\"catalyst\"} |= `[pod-mon]` | regexp `{\"process\": \"catalyst-uploader\", \"avg_cpu_per_core\": (?P<avg_cpu_per_core>[\\d\\.]+), \"max_cpu_per_core\": [\\d\\.]+, \"avg_mem_per_process\": [\\d\\.]+}` | unwrap avg_cpu_per_core [$__auto])) > 0.9",
+          "hide": false,
+          "legendFormat": "{{region}}-{{pod}} catalyst-uploader",
+          "queryType": "range",
+          "refId": "L"
+        }
+      ],
+      "title": "high CPU usage per process (pod-mon.sh)",
+      "type": "timeseries"
     }
   ],
+  "refresh": "",
   "schemaVersion": 39,
   "tags": [],
   "templating": {
@@ -3905,8 +4356,8 @@
     ]
   },
   "time": {
-    "from": "2024-11-02T13:13:06.187Z",
-    "to": "2024-11-02T16:17:54.429Z"
+    "from": "now-24h",
+    "to": "now"
   },
   "timepicker": {
     "now": true,
@@ -3937,6 +4388,6 @@
   "timezone": "utc",
   "title": "Mist Global Overview",
   "uid": "000000016",
-  "version": 7,
+  "version": 18,
   "weekStart": ""
 }
