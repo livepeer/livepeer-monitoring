@@ -402,7 +402,7 @@ function prometheusConfig(params) {
       scrape_timeout: "1m",
       honor_timestamps: true,
       static_configs: [
-        { targets: [params.prometheusPipelinesDomain.split(",")] },
+        { targets: params.prometheusPipelinesDomain.split(",") },
       ],
       scheme: "https",
       metrics_path: "/api/metrics",
