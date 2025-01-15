@@ -577,6 +577,84 @@
       ],
       "title": "ready paths",
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "description": "",
+      "gridPos": {
+        "h": 9,
+        "w": 7,
+        "x": 7,
+        "y": 18
+      },
+      "id": 8,
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": false,
+        "sortOrder": "Ascending",
+        "wrapLogMessage": false
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "{app=\"mediamtx\", region=~\"${region:pipe}\"} |~ `closed:`",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "MediaMTX closing connection",
+      "type": "logs"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "description": "",
+      "gridPos": {
+        "h": 9,
+        "w": 7,
+        "x": 7,
+        "y": 27
+      },
+      "id": 9,
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": false,
+        "sortOrder": "Ascending",
+        "wrapLogMessage": false
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "{app=\"mediamtx\", region=~\"${region:pipe}\"} |~ `err|ERR|Err|fail|FAIL|Fail|any supported codec|doesn't`",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "MediaMTX errors",
+      "type": "logs"
     }
   ],
   "refresh": "",
@@ -627,6 +705,6 @@
   "timezone": "utc",
   "title": "MediaMTX",
   "uid": "ee6e9mucakb9cc",
-  "version": 3,
+  "version": 7,
   "weekStart": ""
 }
