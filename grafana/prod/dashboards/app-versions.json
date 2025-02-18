@@ -528,6 +528,7 @@
     },
     {
       "datasource": {
+        "default": true,
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
@@ -614,7 +615,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum by (version) (version{app=\"studio-api\"})",
+          "expr": "sum by (version) (version{app=\"\"})",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -1218,6 +1219,104 @@
       ],
       "title": "Concurrent Versions by App",
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 60,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 0,
+        "y": 36
+      },
+      "id": 20,
+      "interval": "1m",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "sum by (version) (version{app=\"ai-runner\"})",
+          "legendFormat": "{{ livepeerversion }}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "AI Runner",
+      "type": "timeseries"
     }
   ],
   "refresh": "5s",
@@ -1235,6 +1334,6 @@
   "timezone": "utc",
   "title": "App Versions",
   "uid": "L7BdzGh4z",
-  "version": 2,
+  "version": 3,
   "weekStart": ""
 }
