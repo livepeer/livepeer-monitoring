@@ -1,0 +1,156 @@
+{
+  "dashboard": {
+    "id": null,
+    "panels": [
+      {
+        "panels": [
+          {
+            "options": {
+              "colorMode": "value",
+              "graphMode": "area",
+              "orientation": "horizontal",
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ],
+                "values": false
+              }
+            },
+            "targets": [
+              {
+                "refId": "A",
+                "target": "stream_status{stream_id=\"$stream_id\"}"
+              }
+            ],
+            "title": "Stream Health Status",
+            "type": "stat"
+          },
+          {
+            "columns": [
+              {
+                "text": "Stream ID",
+                "value": "stream_id"
+              },
+              {
+                "text": "State",
+                "value": "state"
+              },
+              {
+                "text": "Last Input Time",
+                "value": "last_input_time_ts"
+              },
+              {
+                "text": "Last Output Time",
+                "value": "last_output_time_ts"
+              },
+              {
+                "text": "Restart Count",
+                "value": "restart_count"
+              },
+              {
+                "text": "Last Error",
+                "value": "last_error"
+              }
+            ],
+            "targets": [
+              {
+                "refId": "B",
+                "target": "network_events.stream_status{stream_id=\"$stream_id\"}"
+              }
+            ],
+            "title": "Stream Details",
+            "type": "table"
+          }
+        ],
+        "title": "Stream Status Overview",
+        "type": "row"
+      },
+      {
+        "panels": [
+          {
+            "legend": {
+              "show": true
+            },
+            "targets": [
+              {
+                "refId": "C",
+                "target": "reconnection_attempts{stream_id=\"$stream_id\"}"
+              }
+            ],
+            "title": "Reconnection Attempts Over Time",
+            "type": "timeSeries"
+          },
+          {
+            "options": {
+              "colorMode": "value",
+              "graphMode": "area",
+              "orientation": "horizontal",
+              "reduceOptions": {
+                "calcs": [
+                  "avg"
+                ],
+                "values": false
+              }
+            },
+            "targets": [
+              {
+                "refId": "D",
+                "target": "wait_time{stream_id=\"$stream_id\"}"
+              }
+            ],
+            "title": "Wait Time Before Each Attempt",
+            "type": "stat"
+          }
+        ],
+        "title": "Reconnection Attempts",
+        "type": "row"
+      },
+      {
+        "panels": [
+          {
+            "targets": [
+              {
+                "refId": "E",
+                "target": "stream_region{stream_id=\"$stream_id\"}"
+              }
+            ],
+            "title": "Stream Ingest Region",
+            "type": "stat"
+          },
+          {
+            "content": "Refer to the documentation for regions where Livepeer may be blocked.",
+            "title": "Blocked Regions Documentation",
+            "type": "text"
+          }
+        ],
+        "title": "Region Information",
+        "type": "row"
+      },
+      {
+        "content": "Minimum bandwidth: XX Mbps, Minimum speed: XX Mbps. Refer to the documentation for details.",
+        "title": "Minimum Network Requirements",
+        "type": "text"
+      }
+    ],
+    "tags": [],
+    "templating": {
+      "list": [
+        {
+          "label": "Select Stream ID",
+          "name": "stream_id",
+          "query": "SHOW TAG VALUES WITH KEY = stream_id",
+          "refresh": 1,
+          "type": "query"
+        }
+      ]
+    },
+    "timezone": "browser",
+    "title": "Stream Monitoring Dashboard",
+    "uid": "stream-monitoring-dashboard"
+  },
+  "id": null,
+  "overwrite": true,
+  "title": "Media Stream Dashboard",
+  "uid": "bec6t1ew52s5cd",
+  "version": 1
+}
