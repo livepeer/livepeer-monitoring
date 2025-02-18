@@ -1,0 +1,1421 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 8,
+      "panels": [],
+      "title": "Stream Monitoring",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-clickhouse-datasource",
+        "uid": "cdrta4zbtlddsa"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "series",
+            "axisLabel": "# of Counts",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "line+area"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 5000
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Restart_Count"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Error_Count"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 1
+      },
+      "id": 18,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max",
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrta4zbtlddsa"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.7.0",
+          "queryType": "table",
+          "rawSql": "SELECT\ntoStartOfMinute(se.timestamp_ts) AS timestamp_ts,\nse.stream_id,\nss.state,\nsum(se.restart_count) AS Restart_Count,\ncountIf(se.sub_type = 'error') AS Error_Count\n\nFROM\nnetwork_events.stream_events AS se\nJOIN\nnetwork_events.stream_status AS ss ON se.stream_id = ss.stream_id\nWHERE\nse.stream_id IN (SELECT DISTINCT stream_id FROM network_events.stream_events)\nAND $__timeFilter(se.timestamp_ts)\nGROUP BY\ntimestamp_ts, se.stream_id, ss.state\nORDER BY\ntimestamp_ts ASC;",
+          "refId": "A"
+        }
+      ],
+      "title": "Stream Health",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-clickhouse-datasource",
+        "uid": "cdrta4zbtlddsa"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 1
+      },
+      "id": 3,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrta4zbtlddsa"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.7.0",
+          "queryType": "table",
+          "rawSql": "SELECT \n    se.stream_id,\n    se.type,\n    se.sub_type,\n    se.gateway_address,\n    se.gateway_host,\n    se.orchestrator_address,\n    se.orchestrator_url,\n    fromUnixTimestamp(CAST(se.timestamp_ms / 1000 AS Int64)) AS Time_Stamp, \n    se.restart_count,\n    ss.state,\n    se.last_error\nFROM \n    network_events.stream_events AS se\nJOIN \n    network_events.stream_status AS ss ON se.stream_id = ss.stream_id\nWHERE \n    (se.gateway_address IS NOT NULL AND se.gateway_address != '')\n    OR (se.orchestrator_address IS NOT NULL AND se.orchestrator_address != '')\n    AND (se.stream_id IS NOT NULL AND se.stream_id != '')\nORDER BY \n    Time_Stamp DESC,\n    se.stream_id ASC\nLIMIT 100;\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Stream Error Logs",
+      "type": "table"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 7,
+      "panels": [
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": true,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "line+area"
+                }
+              },
+              "mappings": [],
+              "max": 100,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "transparent",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 50
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 90
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 10
+          },
+          "id": 2,
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull",
+                "max"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "expr": "sum(rate(container_cpu_usage_seconds_total{container!=\"\", container!=\"POD\", region=~\".*-ai$\"}[5m])) by (region)",
+              "hide": false,
+              "instant": false,
+              "legendFormat": "{{region}}",
+              "range": true,
+              "refId": "B"
+            }
+          ],
+          "title": "CPU Usage (> 50%)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineStyle": {
+                  "fill": "solid"
+                },
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "spanNulls": true,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "line+area"
+                }
+              },
+              "mappings": [],
+              "max": 100,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "transparent",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 50
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 90
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 10
+          },
+          "id": 1,
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull",
+                "max"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "expr": "(node_memory_MemFree_bytes{region=~\".*-ai$\"} + node_memory_Buffers_bytes{region=~\".*-ai$\"} + node_memory_Cached_bytes{region=~\".*-ai$\"}) / node_memory_MemTotal_bytes{region=~\".*-ai$\"} * on(region) group_left(nodename) node_uname_info",
+              "instant": false,
+              "legendFormat": "{{region}}-{{nodename}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "CPU Memory Usage (> 50%)",
+          "type": "timeseries"
+        }
+      ],
+      "title": "CPU Monitoring",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 10
+      },
+      "id": 11,
+      "panels": [
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "Shows how much electricity the GPU is consuming - higher usage indicates more intensive workloads",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 25,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineStyle": {
+                  "fill": "solid"
+                },
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "normal"
+                },
+                "thresholdsStyle": {
+                  "mode": "line+area"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "percentage",
+                "steps": [
+                  {
+                    "color": "transparent",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 50
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 90
+                  }
+                ]
+              },
+              "unit": "kwattm"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 11
+          },
+          "id": 9,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "table",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.2.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "expr": "DCGM_FI_DEV_POWER_USAGE{Hostname=~\".*load-test-prod.*\"}",
+              "instant": false,
+              "legendFormat": "{{node_name}}/{{UUID}}/{{modelName}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "GPU Power Usage (Load Test)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "Shows how much VRAM is being used to store data and buffers",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "line+area"
+                }
+              },
+              "mappings": [],
+              "max": 100,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "transparent",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 50
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 90
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 11
+          },
+          "id": 10,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.2.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "expr": "DCGM_FI_DEV_FB_USED{Hostname=~\".*load-test-prod.*\"}\n",
+              "instant": false,
+              "legendFormat": "{{node_name}}/{{UUID}}/{{modelName}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "GPU Memory Usage (Load Test)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "Indicates how hot the GPU is running",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "fieldMinMax": false,
+              "mappings": [],
+              "thresholds": {
+                "mode": "percentage",
+                "steps": [
+                  {
+                    "color": "dark-green"
+                  },
+                  {
+                    "color": "orange",
+                    "value": 50
+                  },
+                  {
+                    "color": "red",
+                    "value": 95
+                  }
+                ]
+              },
+              "unit": "celsius"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 19
+          },
+          "id": 17,
+          "options": {
+            "minVizHeight": 75,
+            "minVizWidth": 75,
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "sizing": "auto",
+            "text": {}
+          },
+          "pluginVersion": "11.2.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "expr": "DCGM_FI_DEV_GPU_TEMP{Hostname=~\".*load-test-prod.*\"}",
+              "instant": false,
+              "legendFormat": "{{node_name}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "GPU Temperature - Celsius (Load Test)",
+          "type": "gauge"
+        },
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "Shows the percentage of time the GPU is actively processing tasks ",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "line+area"
+                }
+              },
+              "mappings": [],
+              "max": 100,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "transparent"
+                  },
+                  {
+                    "color": "red",
+                    "value": 50
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 90
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 19
+          },
+          "id": 13,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.2.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "expr": "DCGM_FI_DEV_GPU_UTIL{Hostname=~\".*load-test-prod.*\"}\n",
+              "instant": false,
+              "legendFormat": "{{node_name}}/{{UUID}}/{{modelName}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "GPU Utilization (Load Test)",
+          "type": "timeseries"
+        }
+      ],
+      "title": "GPU Load Testing",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 11
+      },
+      "id": 6,
+      "panels": [
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "Number of GPUs in use and the total number of GPUs",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "dark-green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "count(DCGM_FI_DEV_GPU_UTIL{gpu!=\"\"} > 0)"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "GPUs in Use"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "count(DCGM_FI_DEV_POWER_USAGE{gpu!=\"\"})"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Total GPUs Available"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 12
+          },
+          "id": 15,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "center",
+            "orientation": "horizontal",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": false
+          },
+          "pluginVersion": "11.2.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "expr": "count(DCGM_FI_DEV_GPU_UTIL{gpu!=\"\"} > 0)",
+              "instant": false,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "expr": "count(DCGM_FI_DEV_POWER_USAGE{gpu!=\"\"})",
+              "hide": false,
+              "instant": false,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "B"
+            }
+          ],
+          "title": "GPUs",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "Shows how much VRAM is being used to store data and buffers",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "line+area"
+                }
+              },
+              "mappings": [],
+              "max": 100,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "transparent",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 50
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 90
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 12
+          },
+          "id": 16,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.2.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "expr": "DCGM_FI_DEV_FB_USED{Hostname!~\".*load-test-prod.*\"}\n",
+              "instant": false,
+              "legendFormat": "{{node_name}}/{{UUID}}/{{modelName}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "GPU Memory Usage",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "Indicates how hot the GPU is running",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "fieldMinMax": false,
+              "mappings": [],
+              "thresholds": {
+                "mode": "percentage",
+                "steps": [
+                  {
+                    "color": "dark-green"
+                  },
+                  {
+                    "color": "orange",
+                    "value": 50
+                  },
+                  {
+                    "color": "red",
+                    "value": 95
+                  }
+                ]
+              },
+              "unit": "celsius"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 20
+          },
+          "id": 12,
+          "options": {
+            "minVizHeight": 75,
+            "minVizWidth": 75,
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "sizing": "auto",
+            "text": {}
+          },
+          "pluginVersion": "11.2.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "expr": "DCGM_FI_DEV_GPU_TEMP{Hostname!~\".*load-test-prod.*\"}",
+              "instant": false,
+              "legendFormat": "{{node_name}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "GPU Temperature - Celsius",
+          "type": "gauge"
+        },
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "line+area"
+                }
+              },
+              "mappings": [],
+              "max": 100,
+              "min": 0,
+              "thresholds": {
+                "mode": "percentage",
+                "steps": [
+                  {
+                    "color": "transparent"
+                  },
+                  {
+                    "color": "red",
+                    "value": 50
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 90
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 20
+          },
+          "id": 4,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "sum by (\n  Hostname, \n  UUID, \n  gpu, \n  instance, \n  modelName, \n  node_name, \n  region\n) (\n    DCGM_FI_DEV_GPU_UTIL{Hostname!~\".*load-test-prod.*\"}  \n  or\n    DCGM_FI_DEV_GPU_UTIL{region!~\".*load-test-prod.*\"}    \n  or\n    DCGM_FI_DEV_GPU_UTIL{node_name!~\".*load-test-prod.*\"} \n)",
+              "instant": false,
+              "legendFormat": "{{node_name}}({{UUID}})({{modelName}})",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "GPU Utilization ",
+          "type": "timeseries"
+        }
+      ],
+      "title": "GPU Monitoring",
+      "type": "row"
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "str_6Ph3B4pxN3R2crrV",
+          "value": "str_6Ph3B4pxN3R2crrV"
+        },
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "cdrta4zbtlddsa"
+        },
+        "definition": "SELECT se.stream_id\nFROM network_events.stream_status AS se;",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Stream ID",
+        "multi": false,
+        "name": "stream_id",
+        "options": [],
+        "query": "SELECT se.stream_id\nFROM network_events.stream_status AS se;",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "",
+          "value": ""
+        },
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "cdrta4zbtlddsa"
+        },
+        "definition": "SELECT state \nFROM network_events.stream_status;",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Stream State",
+        "multi": true,
+        "name": "stream_state",
+        "options": [],
+        "query": "SELECT state \nFROM network_events.stream_status;",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "0x180859c337d14edf588c685f3f7ab4472ab6a252",
+          "value": "0x180859c337d14edf588c685f3f7ab4472ab6a252"
+        },
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "cdrta4zbtlddsa"
+        },
+        "definition": "SELECT orchestrator_address\nFROM network_events.stream_status;",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Orchestrator Address",
+        "multi": false,
+        "name": "orchestrator_address",
+        "options": [],
+        "query": "SELECT orchestrator_address\nFROM network_events.stream_status;",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": "",
+        "current": {
+          "selected": false,
+          "text": "",
+          "value": ""
+        },
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "cdrta4zbtlddsa"
+        },
+        "definition": "SELECT gateway_address\nFROM network_events.stream_status;",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Gateway Address",
+        "multi": false,
+        "name": "gateway_address",
+        "options": [],
+        "query": "SELECT gateway_address\nFROM network_events.stream_status;",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "utc",
+  "title": "Ai Monitoring [WIP]",
+  "uid": "becrwydm8kpvke",
+  "version": 69,
+  "weekStart": ""
+}
