@@ -831,9 +831,106 @@
       ],
       "title": "Missing Capacity Errors",
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 34
+      },
+      "id": 13,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "count by(region, node_name) (rate({container=~\"live-video-to-video.*\"} != `Polling blocks` != `h264` |~ `CUDA initialization failure with error` [$__auto]))",
+          "legendFormat": "",
+          "queryType": "range",
+          "refId": "A",
+          "splitDuration": "1d"
+        }
+      ],
+      "title": "CUDA/GPU Errors",
+      "type": "timeseries"
     }
   ],
-  "refresh": "",
+  "refresh": "10s",
   "schemaVersion": 39,
   "tags": [
     "ai",
@@ -851,6 +948,6 @@
   "timezone": "utc",
   "title": "AI Overview (Livestream)",
   "uid": "be6llteqebk00b",
-  "version": 18,
+  "version": 20,
   "weekStart": ""
 }
