@@ -47,8 +47,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -111,8 +110,7 @@
                 "mode": "percentage",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -175,8 +173,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               }
@@ -269,8 +266,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -335,8 +331,7 @@
                 "mode": "percentage",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               }
@@ -396,8 +391,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               }
@@ -457,8 +451,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               },
@@ -552,8 +545,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -628,8 +620,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               },
@@ -732,8 +723,7 @@
                 "mode": "percentage",
                 "steps": [
                   {
-                    "color": "transparent",
-                    "value": null
+                    "color": "transparent"
                   },
                   {
                     "color": "super-light-red",
@@ -847,8 +837,7 @@
                 "mode": "percentage",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -952,8 +941,7 @@
                 "mode": "percentage",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1049,8 +1037,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1163,8 +1150,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1403,9 +1389,9 @@
               "table": ""
             }
           },
-          "pluginVersion": "4.7.0",
+          "pluginVersion": "4.8.0",
           "queryType": "table",
-          "rawSql": "SELECT \r\n    stream_id, \r\n    timestamp_ts, \r\n    event_type, \r\n    message, \r\n    restart_count, \r\n    gateway_address, \r\n    gateway_host, \r\n    type, \r\n    capability, \r\n    pipeline, \r\n    pipeline_id, \r\n    params, \r\n    orchestrator_address, \r\n    orchestrator_url\r\nFROM \r\n    network_events.stream_events\r\nWHERE \r\n    sub_type IN ('error', 'restart')\r\n    AND $__timeFilter(timestamp_ts)\r\nORDER BY \r\n    timestamp_ts DESC\r\nLIMIT 100;\r\n",
+          "rawSql": "SELECT \r\n    stream_id, \r\n    timestamp_ts, \r\n    event_type, \r\n    message, \r\n    restart_count, \r\n    gateway,\r\n    type, \r\n    capability, \r\n    pipeline, \r\n    pipeline_id, \r\n    params, \r\n    orchestrator_address, \r\n    orchestrator_url\r\nFROM \r\n    network_events.stream_events\r\nWHERE \r\n    sub_type IN ('error', 'restart')\r\n    AND $__timeFilter(timestamp_ts)\r\nORDER BY \r\n    timestamp_ts DESC\r\nLIMIT 100;\r\n",
           "refId": "A"
         }
       ],
@@ -1707,6 +1693,6 @@
   "timezone": "utc",
   "title": "Ai Ingest Monitoring",
   "uid": "eec8ak1lxzshsd",
-  "version": 140,
+  "version": 142,
   "weekStart": ""
 }
