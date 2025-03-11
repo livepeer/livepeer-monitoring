@@ -282,7 +282,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 9
+            "y": 232
           },
           "id": 20,
           "options": {
@@ -342,7 +342,7 @@
             "h": 8,
             "w": 4,
             "x": 12,
-            "y": 9
+            "y": 232
           },
           "id": 22,
           "options": {
@@ -402,7 +402,7 @@
             "h": 8,
             "w": 4,
             "x": 16,
-            "y": 9
+            "y": 232
           },
           "id": 23,
           "options": {
@@ -463,7 +463,7 @@
             "h": 8,
             "w": 4,
             "x": 20,
-            "y": 9
+            "y": 232
           },
           "id": 25,
           "options": {
@@ -561,7 +561,7 @@
             "h": 9,
             "w": 12,
             "x": 0,
-            "y": 17
+            "y": 240
           },
           "id": 16,
           "options": {
@@ -632,7 +632,7 @@
             "h": 9,
             "w": 12,
             "x": 12,
-            "y": 17
+            "y": 240
           },
           "id": 26,
           "options": {
@@ -743,7 +743,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 26
+            "y": 249
           },
           "id": 15,
           "options": {
@@ -777,7 +777,7 @@
       "type": "row"
     },
     {
-      "collapsed": true,
+      "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -785,421 +785,424 @@
         "y": 1
       },
       "id": 7,
-      "panels": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "description": "This chart visualizes the CPU usage percentage for nodes in specified regions, with a threshold set at 80%.\n\nA CPU usage percentage greater than 80% indicates that the system is heavily loaded, with most of the CPU resources actively in use.",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "barWidthFactor": 0.6,
-                "drawStyle": "line",
-                "fillOpacity": 0,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "insertNulls": false,
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "line+area"
-                }
-              },
-              "mappings": [],
-              "max": 100,
-              "min": 0,
-              "thresholds": {
-                "mode": "percentage",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              },
-              "unit": "percent"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 12,
-            "w": 12,
-            "x": 0,
-            "y": 2
-          },
-          "id": 5,
-          "options": {
-            "legend": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "displayMode": "table",
-              "placement": "right",
-              "showLegend": true
-            },
-            "tooltip": {
-              "hideZeros": false,
-              "mode": "single",
-              "sort": "none"
-            }
-          },
-          "pluginVersion": "11.5.1",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "PBFA97CFB590B2093"
-              },
-              "editorMode": "code",
-              "expr": "100 * (1 - (sum(irate(node_cpu_seconds_total{region=~\".*-ai$\", mode=\"idle\", instance=~\".+:9100\"}[1m])) by (region) / sum(irate(node_cpu_seconds_total{instance=~\".+:9100\"}[1m])) by (region)))",
-              "instant": false,
-              "legendFormat": "__auto",
-              "range": true,
-              "refId": "A"
-            }
-          ],
-          "title": "CPU Usage",
-          "type": "timeseries"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "description": "This chart visualizes the CPU usage percentage for nodes in specified regions, with a threshold set at 50%.\n\nA CPU usage percentage greater than 50% indicates that more than half of the CPU resources are actively being utilized. ",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": true,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "barWidthFactor": 0.6,
-                "drawStyle": "line",
-                "fillOpacity": 0,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "insertNulls": false,
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "dashed+area"
-                }
-              },
-              "fieldMinMax": false,
-              "mappings": [],
-              "max": 100,
-              "min": 0,
-              "thresholds": {
-                "mode": "percentage",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 50
-                  }
-                ]
-              },
-              "unit": "percent"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 12,
-            "w": 12,
-            "x": 12,
-            "y": 2
-          },
-          "id": 8,
-          "options": {
-            "legend": {
-              "calcs": [],
-              "displayMode": "list",
-              "placement": "bottom",
-              "showLegend": true
-            },
-            "tooltip": {
-              "hideZeros": false,
-              "mode": "single",
-              "sort": "none"
-            }
-          },
-          "pluginVersion": "11.5.1",
-          "targets": [
-            {
-              "editorMode": "code",
-              "expr": "100 * (1 - (sum(irate(node_cpu_seconds_total{region=~\".*-ai$\", mode=\"idle\", instance=~\".+:9100\"}[1m])) by (region) / sum(irate(node_cpu_seconds_total{instance=~\".+:9100\"}[1m])) by (region)))",
-              "format": "time_series",
-              "interval": "",
-              "legendFormat": "{{region}}",
-              "range": true,
-              "refId": "A"
-            }
-          ],
-          "title": "CPU Memory Usage (> 50%)",
-          "type": "timeseries"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "description": "This shows the disk I/O performance for various regions, specifically focusing on the rates of data being written to and read from disk.\n\nNormal Operation:-\nWhen the disk write and read rates are within expected ranges based on usage over time , the system is functioning normally. You should see stable lines on the graph, indicating consistent disk I/O performance.\n\nHigh Disk Write/Read Rates:- If the lines show significantly high values, it may indicate heavy disk usage. This could be due data ingestion processes. \n\nSudden spikes or drops in disk I/O can indicate issues that need further investigation of the node",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "barWidthFactor": 0.6,
-                "drawStyle": "line",
-                "fillOpacity": 0,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "insertNulls": false,
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              },
-              "unit": "decmbytes"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 9,
-            "w": 12,
-            "x": 0,
-            "y": 14
-          },
-          "id": 9,
-          "options": {
-            "legend": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "displayMode": "list",
-              "placement": "right",
-              "showLegend": true
-            },
-            "tooltip": {
-              "hideZeros": false,
-              "mode": "single",
-              "sort": "none"
-            }
-          },
-          "pluginVersion": "11.5.1",
-          "targets": [
-            {
-              "editorMode": "code",
-              "expr": "sum(rate(node_disk_written_bytes_total{region=~\".*-ai$\"}[1m])) by (region) / 1000000",
-              "interval": "",
-              "legendFormat": "{{region}} - Disk Write",
-              "range": true,
-              "refId": "A"
-            },
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "PBFA97CFB590B2093"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "sum(rate(node_disk_read_bytes_total{region=~\".*-ai$\"}[1m])) by (region) / 1000000",
-              "hide": false,
-              "instant": false,
-              "legendFormat": "{{region}} - Disk Read",
-              "range": true,
-              "refId": "B"
-            }
-          ],
-          "title": "Ingest Disk I/O Per Minute",
-          "type": "timeseries"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "description": "This  indicates how much of the total disk capacity is being utilized.\n\nA higher percentage indicates that a significant portion of the disk space is in use, which may suggest that the filesystem is nearing capacity.",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "barWidthFactor": 0.6,
-                "drawStyle": "line",
-                "fillOpacity": 0,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "insertNulls": false,
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "max": 100,
-              "min": 1,
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              },
-              "unit": "percent"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 9,
-            "w": 12,
-            "x": 12,
-            "y": 14
-          },
-          "id": 24,
-          "options": {
-            "legend": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "displayMode": "table",
-              "placement": "right",
-              "showLegend": true
-            },
-            "tooltip": {
-              "hideZeros": false,
-              "mode": "single",
-              "sort": "none"
-            }
-          },
-          "pluginVersion": "11.5.1",
-          "targets": [
-            {
-              "editorMode": "code",
-              "expr": "(node_filesystem_size_bytes{mountpoint=\"/\", region=~\".*-ai$\"} - node_filesystem_avail_bytes{mountpoint=\"/\", region=~\".*-ai$\"}) / node_filesystem_size_bytes{mountpoint=\"/\", region=~\".*-ai$\"} * 100",
-              "legendFormat": "{{region}}",
-              "range": true,
-              "refId": "A"
-            }
-          ],
-          "title": "Disk Usage",
-          "type": "timeseries"
-        }
-      ],
+      "panels": [],
       "title": "CPU Monitoring",
       "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "description": "This chart visualizes the CPU usage percentage for nodes in specified regions, with a threshold set at 80%.\n\nA CPU usage percentage greater than 80% indicates that the system is heavily loaded, with most of the CPU resources actively in use.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "line+area"
+            }
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 0,
+        "y": 2
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "100 * (1 - (sum(irate(node_cpu_seconds_total{region=~\".*-ai$\", mode=\"idle\", instance=~\".+:9100\"}[1m])) by (region) / sum(irate(node_cpu_seconds_total{instance=~\".+:9100\"}[1m])) by (region)))",
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "CPU Usage",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "description": "This chart visualizes the CPU usage percentage for nodes in specified regions, with a threshold set at 50%.\n\nA CPU usage percentage greater than 50% indicates that more than half of the CPU resources are actively being utilized. ",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": true,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed+area"
+            }
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 50
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 12,
+        "y": 2
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.1",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "100 * (1 - (sum(irate(node_cpu_seconds_total{region=~\".*-ai$\", mode=\"idle\", instance=~\".+:9100\"}[1m])) by (region) / sum(irate(node_cpu_seconds_total{instance=~\".+:9100\"}[1m])) by (region)))",
+          "format": "time_series",
+          "interval": "",
+          "legendFormat": "{{region}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "CPU Memory Usage (> 50%)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "description": "This shows the disk I/O performance for various regions, specifically focusing on the rates of data being written to and read from disk.\n\nNormal Operation:-\nWhen the disk write and read rates are within expected ranges based on usage over time , the system is functioning normally. You should see stable lines on the graph, indicating consistent disk I/O performance.\n\nHigh Disk Write/Read Rates:- If the lines show significantly high values, it may indicate heavy disk usage. This could be due data ingestion processes. \n\nSudden spikes or drops in disk I/O can indicate issues that need further investigation of the node",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "decmbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 14
+      },
+      "id": 9,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.1",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "sum(rate(node_disk_written_bytes_total{region=~\".*-ai$\"}[1m])) by (region) / 1000000",
+          "interval": "",
+          "legendFormat": "{{region}} - Disk Write",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(rate(node_disk_read_bytes_total{region=~\".*-ai$\"}[1m])) by (region) / 1000000",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "{{region}} - Disk Read",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "Ingest Disk I/O Per Minute",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "description": "This  indicates how much of the total disk capacity is being utilized.\n\nA higher percentage indicates that a significant portion of the disk space is in use, which may suggest that the filesystem is nearing capacity.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "line+area"
+            }
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 14
+      },
+      "id": 24,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.1",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "(node_filesystem_size_bytes{mountpoint=\"/\", region=~\".*-ai$\"} - node_filesystem_avail_bytes{mountpoint=\"/\", region=~\".*-ai$\"}) / node_filesystem_size_bytes{mountpoint=\"/\", region=~\".*-ai$\"} * 100",
+          "legendFormat": "{{region}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Disk Usage",
+      "type": "timeseries"
     },
     {
       "collapsed": false,
@@ -1207,7 +1210,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 2
+        "y": 23
       },
       "id": 6,
       "panels": [],
@@ -1242,7 +1245,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 3
+        "y": 24
       },
       "id": 27,
       "options": {
@@ -1281,7 +1284,7 @@
               "table": ""
             }
           },
-          "pluginVersion": "4.7.0",
+          "pluginVersion": "4.8.1",
           "queryType": "table",
           "rawSql": "SELECT COUNT(*) AS online_count\r\nFROM network_events.stream_status\r\nWHERE state = 'ONLINE' AND\r\n      last_input_time_ts >= now() - INTERVAL 30 SECOND;",
           "refId": "A"
@@ -1354,7 +1357,7 @@
         "h": 16,
         "w": 12,
         "x": 12,
-        "y": 3
+        "y": 24
       },
       "id": 4,
       "options": {
@@ -1389,7 +1392,7 @@
               "table": ""
             }
           },
-          "pluginVersion": "4.8.0",
+          "pluginVersion": "4.8.1",
           "queryType": "table",
           "rawSql": "SELECT \r\n    stream_id, \r\n    timestamp_ts, \r\n    event_type, \r\n    message, \r\n    restart_count, \r\n    gateway,\r\n    type, \r\n    capability, \r\n    pipeline, \r\n    pipeline_id, \r\n    params, \r\n    orchestrator_address, \r\n    orchestrator_url\r\nFROM \r\n    network_events.stream_events\r\nWHERE \r\n    sub_type IN ('error', 'restart')\r\n    AND $__timeFilter(timestamp_ts)\r\nORDER BY \r\n    timestamp_ts DESC\r\nLIMIT 100;\r\n",
           "refId": "A"
@@ -1496,7 +1499,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 11
+        "y": 32
       },
       "id": 1,
       "options": {
@@ -1542,30 +1545,17 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "thresholds"
           },
           "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "series",
-            "axisLabel": "Error & Restart Count",
-            "axisPlacement": "auto",
-            "fillOpacity": 80,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
+            "align": "left",
+            "cellOptions": {
+              "type": "color-text"
             },
-            "lineWidth": 1,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
+            "inspect": true
           },
           "mappings": [],
+          "min": 1,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1574,11 +1564,20 @@
                 "value": null
               },
               {
+                "color": "yellow",
+                "value": 10
+              },
+              {
+                "color": "orange",
+                "value": 50
+              },
+              {
                 "color": "red",
-                "value": 80
+                "value": 100
               }
             ]
-          }
+          },
+          "unit": "none"
         },
         "overrides": [
           {
@@ -1588,10 +1587,19 @@
             },
             "properties": [
               {
-                "id": "color",
+                "id": "thresholds",
                 "value": {
-                  "fixedColor": "semi-dark-red",
-                  "mode": "fixed"
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "red",
+                      "value": 1
+                    }
+                  ]
                 }
               }
             ]
@@ -1602,32 +1610,21 @@
         "h": 16,
         "w": 24,
         "x": 0,
-        "y": 19
+        "y": 40
       },
       "id": 28,
       "maxPerRow": 2,
       "options": {
-        "barRadius": 0.1,
-        "barWidth": 1,
-        "fullHighlight": false,
-        "groupWidth": 0.7,
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "right",
-          "showLegend": true
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
         },
-        "orientation": "vertical",
-        "showValue": "auto",
-        "stacking": "none",
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        },
-        "xField": "stream_id",
-        "xTickLabelRotation": -45,
-        "xTickLabelSpacing": 100
+        "showHeader": true
       },
       "pluginVersion": "11.5.1",
       "targets": [
@@ -1648,18 +1645,18 @@
               "table": ""
             }
           },
-          "pluginVersion": "4.7.0",
+          "pluginVersion": "4.8.1",
           "queryType": "table",
           "rawSql": "SELECT \r\n    stream_id, \r\n    countIf(event_type = 'restart') AS restart_count,\r\n    countIf(event_type = 'error') AS error_count\r\nFROM (\r\n    SELECT DISTINCT stream_id\r\n    FROM network_events.stream_events\r\n    WHERE event_type IN ('restart', 'error')\r\n    ORDER BY timestamp_ts DESC\r\n    LIMIT 15\r\n) AS latest_streams\r\nJOIN network_events.stream_events USING (stream_id)\r\nGROUP BY stream_id\r\nORDER BY stream_id ASC;\r\n",
           "refId": "A"
         }
       ],
       "title": "Stream Status [Error/Restart Count with Stream ID]",
-      "type": "barchart"
+      "type": "table"
     }
   ],
   "preload": true,
-  "refresh": "5s",
+  "refresh": "1d",
   "schemaVersion": 40,
   "tags": [],
   "templating": {
@@ -1674,25 +1671,26 @@
           "type": "grafana-clickhouse-datasource",
           "uid": "cdrt9r9yntbswf"
         },
-        "definition": "SELECT stream_id FROM network_events.stream_status\nwhere $__timeFilter(timestamp_ts)",
+        "definition": "SELECT DISTINCT stream_id FROM network_events.stream_events where $__timeFilter(timestamp_ts)",
         "includeAll": true,
         "label": "Select Stream ID",
         "name": "stream_id",
         "options": [],
-        "query": "SELECT stream_id FROM network_events.stream_status\nwhere $__timeFilter(timestamp_ts)",
+        "query": "SELECT DISTINCT stream_id FROM network_events.stream_events where $__timeFilter(timestamp_ts)",
         "refresh": 2,
+        "sort": 7,
         "type": "query"
       }
     ]
   },
   "time": {
-    "from": "now-3h",
+    "from": "now-24h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "utc",
-  "title": "Ai Ingest Monitoring",
-  "uid": "eec8ak1lxzshsd",
-  "version": 142,
+  "title": "Test001",
+  "uid": "eec8ak1lxzshs4",
+  "version": 1,
   "weekStart": ""
 }
