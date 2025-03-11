@@ -40,6 +40,7 @@
       "id": 8,
       "options": {
         "dedupStrategy": "none",
+        "enableInfiniteScrolling": false,
         "enableLogDetails": true,
         "prettifyLogMessage": false,
         "showCommonLabels": false,
@@ -48,7 +49,7 @@
         "sortOrder": "Ascending",
         "wrapLogMessage": false
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
@@ -83,6 +84,7 @@
       "id": 9,
       "options": {
         "dedupStrategy": "none",
+        "enableInfiniteScrolling": false,
         "enableLogDetails": true,
         "prettifyLogMessage": false,
         "showCommonLabels": false,
@@ -91,7 +93,7 @@
         "sortOrder": "Descending",
         "wrapLogMessage": false
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
@@ -196,11 +198,12 @@
           "showLegend": false
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
@@ -209,7 +212,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum(increase(livepeer_ai_live_attempt[$__rate_interval]))",
+          "expr": "sum(increase(livepeer_ai_live_attempt[1m]))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -219,7 +222,7 @@
           "useBackend": false
         }
       ],
-      "title": "Stream Attempts",
+      "title": "Stream Attempts in 1m",
       "type": "timeseries"
     },
     {
@@ -298,11 +301,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
@@ -311,17 +315,17 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum by(normalized_error_code) (label_replace(label_replace(increase(livepeer_ai_request_errors{pipeline=~\"live-.*\"}[$__rate_interval]), \"normalized_error_code\", \"no orchestrators available\", \"error_code\", \"no orchestrators available.*\"), \"normalized_error_code\", \"$1\", \"error_code\", \"(.*)\"))",
+          "expr": "sum by(normalized_error_code, model_name) (label_replace(label_replace(increase(livepeer_ai_request_errors{pipeline=~\"live-.*\"}[1m]), \"normalized_error_code\", \"no orchestrators available\", \"error_code\", \"no orchestrators available.*\"), \"normalized_error_code\", \"$1\", \"error_code\", \"(.*)\"))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "{{model_name}}: {{normalized_error_code}}",
           "range": true,
           "refId": "A",
           "useBackend": false
         }
       ],
-      "title": "Error Responses",
+      "title": "Error Responses in 1m",
       "type": "timeseries"
     },
     {
@@ -401,11 +405,12 @@
           "showLegend": false
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
@@ -511,11 +516,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
@@ -626,11 +632,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
@@ -727,23 +734,28 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "editorMode": "code",
-          "expr": "sum (livepeer_ai_current_live_pipelines)",
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "max(increase(livepeer_ai_current_live_pipelines[$__rate_interval]))",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
-          "refId": "A"
+          "refId": "A",
+          "useBackend": false
         }
       ],
       "title": "In-Use Orchestrators",
@@ -825,11 +837,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
@@ -838,7 +851,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum by(pipeline, model_name) (increase(livepeer_ai_request_errors{error_code=~\"no orchestrators available.*\", pipeline=~\"live-.*\"}[$__rate_interval]))",
+          "expr": "sum by(pipeline, model_name) (increase(livepeer_ai_request_errors{error_code=~\"no orchestrators available.*\", pipeline=~\"live-.*\"}[1m]))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -848,25 +861,25 @@
           "useBackend": false
         }
       ],
-      "title": "Missing Capacity Errors",
+      "title": "Missing Capacity Errors in 1m",
       "type": "timeseries"
     }
   ],
   "preload": false,
-  "refresh": "10s",
+  "refresh": "1m",
   "schemaVersion": 40,
   "tags": [],
   "templating": {
     "list": []
   },
   "time": {
-    "from": "now-12h",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "utc",
   "title": "AI Overview (Livestream)",
   "uid": "be6llteqebk00b",
-  "version": 34,
+  "version": 42,
   "weekStart": ""
 }
