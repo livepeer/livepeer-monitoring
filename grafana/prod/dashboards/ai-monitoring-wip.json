@@ -22,7 +22,7 @@
   "links": [],
   "panels": [
     {
-      "collapsed": false,
+      "collapsed": true,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -30,231 +30,1016 @@
         "y": 0
       },
       "id": 8,
-      "panels": [],
-      "title": "Stream Monitoring",
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "default": false,
-        "type": "grafana-clickhouse-datasource",
-        "uid": "cdrta4zbtlddsa"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "# of Counts",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "smooth",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "dark-green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Restart_Count"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-red",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Error_Count"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-yellow",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 1
-      },
-      "id": 18,
-      "options": {
-        "legend": {
-          "calcs": [
-            "lastNotNull",
-            "max",
-            "sum"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
+      "panels": [
         {
           "datasource": {
+            "default": false,
             "type": "grafana-clickhouse-datasource",
             "uid": "cdrta4zbtlddsa"
           },
-          "editorType": "sql",
-          "format": 1,
-          "meta": {
-            "builderOptions": {
-              "columns": [],
-              "database": "",
-              "limit": 1000,
-              "mode": "list",
+          "description": "This chart displays the average number of streams based on the timestamp.\n",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "decimals": 0,
+              "fieldMinMax": false,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 6,
+            "x": 0,
+            "y": 1
+          },
+          "hideTimeOverride": false,
+          "id": 19,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "mean"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "11.2.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "cdrta4zbtlddsa"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "hide": false,
+              "meta": {
+                "builderOptions": {
+                  "columns": [],
+                  "database": "",
+                  "limit": 1000,
+                  "mode": "list",
+                  "queryType": "table",
+                  "table": ""
+                }
+              },
+              "pluginVersion": "4.8.0",
               "queryType": "table",
-              "table": ""
+              "rawSql": "SELECT AVG(stream_count) as avg_active_streams\nFROM (\n    SELECT \n        toStartOfMinute(timestamp_ts) as minute,\n        COUNT(DISTINCT stream_id) as stream_count\n    FROM network_events.stream_status\n    WHERE state = 'ONLINE' AND $__timeFilter(timestamp_ts)\n    GROUP BY minute\n) subquery;",
+              "refId": "B"
+            }
+          ],
+          "title": "Average Streams Online",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "Provides information on the number of AI livestreams currently live in production.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "# of Active Streams",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 6,
+            "x": 6,
+            "y": 1
+          },
+          "id": 25,
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
             }
           },
-          "pluginVersion": "4.7.0",
-          "queryType": "table",
-          "rawSql": "SELECT\ntoStartOfMinute(se.timestamp_ts) AS timestamp_ts,\nse.stream_id,\nss.state,\nsum(se.restart_count) AS Restart_Count,\ncountIf(se.sub_type = 'error') AS Error_Count\n\nFROM\nnetwork_events.stream_events AS se\nJOIN\nnetwork_events.stream_status AS ss ON se.stream_id = ss.stream_id\nWHERE\nse.stream_id IN (SELECT DISTINCT stream_id FROM network_events.stream_events)\nAND $__timeFilter(se.timestamp_ts)\nGROUP BY\ntimestamp_ts, se.stream_id, ss.state\nORDER BY\ntimestamp_ts ASC;",
-          "refId": "A"
-        }
-      ],
-      "title": "Stream Health",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "default": false,
-        "type": "grafana-clickhouse-datasource",
-        "uid": "cdrta4zbtlddsa"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
+          "pluginVersion": "11.2.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "expr": "max(sum_over_time(livepeer_ai_current_live_pipelines[$__interval]))",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "# of Streams",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Total Stream Counts",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "default": false,
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrta4zbtlddsa"
           },
-          "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
+          "description": "This chart indicates the percentage of streams that experience errors.\n\nGreen = < 10% of streams with errors\nYellow = > 10% of streams with errors\nRed = > 20% of streams with errors",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "fieldMinMax": false,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "#EAB839",
+                    "value": 10
+                  },
+                  {
+                    "color": "red",
+                    "value": 20
+                  }
+                ]
+              },
+              "unit": "percent"
             },
-            "inspect": false
+            "overrides": []
           },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
+          "gridPos": {
+            "h": 6,
+            "w": 6,
+            "x": 12,
+            "y": 1
+          },
+          "id": 34,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "text": {
+              "titleSize": 1
+            },
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "11.2.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "cdrta4zbtlddsa"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "columns": [],
+                  "database": "",
+                  "limit": 1000,
+                  "mode": "list",
+                  "queryType": "table",
+                  "table": ""
+                }
+              },
+              "pluginVersion": "4.8.0",
+              "queryType": "table",
+              "rawSql": "SELECT\n  SUM(CASE WHEN last_error_time_ts IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*) * 100 AS `Error Percentage`\nFROM (\n  SELECT\n    stream_id,\n    MAX(last_error_time_ts) AS last_error_time_ts\n  FROM\n    network_events.stream_status\n  WHERE\n    $__timeFilter(timestamp_ts)\n  GROUP BY\n    stream_id\n) AS stream_errors",
+              "refId": "A"
+            }
+          ],
+          "title": "Stream w/ Errors",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "default": false,
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrta4zbtlddsa"
+          },
+          "description": "This chart visualizes the counts of 'restart' and 'error' events occurring in a stream over time\n\nRestart Count: This metric indicates the number of times a 'restart' event occurred within the specified minute. A higher count may suggest frequent restarts, which could indicate potential issues with service stability or performance.\n\nError Count: This metric represents the number of 'error' events logged during the same minute. An increase in error counts may signal underlying problems that require investigation, such as system failures or misconfigurations.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "# of Counts",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "smooth",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "dark-green",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": [
               {
-                "color": "green",
-                "value": null
+                "matcher": {
+                  "id": "byName",
+                  "options": "Restart_Count"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "dark-red",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
               },
               {
-                "color": "red",
-                "value": 80
+                "matcher": {
+                  "id": "byName",
+                  "options": "Error_Count"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "dark-yellow",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
               }
             ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 1
-      },
-      "id": 3,
-      "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": [
-            "sum"
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 6,
+            "x": 18,
+            "y": 1
+          },
+          "id": 18,
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "cdrta4zbtlddsa"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "columns": [],
+                  "database": "",
+                  "limit": 1000,
+                  "mode": "list",
+                  "queryType": "table",
+                  "table": ""
+                }
+              },
+              "pluginVersion": "4.8.0",
+              "queryType": "table",
+              "rawSql": "SELECT toStartOfMinute(se.timestamp_ts) AS timestamp_ts, se.stream_id, ss.state, sum(se.restart_count) AS Restart_Count, countIf(se.sub_type = 'error') AS Error_Count\nFROM network_events.stream_events AS se\nJOIN network_events.stream_status AS ss ON se.stream_id = ss.stream_id\nWHERE se.stream_id IN (${stream_id:singlequote})\nAND $__timeFilter(se.timestamp_ts)\nGROUP BY timestamp_ts, se.stream_id, ss.state\nORDER BY timestamp_ts ASC;",
+              "refId": "A"
+            }
           ],
-          "show": false
+          "title": "Stream Health",
+          "type": "timeseries"
         },
-        "showHeader": true
-      },
-      "pluginVersion": "11.2.0",
-      "targets": [
         {
           "datasource": {
+            "default": false,
             "type": "grafana-clickhouse-datasource",
             "uid": "cdrta4zbtlddsa"
           },
-          "editorType": "sql",
-          "format": 1,
-          "meta": {
-            "builderOptions": {
-              "columns": [],
-              "database": "",
-              "limit": 1000,
-              "mode": "list",
-              "queryType": "table",
-              "table": ""
-            }
+          "description": "The chart show the average number of seconds spent for each of the event.\n- gateway_recieve",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": true,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisGridShow": true,
+                "axisLabel": "Average of Time in Seconds",
+                "axisPlacement": "auto",
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineWidth": 1,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
           },
-          "pluginVersion": "4.7.0",
-          "queryType": "table",
-          "rawSql": "SELECT \n    se.stream_id,\n    se.type,\n    se.sub_type,\n    se.gateway_address,\n    se.gateway_host,\n    se.orchestrator_address,\n    se.orchestrator_url,\n    fromUnixTimestamp(CAST(se.timestamp_ms / 1000 AS Int64)) AS Time_Stamp, \n    se.restart_count,\n    ss.state,\n    se.last_error\nFROM \n    network_events.stream_events AS se\nJOIN \n    network_events.stream_status AS ss ON se.stream_id = ss.stream_id\nWHERE \n    (se.gateway_address IS NOT NULL AND se.gateway_address != '')\n    OR (se.orchestrator_address IS NOT NULL AND se.orchestrator_address != '')\n    AND (se.stream_id IS NOT NULL AND se.stream_id != '')\nORDER BY \n    Time_Stamp DESC,\n    se.stream_id ASC\nLIMIT 100;\n",
-          "refId": "A"
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 7
+          },
+          "id": 39,
+          "options": {
+            "barRadius": 0,
+            "barWidth": 0.97,
+            "fullHighlight": false,
+            "groupWidth": 0.7,
+            "legend": {
+              "calcs": [],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": false
+            },
+            "orientation": "auto",
+            "showValue": "auto",
+            "stacking": "none",
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            },
+            "xTickLabelRotation": 0,
+            "xTickLabelSpacing": 100
+          },
+          "pluginVersion": "11.2.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "cdrta4zbtlddsa"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "hide": false,
+              "meta": {
+                "builderOptions": {
+                  "columns": [],
+                  "database": "",
+                  "limit": 1000,
+                  "mode": "list",
+                  "queryType": "table",
+                  "table": ""
+                }
+              },
+              "pluginVersion": "4.8.0",
+              "queryType": "table",
+              "rawSql": "WITH all_subtypes AS (\n    SELECT 'gateway_recieve_stream_request' AS sub_type\n    UNION ALL SELECT 'gateway_send_first_ingest_segment' AS sub_type\n    UNION ALL SELECT 'runner_receive_first_ingest_segment' AS sub_type\n)\nSELECT\n  `all_subtypes`.`sub_type` AS `sub_type`,\n  COALESCE(`toFloat64`(AVG(`filtered_data`.`time_diff_ms`)) / 1000.0, 0) AS `Average of Time Seconds`\nFROM\n  all_subtypes\nLEFT JOIN\n  (\n    SELECT\n      `network_events`.`stream_trace`.`sub_type` AS `sub_type`,\n      `network_events`.`stream_trace`.`time_diff_ms` AS `time_diff_ms`\n    FROM\n      `network_events`.`stream_trace`\n    WHERE\n      (`network_events`.`stream_trace`.`sub_type` = 'gateway_recieve_stream_request'\n      OR `network_events`.`stream_trace`.`sub_type` = 'gateway_send_first_ingest_segment'\n      OR `network_events`.`stream_trace`.`sub_type` = 'runner_receive_first_ingest_segment')\n      AND `network_events`.`stream_trace`.`timestamp_ts` >= toDateTime($__from/1000)\n      AND `network_events`.`stream_trace`.`timestamp_ts` <= toDateTime($__to/1000)\n  ) AS `filtered_data` ON `all_subtypes`.`sub_type` = `filtered_data`.`sub_type`\nGROUP BY\n  `all_subtypes`.`sub_type`\nORDER BY\n  `all_subtypes`.`sub_type` ASC",
+              "refId": "A"
+            }
+          ],
+          "title": "Start Up Time",
+          "type": "barchart"
+        },
+        {
+          "datasource": {
+            "default": false,
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrta4zbtlddsa"
+          },
+          "description": "The chart shows the sub-type with stream Ids of the time spent for each of the event.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "sub_type"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 258
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "timestamp_ts"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 9
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "event_timestamp_ts"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 189
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "stream_id"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 188
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "time_diff_ms"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 74
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "event_order"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 95
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Pipelines__key"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 120
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 7
+          },
+          "id": 40,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true,
+            "sortBy": []
+          },
+          "pluginVersion": "11.2.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "cdrta4zbtlddsa"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "hide": false,
+              "meta": {
+                "builderOptions": {
+                  "columns": [],
+                  "database": "",
+                  "limit": 1000,
+                  "mode": "list",
+                  "queryType": "table",
+                  "table": ""
+                }
+              },
+              "pluginVersion": "4.8.0",
+              "queryType": "table",
+              "rawSql": "SELECT\n  `source`.`timestamp` AS `timestamp`,\n  `source`.`event_timestamp_ts` AS `event_timestamp_ts`,\n  `source`.`stream_id` AS `stream_id`,\n  `source`.`sub_type` AS `sub_type`,\n  `source`.`time_diff_ms` AS `time_diff_ms`,\n  `source`.`request_id` AS `request_id`,\n  `source`.`Pipelines__name` AS `Pipelines__name`,\n  `source`.`pipeline_id` AS `pipeline_id`,\n  `source`.`event_timestamp` AS `event_timestamp`,\n  `source`.`last_timestamp` AS `last_timestamp`,\n  `source`.`event_order` AS `event_order`,\n  `source`.`orch_address` AS `orch_address`,\n  `source`.`orch_url` AS `orch_url`,\n  `source`.`Pipelines__key` AS `Pipelines__key`,\n  `source`.`Pipelines__author` AS `Pipelines__author`\nFROM\n  (\n    SELECT\n      `network_events`.`stream_trace`.`timestamp` AS `timestamp`,\n      `network_events`.`stream_trace`.`event_timestamp_ts` AS `event_timestamp_ts`,\n      `network_events`.`stream_trace`.`sub_type` AS `sub_type`,\n      `network_events`.`stream_trace`.`stream_id` AS `stream_id`,\n      `network_events`.`stream_trace`.`request_id` AS `request_id`,\n      `network_events`.`stream_trace`.`pipeline_id` AS `pipeline_id`,\n      `network_events`.`stream_trace`.`event_timestamp` AS `event_timestamp`,\n      `network_events`.`stream_trace`.`last_timestamp` AS `last_timestamp`,\n      `network_events`.`stream_trace`.`event_order` AS `event_order`,\n      `network_events`.`stream_trace`.`orch_address` AS `orch_address`,\n      `network_events`.`stream_trace`.`orch_url` AS `orch_url`,\n      `network_events`.`stream_trace`.`time_diff_ms` AS `time_diff_ms`,\n      `Pipelines`.`key` AS `Pipelines__key`,\n      `Pipelines`.`name` AS `Pipelines__name`,\n      `Pipelines`.`author` AS `Pipelines__author`\n    FROM\n      `network_events`.`stream_trace`\n     \nLEFT JOIN `network_events`.`pipelines` AS `Pipelines` ON `network_events`.`stream_trace`.`pipeline_id` = `Pipelines`.`id`\n  ) AS `source`\nWHERE\n  (\n    `source`.`sub_type` = 'gateway_send_first_ingest_segment'\n    OR `source`.`sub_type` = 'runner_receive_first_ingest_segment'\n    OR `source`.`sub_type` = 'gateway_recieve_stream_request'\n  )\n \n   AND (\n    `source`.`event_timestamp_ts` >= toDateTime($__from/1000)\n  )\n  AND (\n    `source`.`event_timestamp_ts` < toDateTime($__to/1000)\n  )\n  AND (`source`.`Pipelines__key` = 'comfyui')\n  AND `source`.`stream_id` IN (${stream_id:singlequote})",
+              "refId": "A"
+            }
+          ],
+          "title": "Start Up Time with Stream Id",
+          "type": "table"
+        },
+        {
+          "datasource": {
+            "default": false,
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrta4zbtlddsa"
+          },
+          "description": "This visualizes the count of'restart' and 'error' events for the latest 15 distinct streams in the network_events.stream_events dataset.\n",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "left",
+                "cellOptions": {
+                  "type": "color-text",
+                  "wrapText": false
+                },
+                "filterable": true,
+                "inspect": true
+              },
+              "fieldMinMax": false,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "#EAB839",
+                    "value": 10
+                  },
+                  {
+                    "color": "dark-orange",
+                    "value": 50
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 100
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "restart_count"
+                },
+                "properties": [
+                  {
+                    "id": "thresholds",
+                    "value": {
+                      "mode": "absolute",
+                      "steps": [
+                        {
+                          "color": "green",
+                          "value": null
+                        },
+                        {
+                          "color": "red",
+                          "value": 1
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 14
+          },
+          "id": 20,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "enablePagination": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true,
+            "sortBy": [
+              {
+                "desc": false,
+                "displayName": "stream_id"
+              }
+            ]
+          },
+          "pluginVersion": "11.2.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "cdrta4zbtlddsa"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "hide": false,
+              "meta": {
+                "builderOptions": {
+                  "columns": [],
+                  "database": "",
+                  "limit": 1000,
+                  "mode": "list",
+                  "queryType": "table",
+                  "table": ""
+                }
+              },
+              "pluginVersion": "4.8.2",
+              "queryType": "table",
+              "rawSql": "SELECT stream_id, \ncountIf(event_type = 'restart') AS restart_count, \ncountIf(event_type = 'error') AS error_count\nFROM \n    network_events.stream_events\nWHERE \n    sub_type IN ('error', 'restart')\n    AND stream_id IN (${stream_id:singlequote})\n    AND $__timeFilter(timestamp_ts)\ngroup by 1",
+              "refId": "B"
+            }
+          ],
+          "title": "Stream Error/Restart Count by Stream ID",
+          "type": "table"
+        },
+        {
+          "datasource": {
+            "default": false,
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrta4zbtlddsa"
+          },
+          "description": "This chart displays the most recent events related to errors and restarts within the streaming system.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "filterable": true,
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "restart_count"
+                },
+                "properties": [
+                  {
+                    "id": "thresholds",
+                    "value": {
+                      "mode": "absolute",
+                      "steps": [
+                        {
+                          "color": "green",
+                          "value": null
+                        },
+                        {
+                          "color": "red",
+                          "value": 1
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 14
+          },
+          "id": 3,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true,
+            "sortBy": [
+              {
+                "desc": false,
+                "displayName": "event_type"
+              }
+            ]
+          },
+          "pluginVersion": "11.2.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "cdrta4zbtlddsa"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "columns": [],
+                  "database": "",
+                  "limit": 1000,
+                  "mode": "list",
+                  "queryType": "table",
+                  "table": ""
+                }
+              },
+              "pluginVersion": "4.8.2",
+              "queryType": "table",
+              "rawSql": "SELECT \n    stream_id, \n    restart_count,\n    timestamp_ts, \n    event_type, \n    message, \n    gateway,\n    type, \n    capability, \n    pipeline, \n    pipeline_id, \n    params, \n    orchestrator_address, \n    orchestrator_url\nFROM \n    network_events.stream_events\nWHERE \n    sub_type IN ('error', 'restart')\n    AND stream_id IN (${stream_id:singlequote})\n    AND $__timeFilter(timestamp_ts)\nORDER BY \n    timestamp_ts DESC\nLIMIT 100;\n",
+              "refId": "A"
+            }
+          ],
+          "title": "Stream Logs",
+          "type": "table"
+        },
+        {
+          "datasource": {
+            "default": false,
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "description": "Log information of all the streams of selected streams during the gateway process.",
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 22
+          },
+          "id": 30,
+          "options": {
+            "dedupStrategy": "none",
+            "enableLogDetails": true,
+            "prettifyLogMessage": true,
+            "showCommonLabels": true,
+            "showLabels": true,
+            "showTime": true,
+            "sortOrder": "Descending",
+            "wrapLogMessage": true
+          },
+          "pluginVersion": "11.2.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "P8E80F9AEF21F6940"
+              },
+              "editorMode": "code",
+              "expr": "{app=~\"prod-livepeer-ai-gateway\"} |~ \"${stream_id}\"",
+              "queryType": "range",
+              "refId": "A"
+            }
+          ],
+          "title": "Gateway Stream Logs",
+          "type": "logs"
+        },
+        {
+          "datasource": {
+            "default": false,
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "description": "Log information of all the streams of selected streams during the MediaMTX process.",
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 22
+          },
+          "id": 32,
+          "options": {
+            "dedupStrategy": "none",
+            "enableLogDetails": true,
+            "prettifyLogMessage": true,
+            "showCommonLabels": true,
+            "showLabels": true,
+            "showTime": true,
+            "sortOrder": "Descending",
+            "wrapLogMessage": true
+          },
+          "pluginVersion": "11.2.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "P8E80F9AEF21F6940"
+              },
+              "editorMode": "code",
+              "expr": "{app=~\"mediamtx\"} |~ \"${stream_key}\"",
+              "queryType": "range",
+              "refId": "A"
+            }
+          ],
+          "title": "MediaMTX Logs",
+          "type": "logs"
         }
       ],
-      "title": "Stream Error Logs",
-      "type": "table"
+      "title": "Stream Monitoring - Ingest",
+      "type": "row"
     },
     {
       "collapsed": true,
@@ -262,7 +1047,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 9
+        "y": 1
       },
       "id": 7,
       "panels": [
@@ -272,6 +1057,7 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "description": "This chart visualizes the CPU usage percentage for nodes in specified regions, with a threshold set at 80%.\n\nA CPU usage percentage greater than 80% indicates that the system is heavily loaded, with most of the CPU resources actively in use.",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -337,7 +1123,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 10
+            "y": 2
           },
           "id": 2,
           "options": {
@@ -362,10 +1148,10 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "editorMode": "code",
-              "expr": "sum(rate(container_cpu_usage_seconds_total{container!=\"\", container!=\"POD\", region=~\".*-ai$\"}[5m])) by (region)",
+              "expr": "100 - (avg by (instance, region) (irate(node_cpu_seconds_total{region=~\"${region:regex}\", mode=\"idle\", instance=~\".+:9100\"}[1m])) * 100 * on(instance) group_left(nodename) node_uname_info)",
               "hide": false,
               "instant": false,
-              "legendFormat": "{{region}}",
+              "legendFormat": "{{region}}-{{nodename}}",
               "range": true,
               "refId": "B"
             }
@@ -379,7 +1165,7 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "description": "",
+          "description": "This visualizes the count of'restart' and 'error' events for the latest 15 distinct streams in the network_events.stream_events dataset.\n",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -448,7 +1234,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 10
+            "y": 2
           },
           "id": 1,
           "options": {
@@ -473,14 +1259,232 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "editorMode": "code",
-              "expr": "(node_memory_MemFree_bytes{region=~\".*-ai$\"} + node_memory_Buffers_bytes{region=~\".*-ai$\"} + node_memory_Cached_bytes{region=~\".*-ai$\"}) / node_memory_MemTotal_bytes{region=~\".*-ai$\"} * on(region) group_left(nodename) node_uname_info",
+              "expr": "(node_memory_MemFree_bytes{region=~\"${region:regex}\"} + node_memory_Buffers_bytes{region=~\"${region:regex}\"} + node_memory_Cached_bytes{region=~\"${region:regex}\"}) / node_memory_MemTotal_bytes{region=~\"${region:regex}\"} * on(region) group_left(nodename) node_uname_info",
+              "hide": false,
               "instant": false,
               "legendFormat": "{{region}}-{{nodename}}",
               "range": true,
-              "refId": "A"
+              "refId": "B"
             }
           ],
           "title": "CPU Memory Usage (> 50%)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "This  indicates how much of the total disk capacity is being utilized.\n\nA higher percentage indicates that a significant portion of the disk space is in use, which may suggest that the filesystem is nearing capacity.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "line+area"
+                }
+              },
+              "mappings": [],
+              "max": 100,
+              "min": 1,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 10
+          },
+          "id": 22,
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "expr": "(node_filesystem_size_bytes{mountpoint=\"/\", region=~\"${region:regex}\"} - node_filesystem_avail_bytes{mountpoint=\"/\", region=~\"${region:regex}\"}) / node_filesystem_size_bytes{mountpoint=\"/\", region=~\"${region:regex}\"} * 100",
+              "hide": false,
+              "instant": false,
+              "legendFormat": "{{region}}",
+              "range": true,
+              "refId": "B"
+            }
+          ],
+          "title": "Disk Usage",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "This shows the disk I/O performance for various regions, specifically focusing on the rates of data being written to and read from disk.\n\nNormal Operation:-\nWhen the disk write and read rates are within expected ranges based on usage over time , the system is functioning normally. You should see stable lines on the graph, indicating consistent disk I/O performance.\n\nHigh Disk Write/Read Rates:- If the lines show significantly high values, it may indicate heavy disk usage. This could be due data ingestion processes. \n\nSudden spikes or drops in disk I/O can indicate issues that need further investigation of the node",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "decmbytes"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 10
+          },
+          "id": 21,
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "expr": "sum(rate(node_disk_written_bytes_total{region=~\"${region:regex}\"}[1m])) by (region) / 1000000",
+              "hide": false,
+              "instant": false,
+              "legendFormat": "{{region}} - Disk Write",
+              "range": true,
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "expr": "sum(rate(node_disk_read_bytes_total{region=~\"${region:regex}\"}[1m])) by (region) / 1000000",
+              "hide": false,
+              "instant": false,
+              "legendFormat": "{{region}} - Disk Read",
+              "range": true,
+              "refId": "B"
+            }
+          ],
+          "title": "Ingest Disk I/O Per Minute",
           "type": "timeseries"
         }
       ],
@@ -493,412 +1497,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 10
-      },
-      "id": 11,
-      "panels": [
-        {
-          "datasource": {
-            "default": true,
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "description": "Shows how much electricity the GPU is consuming - higher usage indicates more intensive workloads",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "barWidthFactor": 0.6,
-                "drawStyle": "line",
-                "fillOpacity": 25,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "insertNulls": false,
-                "lineInterpolation": "linear",
-                "lineStyle": {
-                  "fill": "solid"
-                },
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "normal"
-                },
-                "thresholdsStyle": {
-                  "mode": "line+area"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "percentage",
-                "steps": [
-                  {
-                    "color": "transparent"
-                  },
-                  {
-                    "color": "red",
-                    "value": 50
-                  },
-                  {
-                    "color": "dark-red",
-                    "value": 90
-                  }
-                ]
-              },
-              "unit": "kwattm"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 0,
-            "y": 11
-          },
-          "id": 9,
-          "options": {
-            "legend": {
-              "calcs": [],
-              "displayMode": "table",
-              "placement": "bottom",
-              "showLegend": true
-            },
-            "tooltip": {
-              "mode": "single",
-              "sort": "none"
-            }
-          },
-          "pluginVersion": "11.2.0",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "PBFA97CFB590B2093"
-              },
-              "editorMode": "code",
-              "expr": "DCGM_FI_DEV_POWER_USAGE{Hostname=~\".*load-test-prod.*\"}",
-              "instant": false,
-              "legendFormat": "{{node_name}}/{{UUID}}/{{modelName}}",
-              "range": true,
-              "refId": "A"
-            }
-          ],
-          "title": "GPU Power Usage (Load Test)",
-          "type": "timeseries"
-        },
-        {
-          "datasource": {
-            "default": true,
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "description": "Shows how much VRAM is being used to store data and buffers",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "barWidthFactor": 0.6,
-                "drawStyle": "line",
-                "fillOpacity": 0,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "insertNulls": false,
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "line+area"
-                }
-              },
-              "mappings": [],
-              "max": 100,
-              "min": 0,
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "transparent"
-                  },
-                  {
-                    "color": "red",
-                    "value": 50
-                  },
-                  {
-                    "color": "dark-red",
-                    "value": 90
-                  }
-                ]
-              },
-              "unit": "percent"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 12,
-            "y": 11
-          },
-          "id": 10,
-          "options": {
-            "legend": {
-              "calcs": [],
-              "displayMode": "list",
-              "placement": "bottom",
-              "showLegend": true
-            },
-            "tooltip": {
-              "mode": "single",
-              "sort": "none"
-            }
-          },
-          "pluginVersion": "11.2.0",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "PBFA97CFB590B2093"
-              },
-              "editorMode": "code",
-              "expr": "DCGM_FI_DEV_FB_USED{Hostname=~\".*load-test-prod.*\"}\n",
-              "instant": false,
-              "legendFormat": "{{node_name}}/{{UUID}}/{{modelName}}",
-              "range": true,
-              "refId": "A"
-            }
-          ],
-          "title": "GPU Memory Usage (Load Test)",
-          "type": "timeseries"
-        },
-        {
-          "datasource": {
-            "default": true,
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "description": "Indicates how hot the GPU is running",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "thresholds"
-              },
-              "fieldMinMax": false,
-              "mappings": [],
-              "thresholds": {
-                "mode": "percentage",
-                "steps": [
-                  {
-                    "color": "dark-green"
-                  },
-                  {
-                    "color": "orange",
-                    "value": 50
-                  },
-                  {
-                    "color": "red",
-                    "value": 95
-                  }
-                ]
-              },
-              "unit": "celsius"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 0,
-            "y": 19
-          },
-          "id": 17,
-          "options": {
-            "minVizHeight": 75,
-            "minVizWidth": 75,
-            "orientation": "auto",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": false
-            },
-            "showThresholdLabels": false,
-            "showThresholdMarkers": true,
-            "sizing": "auto",
-            "text": {}
-          },
-          "pluginVersion": "11.2.0",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "PBFA97CFB590B2093"
-              },
-              "editorMode": "code",
-              "expr": "DCGM_FI_DEV_GPU_TEMP{Hostname=~\".*load-test-prod.*\"}",
-              "instant": false,
-              "legendFormat": "{{node_name}}",
-              "range": true,
-              "refId": "A"
-            }
-          ],
-          "title": "GPU Temperature - Celsius (Load Test)",
-          "type": "gauge"
-        },
-        {
-          "datasource": {
-            "default": true,
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "description": "Shows the percentage of time the GPU is actively processing tasks ",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "barWidthFactor": 0.6,
-                "drawStyle": "line",
-                "fillOpacity": 0,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "insertNulls": false,
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "line+area"
-                }
-              },
-              "mappings": [],
-              "max": 100,
-              "min": 0,
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "transparent"
-                  },
-                  {
-                    "color": "red",
-                    "value": 50
-                  },
-                  {
-                    "color": "dark-red",
-                    "value": 90
-                  }
-                ]
-              },
-              "unit": "percent"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 12,
-            "y": 19
-          },
-          "id": 13,
-          "options": {
-            "legend": {
-              "calcs": [],
-              "displayMode": "list",
-              "placement": "bottom",
-              "showLegend": true
-            },
-            "tooltip": {
-              "mode": "single",
-              "sort": "none"
-            }
-          },
-          "pluginVersion": "11.2.0",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "PBFA97CFB590B2093"
-              },
-              "editorMode": "code",
-              "expr": "DCGM_FI_DEV_GPU_UTIL{Hostname=~\".*load-test-prod.*\"}\n",
-              "instant": false,
-              "legendFormat": "{{node_name}}/{{UUID}}/{{modelName}}",
-              "range": true,
-              "refId": "A"
-            }
-          ],
-          "title": "GPU Utilization (Load Test)",
-          "type": "timeseries"
-        }
-      ],
-      "title": "GPU Load Testing",
-      "type": "row"
-    },
-    {
-      "collapsed": true,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 11
+        "y": 2
       },
       "id": 6,
       "panels": [
@@ -953,16 +1552,16 @@
           },
           "gridPos": {
             "h": 8,
-            "w": 12,
+            "w": 9,
             "x": 0,
-            "y": 12
+            "y": 3
           },
           "id": 15,
           "options": {
             "colorMode": "value",
             "graphMode": "none",
             "justifyMode": "center",
-            "orientation": "horizontal",
+            "orientation": "vertical",
             "percentChangeColorMode": "standard",
             "reduceOptions": {
               "calcs": [
@@ -983,9 +1582,10 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "editorMode": "code",
-              "expr": "count(DCGM_FI_DEV_GPU_UTIL{gpu!=\"\"} > 0)",
+              "expr": "max(sum_over_time(livepeer_ai_current_live_pipelines[$__interval]))",
+              "hide": false,
               "instant": false,
-              "legendFormat": "__auto",
+              "legendFormat": "GPUs in Use",
               "range": true,
               "refId": "A"
             },
@@ -1076,16 +1676,16 @@
           },
           "gridPos": {
             "h": 8,
-            "w": 12,
-            "x": 12,
-            "y": 12
+            "w": 14,
+            "x": 9,
+            "y": 3
           },
           "id": 16,
           "options": {
             "legend": {
               "calcs": [],
-              "displayMode": "list",
-              "placement": "bottom",
+              "displayMode": "table",
+              "placement": "right",
               "showLegend": true
             },
             "tooltip": {
@@ -1101,90 +1701,16 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "editorMode": "code",
-              "expr": "DCGM_FI_DEV_FB_USED{Hostname!~\".*load-test-prod.*\"}\n",
+              "expr": "DCGM_FI_DEV_FB_USED{Hostname=~\"${Hostname:regex}\"}\n",
+              "hide": false,
               "instant": false,
-              "legendFormat": "{{node_name}}/{{UUID}}/{{modelName}}",
+              "legendFormat": "{{Hostname}}/{{modelName}}",
               "range": true,
-              "refId": "A"
+              "refId": "B"
             }
           ],
           "title": "GPU Memory Usage",
           "type": "timeseries"
-        },
-        {
-          "datasource": {
-            "default": true,
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "description": "Indicates how hot the GPU is running",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "thresholds"
-              },
-              "fieldMinMax": false,
-              "mappings": [],
-              "thresholds": {
-                "mode": "percentage",
-                "steps": [
-                  {
-                    "color": "dark-green"
-                  },
-                  {
-                    "color": "orange",
-                    "value": 50
-                  },
-                  {
-                    "color": "red",
-                    "value": 95
-                  }
-                ]
-              },
-              "unit": "celsius"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 0,
-            "y": 20
-          },
-          "id": 12,
-          "options": {
-            "minVizHeight": 75,
-            "minVizWidth": 75,
-            "orientation": "auto",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": false
-            },
-            "showThresholdLabels": false,
-            "showThresholdMarkers": true,
-            "sizing": "auto",
-            "text": {}
-          },
-          "pluginVersion": "11.2.0",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "PBFA97CFB590B2093"
-              },
-              "editorMode": "code",
-              "expr": "DCGM_FI_DEV_GPU_TEMP{Hostname!~\".*load-test-prod.*\"}",
-              "instant": false,
-              "legendFormat": "{{node_name}}",
-              "range": true,
-              "refId": "A"
-            }
-          ],
-          "title": "GPU Temperature - Celsius",
-          "type": "gauge"
         },
         {
           "datasource": {
@@ -1255,9 +1781,9 @@
           },
           "gridPos": {
             "h": 8,
-            "w": 12,
-            "x": 12,
-            "y": 20
+            "w": 23,
+            "x": 0,
+            "y": 11
           },
           "id": 4,
           "options": {
@@ -1280,11 +1806,25 @@
               },
               "editorMode": "code",
               "exemplar": false,
-              "expr": "sum by (\n  Hostname, \n  UUID, \n  gpu, \n  instance, \n  modelName, \n  node_name, \n  region\n) (\n    DCGM_FI_DEV_GPU_UTIL{Hostname!~\".*load-test-prod.*\"}  \n  or\n    DCGM_FI_DEV_GPU_UTIL{region!~\".*load-test-prod.*\"}    \n  or\n    DCGM_FI_DEV_GPU_UTIL{node_name!~\".*load-test-prod.*\"} \n)",
+              "expr": "sum by (\n  Hostname, \n  UUID, \n  gpu, \n  instance, \n  modelName, \n  node_name, \n  region\n) (\n    DCGM_FI_DEV_GPU_UTIL{Hostname=~\"${Hostname:regex}\"}\n)",
+              "hide": false,
               "instant": false,
               "legendFormat": "{{node_name}}({{UUID}})({{modelName}})",
               "range": true,
               "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "expr": "sum by (\n  Hostname, \n  UUID, \n  gpu, \n  instance, \n  modelName, \n  node_name, \n  region\n) (\n    DCGM_FI_DEV_GPU_UTIL{Hostname=~\"${Hostname:regex}\"}\n)",
+              "hide": true,
+              "instant": false,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "B"
             }
           ],
           "title": "GPU Utilization ",
@@ -1292,6 +1832,1212 @@
         }
       ],
       "title": "GPU Monitoring",
+      "type": "row"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 3
+      },
+      "id": 26,
+      "panels": [],
+      "title": "Inference Monitoring",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-clickhouse-datasource",
+        "uid": "cdrta4zbtlddsa"
+      },
+      "description": "This dashboard monitors the average FPS output from streams.\n \n- AVG FPS  15 or greater is good.\n- AVG FPS between 10 - 15 should be monitored.\n- AVG FPS < 10 indicates an issue that needs to be investigated.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "left",
+            "cellOptions": {
+              "type": "color-text"
+            },
+            "filterable": true,
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "#EAB839",
+                "value": 10
+              },
+              {
+                "color": "dark-green",
+                "value": 15
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 5,
+        "x": 0,
+        "y": 4
+      },
+      "id": 27,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrta4zbtlddsa"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "hide": false,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.8.2",
+          "queryType": "table",
+          "rawSql": "SELECT\n  `network_events`.`stream_status`.`stream_id` AS `stream_id`,\n  AVG(`network_events`.`stream_status`.`output_fps`) AS `avg`\nFROM\n  `network_events`.`stream_status`\nWHERE\n  (\n    `network_events`.`stream_status`.`timestamp_ts` >= `toStartOfHour`((`now64`(9, 'UTC') + INTERVAL -24 hour))\n  )\n  AND (\n    `network_events`.`stream_status`.`timestamp_ts` < `toStartOfHour`((`now64`(9, 'UTC') + INTERVAL 1 hour))\n  )\n  AND (\n    `network_events`.`stream_status`.`pipeline` = 'comfyui'\n  )\n  AND (\n    `network_events`.`stream_status`.`stream_id` IN (${stream_id:singlequote})\n  )\nGROUP BY\n  `network_events`.`stream_status`.`stream_id`\nORDER BY\n  `avg` ASC,\n  `network_events`.`stream_status`.`stream_id` ASC;",
+          "refId": "B"
+        }
+      ],
+      "title": "Daydream: AVG FPS Output",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-clickhouse-datasource",
+        "uid": "cdrta4zbtlddsa"
+      },
+      "description": "This table displays the number of errors for each type that is being reported.\n\nGreen = below 20 errors\nYellow = 20 - 50 errors\nRed = > 50 errors\n",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "left",
+            "cellOptions": {
+              "type": "color-text",
+              "wrapText": false
+            },
+            "filterable": true,
+            "inspect": false
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 20
+              },
+              {
+                "color": "red",
+                "value": 50
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "stream_id"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 228
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 109
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "short_message"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 355
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 5,
+        "y": 4
+      },
+      "id": 41,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrta4zbtlddsa"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.8.0",
+          "queryType": "table",
+          "rawSql": "SELECT\n  `source`.`stream_id` AS `stream_id`,\n  `source`.`short_message` AS `short_message`,\n  COUNT(*) AS `count`\nFROM\n  (\n    SELECT\n      `network_events`.`stream_events`.`sub_type` AS `sub_type`,\n      `network_events`.`stream_events`.`timestamp_ts` AS `timestamp_ts`,\n      `network_events`.`stream_events`.`message` AS `message`,\n      `network_events`.`stream_events`.`stream_id` AS `stream_id`,\n      `substring`(\n        `toString`(`network_events`.`stream_events`.`message`),\n        1,\n        70\n      ) AS `short_message`\n    FROM\n      `network_events`.`stream_events`\n    WHERE\n      `network_events`.`stream_events`.`sub_type` = 'error'\n      AND $__timeFilter(timestamp_ts)\n      AND `network_events`.`stream_events`.`stream_id` IN (${stream_id:sqlstring})\n  ) AS `source`\nWHERE\n  `source`.`short_message` != ''\nGROUP BY\n  `source`.`short_message`,\n  `source`.`stream_id`\nORDER BY\n  count DESC;",
+          "refId": "A"
+        }
+      ],
+      "title": "Error Count by Type w/ Stream Id",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-clickhouse-datasource",
+        "uid": "cdrta4zbtlddsa"
+      },
+      "description": "This table displays the number of errors for each type that is being reported.\n\nGreen = below 20 errors\nYellow = 20 - 50 errors\nRed = > 50 errors\n",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisBorderShow": true,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 20
+              },
+              {
+                "color": "red",
+                "value": 50
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 11,
+        "x": 13,
+        "y": 4
+      },
+      "id": 42,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "colorByField": "count",
+        "fullHighlight": true,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": false
+        },
+        "orientation": "horizontal",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrta4zbtlddsa"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.8.0",
+          "queryType": "table",
+          "rawSql": "SELECT\n  `source`.`short_message` AS `short_message`,\n  COUNT(*) AS `count`\nFROM\n  (\n    SELECT\n      `network_events`.`stream_events`.`sub_type` AS `sub_type`,\n      `network_events`.`stream_events`.`timestamp_ts` AS `timestamp_ts`,\n      `network_events`.`stream_events`.`message` AS `message`,\n      `substring`(\n        `toString`(`network_events`.`stream_events`.`message`),\n        1,\n        70\n      ) AS `short_message`\n    FROM\n      `network_events`.`stream_events`\n    WHERE\n      `network_events`.`stream_events`.`sub_type` = 'error'\n      AND $__timeFilter(timestamp_ts)\n  ) AS `source`\nWHERE\n  `source`.`short_message` != ''\nGROUP BY\n  `source`.`short_message`\nORDER BY\n  count DESC;",
+          "refId": "A"
+        }
+      ],
+      "title": "Error Count by Type",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-clickhouse-datasource",
+        "uid": "cdrta4zbtlddsa"
+      },
+      "description": "This chart displays the most recent events related to errors in the inference process.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 11
+      },
+      "id": 28,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrta4zbtlddsa"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.8.2",
+          "queryType": "table",
+          "rawSql": "SELECT stream_id, timestamp_ts, event_type, pipeline, pipeline_id, message, gateway, type, capability, params, orchestrator_address, orchestrator_url\nFROM network_events.stream_events\nWHERE sub_type IN ('error', 'restart')\nAND stream_id IN (${stream_id:singlequote})\nAND $__timeFilter(timestamp_ts)\nORDER BY timestamp_ts DESC LIMIT 100;",
+          "refId": "A"
+        }
+      ],
+      "title": "Inference  Logs",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "description": "Log information of all the streams of selected streams during the inference process. Using {container=\"live-video-to-video_comfyui_8900\"}",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 18
+      },
+      "id": 31,
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": true,
+        "showCommonLabels": true,
+        "showLabels": true,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": true
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "{container=\"live-video-to-video_comfyui_8900\"} |~ \"${stream_id}\"",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Inference Stream Logs",
+      "type": "logs"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-clickhouse-datasource",
+        "uid": "cdrta4zbtlddsa"
+      },
+      "description": "This table contains information on the stream and the pipeline it is using.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Streams__from_playground"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 187
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Streams__pipeline_params"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 190
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Streams__pipeline_id"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 185
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 18
+      },
+      "id": 29,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrta4zbtlddsa"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.8.2",
+          "queryType": "table",
+          "rawSql": "SELECT\n    stream_status.stream_id,\n    timestamp_ts,\n    Streams.id AS `Streams__id`,\n    Streams.pipeline_id AS `Streams__pipeline_id`,\n    Streams.output_playback_id AS `Streams__output_playback_id`,\n    Streams.author AS `Streams__author`,\n    Streams.stream_key AS `Streams__stream_key`,\n    Streams.output_stream_url AS `Streams__output_stream_url`,\n    Streams.created_at AS `Streams__created_at`,\n    Streams.pipeline_params AS `Streams__pipeline_params`,\n    Streams.from_playground AS `Streams__from_playground`,\n    Streams.gateway_host AS `Streams__gateway_host`,\n    Pipelines.id AS `Pipelines__id`,\n    Pipelines.name AS `Pipelines__name`,\n    Pipelines.version AS `Pipelines__version`,\n    Pipelines.description AS `Pipelines__description`,\n    Pipelines.author AS `Pipelines__author`,\n    Pipelines.type AS `Pipelines__type`,\n    Pipelines.created_at AS `Pipelines__created_at`,\n    Pipelines.updated_at AS `Pipelines__updated_at`\nFROM network_events.stream_status\n    LEFT JOIN network_events.streams AS Streams ON stream_status.stream_id = Streams.id\n    LEFT JOIN network_events.pipelines AS Pipelines ON stream_status.pipeline_id = Pipelines.id\n    LEFT JOIN network_events.users AS `Users - Author` ON Pipelines.author = `Users - Author`.id\nWHERE $__timeFilter(timestamp_ts) \nAND stream_status.stream_id IN (${stream_id:singlequote})\nORDER BY timestamp_ts ASC;",
+          "refId": "A"
+        }
+      ],
+      "title": "Stream's Pipeline Data",
+      "type": "table"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 26
+      },
+      "id": 33,
+      "panels": [
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "Shows how much electricity the GPU is consuming - higher usage indicates more intensive workloads.\nNormal Load: <400W (for non-overclocked GPUs).\n\nHigh Load: 400–450W (expected under heavy workloads).",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 25,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineStyle": {
+                  "fill": "solid"
+                },
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "normal"
+                },
+                "thresholdsStyle": {
+                  "mode": "line+area"
+                }
+              },
+              "fieldMinMax": false,
+              "mappings": [],
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "transparent"
+                  },
+                  {
+                    "color": "red",
+                    "value": 350
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 450
+                  }
+                ]
+              },
+              "unit": "watt"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 29
+          },
+          "id": 24,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.2.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "expr": "DCGM_FI_DEV_POWER_USAGE{Hostname=~\"${Hostname:regex}\"}",
+              "instant": false,
+              "legendFormat": "{{node_name}}/{{UUID}}/{{modelName}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "GPU Power Usage ",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "Indicates how hot the GPU is running. 75°C is set as the warning  and ≥85°C should be alerted. Below 5°C should also indicate an issue.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "area"
+                }
+              },
+              "fieldMinMax": false,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "transparent"
+                  },
+                  {
+                    "color": "dark-blue",
+                    "value": 0
+                  },
+                  {
+                    "color": "transparent",
+                    "value": 5
+                  },
+                  {
+                    "color": "light-red",
+                    "value": 75
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 85
+                  }
+                ]
+              },
+              "unit": "celsius"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 29
+          },
+          "id": 23,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.2.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "expr": "DCGM_FI_DEV_GPU_TEMP{Hostname=~\"${Hostname:regex}\"}\n",
+              "instant": false,
+              "legendFormat": "{{node_name}}/{{modelName}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "GPU Temperature >75°C - Celsius",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "2520 MHz (Boost Clock Speed):\nThis is the maximum clock speed that the GPU can achieve under optimal conditions, known as the boost clock speed. It represents the peak performance capability of the RTX 4090 when the GPU is under heavy load and has adequate cooling and power supply. Monitoring this value helps us understand the upper limits of the GPU's performance during demanding tasks.\n\n2235 MHz (Base Clock Speed):\nThis is the minimum clock speed at which the GPU operates under normal conditions. The base clock speed indicates the performance level the GPU should maintain during standard workloads. If the SM clock speed consistently operates at or near this value, it is functioning as expected. Monitoring this value helps ensure that the GPU is performing adequately during typical usage scenarios.\n\n2000 MHz (Threshold for Concern):\nThis is the threshold we have set to identify potential performance issues. If the SM clock speed drops below 2000 MHz during demanding tasks, it may indicate that the GPU is experiencing problems such as thermal throttling (overheating), power limitations, or other issues that could affect performance. Monitoring for values below this threshold allows us to take proactive measures to investigate and resolve any underlying issues before they impact the overall performance of the GPU.\n\nNote: The mean value on the chart should also be taking a close look at. Drop below 2000 MHz during demanding tasks may indicate issues such as thermal throttling, power limitations, or driver problems",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "line+area"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red"
+                  },
+                  {
+                    "color": "dark-green",
+                    "value": 2000
+                  },
+                  {
+                    "color": "#EAB839",
+                    "value": 2235
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 2520
+                  }
+                ]
+              },
+              "unit": "rotmhz"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 37
+          },
+          "id": 35,
+          "options": {
+            "legend": {
+              "calcs": [
+                "mean",
+                "last"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "expr": "avg(DCGM_FI_DEV_SM_CLOCK) by (region, Hostname)",
+              "legendFormat": "{{region}}-{{Hostname}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "SM Clock Speed",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "This indicates the utilization of the GPU's Encoding/Decoding resources\n\nIf the encoding/decoding utilization is consistently near 100%, it may indicate that the GPU is being overutilized.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 90
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 37
+          },
+          "id": 36,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "expr": "rate(DCGM_FI_DEV_ENC_UTIL[1m])",
+              "instant": false,
+              "legendFormat": "{{region}}-Encode",
+              "range": true,
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "expr": "rate(DCGM_FI_DEV_DEC_UTIL[1m])",
+              "hide": false,
+              "instant": false,
+              "legendFormat": "{{region}}-Decode",
+              "range": true,
+              "refId": "B"
+            }
+          ],
+          "title": "GPU Encode/Decode Utilization",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "This displays the current amount of free framebuffer memory available on the GPU.\n\nGreen = > 90%\nYellow = > 60%\nRed = > 50%",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "fieldMinMax": false,
+              "mappings": [],
+              "min": 0,
+              "thresholds": {
+                "mode": "percentage",
+                "steps": [
+                  {
+                    "color": "dark-red"
+                  },
+                  {
+                    "color": "red",
+                    "value": 50
+                  },
+                  {
+                    "color": "#EAB839",
+                    "value": 60
+                  },
+                  {
+                    "color": "green",
+                    "value": 90
+                  }
+                ]
+              },
+              "unit": "mbytes"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 45
+          },
+          "id": 37,
+          "options": {
+            "displayMode": "gradient",
+            "maxVizHeight": 300,
+            "minVizHeight": 15,
+            "minVizWidth": 8,
+            "namePlacement": "left",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showUnfilled": true,
+            "sizing": "auto",
+            "valueMode": "color"
+          },
+          "pluginVersion": "11.2.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "expr": "DCGM_FI_DEV_FB_FREE",
+              "instant": false,
+              "legendFormat": "{{Hostname}}",
+              "range": true,
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "expr": "",
+              "hide": false,
+              "instant": false,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "B"
+            }
+          ],
+          "title": "GPU Free Memory not in use",
+          "type": "bargauge"
+        },
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "This measures the total capacity of the GPU.\n",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "green",
+                "mode": "thresholds"
+              },
+              "fieldMinMax": false,
+              "mappings": [],
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  }
+                ]
+              },
+              "unit": "mbytes"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 45
+          },
+          "id": 38,
+          "options": {
+            "displayMode": "gradient",
+            "maxVizHeight": 300,
+            "minVizHeight": 15,
+            "minVizWidth": 8,
+            "namePlacement": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showUnfilled": true,
+            "sizing": "auto",
+            "valueMode": "color"
+          },
+          "pluginVersion": "11.2.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "expr": "(DCGM_FI_DEV_FB_FREE + DCGM_FI_DEV_FB_USED)",
+              "instant": false,
+              "legendFormat": "{{Hostname}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "GPU Max Capacity",
+          "type": "bargauge"
+        }
+      ],
+      "title": "Additional Dashboards",
       "type": "row"
     }
   ],
@@ -1309,14 +3055,14 @@
           "type": "grafana-clickhouse-datasource",
           "uid": "cdrta4zbtlddsa"
         },
-        "definition": "SELECT se.stream_id\nFROM network_events.stream_status AS se;",
+        "definition": "SELECT DISTINCT stream_id \nFROM network_events.stream_events \nWHERE $__timeFilter(timestamp_ts)",
         "hide": 0,
         "includeAll": true,
-        "label": "Stream ID",
+        "label": "Stream Id",
         "multi": false,
         "name": "stream_id",
         "options": [],
-        "query": "SELECT se.stream_id\nFROM network_events.stream_status AS se;",
+        "query": "SELECT DISTINCT stream_id \nFROM network_events.stream_events \nWHERE $__timeFilter(timestamp_ts)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
@@ -1326,70 +3072,77 @@
       {
         "current": {
           "selected": false,
-          "text": "",
-          "value": ""
+          "text": "All",
+          "value": "$__all"
         },
         "datasource": {
           "type": "grafana-clickhouse-datasource",
           "uid": "cdrta4zbtlddsa"
         },
-        "definition": "SELECT state \nFROM network_events.stream_status;",
+        "definition": "SELECT DISTINCT Streams.stream_key\nFROM network_events.stream_events\nLEFT JOIN network_events.streams AS Streams ON stream_events.stream_id = Streams.id\nWHERE $__timeFilter(timestamp_ts);",
         "hide": 0,
         "includeAll": true,
-        "label": "Stream State",
+        "label": "Stream Key",
+        "multi": false,
+        "name": "stream_key",
+        "options": [],
+        "query": "SELECT DISTINCT Streams.stream_key\nFROM network_events.stream_events\nLEFT JOIN network_events.streams AS Streams ON stream_events.stream_id = Streams.id\nWHERE $__timeFilter(timestamp_ts);",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "definition": "label_values(node_cpu_seconds_total{region=~\".*-ai$\"}, region)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Ingest Region",
+        "multi": false,
+        "name": "region",
+        "options": [],
+        "query": {
+          "qryType": 5,
+          "query": "label_values(node_cpu_seconds_total{region=~\".*-ai$\"}, region)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "definition": "label_values(DCGM_FI_DEV_FB_USED, Hostname)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Inference Region",
         "multi": true,
-        "name": "stream_state",
+        "name": "Hostname",
         "options": [],
-        "query": "SELECT state \nFROM network_events.stream_status;",
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "type": "query"
-      },
-      {
-        "current": {
-          "selected": false,
-          "text": "0x180859c337d14edf588c685f3f7ab4472ab6a252",
-          "value": "0x180859c337d14edf588c685f3f7ab4472ab6a252"
+        "query": {
+          "qryType": 5,
+          "query": "label_values(DCGM_FI_DEV_FB_USED, Hostname)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
-        "datasource": {
-          "type": "grafana-clickhouse-datasource",
-          "uid": "cdrta4zbtlddsa"
-        },
-        "definition": "SELECT orchestrator_address\nFROM network_events.stream_status;",
-        "hide": 0,
-        "includeAll": true,
-        "label": "Orchestrator Address",
-        "multi": false,
-        "name": "orchestrator_address",
-        "options": [],
-        "query": "SELECT orchestrator_address\nFROM network_events.stream_status;",
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "type": "query"
-      },
-      {
-        "allValue": "",
-        "current": {
-          "selected": false,
-          "text": "",
-          "value": ""
-        },
-        "datasource": {
-          "type": "grafana-clickhouse-datasource",
-          "uid": "cdrta4zbtlddsa"
-        },
-        "definition": "SELECT gateway_address\nFROM network_events.stream_status;",
-        "hide": 0,
-        "includeAll": true,
-        "label": "Gateway Address",
-        "multi": false,
-        "name": "gateway_address",
-        "options": [],
-        "query": "SELECT gateway_address\nFROM network_events.stream_status;",
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
@@ -1406,6 +3159,6 @@
   "timezone": "utc",
   "title": "Ai Monitoring [WIP]",
   "uid": "becrwydm8kpvke",
-  "version": 70,
+  "version": 208,
   "weekStart": ""
 }

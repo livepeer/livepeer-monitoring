@@ -198,7 +198,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum(increase(livepeer_ai_live_attempt[$__rate_interval]))",
+          "expr": "sum(increase(livepeer_ai_live_attempt[1m]))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -208,7 +208,7 @@
           "useBackend": false
         }
       ],
-      "title": "Stream Attempts",
+      "title": "Stream Attempts in 1m",
       "type": "timeseries"
     },
     {
@@ -299,17 +299,17 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum by(normalized_error_code) (label_replace(label_replace(increase(livepeer_ai_request_errors{pipeline=~\"live-.*\"}[$__rate_interval]), \"normalized_error_code\", \"no orchestrators available\", \"error_code\", \"no orchestrators available.*\"), \"normalized_error_code\", \"$1\", \"error_code\", \"(.*)\"))",
+          "expr": "sum by(normalized_error_code, model_name) (label_replace(label_replace(increase(livepeer_ai_request_errors{pipeline=~\"live-.*\"}[1m]), \"normalized_error_code\", \"no orchestrators available\", \"error_code\", \"no orchestrators available.*\"), \"normalized_error_code\", \"$1\", \"error_code\", \"(.*)\"))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "{{model_name}}: {{normalized_error_code}}",
           "range": true,
           "refId": "A",
           "useBackend": false
         }
       ],
-      "title": "Error Responses",
+      "title": "Error Responses in 1m",
       "type": "timeseries"
     },
     {
@@ -720,12 +720,16 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "editorMode": "code",
-          "expr": "sum (livepeer_ai_current_live_pipelines)",
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "sum(increase(livepeer_ai_current_live_pipelines[$__rate_interval]))",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
-          "refId": "A"
+          "refId": "A",
+          "useBackend": false
         }
       ],
       "title": "In-Use Orchestrators",
@@ -819,7 +823,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum by(pipeline, model_name) (increase(livepeer_ai_request_errors{error_code=~\"no orchestrators available.*\", pipeline=~\"live-.*\"}[$__rate_interval]))",
+          "expr": "sum by(pipeline, model_name) (increase(livepeer_ai_request_errors{error_code=~\"no orchestrators available.*\", pipeline=~\"live-.*\"}[1m]))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -829,7 +833,7 @@
           "useBackend": false
         }
       ],
-      "title": "Missing Capacity Errors",
+      "title": "Missing Capacity Errors in 1m (no orchestrators available)",
       "type": "timeseries"
     },
     {
@@ -919,7 +923,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "count by(region, node_name) (rate({container=~\"live-video-to-video.*\"} != `Polling blocks` != `h264` |~ `CUDA initialization failure with error` [$__auto]))",
+          "expr": "count by(region, node_name) (rate({container=~\"live-video-to-video.*\"} |~ `CUDA initialization failure with error` [$__auto]))",
           "legendFormat": "",
           "queryType": "range",
           "refId": "A",
@@ -930,7 +934,6 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "10s",
   "schemaVersion": 39,
   "tags": [
     "ai",
@@ -948,6 +951,6 @@
   "timezone": "utc",
   "title": "AI Overview (Livestream)",
   "uid": "be6llteqebk00b",
-  "version": 20,
+  "version": 28,
   "weekStart": ""
 }
