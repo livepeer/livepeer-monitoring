@@ -22,6 +22,50 @@
   "links": [],
   "panels": [
     {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 47,
+      "options": {
+        "dedupStrategy": "none",
+        "enableInfiniteScrolling": false,
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": false,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "{container=~\"ai-gateway|live-video-to-video_comfyui_.*\"} |~ \"${stream_key}|${stream_id}\" != \"Sending input frame\" != \"message=frame_type=Video\" != \"message=Output image received\"",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Panel Title",
+      "type": "logs"
+    },
+    {
       "collapsed": true,
       "gridPos": {
         "h": 1,
@@ -33,18 +77,15 @@
       "panels": [
         {
           "datasource": {
-            "default": false,
             "type": "grafana-clickhouse-datasource",
             "uid": "cdrta4zbtlddsa"
           },
-          "description": "This chart displays the average number of streams based on the timestamp.\n",
+          "description": "This dashboard show the average of stream start-up time that is successful in seconds.\nThe average is coming for the Start Up dashboard below.\n\nGreen = Avg < 6 seconds\nYellow = Avg 6 - 10 seconds\nRed = Avg > 12 seconds.",
           "fieldConfig": {
             "defaults": {
               "color": {
                 "mode": "thresholds"
               },
-              "decimals": 0,
-              "fieldMinMax": false,
               "mappings": [],
               "thresholds": {
                 "mode": "absolute",
@@ -52,21 +93,28 @@
                   {
                     "color": "green",
                     "value": null
+                  },
+                  {
+                    "color": "#EAB839",
+                    "value": 10
+                  },
+                  {
+                    "color": "red",
+                    "value": 12
                   }
                 ]
               },
-              "unit": "none"
+              "unit": "s"
             },
             "overrides": []
           },
           "gridPos": {
             "h": 6,
-            "w": 6,
+            "w": 4,
             "x": 0,
             "y": 1
           },
-          "hideTimeOverride": false,
-          "id": 19,
+          "id": 44,
           "options": {
             "colorMode": "value",
             "graphMode": "none",
@@ -75,7 +123,7 @@
             "percentChangeColorMode": "standard",
             "reduceOptions": {
               "calcs": [
-                "mean"
+                "lastNotNull"
               ],
               "fields": "",
               "values": false
@@ -84,7 +132,206 @@
             "textMode": "auto",
             "wideLayout": true
           },
-          "pluginVersion": "11.2.0",
+          "pluginVersion": "11.5.2",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "cdrta4zbtlddsa"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "hide": true,
+              "meta": {
+                "builderOptions": {
+                  "columns": [],
+                  "database": "",
+                  "limit": 1000,
+                  "mode": "list",
+                  "queryType": "table",
+                  "table": ""
+                }
+              },
+              "pluginVersion": "4.8.2",
+              "queryType": "table",
+              "rawSql": "SELECT\n  toFloat64(median(source.total_time_diff_ms)) / 1000.0 AS `Start Up Time Seconds`\nFROM\n  (\n    SELECT\n      network_events.stream_trace_summary.total_time_diff_ms AS total_time_diff_ms\n    FROM\n      network_events.stream_trace_summary\n    WHERE\n      $__timeFilter(first_event_timestamp_ts)\n  ) AS source",
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "cdrta4zbtlddsa"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "hide": false,
+              "meta": {
+                "builderOptions": {
+                  "columns": [],
+                  "database": "",
+                  "limit": 1000,
+                  "mode": "list",
+                  "queryType": "table",
+                  "table": ""
+                }
+              },
+              "pluginVersion": "4.8.2",
+              "queryType": "table",
+              "rawSql": "WITH all_subtypes AS (\n    SELECT 'app_receive_first_segment' AS sub_type\n    UNION ALL SELECT 'gateway_receive_stream_request'  \n    UNION ALL SELECT 'gateway_send_first_ingest_segment'\n    UNION ALL SELECT 'runner_receive_first_ingest_segment'\n),\nstream_events AS (\n    SELECT\n        stream_id,\n        sub_type,\n        timestamp_ts,\n        time_diff_ms / 1000.0 AS time_diff_seconds\n    FROM network_events.stream_trace\n    WHERE sub_type IN (SELECT sub_type FROM all_subtypes)\n    AND timestamp_ts BETWEEN toDateTime($__from/1000) AND toDateTime($__to/1000)\n),\nstream_times AS (\n    SELECT\n        stream_id,\n        MIN(CASE WHEN sub_type = 'gateway_receive_stream_request' THEN timestamp_ts END) AS start_time,\n        MAX(CASE WHEN sub_type = 'app_receive_first_segment' THEN timestamp_ts END) AS end_time\n    FROM stream_events\n    GROUP BY stream_id\n    HAVING start_time IS NOT NULL AND end_time IS NOT NULL\n)\n\n-- 1. Total Startup Time (Gateway Request → App Receive)\nSELECT\n    'Total Startup Time' AS metric,\n    ROUND(COALESCE(AVG(toUnixTimestamp(end_time) - toUnixTimestamp(start_time)), 0), 3) AS `Seconds`\nFROM stream_times\n\nUNION ALL\n\n-- 2. Individual Subtype Averages\nSELECT\n    sub_type AS metric,\n    ROUND(AVG(time_diff_seconds), 3) AS `Seconds`\nFROM stream_events\nGROUP BY sub_type\n\nUNION ALL\n\n-- 3. TRUE Combined Average (All Events - Weighted)\nSELECT\n    'Combined Average (Weighted)' AS metric,\n    ROUND(AVG(time_diff_seconds), 3) AS `Seconds`\nFROM stream_events\n\nUNION ALL\n\n-- 4. Corrected Average of Subtype Averages (Unweighted)\nSELECT\n    'Combined Average (Unweighted)' AS metric,\n    ROUND(SUM(subtype_avg) / COUNT(DISTINCT sub_type), 3) AS `Seconds`\nFROM (\n    SELECT sub_type, AVG(time_diff_seconds) AS subtype_avg\n    FROM stream_events\n    GROUP BY sub_type\n) AS sub_avg_table;",
+              "refId": "B"
+            }
+          ],
+          "title": "Average Start Up Time",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "default": false,
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrta4zbtlddsa"
+          },
+          "description": "This chart indicates the percentage of streams that experience errors.\n\nGreen = < 10% of streams with errors\nYellow = > 10% of streams with errors\nRed = > 20% of streams with errors",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "fieldMinMax": false,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "#EAB839",
+                    "value": 10
+                  },
+                  {
+                    "color": "red",
+                    "value": 20
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 4,
+            "x": 4,
+            "y": 1
+          },
+          "id": 34,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "text": {
+              "titleSize": 1
+            },
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "11.5.2",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "cdrta4zbtlddsa"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "columns": [],
+                  "database": "",
+                  "limit": 1000,
+                  "mode": "list",
+                  "queryType": "table",
+                  "table": ""
+                }
+              },
+              "pluginVersion": "4.8.2",
+              "queryType": "table",
+              "rawSql": "SELECT\n  SUM(CASE WHEN last_error_time_ts IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*) * 100 AS `Error Percentage`\nFROM (\n  SELECT\n    stream_id,\n    MAX(last_error_time_ts) AS last_error_time_ts\n  FROM\n    network_events.stream_status\n  WHERE\n    $__timeFilter(timestamp_ts)\n  GROUP BY\n    stream_id\n) AS stream_errors",
+              "refId": "A"
+            }
+          ],
+          "title": "Stream w/ Errors",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrta4zbtlddsa"
+          },
+          "description": "This monitors the full start up success rate.\n\nGreen = > 95% success rate\nYellow= > 80% success rate\nRed= < 80% success rate",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "semi-dark-red",
+                    "value": null
+                  },
+                  {
+                    "color": "#EAB839",
+                    "value": 0.8
+                  },
+                  {
+                    "color": "dark-green",
+                    "value": 0.95
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 5,
+            "x": 8,
+            "y": 1
+          },
+          "id": 45,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -104,13 +351,13 @@
                   "table": ""
                 }
               },
-              "pluginVersion": "4.8.0",
+              "pluginVersion": "4.8.2",
               "queryType": "table",
-              "rawSql": "SELECT AVG(stream_count) as avg_active_streams\nFROM (\n    SELECT \n        toStartOfMinute(timestamp_ts) as minute,\n        COUNT(DISTINCT stream_id) as stream_count\n    FROM network_events.stream_status\n    WHERE state = 'ONLINE' AND $__timeFilter(timestamp_ts)\n    GROUP BY minute\n) subquery;",
-              "refId": "B"
+              "rawSql": "SELECT\n  CASE\n    WHEN count() > 0 THEN SUM(\n      CASE\n        WHEN source.gateway_startup_completed = 1 THEN 1\n        ELSE 0\n      END\n    )\n    ELSE NULL\n  END / COUNT(*) AS `Gateway Start Up Success`\nFROM\n  (\n    SELECT\n      network_events.stream_trace_summary.gateway_startup_completed AS gateway_startup_completed\n    FROM\n      network_events.stream_trace_summary\n    WHERE\n      $__timeFilter(first_event_timestamp_ts)\n  ) AS source",
+              "refId": "A"
             }
           ],
-          "title": "Average Streams Online",
+          "title": "Gateway Start Up Success Rate",
           "type": "stat"
         },
         {
@@ -173,8 +420,8 @@
           },
           "gridPos": {
             "h": 6,
-            "w": 6,
-            "x": 6,
+            "w": 11,
+            "x": 13,
             "y": 1
           },
           "id": 25,
@@ -188,11 +435,12 @@
               "showLegend": true
             },
             "tooltip": {
+              "hideZeros": false,
               "mode": "single",
               "sort": "none"
             }
           },
-          "pluginVersion": "11.2.0",
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -200,7 +448,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "editorMode": "code",
-              "expr": "max(sum_over_time(livepeer_ai_current_live_pipelines[$__interval]))",
+              "expr": "sum(sum_over_time(livepeer_ai_current_live_pipelines{livepeer_node_type=\"prod-livepeer-ai-gateway\"}[30s]))",
               "instant": false,
               "interval": "",
               "legendFormat": "# of Streams",
@@ -209,235 +457,6 @@
             }
           ],
           "title": "Total Stream Counts",
-          "type": "timeseries"
-        },
-        {
-          "datasource": {
-            "default": false,
-            "type": "grafana-clickhouse-datasource",
-            "uid": "cdrta4zbtlddsa"
-          },
-          "description": "This chart indicates the percentage of streams that experience errors.\n\nGreen = < 10% of streams with errors\nYellow = > 10% of streams with errors\nRed = > 20% of streams with errors",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "thresholds"
-              },
-              "fieldMinMax": false,
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": null
-                  },
-                  {
-                    "color": "#EAB839",
-                    "value": 10
-                  },
-                  {
-                    "color": "red",
-                    "value": 20
-                  }
-                ]
-              },
-              "unit": "percent"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 6,
-            "w": 6,
-            "x": 12,
-            "y": 1
-          },
-          "id": 34,
-          "options": {
-            "colorMode": "value",
-            "graphMode": "area",
-            "justifyMode": "auto",
-            "orientation": "auto",
-            "percentChangeColorMode": "standard",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": false
-            },
-            "showPercentChange": false,
-            "text": {
-              "titleSize": 1
-            },
-            "textMode": "auto",
-            "wideLayout": true
-          },
-          "pluginVersion": "11.2.0",
-          "targets": [
-            {
-              "datasource": {
-                "type": "grafana-clickhouse-datasource",
-                "uid": "cdrta4zbtlddsa"
-              },
-              "editorType": "sql",
-              "format": 1,
-              "meta": {
-                "builderOptions": {
-                  "columns": [],
-                  "database": "",
-                  "limit": 1000,
-                  "mode": "list",
-                  "queryType": "table",
-                  "table": ""
-                }
-              },
-              "pluginVersion": "4.8.0",
-              "queryType": "table",
-              "rawSql": "SELECT\n  SUM(CASE WHEN last_error_time_ts IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*) * 100 AS `Error Percentage`\nFROM (\n  SELECT\n    stream_id,\n    MAX(last_error_time_ts) AS last_error_time_ts\n  FROM\n    network_events.stream_status\n  WHERE\n    $__timeFilter(timestamp_ts)\n  GROUP BY\n    stream_id\n) AS stream_errors",
-              "refId": "A"
-            }
-          ],
-          "title": "Stream w/ Errors",
-          "type": "stat"
-        },
-        {
-          "datasource": {
-            "default": false,
-            "type": "grafana-clickhouse-datasource",
-            "uid": "cdrta4zbtlddsa"
-          },
-          "description": "This chart visualizes the counts of 'restart' and 'error' events occurring in a stream over time\n\nRestart Count: This metric indicates the number of times a 'restart' event occurred within the specified minute. A higher count may suggest frequent restarts, which could indicate potential issues with service stability or performance.\n\nError Count: This metric represents the number of 'error' events logged during the same minute. An increase in error counts may signal underlying problems that require investigation, such as system failures or misconfigurations.",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "# of Counts",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "barWidthFactor": 0.6,
-                "drawStyle": "line",
-                "fillOpacity": 0,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "insertNulls": false,
-                "lineInterpolation": "smooth",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "min": 0,
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "dark-green",
-                    "value": null
-                  }
-                ]
-              },
-              "unit": "none"
-            },
-            "overrides": [
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Restart_Count"
-                },
-                "properties": [
-                  {
-                    "id": "color",
-                    "value": {
-                      "fixedColor": "dark-red",
-                      "mode": "fixed"
-                    }
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Error_Count"
-                },
-                "properties": [
-                  {
-                    "id": "color",
-                    "value": {
-                      "fixedColor": "dark-yellow",
-                      "mode": "fixed"
-                    }
-                  }
-                ]
-              }
-            ]
-          },
-          "gridPos": {
-            "h": 6,
-            "w": 6,
-            "x": 18,
-            "y": 1
-          },
-          "id": 18,
-          "options": {
-            "legend": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "displayMode": "table",
-              "placement": "right",
-              "showLegend": true
-            },
-            "tooltip": {
-              "mode": "single",
-              "sort": "none"
-            }
-          },
-          "targets": [
-            {
-              "datasource": {
-                "type": "grafana-clickhouse-datasource",
-                "uid": "cdrta4zbtlddsa"
-              },
-              "editorType": "sql",
-              "format": 1,
-              "meta": {
-                "builderOptions": {
-                  "columns": [],
-                  "database": "",
-                  "limit": 1000,
-                  "mode": "list",
-                  "queryType": "table",
-                  "table": ""
-                }
-              },
-              "pluginVersion": "4.8.0",
-              "queryType": "table",
-              "rawSql": "SELECT toStartOfMinute(se.timestamp_ts) AS timestamp_ts, se.stream_id, ss.state, sum(se.restart_count) AS Restart_Count, countIf(se.sub_type = 'error') AS Error_Count\nFROM network_events.stream_events AS se\nJOIN network_events.stream_status AS ss ON se.stream_id = ss.stream_id\nWHERE se.stream_id IN (${stream_id:singlequote})\nAND $__timeFilter(se.timestamp_ts)\nGROUP BY timestamp_ts, se.stream_id, ss.state\nORDER BY timestamp_ts ASC;",
-              "refId": "A"
-            }
-          ],
-          "title": "Stream Health",
           "type": "timeseries"
         },
         {
@@ -495,7 +514,7 @@
             "h": 7,
             "w": 12,
             "x": 0,
-            "y": 7
+            "y": 169
           },
           "id": 39,
           "options": {
@@ -509,17 +528,18 @@
               "placement": "right",
               "showLegend": false
             },
-            "orientation": "auto",
+            "orientation": "horizontal",
             "showValue": "auto",
             "stacking": "none",
             "tooltip": {
+              "hideZeros": false,
               "mode": "single",
               "sort": "none"
             },
             "xTickLabelRotation": 0,
             "xTickLabelSpacing": 100
           },
-          "pluginVersion": "11.2.0",
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -539,9 +559,9 @@
                   "table": ""
                 }
               },
-              "pluginVersion": "4.8.0",
+              "pluginVersion": "4.8.2",
               "queryType": "table",
-              "rawSql": "WITH all_subtypes AS (\n    SELECT 'gateway_recieve_stream_request' AS sub_type\n    UNION ALL SELECT 'gateway_send_first_ingest_segment' AS sub_type\n    UNION ALL SELECT 'runner_receive_first_ingest_segment' AS sub_type\n)\nSELECT\n  `all_subtypes`.`sub_type` AS `sub_type`,\n  COALESCE(`toFloat64`(AVG(`filtered_data`.`time_diff_ms`)) / 1000.0, 0) AS `Average of Time Seconds`\nFROM\n  all_subtypes\nLEFT JOIN\n  (\n    SELECT\n      `network_events`.`stream_trace`.`sub_type` AS `sub_type`,\n      `network_events`.`stream_trace`.`time_diff_ms` AS `time_diff_ms`\n    FROM\n      `network_events`.`stream_trace`\n    WHERE\n      (`network_events`.`stream_trace`.`sub_type` = 'gateway_recieve_stream_request'\n      OR `network_events`.`stream_trace`.`sub_type` = 'gateway_send_first_ingest_segment'\n      OR `network_events`.`stream_trace`.`sub_type` = 'runner_receive_first_ingest_segment')\n      AND `network_events`.`stream_trace`.`timestamp_ts` >= toDateTime($__from/1000)\n      AND `network_events`.`stream_trace`.`timestamp_ts` <= toDateTime($__to/1000)\n  ) AS `filtered_data` ON `all_subtypes`.`sub_type` = `filtered_data`.`sub_type`\nGROUP BY\n  `all_subtypes`.`sub_type`\nORDER BY\n  `all_subtypes`.`sub_type` ASC",
+              "rawSql": "WITH all_subtypes AS (\n    SELECT 'app_receive_first_segment' AS sub_type\n    UNION ALL SELECT 'gateway_recieve_stream_request' AS sub_type\n    UNION ALL SELECT 'gateway_send_first_ingest_segment' AS sub_type\n    UNION ALL SELECT 'runner_receive_first_ingest_segment' AS sub_type\n)\nSELECT\n  `all_subtypes`.`sub_type` AS `sub_type`,\n  COALESCE(`toFloat64`(AVG(`filtered_data`.`time_diff_ms`)) / 1000.0, 0) AS `Average of Time Seconds`\nFROM\n  all_subtypes\nLEFT JOIN\n  (\n    SELECT\n      `network_events`.`stream_trace`.`sub_type` AS `sub_type`,\n      `network_events`.`stream_trace`.`time_diff_ms` AS `time_diff_ms`\n    FROM\n      `network_events`.`stream_trace`\n    WHERE\n      (`network_events`.`stream_trace`.`sub_type` = 'app_receive_first_segment'\n      OR `network_events`.`stream_trace`.`sub_type` = 'gateway_recieve_stream_request'\n      OR `network_events`.`stream_trace`.`sub_type` = 'gateway_send_first_ingest_segment'\n      OR `network_events`.`stream_trace`.`sub_type` = 'runner_receive_first_ingest_segment')\n      AND `network_events`.`stream_trace`.`timestamp_ts` >= toDateTime($__from/1000)\n      AND `network_events`.`stream_trace`.`timestamp_ts` <= toDateTime($__to/1000)\n  ) AS `filtered_data` ON `all_subtypes`.`sub_type` = `filtered_data`.`sub_type`\nGROUP BY\n  `all_subtypes`.`sub_type`\nORDER BY\n  `all_subtypes`.`sub_type` ASC",
               "refId": "A"
             }
           ],
@@ -565,6 +585,7 @@
                 "cellOptions": {
                   "type": "auto"
                 },
+                "filterable": true,
                 "inspect": false
               },
               "mappings": [],
@@ -673,7 +694,7 @@
             "h": 7,
             "w": 12,
             "x": 12,
-            "y": 7
+            "y": 169
           },
           "id": 40,
           "options": {
@@ -689,7 +710,7 @@
             "showHeader": true,
             "sortBy": []
           },
-          "pluginVersion": "11.2.0",
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -709,9 +730,9 @@
                   "table": ""
                 }
               },
-              "pluginVersion": "4.8.0",
+              "pluginVersion": "4.8.2",
               "queryType": "table",
-              "rawSql": "SELECT\n  `source`.`timestamp` AS `timestamp`,\n  `source`.`event_timestamp_ts` AS `event_timestamp_ts`,\n  `source`.`stream_id` AS `stream_id`,\n  `source`.`sub_type` AS `sub_type`,\n  `source`.`time_diff_ms` AS `time_diff_ms`,\n  `source`.`request_id` AS `request_id`,\n  `source`.`Pipelines__name` AS `Pipelines__name`,\n  `source`.`pipeline_id` AS `pipeline_id`,\n  `source`.`event_timestamp` AS `event_timestamp`,\n  `source`.`last_timestamp` AS `last_timestamp`,\n  `source`.`event_order` AS `event_order`,\n  `source`.`orch_address` AS `orch_address`,\n  `source`.`orch_url` AS `orch_url`,\n  `source`.`Pipelines__key` AS `Pipelines__key`,\n  `source`.`Pipelines__author` AS `Pipelines__author`\nFROM\n  (\n    SELECT\n      `network_events`.`stream_trace`.`timestamp` AS `timestamp`,\n      `network_events`.`stream_trace`.`event_timestamp_ts` AS `event_timestamp_ts`,\n      `network_events`.`stream_trace`.`sub_type` AS `sub_type`,\n      `network_events`.`stream_trace`.`stream_id` AS `stream_id`,\n      `network_events`.`stream_trace`.`request_id` AS `request_id`,\n      `network_events`.`stream_trace`.`pipeline_id` AS `pipeline_id`,\n      `network_events`.`stream_trace`.`event_timestamp` AS `event_timestamp`,\n      `network_events`.`stream_trace`.`last_timestamp` AS `last_timestamp`,\n      `network_events`.`stream_trace`.`event_order` AS `event_order`,\n      `network_events`.`stream_trace`.`orch_address` AS `orch_address`,\n      `network_events`.`stream_trace`.`orch_url` AS `orch_url`,\n      `network_events`.`stream_trace`.`time_diff_ms` AS `time_diff_ms`,\n      `Pipelines`.`key` AS `Pipelines__key`,\n      `Pipelines`.`name` AS `Pipelines__name`,\n      `Pipelines`.`author` AS `Pipelines__author`\n    FROM\n      `network_events`.`stream_trace`\n     \nLEFT JOIN `network_events`.`pipelines` AS `Pipelines` ON `network_events`.`stream_trace`.`pipeline_id` = `Pipelines`.`id`\n  ) AS `source`\nWHERE\n  (\n    `source`.`sub_type` = 'gateway_send_first_ingest_segment'\n    OR `source`.`sub_type` = 'runner_receive_first_ingest_segment'\n    OR `source`.`sub_type` = 'gateway_recieve_stream_request'\n  )\n \n   AND (\n    `source`.`event_timestamp_ts` >= toDateTime($__from/1000)\n  )\n  AND (\n    `source`.`event_timestamp_ts` < toDateTime($__to/1000)\n  )\n  AND (`source`.`Pipelines__key` = 'comfyui')\n  AND `source`.`stream_id` IN (${stream_id:singlequote})",
+              "rawSql": "SELECT\n  `source`.`timestamp` AS `timestamp`,\n  `source`.`event_timestamp_ts` AS `event_timestamp_ts`,\n  `source`.`stream_id` AS `stream_id`,\n  `source`.`sub_type` AS `sub_type`,\n  `source`.`time_diff_ms` AS `time_diff_ms`,\n  `source`.`request_id` AS `request_id`,\n  `source`.`Pipelines__name` AS `Pipelines__name`,\n  `source`.`pipeline_id` AS `pipeline_id`,\n  `source`.`event_timestamp` AS `event_timestamp`,\n  `source`.`last_timestamp` AS `last_timestamp`,\n  `source`.`event_order` AS `event_order`,\n  `source`.`orch_address` AS `orch_address`,\n  `source`.`orch_url` AS `orch_url`,\n  `source`.`Pipelines__key` AS `Pipelines__key`,\n  `source`.`Pipelines__author` AS `Pipelines__author`\nFROM\n  (\n    SELECT\n      `network_events`.`stream_trace`.`timestamp` AS `timestamp`,\n      `network_events`.`stream_trace`.`event_timestamp_ts` AS `event_timestamp_ts`,\n      `network_events`.`stream_trace`.`sub_type` AS `sub_type`,\n      `network_events`.`stream_trace`.`stream_id` AS `stream_id`,\n      `network_events`.`stream_trace`.`request_id` AS `request_id`,\n      `network_events`.`stream_trace`.`pipeline_id` AS `pipeline_id`,\n      `network_events`.`stream_trace`.`event_timestamp` AS `event_timestamp`,\n      `network_events`.`stream_trace`.`last_timestamp` AS `last_timestamp`,\n      `network_events`.`stream_trace`.`event_order` AS `event_order`,\n      `network_events`.`stream_trace`.`orch_address` AS `orch_address`,\n      `network_events`.`stream_trace`.`orch_url` AS `orch_url`,\n      `network_events`.`stream_trace`.`time_diff_ms` AS `time_diff_ms`,\n      `Pipelines`.`key` AS `Pipelines__key`,\n      `Pipelines`.`name` AS `Pipelines__name`,\n      `Pipelines`.`author` AS `Pipelines__author`\n    FROM\n      `network_events`.`stream_trace`\n     \nLEFT JOIN `network_events`.`pipelines` AS `Pipelines` ON `network_events`.`stream_trace`.`pipeline_id` = `Pipelines`.`id`\n  ) AS `source`\nWHERE\n  (\n    `source`.`sub_type` = 'app_receive_first_segment'\n    OR `source`.`sub_type` = 'gateway_send_first_ingest_segment'\n    OR `source`.`sub_type` = 'runner_receive_first_ingest_segment'\n    OR `source`.`sub_type` = 'gateway_recieve_stream_request'\n  )\n \n   AND (\n    `source`.`event_timestamp_ts` >= toDateTime($__from/1000)\n  )\n  AND (\n    `source`.`event_timestamp_ts` < toDateTime($__to/1000)\n  )\n  AND (`source`.`Pipelines__key` = 'comfyui')\n  AND `source`.`stream_id` IN (${stream_id:singlequote})",
               "refId": "A"
             }
           ],
@@ -795,7 +816,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 14
+            "y": 176
           },
           "id": 20,
           "options": {
@@ -812,12 +833,12 @@
             "showHeader": true,
             "sortBy": [
               {
-                "desc": false,
-                "displayName": "stream_id"
+                "desc": true,
+                "displayName": "error_count"
               }
             ]
           },
-          "pluginVersion": "11.2.0",
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -899,6 +920,22 @@
                         }
                       ]
                     }
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 138
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "timestamp_ts"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 166
                   }
                 ]
               }
@@ -908,7 +945,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 14
+            "y": 176
           },
           "id": 3,
           "options": {
@@ -924,12 +961,12 @@
             "showHeader": true,
             "sortBy": [
               {
-                "desc": false,
-                "displayName": "event_type"
+                "desc": true,
+                "displayName": "pipeline"
               }
             ]
           },
-          "pluginVersion": "11.2.0",
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -950,7 +987,7 @@
               },
               "pluginVersion": "4.8.2",
               "queryType": "table",
-              "rawSql": "SELECT \n    stream_id, \n    restart_count,\n    timestamp_ts, \n    event_type, \n    message, \n    gateway,\n    type, \n    capability, \n    pipeline, \n    pipeline_id, \n    params, \n    orchestrator_address, \n    orchestrator_url\nFROM \n    network_events.stream_events\nWHERE \n    sub_type IN ('error', 'restart')\n    AND stream_id IN (${stream_id:singlequote})\n    AND $__timeFilter(timestamp_ts)\nORDER BY \n    timestamp_ts DESC\nLIMIT 100;\n",
+              "rawSql": "SELECT \n    stream_id, \n    timestamp_ts,\n    restart_count, \n    event_type, \n    message, \n    gateway,\n    type, \n    capability, \n    pipeline, \n    pipeline_id, \n    params, \n    orchestrator_address, \n    orchestrator_url\nFROM \n    network_events.stream_events\nWHERE \n    sub_type IN ('error', 'restart')\n    AND stream_id IN (${stream_id:singlequote})\n    AND $__timeFilter(timestamp_ts)\n    AND pipeline = 'comfyui'\nORDER BY \n    timestamp_ts DESC\nLIMIT 100;\n",
               "refId": "A"
             }
           ],
@@ -964,15 +1001,20 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "description": "Log information of all the streams of selected streams during the gateway process.",
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": []
+          },
           "gridPos": {
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 22
+            "y": 184
           },
           "id": 30,
           "options": {
             "dedupStrategy": "none",
+            "enableInfiniteScrolling": false,
             "enableLogDetails": true,
             "prettifyLogMessage": true,
             "showCommonLabels": true,
@@ -981,7 +1023,7 @@
             "sortOrder": "Descending",
             "wrapLogMessage": true
           },
-          "pluginVersion": "11.2.0",
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -1004,15 +1046,20 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "description": "Log information of all the streams of selected streams during the MediaMTX process.",
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": []
+          },
           "gridPos": {
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 22
+            "y": 184
           },
           "id": 32,
           "options": {
             "dedupStrategy": "none",
+            "enableInfiniteScrolling": false,
             "enableLogDetails": true,
             "prettifyLogMessage": true,
             "showCommonLabels": true,
@@ -1021,7 +1068,7 @@
             "sortOrder": "Descending",
             "wrapLogMessage": true
           },
-          "pluginVersion": "11.2.0",
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -1103,7 +1150,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "transparent"
+                    "color": "transparent",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -1137,10 +1185,12 @@
               "showLegend": true
             },
             "tooltip": {
+              "hideZeros": false,
               "mode": "single",
               "sort": "none"
             }
           },
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -1214,7 +1264,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "transparent"
+                    "color": "transparent",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -1248,10 +1299,12 @@
               "showLegend": true
             },
             "tooltip": {
+              "hideZeros": false,
               "mode": "single",
               "sort": "none"
             }
           },
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -1322,7 +1375,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -1351,10 +1405,12 @@
               "showLegend": true
             },
             "tooltip": {
+              "hideZeros": false,
               "mode": "single",
               "sort": "none"
             }
           },
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -1423,7 +1479,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -1452,10 +1509,12 @@
               "showLegend": true
             },
             "tooltip": {
+              "hideZeros": false,
               "mode": "single",
               "sort": "none"
             }
           },
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -1518,7 +1577,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "dark-green"
+                    "color": "dark-green",
+                    "value": null
                   }
                 ]
               }
@@ -1574,7 +1634,7 @@
             "textMode": "auto",
             "wideLayout": false
           },
-          "pluginVersion": "11.2.0",
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -1582,7 +1642,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "editorMode": "code",
-              "expr": "max(sum_over_time(livepeer_ai_current_live_pipelines[$__interval]))",
+              "expr": "sum(sum_over_time(livepeer_ai_container_in_use{node_type=\"orch\"}[30s]))",
               "hide": false,
               "instant": false,
               "legendFormat": "GPUs in Use",
@@ -1658,7 +1718,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "transparent"
+                    "color": "transparent",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -1689,11 +1750,12 @@
               "showLegend": true
             },
             "tooltip": {
+              "hideZeros": false,
               "mode": "single",
               "sort": "none"
             }
           },
-          "pluginVersion": "11.2.0",
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -1718,6 +1780,7 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "description": "This dashboard monitors the GPU load usage. If the threshold goes above 95% for > 15 minutes, an alert will trigger.",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -1763,15 +1826,12 @@
                 "mode": "percentage",
                 "steps": [
                   {
-                    "color": "transparent"
-                  },
-                  {
-                    "color": "red",
-                    "value": 50
+                    "color": "transparent",
+                    "value": null
                   },
                   {
                     "color": "dark-red",
-                    "value": 90
+                    "value": 95
                   }
                 ]
               },
@@ -1794,10 +1854,12 @@
               "showLegend": true
             },
             "tooltip": {
+              "hideZeros": false,
               "mode": "single",
               "sort": "none"
             }
           },
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -1806,28 +1868,15 @@
               },
               "editorMode": "code",
               "exemplar": false,
-              "expr": "sum by (\n  Hostname, \n  UUID, \n  gpu, \n  instance, \n  modelName, \n  node_name, \n  region\n) (\n    DCGM_FI_DEV_GPU_UTIL{Hostname=~\"${Hostname:regex}\"}\n)",
+              "expr": "sum by (\n  Hostname, \n  gpu, \n  instance, \n  modelName, \n  node_name, \n  region\n) (\n    DCGM_FI_DEV_GPU_UTIL{Hostname=~\"${Hostname:regex}\"}\n)",
               "hide": false,
               "instant": false,
-              "legendFormat": "{{node_name}}({{UUID}})({{modelName}})",
+              "legendFormat": "{{node_name}}",
               "range": true,
               "refId": "A"
-            },
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "PBFA97CFB590B2093"
-              },
-              "editorMode": "code",
-              "expr": "sum by (\n  Hostname, \n  UUID, \n  gpu, \n  instance, \n  modelName, \n  node_name, \n  region\n) (\n    DCGM_FI_DEV_GPU_UTIL{Hostname=~\"${Hostname:regex}\"}\n)",
-              "hide": true,
-              "instant": false,
-              "legendFormat": "__auto",
-              "range": true,
-              "refId": "B"
             }
           ],
-          "title": "GPU Utilization ",
+          "title": "GPU Utilization (> 95%)",
           "type": "timeseries"
         }
       ],
@@ -1835,7 +1884,7 @@
       "type": "row"
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -1843,583 +1892,679 @@
         "y": 3
       },
       "id": 26,
-      "panels": [],
-      "title": "Inference Monitoring",
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "default": false,
-        "type": "grafana-clickhouse-datasource",
-        "uid": "cdrta4zbtlddsa"
-      },
-      "description": "This dashboard monitors the average FPS output from streams.\n \n- AVG FPS  15 or greater is good.\n- AVG FPS between 10 - 15 should be monitored.\n- AVG FPS < 10 indicates an issue that needs to be investigated.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
+      "panels": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrta4zbtlddsa"
           },
-          "custom": {
-            "align": "left",
-            "cellOptions": {
-              "type": "color-text"
-            },
-            "filterable": true,
-            "inspect": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
+          "description": "This number indicates the average output of FPS.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
               },
-              {
-                "color": "dark-red",
-                "value": 0
-              },
-              {
-                "color": "#EAB839",
-                "value": 10
-              },
-              {
-                "color": "dark-green",
-                "value": 15
+              "mappings": [],
+              "min": 10,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "dark-red",
+                    "value": null
+                  },
+                  {
+                    "color": "#EAB839",
+                    "value": 12
+                  },
+                  {
+                    "color": "dark-green",
+                    "value": 15
+                  }
+                ]
               }
-            ]
+            },
+            "overrides": []
           },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 5,
-        "x": 0,
-        "y": 4
-      },
-      "id": 27,
-      "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": [
-            "sum"
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 0,
+            "y": 90
+          },
+          "id": 43,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "11.5.2",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "cdrta4zbtlddsa"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "columns": [],
+                  "database": "",
+                  "limit": 1000,
+                  "mode": "list",
+                  "queryType": "table",
+                  "table": ""
+                }
+              },
+              "pluginVersion": "4.8.2",
+              "queryType": "table",
+              "rawSql": "SELECT\n  AVG(`source`.`avg`) AS `avg`\nFROM\n  (\n    SELECT\n      `network_events`.`stream_status`.`stream_id` AS `stream_id`,\n      AVG(`network_events`.`stream_status`.`output_fps`) AS `avg`\n    FROM\n      `network_events`.`stream_status`\n    WHERE\n      $__timeFilter(`network_events`.`stream_status`.`timestamp_ts`)\n    GROUP BY\n      `network_events`.`stream_status`.`stream_id`\n    ORDER BY\n      `network_events`.`stream_status`.`stream_id` ASC\n  ) AS `source`",
+              "refId": "A"
+            }
           ],
-          "show": false
+          "title": "AVG FPS Output",
+          "type": "stat"
         },
-        "showHeader": true,
-        "sortBy": []
-      },
-      "pluginVersion": "11.2.0",
-      "targets": [
         {
           "datasource": {
+            "default": false,
             "type": "grafana-clickhouse-datasource",
             "uid": "cdrta4zbtlddsa"
           },
-          "editorType": "sql",
-          "format": 1,
-          "hide": false,
-          "meta": {
-            "builderOptions": {
-              "columns": [],
-              "database": "",
-              "limit": 1000,
-              "mode": "list",
+          "description": "This dashboard monitors the average FPS output from streams.\n \n- AVG FPS  15 or greater is good.\n- AVG FPS between 10 - 15 should be monitored.\n- AVG FPS < 10 indicates an issue that needs to be investigated.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "left",
+                "cellOptions": {
+                  "type": "color-text"
+                },
+                "filterable": true,
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 0
+                  },
+                  {
+                    "color": "#EAB839",
+                    "value": 10
+                  },
+                  {
+                    "color": "dark-green",
+                    "value": 15
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 6,
+            "x": 4,
+            "y": 90
+          },
+          "id": 27,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true,
+            "sortBy": []
+          },
+          "pluginVersion": "11.5.2",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "cdrta4zbtlddsa"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "hide": false,
+              "meta": {
+                "builderOptions": {
+                  "columns": [],
+                  "database": "",
+                  "limit": 1000,
+                  "mode": "list",
+                  "queryType": "table",
+                  "table": ""
+                }
+              },
+              "pluginVersion": "4.8.2",
               "queryType": "table",
-              "table": ""
+              "rawSql": "SELECT\n  `network_events`.`stream_status`.`stream_id` AS `stream_id`,\n  AVG(`network_events`.`stream_status`.`output_fps`) AS `avg`\nFROM\n  `network_events`.`stream_status`\nWHERE\n  (\n    `network_events`.`stream_status`.`timestamp_ts` >= `toStartOfHour`((`now64`(9, 'UTC') + INTERVAL -24 hour))\n  )\n  AND (\n    `network_events`.`stream_status`.`timestamp_ts` < `toStartOfHour`((`now64`(9, 'UTC') + INTERVAL 1 hour))\n  )\n  AND (\n    `network_events`.`stream_status`.`pipeline` = 'comfyui'\n  )\n  AND (\n    `network_events`.`stream_status`.`stream_id` IN (${stream_id:singlequote})\n  )\nGROUP BY\n  `network_events`.`stream_status`.`stream_id`\nORDER BY\n  `avg` ASC,\n  `network_events`.`stream_status`.`stream_id` ASC;",
+              "refId": "B"
             }
-          },
-          "pluginVersion": "4.8.2",
-          "queryType": "table",
-          "rawSql": "SELECT\n  `network_events`.`stream_status`.`stream_id` AS `stream_id`,\n  AVG(`network_events`.`stream_status`.`output_fps`) AS `avg`\nFROM\n  `network_events`.`stream_status`\nWHERE\n  (\n    `network_events`.`stream_status`.`timestamp_ts` >= `toStartOfHour`((`now64`(9, 'UTC') + INTERVAL -24 hour))\n  )\n  AND (\n    `network_events`.`stream_status`.`timestamp_ts` < `toStartOfHour`((`now64`(9, 'UTC') + INTERVAL 1 hour))\n  )\n  AND (\n    `network_events`.`stream_status`.`pipeline` = 'comfyui'\n  )\n  AND (\n    `network_events`.`stream_status`.`stream_id` IN (${stream_id:singlequote})\n  )\nGROUP BY\n  `network_events`.`stream_status`.`stream_id`\nORDER BY\n  `avg` ASC,\n  `network_events`.`stream_status`.`stream_id` ASC;",
-          "refId": "B"
-        }
-      ],
-      "title": "Daydream: AVG FPS Output",
-      "type": "table"
-    },
-    {
-      "datasource": {
-        "default": false,
-        "type": "grafana-clickhouse-datasource",
-        "uid": "cdrta4zbtlddsa"
-      },
-      "description": "This table displays the number of errors for each type that is being reported.\n\nGreen = below 20 errors\nYellow = 20 - 50 errors\nRed = > 50 errors\n",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "align": "left",
-            "cellOptions": {
-              "type": "color-text",
-              "wrapText": false
-            },
-            "filterable": true,
-            "inspect": false
-          },
-          "fieldMinMax": false,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "#EAB839",
-                "value": 20
-              },
-              {
-                "color": "red",
-                "value": 50
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "stream_id"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 228
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "count"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 109
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "short_message"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 355
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 5,
-        "y": 4
-      },
-      "id": 41,
-      "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": [
-            "sum"
           ],
-          "show": false
+          "title": "Daydream: AVG FPS Output",
+          "type": "table"
         },
-        "showHeader": true,
-        "sortBy": []
-      },
-      "pluginVersion": "11.2.0",
-      "targets": [
         {
           "datasource": {
+            "default": false,
             "type": "grafana-clickhouse-datasource",
             "uid": "cdrta4zbtlddsa"
           },
-          "editorType": "sql",
-          "format": 1,
-          "meta": {
-            "builderOptions": {
-              "columns": [],
-              "database": "",
-              "limit": 1000,
-              "mode": "list",
-              "queryType": "table",
-              "table": ""
-            }
-          },
-          "pluginVersion": "4.8.0",
-          "queryType": "table",
-          "rawSql": "SELECT\n  `source`.`stream_id` AS `stream_id`,\n  `source`.`short_message` AS `short_message`,\n  COUNT(*) AS `count`\nFROM\n  (\n    SELECT\n      `network_events`.`stream_events`.`sub_type` AS `sub_type`,\n      `network_events`.`stream_events`.`timestamp_ts` AS `timestamp_ts`,\n      `network_events`.`stream_events`.`message` AS `message`,\n      `network_events`.`stream_events`.`stream_id` AS `stream_id`,\n      `substring`(\n        `toString`(`network_events`.`stream_events`.`message`),\n        1,\n        70\n      ) AS `short_message`\n    FROM\n      `network_events`.`stream_events`\n    WHERE\n      `network_events`.`stream_events`.`sub_type` = 'error'\n      AND $__timeFilter(timestamp_ts)\n      AND `network_events`.`stream_events`.`stream_id` IN (${stream_id:sqlstring})\n  ) AS `source`\nWHERE\n  `source`.`short_message` != ''\nGROUP BY\n  `source`.`short_message`,\n  `source`.`stream_id`\nORDER BY\n  count DESC;",
-          "refId": "A"
-        }
-      ],
-      "title": "Error Count by Type w/ Stream Id",
-      "type": "table"
-    },
-    {
-      "datasource": {
-        "default": false,
-        "type": "grafana-clickhouse-datasource",
-        "uid": "cdrta4zbtlddsa"
-      },
-      "description": "This table displays the number of errors for each type that is being reported.\n\nGreen = below 20 errors\nYellow = 20 - 50 errors\nRed = > 50 errors\n",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "axisBorderShow": true,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "fillOpacity": 80,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
+          "description": "This table displays the number of errors for each type that is being reported.\n\nGreen = below 20 errors\nYellow = 20 - 50 errors\nRed = > 50 errors\n",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "color-text",
+                  "wrapText": false
+                },
+                "filterable": true,
+                "inspect": false
+              },
+              "fieldMinMax": false,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "#EAB839",
+                    "value": 20
+                  },
+                  {
+                    "color": "red",
+                    "value": 50
+                  }
+                ]
+              },
+              "unit": "none"
             },
-            "lineWidth": 1,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
+            "overrides": [
               {
-                "color": "green",
-                "value": null
+                "matcher": {
+                  "id": "byName",
+                  "options": "stream_id"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 228
+                  }
+                ]
               },
               {
-                "color": "#EAB839",
-                "value": 20
+                "matcher": {
+                  "id": "byName",
+                  "options": "count"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 109
+                  }
+                ]
               },
               {
-                "color": "red",
-                "value": 50
+                "matcher": {
+                  "id": "byName",
+                  "options": "short_message"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 355
+                  }
+                ]
               }
             ]
           },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 11,
-        "x": 13,
-        "y": 4
-      },
-      "id": 42,
-      "options": {
-        "barRadius": 0,
-        "barWidth": 0.97,
-        "colorByField": "count",
-        "fullHighlight": true,
-        "groupWidth": 0.7,
-        "legend": {
-          "calcs": [],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": false
-        },
-        "orientation": "horizontal",
-        "showValue": "auto",
-        "stacking": "none",
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        },
-        "xTickLabelRotation": 0,
-        "xTickLabelSpacing": 100
-      },
-      "pluginVersion": "11.2.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "grafana-clickhouse-datasource",
-            "uid": "cdrta4zbtlddsa"
+          "gridPos": {
+            "h": 7,
+            "w": 6,
+            "x": 10,
+            "y": 90
           },
-          "editorType": "sql",
-          "format": 1,
-          "meta": {
-            "builderOptions": {
-              "columns": [],
-              "database": "",
-              "limit": 1000,
-              "mode": "list",
-              "queryType": "table",
-              "table": ""
-            }
-          },
-          "pluginVersion": "4.8.0",
-          "queryType": "table",
-          "rawSql": "SELECT\n  `source`.`short_message` AS `short_message`,\n  COUNT(*) AS `count`\nFROM\n  (\n    SELECT\n      `network_events`.`stream_events`.`sub_type` AS `sub_type`,\n      `network_events`.`stream_events`.`timestamp_ts` AS `timestamp_ts`,\n      `network_events`.`stream_events`.`message` AS `message`,\n      `substring`(\n        `toString`(`network_events`.`stream_events`.`message`),\n        1,\n        70\n      ) AS `short_message`\n    FROM\n      `network_events`.`stream_events`\n    WHERE\n      `network_events`.`stream_events`.`sub_type` = 'error'\n      AND $__timeFilter(timestamp_ts)\n  ) AS `source`\nWHERE\n  `source`.`short_message` != ''\nGROUP BY\n  `source`.`short_message`\nORDER BY\n  count DESC;",
-          "refId": "A"
-        }
-      ],
-      "title": "Error Count by Type",
-      "type": "barchart"
-    },
-    {
-      "datasource": {
-        "default": false,
-        "type": "grafana-clickhouse-datasource",
-        "uid": "cdrta4zbtlddsa"
-      },
-      "description": "This chart displays the most recent events related to errors in the inference process.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
+          "id": 41,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
             },
-            "filterable": true,
-            "inspect": false
+            "showHeader": true,
+            "sortBy": []
           },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 24,
-        "x": 0,
-        "y": 11
-      },
-      "id": 28,
-      "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": [
-            "sum"
+          "pluginVersion": "11.5.2",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "cdrta4zbtlddsa"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "columns": [],
+                  "database": "",
+                  "limit": 1000,
+                  "mode": "list",
+                  "queryType": "table",
+                  "table": ""
+                }
+              },
+              "pluginVersion": "4.8.2",
+              "queryType": "table",
+              "rawSql": "SELECT\n  `source`.`stream_id` AS `stream_id`,\n  `source`.`short_message` AS `short_message`,\n  COUNT(*) AS `count`\nFROM\n  (\n    SELECT\n      `network_events`.`stream_events`.`sub_type` AS `sub_type`,\n      `network_events`.`stream_events`.`timestamp_ts` AS `timestamp_ts`,\n      `network_events`.`stream_events`.`message` AS `message`,\n      `network_events`.`stream_events`.`stream_id` AS `stream_id`,\n      `substring`(\n        `toString`(`network_events`.`stream_events`.`message`),\n        1,\n        70\n      ) AS `short_message`\n    FROM\n      `network_events`.`stream_events`\n    WHERE\n      `network_events`.`stream_events`.`sub_type` = 'error'\n      AND $__timeFilter(timestamp_ts)\n      AND `network_events`.`stream_events`.`stream_id` IN (${stream_id:sqlstring})\n      AND pipeline = 'comfyui'\n  ) AS `source`\nWHERE\n  `source`.`short_message` != ''\nGROUP BY\n  `source`.`short_message`,\n  `source`.`stream_id`\nORDER BY\n  count DESC;",
+              "refId": "A"
+            }
           ],
-          "show": false
+          "title": "Error Count by Type w/ Stream Id",
+          "type": "table"
         },
-        "showHeader": true
-      },
-      "pluginVersion": "11.2.0",
-      "targets": [
         {
           "datasource": {
+            "default": false,
             "type": "grafana-clickhouse-datasource",
             "uid": "cdrta4zbtlddsa"
           },
-          "editorType": "sql",
-          "format": 1,
-          "meta": {
-            "builderOptions": {
-              "columns": [],
-              "database": "",
-              "limit": 1000,
-              "mode": "list",
-              "queryType": "table",
-              "table": ""
-            }
+          "description": "This table displays the number of errors for each type that is being reported.\n\nGreen = below 20 errors\nYellow = 20 - 50 errors\nRed = > 50 errors\n",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "axisBorderShow": true,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineWidth": 1,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "#EAB839",
+                    "value": 20
+                  },
+                  {
+                    "color": "red",
+                    "value": 50
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
           },
-          "pluginVersion": "4.8.2",
-          "queryType": "table",
-          "rawSql": "SELECT stream_id, timestamp_ts, event_type, pipeline, pipeline_id, message, gateway, type, capability, params, orchestrator_address, orchestrator_url\nFROM network_events.stream_events\nWHERE sub_type IN ('error', 'restart')\nAND stream_id IN (${stream_id:singlequote})\nAND $__timeFilter(timestamp_ts)\nORDER BY timestamp_ts DESC LIMIT 100;",
-          "refId": "A"
-        }
-      ],
-      "title": "Inference  Logs",
-      "type": "table"
-    },
-    {
-      "datasource": {
-        "default": false,
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
-      "description": "Log information of all the streams of selected streams during the inference process. Using {container=\"live-video-to-video_comfyui_8900\"}",
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 18
-      },
-      "id": 31,
-      "options": {
-        "dedupStrategy": "none",
-        "enableLogDetails": true,
-        "prettifyLogMessage": true,
-        "showCommonLabels": true,
-        "showLabels": true,
-        "showTime": true,
-        "sortOrder": "Descending",
-        "wrapLogMessage": true
-      },
-      "pluginVersion": "11.2.0",
-      "targets": [
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 16,
+            "y": 90
+          },
+          "id": 42,
+          "options": {
+            "barRadius": 0,
+            "barWidth": 0.97,
+            "colorByField": "count",
+            "fullHighlight": true,
+            "groupWidth": 0.7,
+            "legend": {
+              "calcs": [],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": false
+            },
+            "orientation": "horizontal",
+            "showValue": "auto",
+            "stacking": "none",
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            },
+            "xTickLabelRotation": 0,
+            "xTickLabelSpacing": 100
+          },
+          "pluginVersion": "11.5.2",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "cdrta4zbtlddsa"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "columns": [],
+                  "database": "",
+                  "limit": 1000,
+                  "mode": "list",
+                  "queryType": "table",
+                  "table": ""
+                }
+              },
+              "pluginVersion": "4.8.2",
+              "queryType": "table",
+              "rawSql": "SELECT\n  `source`.`short_message` AS `short_message`,\n  COUNT(*) AS `count`\nFROM\n  (\n    SELECT\n      `network_events`.`stream_events`.`sub_type` AS `sub_type`,\n      `network_events`.`stream_events`.`timestamp_ts` AS `timestamp_ts`,\n      `network_events`.`stream_events`.`message` AS `message`,\n      `substring`(\n        `toString`(`network_events`.`stream_events`.`message`),\n        1,\n        70\n      ) AS `short_message`\n    FROM\n      `network_events`.`stream_events`\n    WHERE\n      `network_events`.`stream_events`.`sub_type` = 'error'\n      AND $__timeFilter(timestamp_ts)\n      AND pipeline = 'comfyui'\n  ) AS `source`\nWHERE\n  `source`.`short_message` != ''\nGROUP BY\n  `source`.`short_message`\nORDER BY\n  count DESC;",
+              "refId": "A"
+            }
+          ],
+          "title": "Error Count by Type",
+          "type": "barchart"
+        },
         {
           "datasource": {
+            "default": false,
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrta4zbtlddsa"
+          },
+          "description": "This chart displays the most recent events related to errors in the inference process.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "filterable": true,
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 24,
+            "x": 0,
+            "y": 97
+          },
+          "id": 28,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true
+          },
+          "pluginVersion": "11.5.2",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "cdrta4zbtlddsa"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "columns": [],
+                  "database": "",
+                  "limit": 1000,
+                  "mode": "list",
+                  "queryType": "table",
+                  "table": ""
+                }
+              },
+              "pluginVersion": "4.8.2",
+              "queryType": "table",
+              "rawSql": "SELECT stream_id, timestamp_ts, event_type, pipeline, pipeline_id, message, gateway, type, capability, params, orchestrator_address, orchestrator_url\nFROM network_events.stream_events\nWHERE sub_type IN ('error', 'restart')\nAND stream_id IN (${stream_id:singlequote})\nAND $__timeFilter(timestamp_ts)\nAND pipeline = 'comfyui'\nORDER BY timestamp_ts DESC LIMIT 100;",
+              "refId": "A"
+            }
+          ],
+          "title": "Inference  Logs",
+          "type": "table"
+        },
+        {
+          "datasource": {
+            "default": false,
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "editorMode": "code",
-          "expr": "{container=\"live-video-to-video_comfyui_8900\"} |~ \"${stream_id}\"",
-          "queryType": "range",
-          "refId": "A"
-        }
-      ],
-      "title": "Inference Stream Logs",
-      "type": "logs"
-    },
-    {
-      "datasource": {
-        "default": false,
-        "type": "grafana-clickhouse-datasource",
-        "uid": "cdrta4zbtlddsa"
-      },
-      "description": "This table contains information on the stream and the pipeline it is using.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
+          "description": "Log information of all the streams of selected streams during the inference process. Using {container=\"live-video-to-video_comfyui_8900\"}",
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": []
           },
-          "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "inspect": false
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 104
           },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Streams__from_playground"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 187
-              }
-            ]
+          "id": 31,
+          "options": {
+            "dedupStrategy": "none",
+            "enableInfiniteScrolling": false,
+            "enableLogDetails": true,
+            "prettifyLogMessage": true,
+            "showCommonLabels": true,
+            "showLabels": true,
+            "showTime": true,
+            "sortOrder": "Descending",
+            "wrapLogMessage": true
           },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Streams__pipeline_params"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 190
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Streams__pipeline_id"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 185
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 18
-      },
-      "id": 29,
-      "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "enablePagination": false,
-          "fields": "",
-          "reducer": [
-            "sum"
+          "pluginVersion": "11.5.2",
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "P8E80F9AEF21F6940"
+              },
+              "editorMode": "code",
+              "expr": "{container=\"live-video-to-video_comfyui_8900\"} |~ \"${stream_id}\"",
+              "queryType": "range",
+              "refId": "A"
+            }
           ],
-          "show": false
+          "title": "Inference Stream Logs",
+          "type": "logs"
         },
-        "showHeader": true,
-        "sortBy": []
-      },
-      "pluginVersion": "11.2.0",
-      "targets": [
         {
           "datasource": {
+            "default": false,
             "type": "grafana-clickhouse-datasource",
             "uid": "cdrta4zbtlddsa"
           },
-          "editorType": "sql",
-          "format": 1,
-          "meta": {
-            "builderOptions": {
-              "columns": [],
-              "database": "",
-              "limit": 1000,
-              "mode": "list",
-              "queryType": "table",
-              "table": ""
-            }
+          "description": "This table contains information on the stream and the pipeline it is using.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Streams__from_playground"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 187
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Streams__pipeline_params"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 190
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Streams__pipeline_id"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 185
+                  }
+                ]
+              }
+            ]
           },
-          "pluginVersion": "4.8.2",
-          "queryType": "table",
-          "rawSql": "SELECT\n    stream_status.stream_id,\n    timestamp_ts,\n    Streams.id AS `Streams__id`,\n    Streams.pipeline_id AS `Streams__pipeline_id`,\n    Streams.output_playback_id AS `Streams__output_playback_id`,\n    Streams.author AS `Streams__author`,\n    Streams.stream_key AS `Streams__stream_key`,\n    Streams.output_stream_url AS `Streams__output_stream_url`,\n    Streams.created_at AS `Streams__created_at`,\n    Streams.pipeline_params AS `Streams__pipeline_params`,\n    Streams.from_playground AS `Streams__from_playground`,\n    Streams.gateway_host AS `Streams__gateway_host`,\n    Pipelines.id AS `Pipelines__id`,\n    Pipelines.name AS `Pipelines__name`,\n    Pipelines.version AS `Pipelines__version`,\n    Pipelines.description AS `Pipelines__description`,\n    Pipelines.author AS `Pipelines__author`,\n    Pipelines.type AS `Pipelines__type`,\n    Pipelines.created_at AS `Pipelines__created_at`,\n    Pipelines.updated_at AS `Pipelines__updated_at`\nFROM network_events.stream_status\n    LEFT JOIN network_events.streams AS Streams ON stream_status.stream_id = Streams.id\n    LEFT JOIN network_events.pipelines AS Pipelines ON stream_status.pipeline_id = Pipelines.id\n    LEFT JOIN network_events.users AS `Users - Author` ON Pipelines.author = `Users - Author`.id\nWHERE $__timeFilter(timestamp_ts) \nAND stream_status.stream_id IN (${stream_id:singlequote})\nORDER BY timestamp_ts ASC;",
-          "refId": "A"
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 104
+          },
+          "id": 29,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "enablePagination": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true,
+            "sortBy": []
+          },
+          "pluginVersion": "11.5.2",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "cdrta4zbtlddsa"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "columns": [],
+                  "database": "",
+                  "limit": 1000,
+                  "mode": "list",
+                  "queryType": "table",
+                  "table": ""
+                }
+              },
+              "pluginVersion": "4.8.2",
+              "queryType": "table",
+              "rawSql": "SELECT\n    stream_status.stream_id,\n    timestamp_ts,\n    Streams.id AS `Streams__id`,\n    Streams.pipeline_id AS `Streams__pipeline_id`,\n    Streams.output_playback_id AS `Streams__output_playback_id`,\n    Streams.author AS `Streams__author`,\n    Streams.stream_key AS `Streams__stream_key`,\n    Streams.output_stream_url AS `Streams__output_stream_url`,\n    Streams.created_at AS `Streams__created_at`,\n    Streams.pipeline_params AS `Streams__pipeline_params`,\n    Streams.from_playground AS `Streams__from_playground`,\n    Streams.gateway_host AS `Streams__gateway_host`,\n    Pipelines.id AS `Pipelines__id`,\n    Pipelines.name AS `Pipelines__name`,\n    Pipelines.version AS `Pipelines__version`,\n    Pipelines.description AS `Pipelines__description`,\n    Pipelines.author AS `Pipelines__author`,\n    Pipelines.type AS `Pipelines__type`,\n    Pipelines.created_at AS `Pipelines__created_at`,\n    Pipelines.updated_at AS `Pipelines__updated_at`\nFROM network_events.stream_status\n    LEFT JOIN network_events.streams AS Streams ON stream_status.stream_id = Streams.id\n    LEFT JOIN network_events.pipelines AS Pipelines ON stream_status.pipeline_id = Pipelines.id\n    LEFT JOIN network_events.users AS `Users - Author` ON Pipelines.author = `Users - Author`.id\nWHERE $__timeFilter(timestamp_ts) \nAND stream_status.stream_id IN (${stream_id:singlequote})\nAND pipeline = 'comfyui'\nORDER BY timestamp_ts ASC;",
+              "refId": "A"
+            }
+          ],
+          "title": "Stream's Pipeline Data",
+          "type": "table"
         }
       ],
-      "title": "Stream's Pipeline Data",
-      "type": "table"
+      "title": "Inference Monitoring",
+      "type": "row"
     },
     {
       "collapsed": true,
@@ -2427,10 +2572,150 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 26
+        "y": 4
       },
       "id": 33,
       "panels": [
+        {
+          "datasource": {
+            "default": false,
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrta4zbtlddsa"
+          },
+          "description": "This chart visualizes the counts of 'restart' and 'error' events occurring in a stream over time\n\nRestart Count: This metric indicates the number of times a 'restart' event occurred within the specified minute. A higher count may suggest frequent restarts, which could indicate potential issues with service stability or performance.\n\nError Count: This metric represents the number of 'error' events logged during the same minute. An increase in error counts may signal underlying problems that require investigation, such as system failures or misconfigurations.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "# of Counts",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "smooth",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "dark-green"
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Restart_Count"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "dark-red",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Error_Count"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "dark-yellow",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 6,
+            "x": 0,
+            "y": 445
+          },
+          "id": 18,
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.5.2",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "cdrta4zbtlddsa"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "columns": [],
+                  "database": "",
+                  "limit": 1000,
+                  "mode": "list",
+                  "queryType": "table",
+                  "table": ""
+                }
+              },
+              "pluginVersion": "4.8.0",
+              "queryType": "table",
+              "rawSql": "SELECT toStartOfMinute(se.timestamp_ts) AS timestamp_ts, se.stream_id, ss.state, sum(se.restart_count) AS Restart_Count, countIf(se.sub_type = 'error') AS Error_Count\nFROM network_events.stream_events AS se\nJOIN network_events.stream_status AS ss ON se.stream_id = ss.stream_id\nWHERE se.stream_id IN (${stream_id:singlequote})\nAND $__timeFilter(se.timestamp_ts)\nGROUP BY timestamp_ts, se.stream_id, ss.state\nORDER BY timestamp_ts ASC;",
+              "refId": "A"
+            }
+          ],
+          "title": "Stream Health",
+          "type": "timeseries"
+        },
         {
           "datasource": {
             "default": true,
@@ -2503,10 +2788,10 @@
             "overrides": []
           },
           "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 0,
-            "y": 29
+            "h": 6,
+            "w": 9,
+            "x": 6,
+            "y": 445
           },
           "id": 24,
           "options": {
@@ -2517,11 +2802,12 @@
               "showLegend": true
             },
             "tooltip": {
+              "hideZeros": false,
               "mode": "single",
               "sort": "none"
             }
           },
-          "pluginVersion": "11.2.0",
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -2615,10 +2901,10 @@
             "overrides": []
           },
           "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 12,
-            "y": 29
+            "h": 6,
+            "w": 9,
+            "x": 15,
+            "y": 445
           },
           "id": 23,
           "options": {
@@ -2629,11 +2915,12 @@
               "showLegend": true
             },
             "tooltip": {
+              "hideZeros": false,
               "mode": "single",
               "sort": "none"
             }
           },
-          "pluginVersion": "11.2.0",
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -2725,7 +3012,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 37
+            "y": 451
           },
           "id": 35,
           "options": {
@@ -2739,10 +3026,12 @@
               "showLegend": true
             },
             "tooltip": {
+              "hideZeros": false,
               "mode": "single",
               "sort": "none"
             }
           },
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -2825,7 +3114,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 37
+            "y": 451
           },
           "id": 36,
           "options": {
@@ -2836,10 +3125,12 @@
               "showLegend": true
             },
             "tooltip": {
+              "hideZeros": false,
               "mode": "single",
               "sort": "none"
             }
           },
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -2913,11 +3204,17 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 45
+            "y": 459
           },
           "id": 37,
           "options": {
             "displayMode": "gradient",
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
             "maxVizHeight": 300,
             "minVizHeight": 15,
             "minVizWidth": 8,
@@ -2934,7 +3231,7 @@
             "sizing": "auto",
             "valueMode": "color"
           },
-          "pluginVersion": "11.2.0",
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -2997,11 +3294,17 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 45
+            "y": 459
           },
           "id": 38,
           "options": {
             "displayMode": "gradient",
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
             "maxVizHeight": 300,
             "minVizHeight": 15,
             "minVizWidth": 8,
@@ -3018,7 +3321,7 @@
             "sizing": "auto",
             "valueMode": "color"
           },
-          "pluginVersion": "11.2.0",
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -3035,43 +3338,132 @@
           ],
           "title": "GPU Max Capacity",
           "type": "bargauge"
+        },
+        {
+          "datasource": {
+            "default": false,
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrta4zbtlddsa"
+          },
+          "description": "This chart displays the average number of streams based on the timestamp.\n",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "decimals": 0,
+              "fieldMinMax": false,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 5,
+            "x": 0,
+            "y": 467
+          },
+          "id": 19,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "mean"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "11.5.2",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "cdrta4zbtlddsa"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "hide": false,
+              "meta": {
+                "builderOptions": {
+                  "columns": [],
+                  "database": "",
+                  "limit": 1000,
+                  "mode": "list",
+                  "queryType": "table",
+                  "table": ""
+                }
+              },
+              "pluginVersion": "4.8.0",
+              "queryType": "table",
+              "rawSql": "SELECT AVG(stream_count) as avg_active_streams\nFROM (\n    SELECT \n        toStartOfMinute(timestamp_ts) as minute,\n        COUNT(DISTINCT stream_id) as stream_count\n    FROM network_events.stream_status\n    WHERE state = 'ONLINE' AND $__timeFilter(timestamp_ts)\n    GROUP BY minute\n) subquery;",
+              "refId": "B"
+            }
+          ],
+          "title": "Average Streams Online",
+          "type": "stat"
         }
       ],
       "title": "Additional Dashboards",
       "type": "row"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 5
+      },
+      "id": 46,
+      "panels": [],
+      "title": "Tracking Changes",
+      "type": "row"
     }
   ],
-  "schemaVersion": 39,
+  "preload": false,
+  "refresh": "",
+  "schemaVersion": 40,
   "tags": [],
   "templating": {
     "list": [
       {
         "current": {
-          "selected": false,
-          "text": "str_6Ph3B4pxN3R2crrV",
-          "value": "str_6Ph3B4pxN3R2crrV"
+          "text": "All",
+          "value": "$__all"
         },
         "datasource": {
           "type": "grafana-clickhouse-datasource",
           "uid": "cdrta4zbtlddsa"
         },
         "definition": "SELECT DISTINCT stream_id \nFROM network_events.stream_events \nWHERE $__timeFilter(timestamp_ts)",
-        "hide": 0,
         "includeAll": true,
         "label": "Stream Id",
-        "multi": false,
         "name": "stream_id",
         "options": [],
         "query": "SELECT DISTINCT stream_id \nFROM network_events.stream_events \nWHERE $__timeFilter(timestamp_ts)",
         "refresh": 2,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query"
       },
       {
         "current": {
-          "selected": false,
           "text": "All",
           "value": "$__all"
         },
@@ -3080,22 +3472,17 @@
           "uid": "cdrta4zbtlddsa"
         },
         "definition": "SELECT DISTINCT Streams.stream_key\nFROM network_events.stream_events\nLEFT JOIN network_events.streams AS Streams ON stream_events.stream_id = Streams.id\nWHERE $__timeFilter(timestamp_ts);",
-        "hide": 0,
         "includeAll": true,
         "label": "Stream Key",
-        "multi": false,
         "name": "stream_key",
         "options": [],
         "query": "SELECT DISTINCT Streams.stream_key\nFROM network_events.stream_events\nLEFT JOIN network_events.streams AS Streams ON stream_events.stream_id = Streams.id\nWHERE $__timeFilter(timestamp_ts);",
         "refresh": 2,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query"
       },
       {
         "current": {
-          "selected": true,
           "text": "All",
           "value": "$__all"
         },
@@ -3104,10 +3491,8 @@
           "uid": "PBFA97CFB590B2093"
         },
         "definition": "label_values(node_cpu_seconds_total{region=~\".*-ai$\"}, region)",
-        "hide": 0,
         "includeAll": true,
         "label": "Ingest Region",
-        "multi": false,
         "name": "region",
         "options": [],
         "query": {
@@ -3117,13 +3502,10 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query"
       },
       {
         "current": {
-          "selected": true,
           "text": "All",
           "value": "$__all"
         },
@@ -3132,7 +3514,6 @@
           "uid": "PBFA97CFB590B2093"
         },
         "definition": "label_values(DCGM_FI_DEV_FB_USED, Hostname)",
-        "hide": 0,
         "includeAll": true,
         "label": "Inference Region",
         "multi": true,
@@ -3145,20 +3526,18 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query"
       }
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-3h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "utc",
-  "title": "Ai Monitoring [WIP]",
+  "title": "Ai Monitoring",
   "uid": "becrwydm8kpvke",
-  "version": 208,
+  "version": 265,
   "weekStart": ""
 }
