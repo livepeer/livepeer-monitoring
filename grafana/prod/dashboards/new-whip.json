@@ -15,6 +15,7 @@
       }
     ]
   },
+  "description": "",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
@@ -23,8 +24,8 @@
   "panels": [
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
       },
       "fieldConfig": {
         "defaults": {
@@ -38,6 +39,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -95,43 +97,44 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
           },
+          "direction": "forward",
           "editorMode": "code",
-          "expr": "sum(rate(livepeer_api_http_request_duration_seconds_count{path=\"/api/stream/pull\"}[10m])) by (status_code)",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "B"
+          "expr": "100 * (\n  sum (count_over_time({container=\"ai-gateway\"} |= `livepeer-whip` |= `Gathered` [1h]))\n) / (\n  sum (count_over_time({container=\"ai-gateway\"} |= `livepeer-whip` |= \"no video!\" [1h])) +\n  sum (count_over_time({container=\"ai-gateway\"} |= `livepeer-whip` |= `Gathered`[1h]))\n)",
+          "queryType": "range",
+          "refId": "A"
         }
       ],
-      "title": "Status codes /api/stream/pull",
+      "title": "Media Gathering Success Rate",
       "type": "timeseries"
     }
   ],
+  "preload": false,
   "refresh": "",
-  "schemaVersion": 39,
+  "schemaVersion": 40,
   "tags": [],
   "templating": {
     "list": []
   },
   "time": {
-    "from": "2024-08-16T23:00:00.000Z",
-    "to": "2024-08-19T22:59:59.000Z"
+    "from": "now-24h",
+    "to": "now"
   },
   "timepicker": {},
-  "timezone": "browser",
-  "title": "Stream pull",
-  "uid": "fdveqnkpmy0aoc",
-  "version": 2,
+  "timezone": "utc",
+  "title": "New WHIP",
+  "uid": "ceh5celu5y2v4b",
+  "version": 1,
   "weekStart": ""
 }

@@ -27,6 +27,10 @@
         "type": "loki",
         "uid": "P8E80F9AEF21F6940"
       },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
       "gridPos": {
         "h": 8,
         "w": 12,
@@ -36,6 +40,7 @@
       "id": 8,
       "options": {
         "dedupStrategy": "none",
+        "enableInfiniteScrolling": false,
         "enableLogDetails": true,
         "prettifyLogMessage": false,
         "showCommonLabels": false,
@@ -44,6 +49,7 @@
         "sortOrder": "Ascending",
         "wrapLogMessage": false
       },
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -65,6 +71,10 @@
         "type": "loki",
         "uid": "P8E80F9AEF21F6940"
       },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
       "gridPos": {
         "h": 8,
         "w": 12,
@@ -74,6 +84,7 @@
       "id": 9,
       "options": {
         "dedupStrategy": "none",
+        "enableInfiniteScrolling": false,
         "enableLogDetails": true,
         "prettifyLogMessage": false,
         "showCommonLabels": false,
@@ -82,6 +93,7 @@
         "sortOrder": "Descending",
         "wrapLogMessage": false
       },
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -186,10 +198,12 @@
           "showLegend": false
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -287,10 +301,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -389,10 +405,12 @@
           "showLegend": false
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -498,10 +516,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -522,17 +542,6 @@
       ],
       "title": "First segment delay",
       "type": "timeseries"
-    },
-    {
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 25
-      },
-      "id": 2,
-      "title": "Orchestrators",
-      "type": "row"
     },
     {
       "datasource": {
@@ -599,9 +608,9 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 26
+        "y": 25
       },
-      "id": 1,
+      "id": 4,
       "options": {
         "legend": {
           "calcs": [],
@@ -610,25 +619,31 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "editorMode": "code",
-          "expr": "sum(livepeer_versions{job=\"orchestrator\"}) by (livepeerversion)",
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "sum by(pipeline, model_name) (increase(livepeer_ai_request_errors{error_code=~\"no orchestrators available.*\", pipeline=~\"live-.*\"}[1m]))",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
-          "refId": "A"
+          "refId": "A",
+          "useBackend": false
         }
       ],
-      "title": "Total Orchestrator Capacity by Version",
+      "title": "Missing Capacity Errors in 1m (no orchestrators available)",
       "type": "timeseries"
     },
     {
@@ -699,7 +714,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 26
+        "y": 25
       },
       "id": 6,
       "options": {
@@ -710,10 +725,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -721,8 +738,8 @@
             "uid": "PBFA97CFB590B2093"
           },
           "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "sum(increase(livepeer_ai_current_live_pipelines[$__rate_interval]))",
+          "editorMode": "code",
+          "expr": "sum(sum_over_time(livepeer_ai_current_live_pipelines{livepeer_node_type=\"prod-livepeer-ai-gateway\"}[30s]))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -732,8 +749,21 @@
           "useBackend": false
         }
       ],
-      "title": "In-Use Orchestrators",
+      "title": "Total Streams",
       "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 33
+      },
+      "id": 2,
+      "panels": [],
+      "title": "Orchestrators",
+      "type": "row"
     },
     {
       "datasource": {
@@ -802,7 +832,7 @@
         "x": 0,
         "y": 34
       },
-      "id": 4,
+      "id": 1,
       "options": {
         "legend": {
           "calcs": [],
@@ -811,10 +841,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -823,17 +855,215 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum by(pipeline, model_name) (increase(livepeer_ai_request_errors{error_code=~\"no orchestrators available.*\", pipeline=~\"live-.*\"}[1m]))",
+          "expr": "sum by(livepeerversion, group) (label_replace(livepeer_versions{job=\"orchestrator\"}, \"group\", \"$1\", \"group\", \".*/(tensordock_.*)\"))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "{{ group }} {{ livepeerversion }}",
           "range": true,
           "refId": "A",
           "useBackend": false
         }
       ],
-      "title": "Missing Capacity Errors in 1m (no orchestrators available)",
+      "title": "Total Orchestrator Capacity by Version",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 34
+      },
+      "id": 15,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "sum(sum_over_time(livepeer_ai_container_in_use{node_type=\"orch\"}[30s]))",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Runners In-Use",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "description": "This graph shows the percentage of successful load tests. Anything tests run with < 80% will trigger this alert.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed"
+            }
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "max": 100,
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 60
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 42
+      },
+      "id": 14,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "100 * (\n  sum (count_over_time({app=~\".*prod-ai-load-test.*\"} |= \"PASS: TestFeatures/Create_a_ComfyUI_Dreamshaper_Stream\" [1h]))\n) / (\n  sum (count_over_time({app=~\".*prod-ai-load-test.*\"} |= \"PASS: TestFeatures/Create_a_ComfyUI_Dreamshaper_Stream\" [1h])) +\n  (sum (count_over_time({app=~\".*prod-ai-load-test.*\"} |= \"FAIL: TestFeatures/Create_a_ComfyUI_Dreamshaper_Stream\" [1h])) or vector(0))\n)",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Load Test Success Rate",
       "type": "timeseries"
     },
     {
@@ -901,7 +1131,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 34
+        "y": 42
       },
       "id": 13,
       "options": {
@@ -912,10 +1142,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -932,9 +1164,110 @@
       ],
       "title": "CUDA/GPU Errors",
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed"
+            }
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "dark-red",
+                "value": 85
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 50
+      },
+      "id": 16,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "100 * (\n  sum (count_over_time({app=~\".*staging-ai-load-test.*\"} |= \"PASS: TestFeatures/Create_a_ComfyUI_Dreamshaper_Stream\" [1h]))\n) / (\n  sum (count_over_time({app=~\".*staging-ai-load-test.*\"} |= \"PASS: TestFeatures/Create_a_ComfyUI_Dreamshaper_Stream\" [1h])) +\n  sum (count_over_time({app=~\".*staging-ai-load-test.*\"} |= \"FAIL: TestFeatures/Create_a_ComfyUI_Dreamshaper_Stream\" [1h]))\n)\n",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "STAGING Load Test Success Rate",
+      "type": "timeseries"
     }
   ],
-  "schemaVersion": 39,
+  "preload": false,
+  "refresh": "1m",
+  "schemaVersion": 40,
   "tags": [
     "ai",
     "ai-gateway",
@@ -944,13 +1277,13 @@
     "list": []
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-3h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "utc",
   "title": "AI Overview (Livestream)",
   "uid": "be6llteqebk00b",
-  "version": 28,
+  "version": 56,
   "weekStart": ""
 }
