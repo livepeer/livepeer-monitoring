@@ -506,7 +506,7 @@
             "h": 8,
             "w": 13,
             "x": 0,
-            "y": 8
+            "y": 79
           },
           "id": 42,
           "options": {
@@ -597,7 +597,7 @@
             "h": 8,
             "w": 11,
             "x": 13,
-            "y": 8
+            "y": 79
           },
           "id": 43,
           "options": {
@@ -713,7 +713,7 @@
             "h": 7,
             "w": 13,
             "x": 0,
-            "y": 16
+            "y": 87
           },
           "id": 28,
           "maxPerRow": 2,
@@ -847,7 +847,7 @@
             "h": 7,
             "w": 11,
             "x": 13,
-            "y": 16
+            "y": 87
           },
           "id": 4,
           "options": {
@@ -905,7 +905,7 @@
             "h": 8,
             "w": 13,
             "x": 0,
-            "y": 23
+            "y": 94
           },
           "id": 36,
           "options": {
@@ -950,7 +950,7 @@
             "h": 8,
             "w": 11,
             "x": 13,
-            "y": 23
+            "y": 94
           },
           "id": 37,
           "options": {
@@ -1062,7 +1062,7 @@
             "h": 12,
             "w": 12,
             "x": 0,
-            "y": 193
+            "y": 264
           },
           "id": 5,
           "options": {
@@ -1167,7 +1167,7 @@
             "h": 12,
             "w": 12,
             "x": 12,
-            "y": 193
+            "y": 264
           },
           "id": 8,
           "options": {
@@ -1268,7 +1268,7 @@
             "h": 9,
             "w": 12,
             "x": 0,
-            "y": 321
+            "y": 392
           },
           "id": 24,
           "options": {
@@ -1367,7 +1367,7 @@
             "h": 9,
             "w": 12,
             "x": 12,
-            "y": 321
+            "y": 392
           },
           "id": 9,
           "options": {
@@ -1418,7 +1418,7 @@
       "type": "row"
     },
     {
-      "collapsed": true,
+      "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -1426,324 +1426,421 @@
         "y": 2
       },
       "id": 10,
-      "panels": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+      "panels": [],
+      "title": "GPU Monitoring - Inference",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "description": "This shows the number of GPUs online. i.e that are actively running and reporting power metrics\n\n",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
           },
-          "description": "This shows the number of GPUs online. i.e that are actively running and reporting power metrics\n\n",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "thresholds"
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  }
-                ]
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
               }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count(DCGM_FI_DEV_GPU_UTIL{gpu!=\"\"} > 0)"
             },
-            "overrides": [
+            "properties": [
               {
-                "matcher": {
-                  "id": "byName",
-                  "options": "count(DCGM_FI_DEV_GPU_UTIL{gpu!=\"\"} > 0)"
-                },
-                "properties": [
-                  {
-                    "id": "displayName",
-                    "value": "GPUs in Use"
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "count(DCGM_FI_DEV_POWER_USAGE{gpu!=\"\"}) "
-                },
-                "properties": [
-                  {
-                    "id": "displayName",
-                    "value": "Total GPUs Available"
-                  }
-                ]
+                "id": "displayName",
+                "value": "GPUs in Use"
               }
             ]
           },
-          "gridPos": {
-            "h": 7,
-            "w": 8,
-            "x": 0,
-            "y": 194
-          },
-          "id": 22,
-          "options": {
-            "colorMode": "value",
-            "graphMode": "none",
-            "justifyMode": "center",
-            "orientation": "vertical",
-            "percentChangeColorMode": "standard",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": false
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count(DCGM_FI_DEV_POWER_USAGE{gpu!=\"\"}) "
             },
-            "showPercentChange": false,
-            "textMode": "auto",
-            "wideLayout": true
-          },
-          "pluginVersion": "11.5.2",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "PBFA97CFB590B2093"
-              },
-              "editorMode": "code",
-              "expr": "sum(increase(livepeer_ai_current_live_pipelines[$__rate_interval]))",
-              "hide": false,
-              "instant": false,
-              "legendFormat": "GPUs in Use",
-              "range": true,
-              "refId": "A"
-            },
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "PBFA97CFB590B2093"
-              },
-              "editorMode": "code",
-              "expr": "count(DCGM_FI_DEV_POWER_USAGE{gpu!=\"\"}) ",
-              "hide": false,
-              "instant": false,
-              "legendFormat": "__auto",
-              "range": true,
-              "refId": "B"
-            }
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Total GPUs Available"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 5,
+        "x": 0,
+        "y": 3
+      },
+      "id": 22,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
           ],
-          "title": "GPUs",
-          "type": "stat"
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "sum(increase(livepeer_ai_current_live_pipelines[$__rate_interval]))",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "GPUs in Use",
+          "range": true,
+          "refId": "A"
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "description": "Monitoring VRAM usage helps ensure that tasks aren't running out of memory, which can cause significant performance degradation or crashes. It's important to know if the GPU's memory is sufficient for the tasks or if you need to scale up.",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "barWidthFactor": 0.6,
-                "drawStyle": "line",
-                "fillOpacity": 0,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "insertNulls": false,
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "line+area"
-                }
-              },
-              "mappings": [],
-              "max": 100,
-              "thresholds": {
-                "mode": "percentage",
-                "steps": [
-                  {
-                    "color": "light-blue"
-                  },
-                  {
-                    "color": "dark-green",
-                    "value": 10
-                  },
-                  {
-                    "color": "yellow",
-                    "value": 70
-                  },
-                  {
-                    "color": "dark-red",
-                    "value": 90
-                  }
-                ]
-              },
-              "unit": "percent"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 7,
-            "w": 16,
-            "x": 8,
-            "y": 194
-          },
-          "id": 20,
-          "options": {
-            "legend": {
-              "calcs": [
-                "mean"
-              ],
-              "displayMode": "table",
-              "placement": "right",
-              "showLegend": true
-            },
-            "tooltip": {
-              "hideZeros": false,
-              "mode": "single",
-              "sort": "none"
-            }
-          },
-          "pluginVersion": "11.5.2",
-          "targets": [
-            {
-              "editorMode": "code",
-              "expr": "avg((DCGM_FI_DEV_FB_USED / (DCGM_FI_DEV_FB_USED{Hostname=~\"${Hostname:regex}\"} + DCGM_FI_DEV_FB_FREE))* 100 ) by (Hostname, region)",
-              "legendFormat": "{{region}} - {{Hostname}}",
-              "range": true,
-              "refId": "A"
-            }
-          ],
-          "title": "GPU Memory Usage",
-          "type": "timeseries"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "description": "This is crucial to understand how effectively the GPU is being used. High utilization is good for performance but could indicate potential bottlenecks if consistently at 100%. Low utilization might suggest that the GPU is oversized for the task or there's an inefficiency in workload distribution.",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "barWidthFactor": 0.6,
-                "drawStyle": "line",
-                "fillOpacity": 0,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "insertNulls": false,
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "dashed+area"
-                }
-              },
-              "mappings": [],
-              "max": 100,
-              "thresholds": {
-                "mode": "percentage",
-                "steps": [
-                  {
-                    "color": "light-blue"
-                  },
-                  {
-                    "color": "dark-green",
-                    "value": 10
-                  },
-                  {
-                    "color": "yellow",
-                    "value": 70
-                  },
-                  {
-                    "color": "dark-red",
-                    "value": 90
-                  }
-                ]
-              },
-              "unit": "percent"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 10,
-            "w": 24,
-            "x": 0,
-            "y": 249
-          },
-          "id": 29,
-          "options": {
-            "legend": {
-              "calcs": [
-                "mean"
-              ],
-              "displayMode": "table",
-              "placement": "right",
-              "showLegend": true
-            },
-            "tooltip": {
-              "hideZeros": false,
-              "mode": "single",
-              "sort": "none"
-            }
-          },
-          "pluginVersion": "11.5.2",
-          "targets": [
-            {
-              "editorMode": "code",
-              "expr": "avg(DCGM_FI_DEV_GPU_UTIL{Hostname=~\"${Hostname:regex}\"}) by (Hostname, region)",
-              "legendFormat": "{{region}}{{Hostname}}",
-              "range": true,
-              "refId": "A"
-            }
-          ],
-          "title": "GPU Utilization",
-          "type": "timeseries"
+          "editorMode": "code",
+          "expr": "count(DCGM_FI_DEV_POWER_USAGE{gpu!=\"\"}) ",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "B"
         }
       ],
-      "title": "GPU Monitoring - Inference",
-      "type": "row"
+      "title": "GPUs",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "description": "This graph indicates the number of streams running per orchestrator.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 9,
+        "x": 5,
+        "y": 3
+      },
+      "id": 50,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.6.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "sort_desc(sum(livepeer_ai_container_in_use{}) by (node_id))",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Streams per Orchestrator",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "description": "Monitoring VRAM usage helps ensure that tasks aren't running out of memory, which can cause significant performance degradation or crashes. It's important to know if the GPU's memory is sufficient for the tasks or if you need to scale up.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "line+area"
+            }
+          },
+          "mappings": [],
+          "max": 100,
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "light-blue"
+              },
+              {
+                "color": "dark-green",
+                "value": 10
+              },
+              {
+                "color": "yellow",
+                "value": 70
+              },
+              {
+                "color": "dark-red",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 10,
+        "x": 14,
+        "y": 3
+      },
+      "id": 20,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.6.1",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "avg((DCGM_FI_DEV_FB_USED / (DCGM_FI_DEV_FB_USED{Hostname=~\"${Hostname:regex}\"} + DCGM_FI_DEV_FB_FREE))* 100 ) by (Hostname, region)",
+          "legendFormat": "{{region}} - {{Hostname}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "GPU Memory Usage",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "description": "This is crucial to understand how effectively the GPU is being used. High utilization is good for performance but could indicate potential bottlenecks if consistently at 100%. Low utilization might suggest that the GPU is oversized for the task or there's an inefficiency in workload distribution.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed+area"
+            }
+          },
+          "mappings": [],
+          "max": 100,
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "light-blue"
+              },
+              {
+                "color": "dark-green",
+                "value": 10
+              },
+              {
+                "color": "yellow",
+                "value": 70
+              },
+              {
+                "color": "dark-red",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 10
+      },
+      "id": 29,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.6.1",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "avg(DCGM_FI_DEV_GPU_UTIL{Hostname=~\"${Hostname:regex}\"}) by (Hostname, region)",
+          "legendFormat": "{{region}}{{Hostname}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "GPU Utilization",
+      "type": "timeseries"
     },
     {
       "collapsed": true,
@@ -1751,7 +1848,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 3
+        "y": 20
       },
       "id": 34,
       "panels": [
@@ -1790,7 +1887,7 @@
             "h": 9,
             "w": 4,
             "x": 0,
-            "y": 195
+            "y": 266
           },
           "id": 47,
           "options": {
@@ -1881,7 +1978,7 @@
             "h": 9,
             "w": 5,
             "x": 4,
-            "y": 195
+            "y": 266
           },
           "id": 41,
           "options": {
@@ -1981,7 +2078,7 @@
             "h": 9,
             "w": 6,
             "x": 9,
-            "y": 195
+            "y": 266
           },
           "id": 40,
           "options": {
@@ -2090,7 +2187,7 @@
             "h": 9,
             "w": 9,
             "x": 15,
-            "y": 195
+            "y": 266
           },
           "id": 31,
           "options": {
@@ -2175,7 +2272,7 @@
             "h": 7,
             "w": 24,
             "x": 0,
-            "y": 204
+            "y": 275
           },
           "id": 44,
           "options": {
@@ -2232,7 +2329,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 211
+            "y": 282
           },
           "id": 45,
           "options": {
@@ -2297,7 +2394,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 211
+            "y": 282
           },
           "id": 46,
           "options": {
@@ -2350,7 +2447,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 4
+        "y": 21
       },
       "id": 33,
       "panels": [
@@ -2428,7 +2525,7 @@
             "h": 9,
             "w": 12,
             "x": 0,
-            "y": 699
+            "y": 770
           },
           "id": 19,
           "options": {
@@ -2533,7 +2630,7 @@
             "h": 9,
             "w": 12,
             "x": 12,
-            "y": 699
+            "y": 770
           },
           "id": 18,
           "options": {
@@ -2660,7 +2757,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 708
+            "y": 779
           },
           "id": 30,
           "options": {
@@ -2757,7 +2854,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 708
+            "y": 779
           },
           "id": 16,
           "options": {
@@ -2840,7 +2937,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 716
+            "y": 787
           },
           "id": 26,
           "options": {
@@ -2909,7 +3006,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 716
+            "y": 787
           },
           "id": 25,
           "options": {
@@ -3005,7 +3102,7 @@
             "h": 10,
             "w": 12,
             "x": 0,
-            "y": 724
+            "y": 795
           },
           "id": 39,
           "options": {
@@ -3156,7 +3253,7 @@
             "h": 8,
             "w": 6,
             "x": 12,
-            "y": 724
+            "y": 795
           },
           "id": 1,
           "options": {
@@ -3250,7 +3347,7 @@
             "h": 16,
             "w": 24,
             "x": 0,
-            "y": 734
+            "y": 805
           },
           "id": 38,
           "options": {
@@ -3306,69 +3403,11 @@
       ],
       "title": "Additional Dashboards",
       "type": "row"
-    },
-    {
-      "collapsed": true,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 5
-      },
-      "id": 50,
-      "panels": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
-          "fieldConfig": {
-            "defaults": {},
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 6,
-            "w": 24,
-            "x": 0,
-            "y": 6
-          },
-          "id": 51,
-          "options": {
-            "dedupStrategy": "none",
-            "enableInfiniteScrolling": false,
-            "enableLogDetails": true,
-            "prettifyLogMessage": false,
-            "showCommonLabels": false,
-            "showLabels": false,
-            "showTime": false,
-            "sortOrder": "Descending",
-            "wrapLogMessage": false
-          },
-          "pluginVersion": "11.5.2",
-          "targets": [
-            {
-              "datasource": {
-                "type": "loki",
-                "uid": "P8E80F9AEF21F6940"
-              },
-              "direction": "backward",
-              "editorMode": "code",
-              "expr": "{container=~\"ai-gateway|live-video-to-video_comfyui_.*\"} |~ \"${stream_key}|${stream_id}\" != \"Sending input frame\" != \"message=frame_type=Video\" != \"message=Output image received\"",
-              "queryType": "range",
-              "refId": "A"
-            }
-          ],
-          "title": "Panel Title",
-          "type": "logs"
-        }
-      ],
-      "title": "Tracking Changes",
-      "type": "row"
     }
   ],
   "preload": true,
   "refresh": "",
-  "schemaVersion": 40,
+  "schemaVersion": 41,
   "tags": [],
   "templating": {
     "list": [
@@ -3459,6 +3498,5 @@
   "timezone": "utc",
   "title": "Ai Monitoring",
   "uid": "eec8ak1lxzshsd",
-  "version": 29,
-  "weekStart": ""
+  "version": 38
 }
