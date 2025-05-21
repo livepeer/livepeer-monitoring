@@ -33,7 +33,6 @@
       "url": "https://www.notion.so/livepeer/Broadcaster-Introspection-5b514726783b46fe854be4ce7c3d8317"
     }
   ],
-  "liveNow": false,
   "panels": [
     {
       "datasource": {
@@ -52,6 +51,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -82,8 +82,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -109,10 +108,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.6.1",
       "targets": [
         {
           "datasource": {
@@ -145,6 +146,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -175,8 +177,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -202,10 +203,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.6.1",
       "targets": [
         {
           "datasource": {
@@ -228,6 +231,10 @@
         "uid": "b7b558d2-ba70-4bd0-ba7f-71783c3b3d12"
       },
       "description": "",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
       "gridPos": {
         "h": 10,
         "w": 12,
@@ -243,6 +250,7 @@
       ],
       "options": {
         "dedupStrategy": "none",
+        "enableInfiniteScrolling": false,
         "enableLogDetails": true,
         "prettifyLogMessage": false,
         "showCommonLabels": false,
@@ -251,6 +259,7 @@
         "sortOrder": "Descending",
         "wrapLogMessage": true
       },
+      "pluginVersion": "11.6.1",
       "targets": [
         {
           "datasource": {
@@ -271,15 +280,20 @@
         "type": "loki",
         "uid": "P8E80F9AEF21F6940"
       },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 0,
-        "y": 18
+        "x": 12,
+        "y": 8
       },
       "id": 4,
       "options": {
         "dedupStrategy": "none",
+        "enableInfiniteScrolling": false,
         "enableLogDetails": true,
         "prettifyLogMessage": false,
         "showCommonLabels": false,
@@ -288,6 +302,7 @@
         "sortOrder": "Descending",
         "wrapLogMessage": true
       },
+      "pluginVersion": "11.6.1",
       "targets": [
         {
           "datasource": {
@@ -304,8 +319,9 @@
       "type": "logs"
     }
   ],
-  "refresh": "5s",
-  "schemaVersion": 39,
+  "preload": false,
+  "refresh": "1m",
+  "schemaVersion": 41,
   "tags": [],
   "templating": {
     "list": []
@@ -318,6 +334,5 @@
   "timezone": "",
   "title": "Broadcaster introspection logs",
   "uid": "fdb39c49-a23e-45ee-b1d2-431ba96b5e3a",
-  "version": 1,
-  "weekStart": ""
+  "version": 2
 }
