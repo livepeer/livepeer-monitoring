@@ -23,6 +23,7 @@
   "links": [],
   "panels": [
     {
+      "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -30,6 +31,7 @@
         "y": 0
       },
       "id": 3,
+      "panels": [],
       "title": "Deposit",
       "type": "row"
     },
@@ -49,7 +51,10 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMax": 15,
+            "axisSoftMin": 0,
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -80,20 +85,20 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "ETH"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 10,
         "w": 12,
         "x": 0,
         "y": 1
@@ -107,10 +112,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.6.1",
       "targets": [
         {
           "datasource": {
@@ -118,7 +125,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "avg(\n    livepeer_gateway_deposit{livepeer_live_app=\"prod-livepeer-broadcaster\"} # standalone broadcasters\n    or livepeer_gateway_deposit{job=\"broadcaster\"} # catalyst nodes\n) / 1e9 # metric in gwei",
+          "expr": "avg(\n    livepeer_gateway_deposit{livepeer_live_app=\"prod-livepeer-broadcaster\"} # standalone broadcasters\n    or livepeer_gateway_deposit{job=\"broadcaster\"} # catalyst nodes\n) / 1e9 # ETH (livepeer_gateway_deposit metric in gwei)",
           "instant": false,
           "interval": "",
           "legendFormat": "0xc3c7...e61E",
@@ -145,7 +152,10 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMax": 15,
+            "axisSoftMin": 0,
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -176,20 +186,20 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "ETH"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 10,
         "w": 12,
         "x": 12,
         "y": 1
@@ -203,10 +213,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.6.1",
       "targets": [
         {
           "datasource": {
@@ -214,7 +226,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "avg(livepeer_gateway_deposit{livepeer_live_app=\"prod-livepeer-ai-gateway\"}) / 1e9 # metric in gwei",
+          "expr": "avg(livepeer_gateway_deposit{livepeer_live_app=\"prod-livepeer-ai-gateway\"}) / 1e9 # ETH (metric in gwei)",
           "instant": false,
           "legendFormat": "0xca33...7fef",
           "range": true,
@@ -230,7 +242,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 9
+        "y": 11
       },
       "id": 4,
       "panels": [],
@@ -253,7 +265,10 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMax": 20,
+            "axisSoftMin": 0,
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -284,23 +299,23 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "ETH"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 10,
         "w": 12,
         "x": 0,
-        "y": 10
+        "y": 12
       },
       "id": 5,
       "options": {
@@ -311,10 +326,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.6.1",
       "targets": [
         {
           "datasource": {
@@ -322,7 +339,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "avg(\n    livepeer_gateway_reserve{livepeer_live_app=\"prod-livepeer-broadcaster\"} # standalone broadcasters\n    or livepeer_gateway_reserve{job=\"broadcaster\"} # catalyst nodes\n) / 1e9 # metric in gwei",
+          "expr": "avg(\n    livepeer_gateway_reserve{livepeer_live_app=\"prod-livepeer-broadcaster\"} # standalone broadcasters\n    or livepeer_gateway_reserve{job=\"broadcaster\"} # catalyst nodes\n) / 1e9 # ETH (metric in gwei)",
           "instant": false,
           "interval": "",
           "legendFormat": "0xc3c7...e61E",
@@ -349,7 +366,10 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMax": 20,
+            "axisSoftMin": 0,
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -380,23 +400,23 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "ETH"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 10,
         "w": 12,
         "x": 12,
-        "y": 10
+        "y": 12
       },
       "id": 6,
       "options": {
@@ -407,10 +427,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.6.1",
       "targets": [
         {
           "datasource": {
@@ -418,7 +440,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "avg(livepeer_gateway_reserve{livepeer_live_app=\"prod-livepeer-ai-gateway\"}) / 1e9 # metric in gwei",
+          "expr": "avg(livepeer_gateway_reserve{livepeer_live_app=\"prod-livepeer-ai-gateway\"}) / 1e9 # ETH (metric in gwei)",
           "instant": false,
           "legendFormat": "0xca33...7fef",
           "range": true,
@@ -429,7 +451,8 @@
       "type": "timeseries"
     }
   ],
-  "schemaVersion": 39,
+  "preload": false,
+  "schemaVersion": 41,
   "tags": [],
   "templating": {
     "list": []
@@ -442,6 +465,5 @@
   "timezone": "browser",
   "title": "Mainnet Wallet Funds",
   "uid": "bdtfa42c9a1ogd",
-  "version": 3,
-  "weekStart": ""
+  "version": 11
 }
