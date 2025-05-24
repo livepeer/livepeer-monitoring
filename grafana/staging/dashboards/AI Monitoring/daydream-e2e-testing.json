@@ -39,7 +39,7 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "barWidthFactor": 0.6,
-            "drawStyle": "line",
+            "drawStyle": "bars",
             "fillOpacity": 0,
             "gradientMode": "none",
             "hideFrom": {
@@ -103,19 +103,12 @@
       "pluginVersion": "11.6.1",
       "targets": [
         {
-          "editorMode": "code",
-          "expr": "sum by(test_name, environment) (count_over_time(e2e_test_success_total{}[5m]))",
-          "legendFormat": "Success ({{environment}}): {{test_name}}",
-          "range": true,
-          "refId": "success"
-        },
-        {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum by(test_name, environment) (count_over_time(e2e_test_failure_total{}[5m]))",
+          "expr": "sum by(test_name) (e2e_test_failure_total{environment=\"staging\"}[1m])",
           "hide": false,
           "instant": false,
           "legendFormat": "Failure ({{environment}}): {{test_name}}",
@@ -123,7 +116,7 @@
           "refId": "failure"
         }
       ],
-      "title": "E2E Success vs Failure counts",
+      "title": "Failure counts",
       "type": "timeseries"
     },
     {
@@ -311,7 +304,7 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "100 * sum((count_over_time(e2e_test_success_total{}[1h])) / sum(count_over_time(e2e_test_success_total{}[1h]) + sum(count_over_time(e2e_test_failure_total{}[1h]) or vector(0))) or vector(0))",
+          "expr": "100 * sum((count_over_time(e2e_test_success_total{environment=\"staging\"}[5m])) / sum(count_over_time(e2e_test_success_total{environment=\"staging\"}[5m]) + sum(count_over_time(e2e_test_failure_total{environment=\"staging\"}[5m]) or vector(0))) or vector(0))",
           "legendFormat": "Success ({{environment}}): {{test_name}}",
           "range": true,
           "refId": "success rate"
@@ -335,5 +328,5 @@
   "timezone": "utc",
   "title": "Daydream E2E Testing",
   "uid": "eek9x61543k00e",
-  "version": 2
+  "version": 10
 }
