@@ -20,9 +20,35 @@
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
   "id": null,
-  "links": [],
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": false,
+      "title": "Deposit ETH from Engineering Wallet into the Gateway/Broadcaster",
+      "tooltip": "",
+      "type": "link",
+      "url": "https://github.com/livepeer/livepeer-infra/actions/workflows/deposit-eth.yaml?query=event%3Aworkflow_dispatch"
+    },
+    {
+      "asDropdown": false,
+      "icon": "doc",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": true,
+      "title": "Engineering ETH wallets",
+      "tooltip": "",
+      "type": "link",
+      "url": "https://www.notion.so/livepeer/Engineering-ETH-wallets-2060a3485687806aae3ad074c167193f"
+    }
+  ],
   "panels": [
     {
+      "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -30,6 +56,7 @@
         "y": 0
       },
       "id": 3,
+      "panels": [],
       "title": "Deposit",
       "type": "row"
     },
@@ -49,7 +76,10 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMax": 15,
+            "axisSoftMin": 0,
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -80,25 +110,32 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "ETH"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 10,
         "w": 12,
         "x": 0,
         "y": 1
       },
       "id": 1,
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "Deposit ETH from Engineering Wallet into Video Broadcaster",
+          "url": "https://github.com/livepeer/livepeer-infra/actions/workflows/deposit-eth.yaml?query=event%3Aworkflow_dispatch"
+        }
+      ],
       "options": {
         "legend": {
           "calcs": [],
@@ -107,10 +144,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.6.1",
       "targets": [
         {
           "datasource": {
@@ -118,7 +157,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "avg(\n    livepeer_gateway_deposit{livepeer_live_app=\"prod-livepeer-broadcaster\"} # standalone broadcasters\n    or livepeer_gateway_deposit{job=\"broadcaster\"} # catalyst nodes\n) / 1e9 # metric in gwei",
+          "expr": "avg(\n    livepeer_gateway_deposit{livepeer_live_app=\"prod-livepeer-broadcaster\"} # standalone broadcasters\n    or livepeer_gateway_deposit{job=\"broadcaster\"} # catalyst nodes\n) / 1e9 # ETH (livepeer_gateway_deposit metric in gwei)",
           "instant": false,
           "interval": "",
           "legendFormat": "0xc3c7...e61E",
@@ -145,7 +184,10 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMax": 15,
+            "axisSoftMin": 0,
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -176,25 +218,37 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "ETH"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 10,
         "w": 12,
         "x": 12,
         "y": 1
       },
       "id": 2,
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "Deposit ETH from Engineering Wallet into AI Gateway",
+          "url": "https://github.com/livepeer/livepeer-infra/actions/workflows/deposit-eth.yaml?query=event%3Aworkflow_dispatch"
+        },
+        {
+          "targetBlank": true,
+          "title": "Withdraw AI fees and Deposit ETH (daily cron)",
+          "url": "https://github.com/livepeer/livepeer-infra/actions/workflows/withdraw-ai-fees-and-deposit-eth.yaml?query=event%3Aschedule"
+        }
+      ],
       "options": {
         "legend": {
           "calcs": [],
@@ -203,10 +257,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.6.1",
       "targets": [
         {
           "datasource": {
@@ -214,7 +270,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "avg(livepeer_gateway_deposit{livepeer_live_app=\"prod-livepeer-ai-gateway\"}) / 1e9 # metric in gwei",
+          "expr": "avg(livepeer_gateway_deposit{livepeer_live_app=\"prod-livepeer-ai-gateway\"}) / 1e9 # ETH (metric in gwei)",
           "instant": false,
           "legendFormat": "0xca33...7fef",
           "range": true,
@@ -230,7 +286,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 9
+        "y": 11
       },
       "id": 4,
       "panels": [],
@@ -253,7 +309,10 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMax": 20,
+            "axisSoftMin": 0,
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -284,23 +343,23 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "ETH"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 10,
         "w": 12,
         "x": 0,
-        "y": 10
+        "y": 12
       },
       "id": 5,
       "options": {
@@ -311,10 +370,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.6.1",
       "targets": [
         {
           "datasource": {
@@ -322,7 +383,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "avg(\n    livepeer_gateway_reserve{livepeer_live_app=\"prod-livepeer-broadcaster\"} # standalone broadcasters\n    or livepeer_gateway_reserve{job=\"broadcaster\"} # catalyst nodes\n) / 1e9 # metric in gwei",
+          "expr": "avg(\n    livepeer_gateway_reserve{livepeer_live_app=\"prod-livepeer-broadcaster\"} # standalone broadcasters\n    or livepeer_gateway_reserve{job=\"broadcaster\"} # catalyst nodes\n) / 1e9 # ETH (metric in gwei)",
           "instant": false,
           "interval": "",
           "legendFormat": "0xc3c7...e61E",
@@ -349,7 +410,10 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMax": 20,
+            "axisSoftMin": 0,
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -380,23 +444,23 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "ETH"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 10,
         "w": 12,
         "x": 12,
-        "y": 10
+        "y": 12
       },
       "id": 6,
       "options": {
@@ -407,10 +471,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.6.1",
       "targets": [
         {
           "datasource": {
@@ -418,7 +484,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "avg(livepeer_gateway_reserve{livepeer_live_app=\"prod-livepeer-ai-gateway\"}) / 1e9 # metric in gwei",
+          "expr": "avg(livepeer_gateway_reserve{livepeer_live_app=\"prod-livepeer-ai-gateway\"}) / 1e9 # ETH (metric in gwei)",
           "instant": false,
           "legendFormat": "0xca33...7fef",
           "range": true,
@@ -427,9 +493,115 @@
       ],
       "title": "AI Gateways Reserve",
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "description": "Delayed 5 minutes from the actual blockchain state",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "area"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red"
+              },
+              {
+                "color": "dark-green",
+                "value": 2
+              }
+            ]
+          },
+          "unit": "ETH"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 22
+      },
+      "id": 7,
+      "links": [
+        {
+          "title": "0xd51b5323ab38F936515bB14d13Cf81A8b517BE2d (Arbitrum)",
+          "url": "https://arbiscan.io/address/0xd51b5323ab38F936515bB14d13Cf81A8b517BE2d"
+        }
+      ],
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.6.1",
+      "targets": [
+        {
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "avg by(address, wallet) (last_over_time(livepeer_eth_wallet_balance_wei[$__interval])) / 1000000000000000000",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "legendFormat": "{{ wallet }} {{ address }}",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Engineering Wallet",
+      "type": "timeseries"
     }
   ],
-  "schemaVersion": 39,
+  "preload": false,
+  "schemaVersion": 41,
   "tags": [],
   "templating": {
     "list": []
@@ -442,6 +614,5 @@
   "timezone": "browser",
   "title": "Mainnet Wallet Funds",
   "uid": "bdtfa42c9a1ogd",
-  "version": 3,
-  "weekStart": ""
+  "version": 21
 }

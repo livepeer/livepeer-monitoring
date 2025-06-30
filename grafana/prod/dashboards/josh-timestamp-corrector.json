@@ -1,0 +1,829 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "datasource",
+        "uid": "-- Dashboard --"
+      },
+      "description": "All known valid corrections",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 0
+      },
+      "id": 6,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "count"
+          ],
+          "fields": "/^request_id$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "-- Dashboard --"
+          },
+          "panelId": 1,
+          "refId": "A",
+          "withTransforms": true
+        }
+      ],
+      "title": "Corrections",
+      "transformations": [
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": "true"
+                  }
+                },
+                "fieldName": "recognized_ua"
+              },
+              {
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": "true"
+                  }
+                },
+                "fieldName": "corrected"
+              },
+              {
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": "true"
+                  }
+                },
+                "fieldName": "estimated_broken"
+              }
+            ],
+            "match": "all",
+            "type": "include"
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "datasource",
+        "uid": "-- Dashboard --"
+      },
+      "description": "Should have applied TS correction but didn't",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "count"
+          ],
+          "fields": "/^request_id$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "-- Dashboard --"
+          },
+          "panelId": 1,
+          "refId": "A",
+          "withTransforms": true
+        }
+      ],
+      "title": "False Negatives",
+      "transformations": [
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": "false"
+                  }
+                },
+                "fieldName": "corrected"
+              },
+              {
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": "true"
+                  }
+                },
+                "fieldName": "estimated_broken"
+              }
+            ],
+            "match": "all",
+            "type": "include"
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "datasource",
+        "uid": "-- Dashboard --"
+      },
+      "description": "Should not have applied TS correction",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "count"
+          ],
+          "fields": "/^request_id$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "-- Dashboard --"
+          },
+          "panelId": 1,
+          "refId": "A",
+          "withTransforms": true
+        }
+      ],
+      "title": "False Positives",
+      "transformations": [
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": "true"
+                  }
+                },
+                "fieldName": "corrected"
+              },
+              {
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": "false"
+                  }
+                },
+                "fieldName": "estimated_broken"
+              }
+            ],
+            "match": "all",
+            "type": "include"
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "datasource",
+        "uid": "-- Dashboard --"
+      },
+      "description": "Heuristics triggered but TS correction not applied because device was not broken",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "count"
+          ],
+          "fields": "/^request_id$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "-- Dashboard --"
+          },
+          "panelId": 1,
+          "refId": "A",
+          "withTransforms": true
+        }
+      ],
+      "title": "Disasters Averted",
+      "transformations": [
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": "true"
+                  }
+                },
+                "fieldName": "detected"
+              },
+              {
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": "false"
+                  }
+                },
+                "fieldName": "corrected"
+              },
+              {
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": "false"
+                  }
+                },
+                "fieldName": "estimated_broken"
+              }
+            ],
+            "match": "all",
+            "type": "include"
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "datasource",
+        "uid": "-- Dashboard --"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "noValue": "Empty - All UAs Recognized",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 15,
+        "x": 0,
+        "y": 4
+      },
+      "id": 5,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "11.6.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "-- Dashboard --"
+          },
+          "panelId": 1,
+          "refId": "A",
+          "withTransforms": true
+        }
+      ],
+      "title": "Unrecognized User Agents",
+      "transformations": [
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "notEqual",
+                  "options": {
+                    "value": "true"
+                  }
+                },
+                "fieldName": "recognized_ua"
+              }
+            ],
+            "match": "any",
+            "type": "include"
+          }
+        },
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "pattern": "^ua$|request_id"
+            }
+          }
+        },
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "request_id": {
+                "aggregations": [
+                  "count"
+                ],
+                "operation": "aggregate"
+              },
+              "ua": {
+                "aggregations": [
+                  "count"
+                ],
+                "operation": "groupby"
+              }
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "first"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 83
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "detected"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 95
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 18,
+        "x": 0,
+        "y": 10
+      },
+      "id": 1,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "delta"
+          }
+        ]
+      },
+      "pluginVersion": "11.6.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "{container=\"ai-gateway\"} |= `user-agent` | regexp `user-agent=(?P<uaRaw>.*$)` | regexp `request_id=(?P<request_id>[a-z0-9]+)`\n\n| label_format ua=`\n    {{ if eq \"Mozilla/5.0 (iPhone; CPU iPhone OS 18_1_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.1.1 Mobile/15E148 Safari/604.1\" .uaRaw }} iPhone 18.1.1 Safari\n    {{ else if eq \"Mozilla/5.0 (iPhone; CPU iPhone OS 18_3_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3.1 Mobile/15E148 Safari/604.1\" .uaRaw }} iPhone 18.3.1 Safari\n    {{ else if eq \"Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1\" .uaRaw }} iPhone 18.5 Safari\n    {{ else if eq \"Mozilla/5.0 (iPhone; CPU iPhone OS 18_5_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/137.0.7151.107 Mobile/15E148 Safari/604.1\" .uaRaw }} iPhone 18.5 Chrome\n    {{ else if eq \"Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Brave/1 Mobile/15E148 Safari/604.1\" .uaRaw }} iPhone 18.5 Brave\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Safari/605.1.15\" .uaRaw }} Mac Safari 18.3\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.4 Safari/605.1.15\" .uaRaw }} Mac Safari 18.4\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15\" .uaRaw}} Mac Safari 18.5\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36 OPR/118.0.0.0\" .uaRaw }} Mac Opera 118\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36\" .uaRaw }} Mac Chrome 126\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36\" .uaRaw }} Mac Chrome 136\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36\" .uaRaw }} Mac Chrome 137\n    {{ else if eq \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36\" .uaRaw }} Win Chrome 137\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:137.0) Gecko/20100101 Firefox/137.0\" .uaRaw }} Mac Firefox 137\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:139.0) Gecko/20100101 Firefox/139.0\" .uaRaw }} Mac Firefox 139\n    {{ else if eq \"Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36\" .uaRaw }} Android Chrome 137\n    {{ else if eq \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36\" .uaRaw }} Linux Chrome 137\n    {{ else if eq \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/137.0.0.0 Safari/537.36\" .uaRaw }} Headless Chrome 137\n    {{ else if eq \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/138.0.0.0 Safari/537.36\" .uaRaw }} Headless Chrome 138\n    {{ else }} nonsense-string {{end}}`\n\n# strip leading whitespace\n| label_format ua=`{{ regexReplaceAll \"^\\\\s+\" .ua \"\" }}`\n\n# strip trailing whitespace\n| label_format ua=`{{ regexReplaceAll \"\\\\s+$\" .ua \"\" }}`\n\n# NB: Some Mac Safari 18.4 *might* actually be broken!\n# But this occurs during a minor update and it doesn't seem possible to distinguish between versions\n| label_format broken_ua=`{{if eq \"Mac Safari 18.5\" .ua}}true{{ else if contains \"iPhone 18.5\" .ua}}true{{else}}false{{end}}`\n\n| label_format recognized_ua=`{{if eq \"nonsense-string\" .ua }}false{{else}}true{{end}}`\n\n| label_format ua=`{{if eq \"nonsense-string\" .ua }}{{.uaRaw}}{{else}}{{.ua}}{{end}}`\n\n| line_format `request_id={{.request_id}} ua=\"{{.ua}}\" estimated_broken={{.broken_ua}} recognized_ua={{.recognized_ua}}`",
+          "hide": false,
+          "maxLines": 5000,
+          "queryType": "range",
+          "refId": "User Agents"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "direction": "backward",
+          "editorMode": "builder",
+          "expr": "{container=\"ai-gateway\"} |= `TSCorrector: All good` | logfmt --strict request_id, freq, first, delta, dt_ms | line_format `request_id={{.request_id}} detected=false corrected=false first={{.first}} delta={{.delta}} dt_ms={{.dt_ms}}`",
+          "hide": false,
+          "maxLines": 5000,
+          "queryType": "range",
+          "refId": "All good timings"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "direction": "backward",
+          "editorMode": "builder",
+          "expr": "{container=\"ai-gateway\"} |= `TSCorrector: Frequency too high` | logfmt --strict request_id, first, delta, dt_ms, skipping | label_format skipped=skipping | line_format `request_id={{.request_id}} detected=true corrected={{if eq \"true\" .skipped}}false{{else}}true{{end}} first={{.first}} delta={{.delta}} dt_ms={{.dt_ms}}`",
+          "hide": false,
+          "maxLines": 5000,
+          "queryType": "range",
+          "refId": "Skipped timings"
+        }
+      ],
+      "title": "Timestamp Corrections",
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "delimiter": ",",
+            "format": "kvp",
+            "replace": true,
+            "source": "Line"
+          }
+        },
+        {
+          "id": "joinByField",
+          "options": {
+            "byField": "request_id",
+            "mode": "outer"
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "detected",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "detected 1",
+                "detected 2"
+              ],
+              "reducer": "firstNotNull"
+            },
+            "replaceFields": false
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "first",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "first 1",
+                "first 2"
+              ],
+              "reducer": "firstNotNull"
+            }
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "delta",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "delta 1",
+                "delta 2"
+              ],
+              "reducer": "firstNotNull"
+            }
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "dt_ms",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "dt_ms 1",
+                "dt_ms 2"
+              ],
+              "reducer": "firstNotNull"
+            }
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "corrected",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "corrected 1",
+                "corrected 2"
+              ],
+              "reducer": "firstNotNull"
+            }
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "corrected 1": true,
+              "corrected 2": true,
+              "delta 1": true,
+              "delta 2": true,
+              "detected 1": true,
+              "detected 2": true,
+              "dt_ms 1": true,
+              "dt_ms 2": true,
+              "first 1": true,
+              "first 2": true
+            },
+            "includeByName": {},
+            "indexByName": {
+              "corrected 1": 8,
+              "corrected 2": 6,
+              "corrected 3": 13,
+              "delta 1": 10,
+              "delta 2": 4,
+              "delta 3": 15,
+              "detected 1": 7,
+              "detected 2": 2,
+              "detected 3": 12,
+              "dt_ms 1": 11,
+              "dt_ms 2": 5,
+              "dt_ms 3": 16,
+              "estimated_broken": 18,
+              "first 1": 9,
+              "first 2": 3,
+              "first 3": 14,
+              "recognized_ua": 17,
+              "request_id": 0,
+              "ua": 1
+            },
+            "renameByName": {
+              "corrected 3": "corrected",
+              "delta 3": "delta",
+              "detected 3": "detected",
+              "dt_ms 3": "dt_ms",
+              "first 3": "first"
+            }
+          }
+        },
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "isNull",
+                  "options": {}
+                },
+                "fieldName": "detected"
+              }
+            ],
+            "match": "all",
+            "type": "exclude"
+          }
+        }
+      ],
+      "type": "table"
+    }
+  ],
+  "preload": false,
+  "schemaVersion": 41,
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "utc",
+  "title": "Josh - Timestamp Corrector",
+  "uid": "cep5qbgj67jeoa",
+  "version": 50
+}
