@@ -111,6 +111,11 @@ function generate() {
         default: "",
         type: "string",
       },
+      "prometheus-disabled": {
+        describe: "Disable prometheus server during deployment",
+        default: false,
+        type: "boolean",
+      },
       "cadvisor-port": {
         describe: "[docker compose mode only] the port defined for cadvisor",
         default: 8080,
