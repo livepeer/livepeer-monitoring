@@ -9,7 +9,7 @@ function generate(params, defaults = "/etc/supervisor.d/supervisord.ini") {
     console.log("ini obj: ", obj);
 
     // prometheus args
-    if (params) {
+    if (params && !params["prometheus-disabled"]) {
         obj[
             "program:prometheus"
         ].command = `/usr/local/bin/prometheus --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=${
