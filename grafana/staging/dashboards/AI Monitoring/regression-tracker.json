@@ -23,6 +23,126 @@
   "panels": [
     {
       "datasource": {
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "description": "This checks the rate of log entries that contain messages on audio/video being out of sync.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "{container=\"live-video-to-video_comfyui_8910\", group=\"td_eu-staging/tensordock/tensordock_staging/tensordock_staging_primary\", logstream=\"stderr\", node_name=\"eu-staging-0\", region=\"td_eu-staging\"}"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.6.1",
+      "targets": [
+        {
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "rate({container=~\"live-video-to-video.*\"} |= `A/V is out of sync`[1m])",
+          "legendFormat": "",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "A/V is out of sync",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
         "type": "loki",
         "uid": "P8E80F9AEF21F6940"
       },
@@ -84,7 +204,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 0
+        "y": 8
       },
       "id": 1,
       "options": {
@@ -184,7 +304,7 @@
         "h": 7,
         "w": 8,
         "x": 0,
-        "y": 7
+        "y": 15
       },
       "id": 2,
       "options": {
@@ -281,7 +401,7 @@
         "h": 7,
         "w": 8,
         "x": 8,
-        "y": 7
+        "y": 15
       },
       "id": 3,
       "options": {
@@ -380,7 +500,7 @@
         "h": 7,
         "w": 8,
         "x": 16,
-        "y": 7
+        "y": 15
       },
       "id": 4,
       "options": {
@@ -478,7 +598,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 14
+        "y": 22
       },
       "id": 5,
       "options": {
@@ -630,7 +750,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 14
+        "y": 22
       },
       "id": 6,
       "options": {
@@ -743,7 +863,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 22
+        "y": 30
       },
       "id": 7,
       "options": {
@@ -794,5 +914,5 @@
   "timezone": "utc",
   "title": "Regression Tracker",
   "uid": "fekb6zt42n2tcf",
-  "version": 15
+  "version": 18
 }

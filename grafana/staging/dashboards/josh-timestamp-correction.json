@@ -1,0 +1,283 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "datasource",
+        "uid": "-- Dashboard --"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [
+            {
+              "options": {
+                "pattern": ".*iPhone OS 18_5 .* Version\\/18\\.5 Mobile/.*",
+                "result": {
+                  "color": "super-light-blue",
+                  "index": 0,
+                  "text": "iPhone 18.5 Safari"
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": ".*iPhone OS 18_5_0.* CriOS.*",
+                "result": {
+                  "color": "super-light-blue",
+                  "index": 1,
+                  "text": "iPhone 18.5 Chrome"
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": ".*Macintosh; .* Version\\/18\\.5 Safari.*",
+                "result": {
+                  "color": "super-light-blue",
+                  "index": 2,
+                  "text": "MacOS Safari 18.5"
+                }
+              },
+              "type": "regex"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "11.6.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "-- Dashboard --"
+          },
+          "panelId": 1,
+          "refId": "A",
+          "withTransforms": true
+        }
+      ],
+      "title": "Corrections By Platform + Browser",
+      "transformations": [
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "request_id": {
+                "aggregations": [
+                  "count"
+                ],
+                "operation": "aggregate"
+              },
+              "ua": {
+                "aggregations": [
+                  "count"
+                ],
+                "operation": "groupby"
+              }
+            }
+          }
+        }
+      ],
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 1,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "frameIndex": 1,
+        "showHeader": true
+      },
+      "pluginVersion": "11.6.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "direction": "backward",
+          "editorMode": "builder",
+          "expr": "{container=\"ai-gateway\"} |= `Frequency too high` |= `skipping=false` | logfmt request_id, first, delta, dt_ms | line_format `request_id={{.request_id}} first={{.first}} delta={{.delta}} dt_ms={{.dt_ms}}`",
+          "hide": false,
+          "queryType": "range",
+          "refId": "timings"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "direction": "backward",
+          "editorMode": "builder",
+          "expr": "{container=\"ai-gateway\"} |= `user-agent` | regexp `user-agent=(?P<ua>.*$)` | regexp `request_id=(?P<request_id>[a-z0-9]+)` | line_format `request_id={{.request_id}} ua=\"{{.ua}}\"`",
+          "hide": false,
+          "queryType": "range",
+          "refId": "user-agent"
+        }
+      ],
+      "title": "Corrected TS + User Agents",
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "delimiter": ",",
+            "keepTime": false,
+            "replace": true,
+            "source": "Line"
+          }
+        },
+        {
+          "id": "joinByField",
+          "options": {
+            "byField": "request_id",
+            "mode": "inner"
+          }
+        }
+      ],
+      "type": "table"
+    }
+  ],
+  "preload": false,
+  "schemaVersion": 41,
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "utc",
+  "title": "Josh - Timestamp Correction",
+  "uid": "ceow9v87t7xtsa",
+  "version": 4
+}

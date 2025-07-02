@@ -121,9 +121,9 @@
               "table": ""
             }
           },
-          "pluginVersion": "4.8.2",
+          "pluginVersion": "4.9.0",
           "queryType": "table",
-          "rawSql": "SELECT\n  `toStartOfMinute`(\n    `toTimeZone`(\n      `network_events`.`stream_ingest_metrics_view`.`event_timestamp_ts`,\n      'UTC'\n    )\n  ) AS `event_timestamp_ts`,\n  `network_events`.`stream_ingest_metrics_view`.`track_type` AS `track_type`,\n  `toFloat64`(\n    SUM(\n      `network_events`.`stream_ingest_metrics_view`.`interval_packets_lost`\n    )\n  ) / NULLIF(\n    `toFloat64`(\n      SUM(\n        `network_events`.`stream_ingest_metrics_view`.`interval_packets_lost`\n      )\n    ) + `toFloat64`(\n      SUM(\n        `network_events`.`stream_ingest_metrics_view`.`interval_bytes_received`\n      )\n    ),\n    0\n  ) AS `Packet Loss`\nFROM\n  `network_events`.`stream_ingest_metrics_view`\nWHERE\n  `network_events`.`stream_ingest_metrics_view`.`gateway` LIKE '%-staging-ai-staging-livepeer-ai-gateway-%.livepeer.monster%'\nGROUP BY\n  `toStartOfMinute`(\n    `toTimeZone`(\n      `network_events`.`stream_ingest_metrics_view`.`event_timestamp_ts`,\n      'UTC'\n    )\n  ),\n  `network_events`.`stream_ingest_metrics_view`.`track_type`\nORDER BY\n  `toStartOfMinute`(\n    `toTimeZone`(\n      `network_events`.`stream_ingest_metrics_view`.`event_timestamp_ts`,\n      'UTC'\n    )\n  ) ASC,\n  `network_events`.`stream_ingest_metrics_view`.`track_type` ASC",
+          "rawSql": "SELECT\n  `toStartOfMinute`(\n    `toTimeZone`(\n      `network_events`.`stream_ingest_metrics_view`.`event_timestamp_ts`,\n      'UTC'\n    )\n  ) AS `event_timestamp_ts`,\n  `network_events`.`stream_ingest_metrics_view`.`track_type` AS `track_type`,\n  `toFloat64`(\n    SUM(\n      `network_events`.`stream_ingest_metrics_view`.`interval_packets_lost`\n    )\n  ) / NULLIF(\n    `toFloat64`(\n      SUM(\n        `network_events`.`stream_ingest_metrics_view`.`interval_packets_lost`\n      )\n    ) + `toFloat64`(\n      SUM(\n        `network_events`.`stream_ingest_metrics_view`.`interval_bytes_received`\n      )\n    ),\n    0\n  ) AS `Packet Loss`\nFROM\n  `network_events`.`stream_ingest_metrics_view`\nWHERE\n\n  `network_events`.`stream_ingest_metrics_view`.`gateway` LIKE '%-staging-ai-staging-livepeer-ai-gateway-%.livepeer.monster%'\n  and $__timeFilter(event_timestamp_ts)\nGROUP BY\n  `toStartOfMinute`(\n    `toTimeZone`(\n      `network_events`.`stream_ingest_metrics_view`.`event_timestamp_ts`,\n      'UTC'\n    )\n  ),\n  `network_events`.`stream_ingest_metrics_view`.`track_type`\nORDER BY\n  `toStartOfMinute`(\n    `toTimeZone`(\n      `network_events`.`stream_ingest_metrics_view`.`event_timestamp_ts`,\n      'UTC'\n    )\n  ) ASC,\n  `network_events`.`stream_ingest_metrics_view`.`track_type` ASC",
           "refId": "A"
         }
       ],
@@ -343,6 +343,7 @@
         "type": "grafana-clickhouse-datasource",
         "uid": "cdrt9r9yntbswf"
       },
+      "description": "Displays the average jitter for streams in milliseconds (ms). The threshold is 30 ms—any value above this should be investigated",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -354,6 +355,7 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMin": -2,
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
@@ -378,7 +380,7 @@
               "mode": "none"
             },
             "thresholdsStyle": {
-              "mode": "off"
+              "mode": "line"
             }
           },
           "mappings": [],
@@ -390,10 +392,11 @@
               },
               {
                 "color": "red",
-                "value": 80
+                "value": 30
               }
             ]
-          }
+          },
+          "unit": "ms"
         },
         "overrides": []
       },
@@ -438,17 +441,17 @@
               "table": ""
             }
           },
-          "pluginVersion": "4.8.2",
+          "pluginVersion": "4.9.0",
           "queryType": "table",
           "rawSql": "SELECT\n  `network_events`.`stream_ingest_metrics_view`.`track_type` AS `track_type`,\n  `toStartOfMinute`(\n    `toTimeZone`(\n      `network_events`.`stream_ingest_metrics_view`.`event_timestamp_ts`,\n      'UTC'\n    )\n  ) AS `event_timestamp_ts`,\n  AVG(\n    `network_events`.`stream_ingest_metrics_view`.`jitter_ms`\n  ) AS `avg`\nFROM\n  `network_events`.`stream_ingest_metrics_view`\nWHERE `network_events`.`stream_ingest_metrics_view`.`gateway` LIKE '%-staging-ai-staging-livepeer-ai-gateway-%.livepeer.monster%'\nGROUP BY\n  `network_events`.`stream_ingest_metrics_view`.`track_type`,\n  `toStartOfMinute`(\n    `toTimeZone`(\n      `network_events`.`stream_ingest_metrics_view`.`event_timestamp_ts`,\n      'UTC'\n    )\n  )\nORDER BY\n  `network_events`.`stream_ingest_metrics_view`.`track_type` ASC,\n  `toStartOfMinute`(\n    `toTimeZone`(\n      `network_events`.`stream_ingest_metrics_view`.`event_timestamp_ts`,\n      'UTC'\n    )\n  ) ASC",
           "refId": "A"
         }
       ],
-      "title": "Ingest Jittter",
+      "title": "Average Ingest Jitter",
       "type": "timeseries"
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -456,759 +459,760 @@
         "y": 16
       },
       "id": 3,
-      "panels": [],
+      "panels": [
+        {
+          "datasource": {
+            "default": false,
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 24,
+            "x": 0,
+            "y": 17
+          },
+          "id": 8,
+          "options": {
+            "dedupStrategy": "none",
+            "enableInfiniteScrolling": false,
+            "enableLogDetails": true,
+            "prettifyLogMessage": false,
+            "showCommonLabels": false,
+            "showLabels": false,
+            "showTime": false,
+            "sortOrder": "Ascending",
+            "wrapLogMessage": false
+          },
+          "pluginVersion": "11.6.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "P8E80F9AEF21F6940"
+              },
+              "direction": "backward",
+              "editorMode": "code",
+              "expr": "{app=~\".*-livepeer-ai-gateway-.*\"} != \"Polling blocks\"",
+              "queryType": "range",
+              "refId": "A"
+            }
+          ],
+          "title": "All Gateway Logs",
+          "type": "logs"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 24,
+            "x": 0,
+            "y": 23
+          },
+          "id": 18,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.6.1",
+          "targets": [
+            {
+              "editorMode": "code",
+              "expr": "sum(sum_over_time(livepeer_ai_current_live_pipelines{livepeer_node_type=~\"staging-livepeer-ai-gateway|staging-livepeer-ai-gateway-.*\"}[30s]))",
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Total Streams",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "line"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 3
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 27
+          },
+          "id": 12,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.6.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "disableTextWrap": false,
+              "editorMode": "builder",
+              "expr": "(sum(increase(livepeer_ai_request_errors{pipeline=~\"live-.*\", livepeer_live_app=\"staging-livepeer-ai-gateway\"}[$__rate_interval])) * 100) / sum(increase(livepeer_ai_live_attempt{livepeer_live_app=\"staging-livepeer-ai-gateway\"}[$__rate_interval]))",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Error Rate",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "description": "Shows the number of occurrences of each unique ‘Live video pipeline’ error in the last 15 minutes, grouped by error type",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 27
+          },
+          "id": 16,
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.6.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "P8E80F9AEF21F6940"
+              },
+              "direction": "backward",
+              "editorMode": "code",
+              "expr": "sum by(errorr) (count_over_time({container=\"ai-gateway\", app=~\"staging-livepeer-ai-gateway-.*\"} |= `Live video pipeline finished with error` | pattern `<_>Live video pipeline finished with error: <errorr>` [15m]))",
+              "queryType": "range",
+              "refId": "A"
+            }
+          ],
+          "title": "Ai Video Pipeline Errors by Type",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "If O does not respond to a request from G within 45s, then G will not retry and flag this error.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 35
+          },
+          "id": 19,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.6.1",
+          "targets": [
+            {
+              "disableTextWrap": false,
+              "editorMode": "builder",
+              "expr": "sum by(pipeline, model_name, region) (increase(livepeer_ai_request_errors{error_code=~\"no orchestrators available.*\", pipeline=~\"live-.*\", livepeer_live_app=\"staging-livepeer-ai-gateway\"}[$__interval]))",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "No Orchestrators Available errors per Region",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 35
+          },
+          "id": 11,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.6.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "disableTextWrap": false,
+              "editorMode": "builder",
+              "expr": "sum by(normalized_error_code, model_name) (label_replace(label_replace(increase(livepeer_ai_request_errors{pipeline=~\"live-.*\", livepeer_live_app=\"staging-livepeer-ai-gateway\"}[1m]), \"normalized_error_code\", \"no orchestrators available\", \"error_code\", \"no orchestrators available.*\"), \"normalized_error_code\", \"$1\", \"error_code\", \"(.*)\"))",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "{{model_name}}: {{normalized_error_code}}",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Error Responses in 1m",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "ms"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 43
+          },
+          "id": 10,
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "go-livepeer code",
+              "url": "https://github.com/search?q=repo%3Alivepeer%2Fgo-livepeer%20AIFirstSegmentDelay&type=code"
+            }
+          ],
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.6.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "disableTextWrap": false,
+              "editorMode": "builder",
+              "expr": "avg by(orchestrator_uri) (increase(livepeer_ai_first_segment_delay_ms_sum{livepeer_live_app=\"staging-livepeer-ai-gateway\"}[1m]))",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "First segment delay",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 43
+          },
+          "id": 5,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.6.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "disableTextWrap": false,
+              "editorMode": "builder",
+              "expr": "sum(increase(livepeer_ai_live_attempt{livepeer_live_app=\"staging-livepeer-ai-gateway\"}[1m]))",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Stream Attempts in 1m",
+          "type": "timeseries"
+        }
+      ],
       "title": "Gateway",
       "type": "row"
-    },
-    {
-      "datasource": {
-        "default": false,
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 24,
-        "x": 0,
-        "y": 17
-      },
-      "id": 8,
-      "options": {
-        "dedupStrategy": "none",
-        "enableInfiniteScrolling": false,
-        "enableLogDetails": true,
-        "prettifyLogMessage": false,
-        "showCommonLabels": false,
-        "showLabels": false,
-        "showTime": false,
-        "sortOrder": "Ascending",
-        "wrapLogMessage": false
-      },
-      "pluginVersion": "11.6.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
-          "direction": "backward",
-          "editorMode": "code",
-          "expr": "{app=~\".*-livepeer-ai-gateway-.*\"} != \"Polling blocks\"",
-          "queryType": "range",
-          "refId": "A"
-        }
-      ],
-      "title": "All Gateway Logs",
-      "type": "logs"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 24,
-        "x": 0,
-        "y": 23
-      },
-      "id": 18,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.6.1",
-      "targets": [
-        {
-          "editorMode": "code",
-          "expr": "sum(sum_over_time(livepeer_ai_current_live_pipelines{livepeer_node_type=~\"staging-livepeer-ai-gateway|staging-livepeer-ai-gateway-.*\"}[30s]))",
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Total Streams",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "default": true,
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "line"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 3
-              }
-            ]
-          },
-          "unit": "percent"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 27
-      },
-      "id": 12,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.6.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "(sum(increase(livepeer_ai_request_errors{pipeline=~\"live-.*\", livepeer_live_app=\"staging-livepeer-ai-gateway\"}[$__rate_interval])) * 100) / sum(increase(livepeer_ai_live_attempt{livepeer_live_app=\"staging-livepeer-ai-gateway\"}[$__rate_interval]))",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "Error Rate",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
-      "description": "Shows the number of occurrences of each unique ‘Live video pipeline’ error in the last 15 minutes, grouped by error type",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 27
-      },
-      "id": 16,
-      "options": {
-        "legend": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.6.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
-          "direction": "backward",
-          "editorMode": "code",
-          "expr": "sum by(errorr) (count_over_time({container=\"ai-gateway\", app=~\"staging-livepeer-ai-gateway-.*\"} |= `Live video pipeline finished with error` | pattern `<_>Live video pipeline finished with error: <errorr>` [15m]))",
-          "queryType": "range",
-          "refId": "A"
-        }
-      ],
-      "title": "Ai Video Pipeline Errors by Type",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "description": "If O does not respond to a request from G within 45s, then G will not retry and flag this error.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 35
-      },
-      "id": 19,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.6.1",
-      "targets": [
-        {
-          "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "sum by(pipeline, model_name, region) (increase(livepeer_ai_request_errors{error_code=~\"no orchestrators available.*\", pipeline=~\"live-.*\", livepeer_live_app=\"staging-livepeer-ai-gateway\"}[$__interval]))",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "No Orchestrators Available errors per Region",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "default": true,
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 35
-      },
-      "id": 11,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.6.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "sum by(normalized_error_code, model_name) (label_replace(label_replace(increase(livepeer_ai_request_errors{pipeline=~\"live-.*\", livepeer_live_app=\"staging-livepeer-ai-gateway\"}[1m]), \"normalized_error_code\", \"no orchestrators available\", \"error_code\", \"no orchestrators available.*\"), \"normalized_error_code\", \"$1\", \"error_code\", \"(.*)\"))",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "{{model_name}}: {{normalized_error_code}}",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "Error Responses in 1m",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "default": true,
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "ms"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 43
-      },
-      "id": 10,
-      "links": [
-        {
-          "targetBlank": true,
-          "title": "go-livepeer code",
-          "url": "https://github.com/search?q=repo%3Alivepeer%2Fgo-livepeer%20AIFirstSegmentDelay&type=code"
-        }
-      ],
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.6.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "avg by(orchestrator_uri) (increase(livepeer_ai_first_segment_delay_ms_sum{livepeer_live_app=\"staging-livepeer-ai-gateway\"}[1m]))",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "First segment delay",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "default": true,
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 43
-      },
-      "id": 5,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.6.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "sum(increase(livepeer_ai_live_attempt{livepeer_live_app=\"staging-livepeer-ai-gateway\"}[1m]))",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "Stream Attempts in 1m",
-      "type": "timeseries"
     },
     {
       "collapsed": false,
@@ -1216,7 +1220,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 51
+        "y": 17
       },
       "id": 2,
       "panels": [],
@@ -1287,7 +1291,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 52
+        "y": 18
       },
       "id": 1,
       "options": {
@@ -1389,7 +1393,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 52
+        "y": 18
       },
       "id": 20,
       "options": {
@@ -1485,7 +1489,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 60
+        "y": 26
       },
       "id": 21,
       "options": {
@@ -1608,7 +1612,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 60
+        "y": 26
       },
       "id": 22,
       "options": {
@@ -1707,7 +1711,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 68
+        "y": 34
       },
       "id": 23,
       "options": {
@@ -1801,7 +1805,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 68
+        "y": 34
       },
       "id": 24,
       "options": {
@@ -1900,7 +1904,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 76
+        "y": 42
       },
       "id": 25,
       "options": {
@@ -1993,7 +1997,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 76
+        "y": 42
       },
       "id": 26,
       "options": {
@@ -2016,7 +2020,7 @@
         {
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sort_desc(sum by(node_id) (livepeer_ai_container_in_use{group=~\".*_staging_primary\"}))",
+          "expr": "sort_desc(sum by(node_name) (livepeer_ai_container_in_use{group=~\".*_staging_primary\"}))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "__auto",
@@ -2092,7 +2096,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 84
+        "y": 50
       },
       "id": 27,
       "options": {
@@ -2146,6 +2150,7 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMin": 0,
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
@@ -2196,7 +2201,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 84
+        "y": 50
       },
       "id": 6,
       "options": {
@@ -2223,7 +2228,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum by(region) (sum_over_time(livepeer_ai_current_live_pipelines{livepeer_node_type=~\"staging-livepeer-ai-gateway|staging-livepeer-ai-gateway-.*\"}[30s]))",
+          "expr": "sum by(region) (sum_over_time(livepeer_ai_current_live_pipelines{livepeer_node_type=~\"staging-livepeer-ai-gateway|staging-livepeer-ai-gateway-.*\"}[10s]))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -2300,7 +2305,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 92
+        "y": 58
       },
       "id": 4,
       "options": {
@@ -2405,7 +2410,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 92
+        "y": 58
       },
       "id": 13,
       "options": {
@@ -2512,7 +2517,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 100
+        "y": 66
       },
       "id": 14,
       "options": {
@@ -2616,7 +2621,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 100
+        "y": 66
       },
       "id": 15,
       "options": {
@@ -2639,7 +2644,7 @@
         {
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sort_desc(sum by(node_id) (livepeer_ai_container_in_use{group=~\".*staging_primary\"}))",
+          "expr": "sort_desc(sum by(node_name) (livepeer_ai_container_in_use{group=~\".*staging_primary\"}))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "__auto",
@@ -2649,6 +2654,300 @@
         }
       ],
       "title": "Streams per Orchestrator",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 40,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "binbps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 74
+      },
+      "id": 33,
+      "links": [
+        {
+          "title": "Network Traffic Basic on Node exporter",
+          "url": "/grafana/d/ID7wiRo7k/node-exporter-full?orgId=1&var-job=node_exporter&viewPanel=panel-74"
+        }
+      ],
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max",
+            "lastNotNull",
+            "min"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "sortBy": "Max",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.6.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "irate(node_network_receive_bytes_total{instance!~\".*secondary\", job=~\"node_exporter\", device=~\".*eth.*\", device!~\".*veth.*\"}[$__rate_interval]) * 8",
+          "format": "time_series",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "intervalFactor": 2,
+          "legendFormat": "recv {{device}} {{node_name}}",
+          "range": true,
+          "refId": "A",
+          "step": 240,
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "irate(node_network_transmit_bytes_total{instance!~\".*secondary\", job=~\"node_exporter\", device=~\".*eth.*\", device!~\".*veth.*\"}[$__rate_interval]) * 8",
+          "format": "time_series",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "intervalFactor": 2,
+          "legendFormat": "transmit {{device}}  {{node_name}}",
+          "range": true,
+          "refId": "B",
+          "step": 240,
+          "useBackend": false
+        }
+      ],
+      "title": "Network Traffic Basic",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Connections",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/.*MaxConn *./"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#890F02",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 74
+      },
+      "id": 34,
+      "links": [
+        {
+          "title": "TCP Connections on Node Exporter",
+          "url": "/grafana/d/ID7wiRo7k/node-exporter-full?orgId=1&var-job=node_exporter&viewPanel=85"
+        }
+      ],
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "lastNotNull",
+            "max",
+            "min"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "sortBy": "Max",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "11.6.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum by(node_name) (node_netstat_Tcp_CurrEstab{job=~\"node_exporter\", instance!~\".*secondary\"})",
+          "format": "time_series",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "intervalFactor": 2,
+          "legendFormat": "{{node_name}} CurrEstab - TCP connections for which the current state is either ESTABLISHED or CLOSE- WAIT",
+          "range": true,
+          "refId": "C",
+          "step": 4,
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum by(node_name) (node_netstat_Tcp_MaxConn{job=~\"node_exporter\", instance!=\".*secondary\"})",
+          "format": "time_series",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "intervalFactor": 2,
+          "legendFormat": "{{node_name}} MaxConn - Limit on the total number of TCP connections the entity can support (Dinamic is \"-1\")",
+          "range": true,
+          "refId": "H",
+          "step": 4,
+          "useBackend": false
+        }
+      ],
+      "title": "TCP Connections",
       "type": "timeseries"
     },
     {
@@ -2698,7 +2997,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 108
+        "y": 82
       },
       "id": 32,
       "options": {
@@ -2744,13 +3043,13 @@
               "table": ""
             }
           },
-          "pluginVersion": "4.8.2",
+          "pluginVersion": "4.9.0",
           "queryType": "table",
-          "rawSql": "SELECT\n  `network_events`.`stream_status`.`orchestrator_url` AS `orchestrator_url`,\n  `median`(`network_events`.`stream_status`.`output_fps`) AS `median`,\n  MAX(`network_events`.`stream_status`.`output_fps`) AS `max`\nFROM\n  `network_events`.`stream_status`\nWHERE\n  (\n    `network_events`.`stream_status`.`start_time_ts` >= `toStartOfDay`((`now64`(9, 'UTC') + INTERVAL -7 day))\n  )\n \n   AND (\n    `network_events`.`stream_status`.`start_time_ts` < `toStartOfDay`(`now64`(9, 'UTC'))\n  )\n  AND `network_events`.`stream_status`.`gateway` LIKE '%-staging-ai-staging-livepeer-ai-gateway-%.livepeer.monster%'\nGROUP BY\n  `network_events`.`stream_status`.`orchestrator_url`\nORDER BY\n  `median` DESC,\n  `network_events`.`stream_status`.`orchestrator_url` ASC",
+          "rawSql": "SELECT\n  `network_events`.`stream_status_view`.`orchestrator_url` AS `orchestrator_url`,\n  `median`(`network_events`.`stream_status_view`.`output_fps`) AS `median`,\n  MAX(`network_events`.`stream_status_view`.`output_fps`) AS `max`\nFROM\n  `network_events`.`stream_status_view`\nWHERE\n`network_events`.`stream_status_view`.`gateway` LIKE '%-staging-ai-staging-livepeer-ai-gateway-%.livepeer.monster%'\nand $__timeFilter(event_timestamp_ts)\nGROUP BY\n  `network_events`.`stream_status_view`.`orchestrator_url`\nORDER BY\n  `median` DESC,\n  `network_events`.`stream_status_view`.`orchestrator_url` ASC",
           "refId": "A"
         }
       ],
-      "title": "Median Output FPS by Orchestrator URL (last 7 days)",
+      "title": "Median Output FPS by Orchestrator URL",
       "type": "barchart"
     }
   ],
@@ -2773,5 +3072,5 @@
   "timezone": "utc",
   "title": "AI Overview (Livestream) - Primary staging",
   "uid": "be6llteqebk00b",
-  "version": 148
+  "version": 19
 }

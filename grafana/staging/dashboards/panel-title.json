@@ -1,0 +1,138 @@
+{
+  "datasource": {
+    "type": "loki",
+    "uid": "P8E80F9AEF21F6940"
+  },
+  "fieldConfig": {
+    "defaults": {},
+    "overrides": []
+  },
+  "gridPos": {
+    "h": 8,
+    "w": 12,
+    "x": 0,
+    "y": 0
+  },
+  "id": null,
+  "options": {
+    "dedupStrategy": "none",
+    "enableInfiniteScrolling": false,
+    "enableLogDetails": true,
+    "prettifyLogMessage": false,
+    "showCommonLabels": false,
+    "showLabels": false,
+    "showTime": false,
+    "sortOrder": "Ascending",
+    "wrapLogMessage": false
+  },
+  "pluginVersion": "11.6.1",
+  "targets": [
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "direction": "forward",
+      "editorMode": "builder",
+      "expr": "{container=\"ai-gateway\"} |= `ice connection state changed` | logfmt --strict request_id, state | line_format `request_id={{.request_id}} state={{.state}}`",
+      "maxLines": 5000,
+      "queryType": "range",
+      "refId": "A"
+    }
+  ],
+  "title": "Panel Title",
+  "transformations": [
+    {
+      "id": "extractFields",
+      "options": {
+        "delimiter": ",",
+        "format": "kvp",
+        "keepTime": true,
+        "replace": true,
+        "source": "Line"
+      }
+    },
+    {
+      "id": "sortBy",
+      "options": {
+        "fields": {},
+        "sort": [
+          {
+            "desc": false,
+            "field": "Time"
+          }
+        ]
+      }
+    },
+    {
+      "id": "groupBy",
+      "options": {
+        "fields": {
+          "Time": {
+            "aggregations": [],
+            "operation": "aggregate"
+          },
+          "request_id": {
+            "aggregations": [],
+            "operation": "groupby"
+          },
+          "state": {
+            "aggregations": [
+              "last",
+              "allValues"
+            ],
+            "operation": "aggregate"
+          }
+        }
+      }
+    },
+    {
+      "id": "filterByValue",
+      "options": {
+        "filters": [
+          {
+            "config": {
+              "id": "regex",
+              "options": {
+                "value": "disconnected"
+              }
+            },
+            "fieldName": "state (allValues)"
+          }
+        ],
+        "match": "all",
+        "type": "include"
+      }
+    },
+    {
+      "id": "filterByValue",
+      "options": {
+        "filters": [
+          {
+            "config": {
+              "id": "regex",
+              "options": {
+                "value": "disconnected,closed"
+              }
+            },
+            "fieldName": "state (allValues)"
+          },
+          {
+            "config": {
+              "id": "regex",
+              "options": {
+                "value": "disconnected,failed"
+              }
+            },
+            "fieldName": "state (allValues)"
+          }
+        ],
+        "match": "any",
+        "type": "exclude"
+      }
+    }
+  ],
+  "type": "logs",
+  "uid": "dep9sad846k8wa",
+  "version": 1
+}
