@@ -2670,7 +2670,7 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "barWidthFactor": 0.6,
-            "drawStyle": "line",
+            "drawStyle": "points",
             "fillOpacity": 0,
             "gradientMode": "none",
             "hideFrom": {
@@ -2742,7 +2742,7 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "sum by (host, region) (\n    count_over_time(\n        {container=\"ai-gateway\"} |= `slow orchestrator` | regexp `url=https?://(?P<host>[^/:]+)`\n    [1h])\n)",
+          "expr": "sum by (host, region) (\n    count_over_time(\n        {container=\"ai-gateway\"} |= `Orchestrator is slow` | regexp `url=https?://(?P<host>[^/:]+)`\n    [1h])\n)",
           "legendFormat": "{{region}} host={{host}}",
           "queryType": "range",
           "refId": "A"
@@ -3655,5 +3655,5 @@
   "timezone": "utc",
   "title": "AI Overview (Livestream)",
   "uid": "be6llteqebk00b",
-  "version": 86
+  "version": 88
 }
