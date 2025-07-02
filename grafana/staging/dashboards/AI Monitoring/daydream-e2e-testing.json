@@ -86,7 +86,7 @@
         "x": 0,
         "y": 0
       },
-      "id": 2,
+      "id": 3,
       "options": {
         "legend": {
           "calcs": [],
@@ -104,26 +104,210 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "sum by(test_name, environment) (count_over_time(e2e_test_success_total{}[5m]))",
+          "expr": "100 * sum((sum_over_time(e2e_test_success_total{environment=\"staging\"}[10m])) / sum(sum_over_time(e2e_test_success_total{environment=\"staging\"}[10m]) + sum(sum_over_time(e2e_test_failure_total{environment=\"staging\"}[10m]) or vector(0))))",
           "legendFormat": "Success ({{environment}}): {{test_name}}",
           "range": true,
-          "refId": "success"
+          "refId": "success rate"
+        }
+      ],
+      "title": "E2E Success Rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 47,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
         },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.6.1",
+      "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sum by(test_name, environment) (count_over_time(e2e_test_failure_total{}[5m]))",
+          "expr": "sum by(test_name) (sum_over_time(e2e_test_failure_total{environment=\"staging\"}[10m]))",
+          "fullMetaSearch": false,
           "hide": false,
+          "includeNullMetadata": true,
           "instant": false,
-          "legendFormat": "Failure ({{environment}}): {{test_name}}",
+          "legendFormat": "{{test_name}}",
           "range": true,
-          "refId": "failure"
+          "refId": "failure",
+          "useBackend": false
         }
       ],
-      "title": "E2E Success vs Failure counts",
+      "title": "Failure counts",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "description": "Pixel variance of a captured video frame center square (should be above threshold)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.6.1",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "sum by(video_type, test_name) (e2e_video_frame_variance{environment=\"staging\"})",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "E2E Frame Variance",
       "type": "timeseries"
     },
     {
@@ -191,7 +375,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 0
+        "y": 8
       },
       "id": 1,
       "options": {
@@ -233,6 +417,7 @@
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
+      "description": "Difference ratio between consecutive video frames",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -283,7 +468,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "percentunit"
         },
         "overrides": []
       },
@@ -291,13 +477,15 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 8
+        "y": 16
       },
-      "id": 3,
+      "id": 5,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
+          "calcs": [
+            "lastNotNull"
+          ],
+          "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
         },
@@ -311,13 +499,13 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "100 * sum((count_over_time(e2e_test_success_total{}[1h])) / sum(count_over_time(e2e_test_success_total{}[1h]) + sum(count_over_time(e2e_test_failure_total{}[1h]) or vector(0))) or vector(0))",
-          "legendFormat": "Success ({{environment}}): {{test_name}}",
+          "expr": "sum by(video_type, test_name) (e2e_video_frame_diff_ratio{environment=\"staging\"})",
+          "legendFormat": "__auto",
           "range": true,
-          "refId": "success rate"
+          "refId": "A"
         }
       ],
-      "title": "E2E Success Rate",
+      "title": "E2E Frame Diff Ratio",
       "type": "timeseries"
     }
   ],
@@ -335,5 +523,5 @@
   "timezone": "utc",
   "title": "Daydream E2E Testing",
   "uid": "eek9x61543k00e",
-  "version": 2
+  "version": 17
 }

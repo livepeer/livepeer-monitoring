@@ -2019,7 +2019,7 @@
         {
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sort_desc(sum by(node_id) (livepeer_ai_container_in_use{group=~\".*_staging_secondary\"}))",
+          "expr": "sort_desc(sum by(node_name) (livepeer_ai_container_in_use{group=~\".*_staging_secondary\"}))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "__auto",
@@ -2149,6 +2149,7 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMin": 0,
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
@@ -2226,7 +2227,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sum by(region) (sum_over_time(livepeer_ai_current_live_pipelines{livepeer_node_type=~\"staging-livepeer-ai-gateway2|staging-livepeer-ai-gateway2-.*\"}[30s]))",
+          "expr": "sum by(region) (sum_over_time(livepeer_ai_current_live_pipelines{livepeer_node_type=~\"staging-livepeer-ai-gateway2|staging-livepeer-ai-gateway2-.*\"}[10s]))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -2642,7 +2643,7 @@
         {
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sort_desc(sum by(node_id) (livepeer_ai_container_in_use{group=~\".*staging_secondary\"}))",
+          "expr": "sort_desc(sum by(node_name) (livepeer_ai_container_in_use{group=~\".*staging_secondary\"}))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "__auto",
@@ -2652,6 +2653,296 @@
         }
       ],
       "title": "Streams per Orchestrator",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 40,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "binbps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 108
+      },
+      "id": 33,
+      "links": [
+        {
+          "title": "Node exporter",
+          "url": "/grafana/d/ID7wiRo7k/node-exporter-full?orgId=1&var-job=node_exporter"
+        }
+      ],
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max",
+            "lastNotNull",
+            "min"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.6.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "irate(node_network_receive_bytes_total{instance=~\".*secondary\", job=~\"node_exporter\", device=~\".*eth.*\", device!~\".*veth.*\"}[$__rate_interval]) * 8",
+          "format": "time_series",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "intervalFactor": 2,
+          "legendFormat": "recv {{device}} {{node_name}}",
+          "range": true,
+          "refId": "A",
+          "step": 240,
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "irate(node_network_transmit_bytes_total{instance=~\".*secondary\", job=~\"node_exporter\", device=~\".*eth.*\", device!~\".*veth.*\"}[$__rate_interval]) * 8",
+          "format": "time_series",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "intervalFactor": 2,
+          "legendFormat": "transmit {{device}}  {{node_name}}",
+          "range": true,
+          "refId": "B",
+          "step": 240,
+          "useBackend": false
+        }
+      ],
+      "title": "Network Traffic",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Connections",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/.*MaxConn *./"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#890F02",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 108
+      },
+      "id": 38,
+      "links": [
+        {
+          "title": "TCP Connections on Node Exporter",
+          "url": "/grafana/d/ID7wiRo7k/node-exporter-full?orgId=1&var-job=node_exporter&viewPanel=85"
+        }
+      ],
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "lastNotNull",
+            "max",
+            "min"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "11.6.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum by(node_name) (node_netstat_Tcp_CurrEstab{job=~\"node_exporter\", instance=~\".*secondary\"})",
+          "format": "time_series",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "intervalFactor": 2,
+          "legendFormat": "{{node_name}} CurrEstab - TCP connections for which the current state is either ESTABLISHED or CLOSE- WAIT",
+          "range": true,
+          "refId": "C",
+          "step": 4,
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum by(node_name) (node_netstat_Tcp_MaxConn{job=~\"node_exporter\", instance=~\".*secondary\"})",
+          "format": "time_series",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "intervalFactor": 2,
+          "legendFormat": "{{node_name}} MaxConn - Limit on the total number of TCP connections the entity can support (Dinamic is \"-1\")",
+          "range": true,
+          "refId": "H",
+          "step": 4,
+          "useBackend": false
+        }
+      ],
+      "title": "TCP Connections",
       "type": "timeseries"
     },
     {
@@ -2701,7 +2992,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 108
+        "y": 116
       },
       "id": 32,
       "options": {
@@ -2747,13 +3038,13 @@
               "table": ""
             }
           },
-          "pluginVersion": "4.8.2",
+          "pluginVersion": "4.9.0",
           "queryType": "table",
-          "rawSql": "SELECT\n  `network_events`.`stream_status`.`orchestrator_url` AS `orchestrator_url`,\n  `median`(`network_events`.`stream_status`.`output_fps`) AS `median`,\n  MAX(`network_events`.`stream_status`.`output_fps`) AS `max`\nFROM\n  `network_events`.`stream_status`\nWHERE\n  (\n    `network_events`.`stream_status`.`start_time_ts` >= `toStartOfDay`((`now64`(9, 'UTC') + INTERVAL -7 day))\n  )\n \n   AND (\n    `network_events`.`stream_status`.`start_time_ts` < `toStartOfDay`(`now64`(9, 'UTC'))\n  )\n  AND `network_events`.`stream_status`.`gateway` LIKE '%-staging-ai2-staging-livepeer-ai-gateway2-%.livepeer.monster%'\n\nGROUP BY\n  `network_events`.`stream_status`.`orchestrator_url`\nORDER BY\n  `median` DESC,\n  `network_events`.`stream_status`.`orchestrator_url` ASC",
+          "rawSql": "SELECT\n  `network_events`.`stream_status`.`orchestrator_url` AS `orchestrator_url`,\n  `median`(`network_events`.`stream_status`.`output_fps`) AS `median`,\n  MAX(`network_events`.`stream_status`.`output_fps`) AS `max`\nFROM\n  `network_events`.`stream_status`\nWHERE\n  `network_events`.`stream_status`.`gateway` LIKE '%-staging-ai2-staging-livepeer-ai-gateway2-%.livepeer.monster%'\n  AND $__timeFilter(timestamp_ts)\nGROUP BY\n  `network_events`.`stream_status`.`orchestrator_url`\nORDER BY\n  `median` DESC,\n  `network_events`.`stream_status`.`orchestrator_url` ASC",
           "refId": "A"
         }
       ],
-      "title": "Median Output FPS by Orchestrator URL (last 7 days)",
+      "title": "Median Output FPS by Orchestrator URL",
       "type": "barchart"
     }
   ],
@@ -2772,5 +3063,5 @@
   "timezone": "utc",
   "title": "AI Overview (Livestream) - Secondary staging",
   "uid": "celyvzq5w9728e",
-  "version": 24
+  "version": 37
 }
