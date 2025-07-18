@@ -38,7 +38,7 @@ jobs:
 
       - name: Commit and push changes
         id: branch-commit
-        uses: devops-infra/action-commit-push@v0.10.0
+        uses: devops-infra/action-commit-push@v0.11.0
         with:
           github_token: ${{ secrets.PUSH_TOKEN }}
           target_branch: backup/grafana-${{ matrix.grafana.env }}
