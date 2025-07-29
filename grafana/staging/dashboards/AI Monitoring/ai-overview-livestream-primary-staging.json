@@ -102,7 +102,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -211,7 +211,7 @@
         "xTickLabelRotation": 0,
         "xTickLabelSpacing": 0
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -320,7 +320,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -422,7 +422,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -1307,7 +1307,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -1409,12 +1409,12 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sum(livepeer_ai_container_idle{group=~\".*staging_primary\"})",
+          "expr": "sum by (model_name) (max by(orchestrator_uri, model_name) (livepeer_ai_container_idle{orchestrator_uri!=\"\", livepeer_node_type=\"staging-livepeer-ai-gateway\"}[30s]))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "__auto",
@@ -1505,7 +1505,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -1630,7 +1630,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -1729,12 +1729,12 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sum by(region) (sum_over_time(livepeer_ai_container_idle{node_type=\"orch\", group=~\".*staging_primary\"}[30s]))",
+          "expr": "sum by (model_name) (max by(orchestrator_uri, model_name) (livepeer_ai_container_idle{orchestrator_uri!=\"\"}[30s]))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "__auto",
@@ -1743,7 +1743,7 @@
           "useBackend": false
         }
       ],
-      "title": "Idle Runners per Region",
+      "title": "Idle Runners per Model",
       "type": "timeseries"
     },
     {
@@ -1751,6 +1751,7 @@
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
+      "description": "This dashboard monitors the number of streams per orchestrator.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1765,7 +1766,7 @@
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "fillOpacity": 50,
+            "fillOpacity": 0,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -1807,11 +1808,11 @@
         "x": 12,
         "y": 34
       },
-      "id": 24,
+      "id": 26,
       "options": {
         "legend": {
           "calcs": [
-            "lastNotNull"
+            "last"
           ],
           "displayMode": "table",
           "placement": "right",
@@ -1823,12 +1824,12 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sum by(region) (sum_over_time(livepeer_ai_container_in_use{node_type=\"orch\", group=~\".*staging_primary\"}[30s]))",
+          "expr": "sort_desc(sum by(node_name) (livepeer_ai_container_in_use{group=~\".*_staging_primary\"}))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "__auto",
@@ -1837,7 +1838,7 @@
           "useBackend": false
         }
       ],
-      "title": "In-Use Runners per Region",
+      "title": "Streams per Orchestrator",
       "type": "timeseries"
     },
     {
@@ -1920,7 +1921,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "disableTextWrap": false,
@@ -1939,10 +1940,11 @@
     },
     {
       "datasource": {
+        "default": true,
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
-      "description": "This dashboard monitors the number of streams per orchestrator.",
+      "description": "Measured in Gateways",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1954,6 +1956,7 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMin": 0,
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
@@ -1966,13 +1969,16 @@
             },
             "insertNulls": false,
             "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
             },
             "showPoints": "auto",
-            "spanNulls": false,
+            "spanNulls": 3600000,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -1981,15 +1987,22 @@
               "mode": "off"
             }
           },
+          "fieldMinMax": false,
           "mappings": [],
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
               }
             ]
-          }
+          },
+          "unit": "none"
         },
         "overrides": []
       },
@@ -1999,14 +2012,14 @@
         "x": 12,
         "y": 42
       },
-      "id": 26,
+      "id": 6,
       "options": {
         "legend": {
           "calcs": [
-            "last"
+            "lastNotNull"
           ],
           "displayMode": "table",
-          "placement": "right",
+          "placement": "bottom",
           "showLegend": true
         },
         "tooltip": {
@@ -2015,21 +2028,26 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sort_desc(sum by(node_name) (livepeer_ai_container_in_use{group=~\".*_staging_primary\"}))",
+          "expr": "sum by(region, pipeline) (sum_over_time(livepeer_ai_current_live_pipelines{livepeer_node_type=~\"staging-livepeer-ai-gateway|staging-livepeer-ai-gateway-.*\"}[10s]))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
+          "instant": false,
           "legendFormat": "__auto",
           "range": true,
           "refId": "A",
           "useBackend": false
         }
       ],
-      "title": "Streams per Orchestrator",
+      "title": "Total Streams",
       "type": "timeseries"
     },
     {
@@ -2114,7 +2132,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -2138,7 +2156,6 @@
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
-      "description": "Measured in Gateways",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -2150,7 +2167,6 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
-            "axisSoftMin": 0,
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
@@ -2203,7 +2219,7 @@
         "x": 12,
         "y": 50
       },
-      "id": 6,
+      "id": 13,
       "options": {
         "legend": {
           "calcs": [
@@ -2219,7 +2235,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -2228,7 +2244,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum by(region) (sum_over_time(livepeer_ai_current_live_pipelines{livepeer_node_type=~\"staging-livepeer-ai-gateway|staging-livepeer-ai-gateway-.*\"}[10s]))",
+          "expr": "sum by(region) (sum_over_time(livepeer_ai_container_in_use{job=\"orchestrator\", group=~\".*staging_primary\"}[30s]))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -2238,7 +2254,7 @@
           "useBackend": false
         }
       ],
-      "title": "Total Streams",
+      "title": "Orchestrators In-Use",
       "type": "timeseries"
     },
     {
@@ -2321,7 +2337,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -2345,10 +2361,10 @@
     },
     {
       "datasource": {
-        "default": true,
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
+      "description": "This dashboard monitors the number of streams per orchestrator.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -2387,9 +2403,7 @@
               "mode": "off"
             }
           },
-          "fieldMinMax": false,
           "mappings": [],
-          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -2401,8 +2415,7 @@
                 "value": 80
               }
             ]
-          },
-          "unit": "none"
+          }
         },
         "overrides": []
       },
@@ -2412,11 +2425,11 @@
         "x": 12,
         "y": 58
       },
-      "id": 13,
+      "id": 15,
       "options": {
         "legend": {
           "calcs": [
-            "lastNotNull"
+            "last"
           ],
           "displayMode": "table",
           "placement": "right",
@@ -2428,26 +2441,21 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
           "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "sum by(region) (sum_over_time(livepeer_ai_container_in_use{job=\"orchestrator\", group=~\".*staging_primary\"}[30s]))",
+          "editorMode": "code",
+          "expr": "sort_desc(sum by(node_name) (livepeer_ai_container_in_use{group=~\".*staging_primary\"}))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
-          "instant": false,
           "legendFormat": "__auto",
           "range": true,
           "refId": "A",
           "useBackend": false
         }
       ],
-      "title": "Orchestrators In-Use",
+      "title": "Streams per Orchestrator",
       "type": "timeseries"
     },
     {
@@ -2535,7 +2543,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -2562,7 +2570,6 @@
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
-      "description": "This dashboard monitors the number of streams per orchestrator.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -2572,12 +2579,12 @@
             "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
-            "axisLabel": "",
+            "axisLabel": "Connections",
             "axisPlacement": "auto",
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 20,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -2591,7 +2598,7 @@
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "auto",
+            "showPoints": "never",
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -2602,6 +2609,7 @@
             }
           },
           "mappings": [],
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -2613,9 +2621,30 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "short"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/.*MaxConn *./"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#890F02",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -2623,37 +2652,75 @@
         "x": 12,
         "y": 66
       },
-      "id": 15,
+      "id": 34,
+      "links": [
+        {
+          "title": "TCP Connections on Node Exporter",
+          "url": "/grafana/d/ID7wiRo7k/node-exporter-full?orgId=1&var-job=node_exporter&viewPanel=85"
+        }
+      ],
       "options": {
         "legend": {
           "calcs": [
-            "last"
+            "mean",
+            "lastNotNull",
+            "max",
+            "min"
           ],
           "displayMode": "table",
-          "placement": "right",
-          "showLegend": true
+          "placement": "bottom",
+          "showLegend": true,
+          "sortBy": "Max",
+          "sortDesc": true
         },
         "tooltip": {
           "hideZeros": false,
           "mode": "single",
-          "sort": "none"
+          "sort": "desc"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sort_desc(sum by(node_name) (livepeer_ai_container_in_use{group=~\".*staging_primary\"}))",
+          "expr": "sum by(node_name) (node_netstat_Tcp_CurrEstab{job=~\"node_exporter\", instance!~\".*secondary\"})",
+          "format": "time_series",
           "fullMetaSearch": false,
+          "hide": false,
           "includeNullMetadata": true,
-          "legendFormat": "__auto",
+          "intervalFactor": 2,
+          "legendFormat": "{{node_name}} CurrEstab - TCP connections for which the current state is either ESTABLISHED or CLOSE- WAIT",
           "range": true,
-          "refId": "A",
+          "refId": "C",
+          "step": 4,
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum by(node_name) (node_netstat_Tcp_MaxConn{job=~\"node_exporter\", instance!=\".*secondary\"})",
+          "format": "time_series",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "intervalFactor": 2,
+          "legendFormat": "{{node_name}} MaxConn - Limit on the total number of TCP connections the entity can support (Dinamic is \"-1\")",
+          "range": true,
+          "refId": "H",
+          "step": 4,
           "useBackend": false
         }
       ],
-      "title": "Streams per Orchestrator",
+      "title": "TCP Connections",
       "type": "timeseries"
     },
     {
@@ -2750,7 +2817,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -2790,164 +2857,6 @@
         }
       ],
       "title": "Network Traffic Basic",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "Connections",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 20,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byRegexp",
-              "options": "/.*MaxConn *./"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "#890F02",
-                  "mode": "fixed"
-                }
-              },
-              {
-                "id": "custom.fillOpacity",
-                "value": 0
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 74
-      },
-      "id": 34,
-      "links": [
-        {
-          "title": "TCP Connections on Node Exporter",
-          "url": "/grafana/d/ID7wiRo7k/node-exporter-full?orgId=1&var-job=node_exporter&viewPanel=85"
-        }
-      ],
-      "options": {
-        "legend": {
-          "calcs": [
-            "mean",
-            "lastNotNull",
-            "max",
-            "min"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true,
-          "sortBy": "Max",
-          "sortDesc": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "desc"
-        }
-      },
-      "pluginVersion": "11.6.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "sum by(node_name) (node_netstat_Tcp_CurrEstab{job=~\"node_exporter\", instance!~\".*secondary\"})",
-          "format": "time_series",
-          "fullMetaSearch": false,
-          "hide": false,
-          "includeNullMetadata": true,
-          "intervalFactor": 2,
-          "legendFormat": "{{node_name}} CurrEstab - TCP connections for which the current state is either ESTABLISHED or CLOSE- WAIT",
-          "range": true,
-          "refId": "C",
-          "step": 4,
-          "useBackend": false
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "sum by(node_name) (node_netstat_Tcp_MaxConn{job=~\"node_exporter\", instance!=\".*secondary\"})",
-          "format": "time_series",
-          "fullMetaSearch": false,
-          "hide": false,
-          "includeNullMetadata": true,
-          "intervalFactor": 2,
-          "legendFormat": "{{node_name}} MaxConn - Limit on the total number of TCP connections the entity can support (Dinamic is \"-1\")",
-          "range": true,
-          "refId": "H",
-          "step": 4,
-          "useBackend": false
-        }
-      ],
-      "title": "TCP Connections",
       "type": "timeseries"
     },
     {
@@ -3024,7 +2933,7 @@
         "xTickLabelRotation": -45,
         "xTickLabelSpacing": 0
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -3072,5 +2981,5 @@
   "timezone": "utc",
   "title": "AI Overview (Livestream) - Primary staging",
   "uid": "be6llteqebk00b",
-  "version": 19
+  "version": 26
 }
