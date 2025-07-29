@@ -29,218 +29,6 @@
         "x": 0,
         "y": 0
       },
-      "id": 34,
-      "panels": [],
-      "title": "Wallet Funds",
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "axisSoftMax": 12,
-            "axisSoftMin": 0,
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "ETH"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 1
-      },
-      "id": 36,
-      "options": {
-        "legend": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.6.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "editorMode": "code",
-          "expr": "avg(livepeer_gateway_reserve{livepeer_live_app=\"prod-livepeer-ai-gateway\"}) / 1e9 # ETH (metric in gwei)",
-          "instant": false,
-          "legendFormat": "0xca33...7fef",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "AI Gateways Reserve",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "axisSoftMax": 15,
-            "axisSoftMin": 0,
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "ETH"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 1
-      },
-      "id": 35,
-      "options": {
-        "legend": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.6.1",
-      "targets": [
-        {
-          "editorMode": "code",
-          "expr": "avg(livepeer_gateway_deposit{livepeer_live_app=\"prod-livepeer-ai-gateway\"}) / 1e9 # ETH (metric in gwei)",
-          "legendFormat": "0xca33...7fef",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "AI Gateways Deposit",
-      "type": "timeseries"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 9
-      },
       "id": 17,
       "panels": [],
       "title": "E2E Overview",
@@ -318,7 +106,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 10
+        "y": 1
       },
       "id": 14,
       "options": {
@@ -334,7 +122,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -343,7 +131,7 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "100 * (\n  sum (count_over_time({app=~\".*prod-ai-load-test.*\"} |= \"PASS: TestFeatures/Create_a_ComfyUI_Dreamshaper_Stream\" [1h]))\n) / (\n  sum (count_over_time({app=~\".*prod-ai-load-test.*\"} |= \"PASS: TestFeatures/Create_a_ComfyUI_Dreamshaper_Stream\" [1h])) +\n  (sum (count_over_time({app=~\".*prod-ai-load-test.*\"} |= \"FAIL: TestFeatures/Create_a_ComfyUI_Dreamshaper_Stream\" [1h])) or vector(0))\n)",
+          "expr": "100 * (\n  sum (count_over_time({app=~\".*prod-ai-load-test.*\"} |= \"PASS: TestFeatures/Start_a_Stream\" [1h]))\n) / (\n  sum (count_over_time({app=~\".*prod-ai-load-test.*\"} |= \"PASS: TestFeatures/Start_a_Stream\" [1h])) +\n  (sum (count_over_time({app=~\".*prod-ai-load-test.*\"} |= \"FAIL: TestFeatures/Start_a_Stream\" [1h])) or vector(0))\n)",
           "queryType": "range",
           "refId": "A"
         }
@@ -417,7 +205,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 10
+        "y": 1
       },
       "id": 16,
       "options": {
@@ -433,7 +221,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -442,7 +230,7 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "100 * (\n  sum (count_over_time({app=~\".*staging-ai-load-test.*\"} |= \"PASS: TestFeatures/Create_a_ComfyUI_Dreamshaper_Stream\" [1h]))\n) / (\n  sum (count_over_time({app=~\".*staging-ai-load-test.*\"} |= \"PASS: TestFeatures/Create_a_ComfyUI_Dreamshaper_Stream\" [1h])) +\n  (sum (count_over_time({app=~\".*staging-ai-load-test.*\"} |= \"FAIL: TestFeatures/Create_a_ComfyUI_Dreamshaper_Stream\" [1h])) or vector(0))\n)\n",
+          "expr": "100 * (\n  sum (count_over_time({app=~\".*staging-ai-load-test.*\"} |= \"PASS: TestFeatures/Start_a_Stream\" [1h]))\n) / (\n  sum (count_over_time({app=~\".*staging-ai-load-test.*\"} |= \"PASS: TestFeatures/Start_a_Stream\" [1h])) +\n  (sum (count_over_time({app=~\".*staging-ai-load-test.*\"} |= \"FAIL: TestFeatures/Start_a_Stream\" [1h])) or vector(0))\n)\n",
           "queryType": "range",
           "refId": "A"
         }
@@ -517,7 +305,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 18
+        "y": 9
       },
       "id": 6,
       "options": {
@@ -533,7 +321,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -619,7 +407,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 18
+        "y": 9
       },
       "id": 20,
       "options": {
@@ -635,11 +423,11 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "editorMode": "code",
-          "expr": "sum(livepeer_ai_container_idle{node_type=\"orch\"}) ",
+          "expr": "sum by (model_name) (max by(orchestrator_uri, model_name) (livepeer_ai_container_idle{orchestrator_uri!=\"\"}[30s]))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -711,7 +499,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 26
+        "y": 17
       },
       "id": 40,
       "options": {
@@ -729,7 +517,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -822,7 +610,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 26
+        "y": 17
       },
       "id": 39,
       "options": {
@@ -840,7 +628,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -921,7 +709,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 34
+        "y": 25
       },
       "id": 31,
       "options": {
@@ -947,7 +735,7 @@
         "xTickLabelRotation": 0,
         "xTickLabelSpacing": 0
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -982,7 +770,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 42
+        "y": 33
       },
       "id": 3,
       "panels": [],
@@ -1003,7 +791,7 @@
         "h": 6,
         "w": 24,
         "x": 0,
-        "y": 43
+        "y": 34
       },
       "id": 8,
       "options": {
@@ -1017,7 +805,7 @@
         "sortOrder": "Ascending",
         "wrapLogMessage": false
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -1098,7 +886,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 49
+        "y": 40
       },
       "id": 12,
       "options": {
@@ -1114,7 +902,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -1200,7 +988,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 49
+        "y": 40
       },
       "id": 18,
       "options": {
@@ -1218,7 +1006,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -1299,7 +1087,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 57
+        "y": 48
       },
       "id": 19,
       "options": {
@@ -1315,7 +1103,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "editorMode": "code",
@@ -1392,7 +1180,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 57
+        "y": 48
       },
       "id": 11,
       "options": {
@@ -1408,7 +1196,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -1495,7 +1283,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 65
+        "y": 56
       },
       "id": 10,
       "links": [
@@ -1518,7 +1306,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -1604,7 +1392,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 65
+        "y": 56
       },
       "id": 5,
       "options": {
@@ -1620,7 +1408,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -1706,7 +1494,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 73
+        "y": 64
       },
       "id": 4,
       "options": {
@@ -1722,7 +1510,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -1758,7 +1546,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 73
+        "y": 64
       },
       "id": 9,
       "options": {
@@ -1772,7 +1560,7 @@
         "sortOrder": "Descending",
         "wrapLogMessage": false
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -1794,7 +1582,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 81
+        "y": 72
       },
       "id": 2,
       "panels": [],
@@ -1865,7 +1653,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 82
+        "y": 73
       },
       "id": 1,
       "options": {
@@ -1881,7 +1669,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -1967,7 +1755,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 82
+        "y": 73
       },
       "id": 13,
       "options": {
@@ -1983,7 +1771,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -2064,7 +1852,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 90
+        "y": 81
       },
       "id": 21,
       "options": {
@@ -2080,7 +1868,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -2187,7 +1975,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 90
+        "y": 81
       },
       "id": 15,
       "options": {
@@ -2205,7 +1993,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "editorMode": "code",
@@ -2281,7 +2069,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 98
+        "y": 89
       },
       "id": 22,
       "options": {
@@ -2299,7 +2087,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "disableTextWrap": false,
@@ -2425,7 +2213,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 98
+        "y": 89
       },
       "id": 24,
       "options": {
@@ -2443,7 +2231,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "editorMode": "builder",
@@ -2520,7 +2308,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 106
+        "y": 97
       },
       "id": 23,
       "options": {
@@ -2536,7 +2324,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "editorMode": "code",
@@ -2614,7 +2402,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 106
+        "y": 97
       },
       "id": 26,
       "options": {
@@ -2634,7 +2422,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "disableTextWrap": false,
@@ -2715,7 +2503,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 114
+        "y": 105
       },
       "id": 25,
       "options": {
@@ -2733,7 +2521,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -2814,7 +2602,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 114
+        "y": 105
       },
       "id": 28,
       "options": {
@@ -2832,7 +2620,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "disableTextWrap": false,
@@ -2912,7 +2700,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 122
+        "y": 113
       },
       "id": 27,
       "options": {
@@ -2928,7 +2716,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "editorMode": "code",
@@ -3005,7 +2793,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 122
+        "y": 113
       },
       "id": 30,
       "options": {
@@ -3023,7 +2811,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "disableTextWrap": false,
@@ -3103,7 +2891,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 130
+        "y": 121
       },
       "id": 29,
       "options": {
@@ -3121,12 +2909,12 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "sum by(region) (sum_over_time(livepeer_ai_container_idle{job=\"orchestrator\"}[30s]))",
+          "editorMode": "code",
+          "expr": "sum by (model_name) (max by(orchestrator_uri, model_name) (livepeer_ai_container_idle{orchestrator_uri!=\"\"}[30s]))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "{{region}}",
@@ -3201,7 +2989,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 130
+        "y": 121
       },
       "id": 32,
       "options": {
@@ -3219,7 +3007,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -3301,7 +3089,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 138
+        "y": 129
       },
       "id": 37,
       "links": [
@@ -3330,7 +3118,7 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -3457,7 +3245,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 138
+        "y": 129
       },
       "id": 38,
       "links": [
@@ -3486,7 +3274,7 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -3579,7 +3367,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 146
+        "y": 137
       },
       "id": 33,
       "options": {
@@ -3607,7 +3395,7 @@
         "xTickLabelRotation": -45,
         "xTickLabelSpacing": 0
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -3634,6 +3422,218 @@
       ],
       "title": "Median Output FPS by Orchestrator URL",
       "type": "barchart"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 145
+      },
+      "id": 34,
+      "panels": [],
+      "title": "Wallet Funds",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMax": 12,
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ETH"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 146
+      },
+      "id": 36,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "avg(livepeer_gateway_reserve{livepeer_live_app=\"prod-livepeer-ai-gateway\"}) / 1e9 # ETH (metric in gwei)",
+          "instant": false,
+          "legendFormat": "0xca33...7fef",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "AI Gateways Reserve",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMax": 15,
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ETH"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 146
+      },
+      "id": 35,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "avg(livepeer_gateway_deposit{livepeer_live_app=\"prod-livepeer-ai-gateway\"}) / 1e9 # ETH (metric in gwei)",
+          "legendFormat": "0xca33...7fef",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "AI Gateways Deposit",
+      "type": "timeseries"
     }
   ],
   "preload": false,
@@ -3655,5 +3655,5 @@
   "timezone": "utc",
   "title": "AI Overview (Livestream)",
   "uid": "be6llteqebk00b",
-  "version": 88
+  "version": 94
 }

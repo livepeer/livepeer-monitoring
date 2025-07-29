@@ -72,7 +72,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -176,7 +176,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -271,7 +271,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -366,7 +366,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -468,7 +468,7 @@
         },
         "showHeader": true
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -614,7 +614,7 @@
           }
         ]
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -623,7 +623,7 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "{container=\"ai-gateway\"} |= `user-agent` | regexp `user-agent=(?P<uaRaw>.*$)` | regexp `request_id=(?P<request_id>[a-z0-9]+)`\n\n| label_format ua=`\n    {{ if eq \"Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1\" .uaRaw }} iPhone 16.6 Safari\n    {{ else if eq \"Mozilla/5.0 (iPhone; CPU iPhone OS 18_1_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.1.1 Mobile/15E148 Safari/604.1\" .uaRaw }} iPhone 18.1.1 Safari\n    {{ else if eq \"Mozilla/5.0 (iPhone; CPU iPhone OS 18_3_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3.1 Mobile/15E148 Safari/604.1\" .uaRaw }} iPhone 18.3.1 Safari\n    {{ else if eq \"Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1\" .uaRaw }} iPhone 18.5 Safari\n    {{ else if eq \"Mozilla/5.0 (iPhone; CPU iPhone OS 18_5_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/137.0.7151.107 Mobile/15E148 Safari/604.1\" .uaRaw }} iPhone 18.5 Chrome\n    {{ else if eq \"Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Brave/1 Mobile/15E148 Safari/604.1\" .uaRaw }} iPhone 18.5 Brave\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Safari/605.1.15\" .uaRaw }} Mac Safari 18.3\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.4 Safari/605.1.15\" .uaRaw }} Mac Safari 18.4\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15\" .uaRaw}} Mac Safari 18.5\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36 OPR/118.0.0.0\" .uaRaw }} Mac Opera 118\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36\" .uaRaw }} Mac Chrome 126\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36\" .uaRaw }} Mac Chrome 135\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36\" .uaRaw }} Mac Chrome 136\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36\" .uaRaw }} Mac Chrome 137\n    {{ else if eq \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36\" .uaRaw }} Win Chrome 137\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:137.0) Gecko/20100101 Firefox/137.0\" .uaRaw }} Mac Firefox 137\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:139.0) Gecko/20100101 Firefox/139.0\" .uaRaw }} Mac Firefox 139\n    {{ else if eq \"Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36\" .uaRaw }} Android Chrome 137\n    {{ else if eq \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36\" .uaRaw }} Linux Chrome 137\n    {{ else if eq \"Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0\" .uaRaw  }} Linux Firefox 140\n    {{ else if eq \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/137.0.0.0 Safari/537.36\" .uaRaw }} Headless Chrome 137\n    {{ else if eq \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/138.0.0.0 Safari/537.36\" .uaRaw }} Headless Chrome 138\n    {{ else }} nonsense-string {{end}}`\n\n# strip leading whitespace\n| label_format ua=`{{ regexReplaceAll \"^\\\\s+\" .ua \"\" }}`\n\n# strip trailing whitespace\n| label_format ua=`{{ regexReplaceAll \"\\\\s+$\" .ua \"\" }}`\n\n# NB: Some Mac Safari 18.4 *might* actually be broken!\n# But this occurs during a minor update and it doesn't seem possible to distinguish between versions\n| label_format broken_ua=`{{if eq \"Mac Safari 18.5\" .ua}}true{{ else if contains \"iPhone 18.5\" .ua}}true{{else}}false{{end}}`\n\n| label_format recognized_ua=`{{if eq \"nonsense-string\" .ua }}false{{else}}true{{end}}`\n\n| label_format ua=`{{if eq \"nonsense-string\" .ua }}{{.uaRaw}}{{else}}{{.ua}}{{end}}`\n\n| line_format `request_id={{.request_id}} ua=\"{{.ua}}\" estimated_broken={{.broken_ua}} recognized_ua={{.recognized_ua}}`",
+          "expr": "{container=\"ai-gateway\"} |= `user-agent` | regexp `user-agent=(?P<uaRaw>.*$)` | regexp `request_id=(?P<request_id>[a-z0-9]+)`\n\n| label_format ua=`\n    {{ if eq \"Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1\" .uaRaw }} iPhone 16.6 Safari\n    {{ else if eq \"Mozilla/5.0 (iPhone; CPU iPhone OS 18_1_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.1.1 Mobile/15E148 Safari/604.1\" .uaRaw }} iPhone 18.1.1 Safari\n    {{ else if eq \"Mozilla/5.0 (iPhone; CPU iPhone OS 18_3_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3.1 Mobile/15E148 Safari/604.1\" .uaRaw }} iPhone 18.3.1 Safari\n    {{ else if eq \"Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1\" .uaRaw }} iPhone 18.5 Safari\n    {{ else if eq \"Mozilla/5.0 (iPhone; CPU iPhone OS 18_5_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/137.0.7151.107 Mobile/15E148 Safari/604.1\" .uaRaw }} iPhone 18.5 Chrome\n    {{ else if eq \"Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Brave/1 Mobile/15E148 Safari/604.1\" .uaRaw }} iPhone 18.5 Brave\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Safari/605.1.15\" .uaRaw }} Mac Safari 18.3\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.4 Safari/605.1.15\" .uaRaw }} Mac Safari 18.4\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15\" .uaRaw}} Mac Safari 18.5\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36 OPR/118.0.0.0\" .uaRaw }} Mac Opera 118\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36\" .uaRaw }} Mac Chrome 126\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36\" .uaRaw }} Mac Chrome 135\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36\" .uaRaw }} Mac Chrome 136\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36\" .uaRaw }} Mac Chrome 137\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36\" .uaRaw }} Mac Chrome 138\n    {{ else if eq \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36\" .uaRaw }} Win Chrome 137\n    {{ else if eq \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36\" .uaRaw }} Win Chrome 138\n    {{ else if eq \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0) Gecko/20100101 Firefox/140.0\" .uaRaw }} Win Firefox 140\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:137.0) Gecko/20100101 Firefox/137.0\" .uaRaw }} Mac Firefox 137\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:139.0) Gecko/20100101 Firefox/139.0\" .uaRaw }} Mac Firefox 139\n    {{ else if eq \"Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36\" .uaRaw }} Android Chrome 137\n    {{ else if eq \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36\" .uaRaw }} Linux Chrome 137\n    {{ else if eq \"Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0\" .uaRaw  }} Linux Firefox 140\n    {{ else if eq \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/137.0.0.0 Safari/537.36\" .uaRaw }} Headless Chrome 137\n    {{ else if eq \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/138.0.0.0 Safari/537.36\" .uaRaw }} Headless Chrome 138\n    {{ else }} nonsense-string {{end}}`\n\n# strip leading whitespace\n| label_format ua=`{{ regexReplaceAll \"^\\\\s+\" .ua \"\" }}`\n\n# strip trailing whitespace\n| label_format ua=`{{ regexReplaceAll \"\\\\s+$\" .ua \"\" }}`\n\n# NB: Some Mac Safari 18.4 *might* actually be broken!\n# But this occurs during a minor update and it doesn't seem possible to distinguish between versions\n| label_format broken_ua=`{{if eq \"Mac Safari 18.5\" .ua}}true{{ else if contains \"iPhone 18.5\" .ua}}true{{else}}false{{end}}`\n\n| label_format recognized_ua=`{{if eq \"nonsense-string\" .ua }}false{{else}}true{{end}}`\n\n| label_format ua=`{{if eq \"nonsense-string\" .ua }}{{.uaRaw}}{{else}}{{.ua}}{{end}}`\n\n| line_format `request_id={{.request_id}} ua=\"{{.ua}}\" estimated_broken={{.broken_ua}} recognized_ua={{.recognized_ua}}`",
           "hide": false,
           "maxLines": 5000,
           "queryType": "range",
@@ -825,5 +825,5 @@
   "timezone": "utc",
   "title": "Josh - Timestamp Corrector",
   "uid": "cep5qbgj67jeoa",
-  "version": 53
+  "version": 3
 }
