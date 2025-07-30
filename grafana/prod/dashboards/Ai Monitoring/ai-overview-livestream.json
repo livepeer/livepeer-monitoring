@@ -2160,54 +2160,7 @@
           },
           "unit": "none"
         },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "mar-0",
-                  "cal-3",
-                  "mis-16",
-                  "mch-1",
-                  "mis-0",
-                  "ohi-0",
-                  "flo-3",
-                  "mis-4",
-                  "mis-17",
-                  "man-1",
-                  "man-0",
-                  "mis-10",
-                  "cal-0",
-                  "cal-2",
-                  "ida-4",
-                  "san-1",
-                  "flo-5",
-                  "ida-2",
-                  "ida-3",
-                  "cal-1",
-                  "ida-5",
-                  "war-0",
-                  "ida-0"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -2223,7 +2176,9 @@
           ],
           "displayMode": "table",
           "placement": "right",
-          "showLegend": true
+          "showLegend": true,
+          "sortBy": "Last *",
+          "sortDesc": true
         },
         "tooltip": {
           "hideZeros": false,
@@ -2234,11 +2189,15 @@
       "pluginVersion": "12.0.2",
       "targets": [
         {
+          "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sort_desc(sum(livepeer_ai_container_in_use{}) by (node_name))",
+          "expr": "sort_desc(sum by(node_name) (livepeer_ai_container_in_use{node_name!=\"\"}))",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
           "legendFormat": "__auto",
           "range": true,
-          "refId": "A"
+          "refId": "A",
+          "useBackend": false
         }
       ],
       "title": "Streams per Orchestrator",
@@ -3655,5 +3614,5 @@
   "timezone": "utc",
   "title": "AI Overview (Livestream)",
   "uid": "be6llteqebk00b",
-  "version": 94
+  "version": 96
 }
