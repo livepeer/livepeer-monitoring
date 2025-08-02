@@ -22,7 +22,7 @@
   "links": [],
   "panels": [
     {
-      "collapsed": false,
+      "collapsed": true,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -30,641 +30,1590 @@
         "y": 0
       },
       "id": 17,
-      "panels": [],
-      "title": "E2E Overview",
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
-      "description": "This graph shows the percentage of successful load tests. Anything tests run with < 80% will trigger this alert.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "axisSoftMin": 0,
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "dashed"
-            }
-          },
-          "fieldMinMax": false,
-          "mappings": [],
-          "max": 100,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "transparent"
-              },
-              {
-                "color": "red",
-                "value": 80
-              },
-              {
-                "color": "#EAB839",
-                "value": 90
-              }
-            ]
-          },
-          "unit": "percent"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 1
-      },
-      "id": 14,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.0.2",
-      "targets": [
+      "panels": [
         {
           "datasource": {
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "direction": "backward",
-          "editorMode": "code",
-          "expr": "100 * (\n  sum (count_over_time({app=~\".*prod-ai-load-test.*\"} |= \"PASS: TestFeatures/Start_a_Stream\" [1h]))\n) / (\n  sum (count_over_time({app=~\".*prod-ai-load-test.*\"} |= \"PASS: TestFeatures/Start_a_Stream\" [1h])) +\n  (sum (count_over_time({app=~\".*prod-ai-load-test.*\"} |= \"FAIL: TestFeatures/Start_a_Stream\" [1h])) or vector(0))\n)",
-          "queryType": "range",
-          "refId": "A"
-        }
-      ],
-      "title": "PROD Load Test Success Rate",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
+          "description": "This graph shows the percentage of successful load tests. Anything tests run with < 80% will trigger this alert.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "axisSoftMin": 0,
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "dashed"
+                }
+              },
+              "fieldMinMax": false,
+              "mappings": [],
+              "max": 100,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "transparent",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  },
+                  {
+                    "color": "#EAB839",
+                    "value": 90
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": []
           },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 1
+          },
+          "id": 14,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
             },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "dashed"
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
             }
           },
-          "fieldMinMax": false,
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "percentage",
-            "steps": [
-              {
-                "color": "green"
+          "pluginVersion": "12.1.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "P8E80F9AEF21F6940"
               },
-              {
-                "color": "dark-red",
-                "value": 85
-              }
-            ]
-          },
-          "unit": "percent"
+              "direction": "backward",
+              "editorMode": "code",
+              "expr": "100 * (\n  sum (count_over_time({app=~\".*prod-ai-load-test.*\"} |= \"PASS: TestFeatures/Start_a_Stream\" [1h]))\n) / (\n  sum (count_over_time({app=~\".*prod-ai-load-test.*\"} |= \"PASS: TestFeatures/Start_a_Stream\" [1h])) +\n  (sum (count_over_time({app=~\".*prod-ai-load-test.*\"} |= \"FAIL: TestFeatures/Start_a_Stream\" [1h])) or vector(0))\n)",
+              "queryType": "range",
+              "refId": "A"
+            }
+          ],
+          "title": "PROD Load Test Success Rate",
+          "type": "timeseries"
         },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 1
-      },
-      "id": 16,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.0.2",
-      "targets": [
         {
           "datasource": {
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "direction": "backward",
-          "editorMode": "code",
-          "expr": "100 * (\n  sum (count_over_time({app=~\".*staging-ai-load-test.*\"} |= \"PASS: TestFeatures/Start_a_Stream\" [1h]))\n) / (\n  sum (count_over_time({app=~\".*staging-ai-load-test.*\"} |= \"PASS: TestFeatures/Start_a_Stream\" [1h])) +\n  (sum (count_over_time({app=~\".*staging-ai-load-test.*\"} |= \"FAIL: TestFeatures/Start_a_Stream\" [1h])) or vector(0))\n)\n",
-          "queryType": "range",
-          "refId": "A"
-        }
-      ],
-      "title": "STAGING Load Test Success Rate",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "default": true,
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "dashed"
+                }
+              },
+              "fieldMinMax": false,
+              "mappings": [],
+              "min": 0,
+              "thresholds": {
+                "mode": "percentage",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 85
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": []
           },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 1
+          },
+          "id": 16,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
             },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
             }
           },
-          "fieldMinMax": false,
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
+          "pluginVersion": "12.1.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "P8E80F9AEF21F6940"
               },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
+              "direction": "backward",
+              "editorMode": "code",
+              "expr": "100 * (\n  sum (count_over_time({app=~\".*staging-ai-load-test.*\"} |= \"PASS: TestFeatures/Start_a_Stream\" [1h]))\n) / (\n  sum (count_over_time({app=~\".*staging-ai-load-test.*\"} |= \"PASS: TestFeatures/Start_a_Stream\" [1h])) +\n  (sum (count_over_time({app=~\".*staging-ai-load-test.*\"} |= \"FAIL: TestFeatures/Start_a_Stream\" [1h])) or vector(0))\n)\n",
+              "queryType": "range",
+              "refId": "A"
+            }
+          ],
+          "title": "STAGING Load Test Success Rate",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
           },
-          "unit": "none"
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "fieldMinMax": false,
+              "mappings": [],
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 89
+          },
+          "id": 6,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.1.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "expr": "sum(sum_over_time(livepeer_ai_current_live_pipelines{livepeer_node_type=\"prod-livepeer-ai-gateway\"}[30s]))",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "total streams",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Total Streams",
+          "type": "timeseries"
         },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 9
-      },
-      "id": 6,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.0.2",
-      "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "sum(sum_over_time(livepeer_ai_current_live_pipelines{livepeer_node_type=\"prod-livepeer-ai-gateway\"}[30s]))",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "total streams",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "Total Streams",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "description": "This graph shows the amount of idle containers.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
+          "description": "This graph shows the amount of idle containers.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
           },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 89
+          },
+          "id": 20,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
             },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
             }
           },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
+          "pluginVersion": "12.1.0",
+          "targets": [
+            {
+              "editorMode": "code",
+              "expr": "sum by (model_name) (max by(orchestrator_uri, model_name) (livepeer_ai_container_idle{orchestrator_uri!=\"\"}[30s]))",
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Global Available Capacity (Idle Runners)",
+          "type": "timeseries"
         },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 9
-      },
-      "id": 20,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.0.2",
-      "targets": [
         {
-          "editorMode": "code",
-          "expr": "sum by (model_name) (max by(orchestrator_uri, model_name) (livepeer_ai_container_idle{orchestrator_uri!=\"\"}[30s]))",
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Global Available Capacity (Idle Runners)",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "grafana-clickhouse-datasource",
-        "uid": "cdrta4zbtlddsa"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrta4zbtlddsa"
           },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
             },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 169
+          },
+          "id": 40,
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true
             },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
             }
           },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
+          "pluginVersion": "12.1.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "cdrta4zbtlddsa"
               },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
+              "editorType": "sql",
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "columns": [],
+                  "database": "",
+                  "limit": 1000,
+                  "mode": "list",
+                  "queryType": "table",
+                  "table": ""
+                }
+              },
+              "pluginVersion": "4.9.0",
+              "queryType": "table",
+              "rawSql": "SELECT\n  `toStartOfMinute`(\n    `toTimeZone`(\n      `network_events`.`stream_ingest_metrics_view`.`event_timestamp_ts`,\n      'UTC'\n    )\n  ) AS `event_timestamp_ts`,\n  `network_events`.`stream_ingest_metrics_view`.`track_type` AS `track_type`,\n  `toFloat64`(\n    SUM(\n      `network_events`.`stream_ingest_metrics_view`.`interval_packets_lost`\n    )\n  ) / NULLIF(\n    `toFloat64`(\n      SUM(\n        `network_events`.`stream_ingest_metrics_view`.`interval_packets_lost`\n      )\n    ) + `toFloat64`(\n      SUM(\n        `network_events`.`stream_ingest_metrics_view`.`interval_bytes_received`\n      )\n    ),\n    0\n  ) AS `Packet Loss`\nFROM\n  `network_events`.`stream_ingest_metrics_view`\nWHERE\n $__timeFilter(event_timestamp_ts)\nGROUP BY\n  `toStartOfMinute`(\n    `toTimeZone`(\n      `network_events`.`stream_ingest_metrics_view`.`event_timestamp_ts`,\n      'UTC'\n    )\n  ),\n  `network_events`.`stream_ingest_metrics_view`.`track_type`\nORDER BY\n  `toStartOfMinute`(\n    `toTimeZone`(\n      `network_events`.`stream_ingest_metrics_view`.`event_timestamp_ts`,\n      'UTC'\n    )\n  ) ASC,\n  `network_events`.`stream_ingest_metrics_view`.`track_type` ASC",
+              "refId": "A"
+            }
+          ],
+          "title": "Packet Loss by Time",
+          "type": "timeseries"
         },
-        "overrides": []
-      },
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrta4zbtlddsa"
+          },
+          "description": "Displays the average jitter for streams in milliseconds (ms). The threshold is 30 ms—any value above this should be investigated",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "dashed"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 30
+                  }
+                ]
+              },
+              "unit": "ms"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 169
+          },
+          "id": 39,
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.1.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "cdrta4zbtlddsa"
+              },
+              "editorType": "sql",
+              "format": 2,
+              "meta": {
+                "builderOptions": {
+                  "columns": [],
+                  "database": "",
+                  "limit": 1000,
+                  "mode": "list",
+                  "queryType": "table",
+                  "table": ""
+                }
+              },
+              "pluginVersion": "4.9.0",
+              "queryType": "logs",
+              "rawSql": "SELECT\n  `network_events`.`stream_ingest_metrics_view`.`track_type` AS `track_type`,\n  `toStartOfMinute`(\n    `toTimeZone`(\n      `network_events`.`stream_ingest_metrics_view`.`event_timestamp_ts`,\n      'UTC'\n    )\n  ) AS `event_timestamp_ts`,\n  AVG(\n    `network_events`.`stream_ingest_metrics_view`.`jitter_ms`\n  ) AS `avg`\nFROM\n  `network_events`.`stream_ingest_metrics_view`\n--WHERE `network_events`.`stream_ingest_metrics_view`.`gateway` LIKE '%--livepeer-ai-gateway-%.livepeer.live%'\nGROUP BY\n  `network_events`.`stream_ingest_metrics_view`.`track_type`,\n  `toStartOfMinute`(\n    `toTimeZone`(\n      `network_events`.`stream_ingest_metrics_view`.`event_timestamp_ts`,\n      'UTC'\n    )\n  )\nORDER BY\n  `network_events`.`stream_ingest_metrics_view`.`track_type` ASC,\n  `toStartOfMinute`(\n    `toTimeZone`(\n      `network_events`.`stream_ingest_metrics_view`.`event_timestamp_ts`,\n      'UTC'\n    )\n  ) ASC",
+              "refId": "A"
+            }
+          ],
+          "title": "Average Ingest Jitter",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrta4zbtlddsa"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineWidth": 1,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "fieldMinMax": false,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 500
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 177
+          },
+          "id": 31,
+          "options": {
+            "barRadius": 0,
+            "barWidth": 0.97,
+            "fullHighlight": true,
+            "groupWidth": 0.7,
+            "legend": {
+              "calcs": [],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": false
+            },
+            "orientation": "horizontal",
+            "showValue": "auto",
+            "stacking": "none",
+            "tooltip": {
+              "hideZeros": true,
+              "mode": "single",
+              "sort": "asc"
+            },
+            "xField": "first_error_message",
+            "xTickLabelRotation": 0,
+            "xTickLabelSpacing": 0
+          },
+          "pluginVersion": "12.1.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "cdrta4zbtlddsa"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "hide": false,
+              "meta": {
+                "builderOptions": {
+                  "columns": [],
+                  "database": "",
+                  "limit": 1000,
+                  "mode": "list",
+                  "queryType": "table",
+                  "table": ""
+                }
+              },
+              "pluginVersion": "4.8.2",
+              "queryType": "table",
+              "rawSql": "SELECT\n  `source`.`first_error_message` AS `first_error_message`,\n  COUNT(*) AS `count`\nFROM\n  (\n    SELECT\n      `network_events`.`stream_trace_summary_view`.`stream_id` AS `stream_id`,\n      `network_events`.`stream_trace_summary_view`.`pipeline_id` AS `pipeline_id`,\n      `network_events`.`stream_trace_summary_view`.`user_agent_raw` AS `user_agent_raw`,\n      `network_events`.`stream_trace_summary_view`.`browser_type` AS `browser_type`,\n      `network_events`.`stream_trace_summary_view`.`device_type` AS `device_type`,\n      `network_events`.`stream_trace_summary_view`.`is_mobile` AS `is_mobile`,\n      `network_events`.`stream_trace_summary_view`.`hostname` AS `hostname`,\n      `network_events`.`stream_trace_summary_view`.`is_comfy_staging_gateway` AS `is_comfy_staging_gateway`,\n      `network_events`.`stream_trace_summary_view`.`request_count` AS `request_count`,\n      `network_events`.`stream_trace_summary_view`.`first_event_timestamp_ts` AS `first_event_timestamp_ts`,\n      `network_events`.`stream_trace_summary_view`.`last_event_timestamp_ts` AS `last_event_timestamp_ts`,\n      `network_events`.`stream_trace_summary_view`.`mid_stream_failure` AS `mid_stream_failure`,\n      `network_events`.`stream_trace_summary_view`.`restart_count` AS `restart_count`,\n      `network_events`.`stream_trace_summary_view`.`event_messages` AS `event_messages`,\n      `network_events`.`stream_trace_summary_view`.`event_message_string` AS `event_message_string`,\n      `network_events`.`stream_trace_summary_view`.`excusable_errors` AS `excusable_errors`,\n      `network_events`.`stream_trace_summary_view`.`error_count` AS `error_count`,\n      `network_events`.`stream_trace_summary_view`.`all_excusable_errors` AS `all_excusable_errors`,\n      `network_events`.`stream_trace_summary_view`.`total_time_diff_ms` AS `total_time_diff_ms`,\n      `network_events`.`stream_trace_summary_view`.`startup_completed` AS `startup_completed`,\n      `network_events`.`stream_trace_summary_view`.`user_generated_stream` AS `user_generated_stream`,\n      `network_events`.`stream_trace_summary_view`.`gateway_startup_completed` AS `gateway_startup_completed`,\n      `network_events`.`stream_trace_summary_view`.`videojs_fallback` AS `videojs_fallback`,\n      `network_events`.`stream_trace_summary_view`.`gateway_start_up_time_ms` AS `gateway_start_up_time_ms`,\n      `network_events`.`stream_trace_summary_view`.`first_event` AS `first_event`,\n      `network_events`.`stream_trace_summary_view`.`last_event` AS `last_event`,\n      `network_events`.`stream_trace_summary_view`.`first_error_message` AS `first_error_message`,\n      `network_events`.`stream_trace_summary_view`.`request_ids` AS `request_ids`,\n      `network_events`.`stream_trace_summary_view`.`orch_count` AS `orch_count`,\n      `network_events`.`stream_trace_summary_view`.`orch_urls` AS `orch_urls`,\n      `network_events`.`stream_trace_summary_view`.`events_sequence` AS `events_sequence`,\n      CASE\n        WHEN `positionUTF8`(\n          `Daydream Users Latest Table - Author`.`email`,\n          'livepeer.org'\n        ) > 0 THEN '1'\n        ELSE '0'\n      END AS `Internal User`,\n      CASE\n        WHEN `Daydream Streams Latest Table - Stream`.`whip_url` = '' THEN 'missing'\n        ELSE CASE\n          WHEN `extract`(\n            `Daydream Streams Latest Table - Stream`.`whip_url`,\n            '(live|aiWebrtc)/'\n          ) = 'live' THEN 'gateway'\n          ELSE 'mediamtx'\n        END\n      END AS `whip_server`,\n      CASE\n        WHEN `positionUTF8`(\n          `Daydream Users Latest Table - Author`.`email`,\n          'infraservice'\n        ) > 0 THEN 'load test'\n        ELSE CASE\n          WHEN `positionUTF8`(\n            `Daydream Users Latest Table - Author`.`email`,\n            'privy.io'\n          ) > 0 THEN 'e2e'\n          ELSE CASE\n            WHEN `positionUTF8`(\n              `Daydream Users Latest Table - Author`.`email`,\n              '@livepeer.org'\n            ) > 0 THEN 'internal'\n            ELSE 'user'\n          END\n        END\n      END AS `User Type`,\n      `Daydream Streams Latest Table - Stream`.`id` AS `Daydream Streams Latest Table - Stream__id`,\n      `Daydream Streams Latest Table - Stream`.`name` AS `Daydream Streams Latest Table - Stream__name`,\n      `Daydream Streams Latest Table - Stream`.`stream_key` AS `Daydream Streams Latest Table - Stream__stream_key`,\n      `Daydream Streams Latest Table - Stream`.`author` AS `Daydream Streams Latest Table - Stream__author`,\n      `Daydream Streams Latest Table - Stream`.`output_playback_id` AS `Daydream Streams Latest Table - Stream__output_playback_id`,\n      `Daydream Streams Latest Table - Stream`.`created_at` AS `Daydream Streams Latest Table - Stream__created_at`,\n      `Daydream Streams Latest Table - Stream`.`gateway_host` AS `Daydream Streams Latest Table - Stream__gateway_host`,\n      `Daydream Streams Latest Table - Stream`.`is_smoke_test` AS `Daydream Streams Latest Table - Stream__is_smoke_test`,\n      `Daydream Streams Latest Table - Stream`.`whip_url` AS `Daydream Streams Latest Table - Stream__whip_url`,\n      `Daydream Streams Latest Table - Stream`.`_peerdb_synced_at` AS `Daydream Streams Latest Table - Stream___peerdb_synced_at`,\n      `Daydream Users Latest Table - Author`.`id` AS `Daydream Users Latest Table - Author__id`,\n      `Daydream Users Latest Table - Author`.`name` AS `Daydream Users Latest Table - Author__name`,\n      `Daydream Users Latest Table - Author`.`email` AS `Daydream Users Latest Table - Author__email`,\n      `Daydream Users Latest Table - Author`.`created_at` AS `Daydream Users Latest Table - Author__created_at`,\n      `Daydream Users Latest Table - Author`.`provider` AS `Daydream Users Latest Table - Author__provider`,\n      `Daydream Users Latest Table - Author`.`_peerdb_synced_at` AS `Daydream Users Latest Table - Author___peerdb_synced_at`,\n      `Daydream Pipelines Latest Table - Pipeline`.`id` AS `Daydream Pipelines Latest Table - Pipeline__id`,\n      `Daydream Pipelines Latest Table - Pipeline`.`name` AS `Daydream Pipelines Latest Table - Pipeline__name`,\n      `Daydream Pipelines Latest Table - Pipeline`.`key` AS `Daydream Pipelines Latest Table - Pipeline__key`,\n      `Daydream Pipelines Latest Table - Pipeline`.`author` AS `Daydream Pipelines Latest Table - Pipeline__author`,\n      `Daydream Pipelines Latest Table - Pipeline`.`description` AS `Daydream Pipelines Latest Table - Pipeline__description`,\n      `Daydream Pipelines Latest Table - Pipeline`.`type` AS `Daydream Pipelines Latest Table - Pipeline__type`,\n      `Daydream Pipelines Latest Table - Pipeline`.`created_at` AS `Daydream Pipelines Latest Table - Pipeline__created_at`,\n      `Daydream Pipelines Latest Table - Pipeline`.`updated_at` AS `Daydream Pipelines Latest Table - Pipeline__updated_at`,\n      `Daydream Pipelines Latest Table - Pipeline`.`is_private` AS `Daydream Pipelines Latest Table - Pipeline__is_private`,\n      `Daydream Pipelines Latest Table - Pipeline`.`is_featured` AS `Daydream Pipelines Latest Table - Pipeline__is_featured`,\n      `Daydream Pipelines Latest Table - Pipeline`.`model_card` AS `Daydream Pipelines Latest Table - Pipeline__model_card`,\n      `Daydream Pipelines Latest Table - Pipeline`.`_peerdb_synced_at` AS `Daydream Pipelines Latest Table - Pipeline___peerdb_4080d2c9`\n    FROM\n      `network_events`.`stream_trace_summary_view`\n     \nLEFT JOIN `network_events`.`daydream_streams_latest_table` AS `Daydream Streams Latest Table - Stream` ON `network_events`.`stream_trace_summary_view`.`stream_id` = `Daydream Streams Latest Table - Stream`.`id`\n      LEFT JOIN `network_events`.`daydream_users_latest_table` AS `Daydream Users Latest Table - Author` ON `Daydream Streams Latest Table - Stream`.`author` = `Daydream Users Latest Table - Author`.`id`\n      LEFT JOIN `network_events`.`daydream_pipelines_latest_table` AS `Daydream Pipelines Latest Table - Pipeline` ON `network_events`.`stream_trace_summary_view`.`pipeline_id` = `Daydream Pipelines Latest Table - Pipeline`.`id`\n  ) AS `source`\nWHERE\n  `source`.`startup_completed` = 0\nGROUP BY\n  `source`.`first_error_message`\nHAVING\n  COUNT(*) > 500\nORDER BY\n  `source`.`first_error_message` ASC",
+              "refId": "A"
+            }
+          ],
+          "title": "Fail Start Up Errors",
+          "type": "barchart"
+        }
+      ],
+      "title": "E2E Overview",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
       "gridPos": {
-        "h": 8,
-        "w": 12,
+        "h": 1,
+        "w": 24,
         "x": 0,
-        "y": 17
+        "y": 1
       },
-      "id": 40,
-      "options": {
-        "legend": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.0.2",
-      "targets": [
+      "id": 3,
+      "panels": [
         {
           "datasource": {
-            "type": "grafana-clickhouse-datasource",
-            "uid": "cdrta4zbtlddsa"
+            "default": false,
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
           },
-          "editorType": "sql",
-          "format": 1,
-          "meta": {
-            "builderOptions": {
-              "columns": [],
-              "database": "",
-              "limit": 1000,
-              "mode": "list",
-              "queryType": "table",
-              "table": ""
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 24,
+            "x": 0,
+            "y": 186
+          },
+          "id": 8,
+          "options": {
+            "dedupStrategy": "none",
+            "enableInfiniteScrolling": false,
+            "enableLogDetails": true,
+            "prettifyLogMessage": false,
+            "showCommonLabels": false,
+            "showLabels": false,
+            "showTime": false,
+            "sortOrder": "Ascending",
+            "wrapLogMessage": false
+          },
+          "pluginVersion": "12.1.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "P8E80F9AEF21F6940"
+              },
+              "editorMode": "code",
+              "expr": "{app=~\".*-livepeer-ai-gateway\"} != \"Polling blocks\"",
+              "queryType": "range",
+              "refId": "A"
+            }
+          ],
+          "title": "All Gateway Logs",
+          "type": "logs"
+        },
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "line"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 3
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 192
+          },
+          "id": 12,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
             }
           },
-          "pluginVersion": "4.9.0",
-          "queryType": "table",
-          "rawSql": "SELECT\n  `toStartOfMinute`(\n    `toTimeZone`(\n      `network_events`.`stream_ingest_metrics_view`.`event_timestamp_ts`,\n      'UTC'\n    )\n  ) AS `event_timestamp_ts`,\n  `network_events`.`stream_ingest_metrics_view`.`track_type` AS `track_type`,\n  `toFloat64`(\n    SUM(\n      `network_events`.`stream_ingest_metrics_view`.`interval_packets_lost`\n    )\n  ) / NULLIF(\n    `toFloat64`(\n      SUM(\n        `network_events`.`stream_ingest_metrics_view`.`interval_packets_lost`\n      )\n    ) + `toFloat64`(\n      SUM(\n        `network_events`.`stream_ingest_metrics_view`.`interval_bytes_received`\n      )\n    ),\n    0\n  ) AS `Packet Loss`\nFROM\n  `network_events`.`stream_ingest_metrics_view`\nWHERE\n $__timeFilter(event_timestamp_ts)\nGROUP BY\n  `toStartOfMinute`(\n    `toTimeZone`(\n      `network_events`.`stream_ingest_metrics_view`.`event_timestamp_ts`,\n      'UTC'\n    )\n  ),\n  `network_events`.`stream_ingest_metrics_view`.`track_type`\nORDER BY\n  `toStartOfMinute`(\n    `toTimeZone`(\n      `network_events`.`stream_ingest_metrics_view`.`event_timestamp_ts`,\n      'UTC'\n    )\n  ) ASC,\n  `network_events`.`stream_ingest_metrics_view`.`track_type` ASC",
-          "refId": "A"
+          "pluginVersion": "12.1.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "expr": "sum(increase(livepeer_ai_request_errors{pipeline=~\"live-.*\"}[$__rate_interval])) / sum(increase(livepeer_ai_live_attempt[$__rate_interval])) * 100",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Error Rate",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "description": "Shows the number of occurrences of each unique ‘Live video pipeline’ error in the last 15 minutes, grouped by error type",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 192
+          },
+          "id": 18,
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.1.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "P8E80F9AEF21F6940"
+              },
+              "direction": "backward",
+              "editorMode": "code",
+              "expr": "sum(count_over_time(\n    {container=\"ai-gateway\"} |= \"Live video pipeline finished with error\" | pattern \"<_>Live video pipeline finished with error: <errorr>\" \n[15m])) by (errorr)",
+              "queryType": "range",
+              "refId": "A"
+            }
+          ],
+          "title": "Ai Video Pipeline Errors by Type",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "If O does not respond to a request from G within 45s, then G will not retry and flag this error.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 200
+          },
+          "id": 19,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.1.0",
+          "targets": [
+            {
+              "editorMode": "code",
+              "expr": "sum by (pipeline, model_name, region) (increase(livepeer_ai_request_errors{error_code=~\"no orchestrators available.*\", pipeline=~\"live-.*\"}[$__interval]))",
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "No Orchestrators Available errors per Region",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 200
+          },
+          "id": 11,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.1.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "disableTextWrap": false,
+              "editorMode": "builder",
+              "expr": "sum by(normalized_error_code, model_name) (label_replace(label_replace(increase(livepeer_ai_request_errors{pipeline=~\"live-.*\"}[1m]), \"normalized_error_code\", \"no orchestrators available\", \"error_code\", \"no orchestrators available.*\"), \"normalized_error_code\", \"$1\", \"error_code\", \"(.*)\"))",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "{{model_name}}: {{normalized_error_code}}",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Error Responses in 1m",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "ms"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 208
+          },
+          "id": 10,
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "go-livepeer code",
+              "url": "https://github.com/search?q=repo%3Alivepeer%2Fgo-livepeer%20AIFirstSegmentDelay&type=code"
+            }
+          ],
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.1.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "expr": "avg by(orchestrator_uri) (increase(livepeer_ai_first_segment_delay_ms_sum[1m]))",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "First segment delay",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 208
+          },
+          "id": 5,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.1.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "disableTextWrap": false,
+              "editorMode": "builder",
+              "expr": "sum(increase(livepeer_ai_live_attempt[1m]))",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Stream Attempts in 1m",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 216
+          },
+          "id": 4,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.1.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "disableTextWrap": false,
+              "editorMode": "builder",
+              "expr": "sum by(pipeline, model_name) (increase(livepeer_ai_request_errors{error_code=~\"no orchestrators available.*\", pipeline=~\"live-.*\"}[1m]))",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Missing Capacity Errors in 1m (no orchestrators available)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "default": false,
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 216
+          },
+          "id": 9,
+          "options": {
+            "dedupStrategy": "none",
+            "enableInfiniteScrolling": false,
+            "enableLogDetails": true,
+            "prettifyLogMessage": false,
+            "showCommonLabels": false,
+            "showLabels": false,
+            "showTime": false,
+            "sortOrder": "Descending",
+            "wrapLogMessage": false
+          },
+          "pluginVersion": "12.1.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "P8E80F9AEF21F6940"
+              },
+              "editorMode": "code",
+              "expr": "{app=\"mediamtx\"} |~ `the stream doesn't contain any supported codec|closed: codec`",
+              "queryType": "range",
+              "refId": "A"
+            }
+          ],
+          "title": "MediaMTX unsupported codec",
+          "type": "logs"
         }
       ],
-      "title": "Packet Loss by Time",
-      "type": "timeseries"
+      "title": "Gateway Debug",
+      "type": "row"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 2
+      },
+      "id": 2,
+      "panels": [],
+      "title": "Orchestrators Debug",
+      "type": "row"
     },
     {
       "datasource": {
-        "type": "grafana-clickhouse-datasource",
-        "uid": "cdrta4zbtlddsa"
+        "uid": "P8E80F9AEF21F6940"
       },
-      "description": "Displays the average jitter for streams in milliseconds (ms). The threshold is 30 ms—any value above this should be investigated",
+      "description": "This chart indicates the number of suspected CUDA memory leaks by each node.\n",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "dashed"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 30
-              }
-            ]
-          },
-          "unit": "ms"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 17
-      },
-      "id": 39,
-      "options": {
-        "legend": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.0.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "grafana-clickhouse-datasource",
-            "uid": "cdrta4zbtlddsa"
-          },
-          "editorType": "sql",
-          "format": 2,
-          "meta": {
-            "builderOptions": {
-              "columns": [],
-              "database": "",
-              "limit": 1000,
-              "mode": "list",
-              "queryType": "table",
-              "table": ""
-            }
-          },
-          "pluginVersion": "4.9.0",
-          "queryType": "logs",
-          "rawSql": "SELECT\n  `network_events`.`stream_ingest_metrics_view`.`track_type` AS `track_type`,\n  `toStartOfMinute`(\n    `toTimeZone`(\n      `network_events`.`stream_ingest_metrics_view`.`event_timestamp_ts`,\n      'UTC'\n    )\n  ) AS `event_timestamp_ts`,\n  AVG(\n    `network_events`.`stream_ingest_metrics_view`.`jitter_ms`\n  ) AS `avg`\nFROM\n  `network_events`.`stream_ingest_metrics_view`\n--WHERE `network_events`.`stream_ingest_metrics_view`.`gateway` LIKE '%--livepeer-ai-gateway-%.livepeer.live%'\nGROUP BY\n  `network_events`.`stream_ingest_metrics_view`.`track_type`,\n  `toStartOfMinute`(\n    `toTimeZone`(\n      `network_events`.`stream_ingest_metrics_view`.`event_timestamp_ts`,\n      'UTC'\n    )\n  )\nORDER BY\n  `network_events`.`stream_ingest_metrics_view`.`track_type` ASC,\n  `toStartOfMinute`(\n    `toTimeZone`(\n      `network_events`.`stream_ingest_metrics_view`.`event_timestamp_ts`,\n      'UTC'\n    )\n  ) ASC",
-          "refId": "A"
-        }
-      ],
-      "title": "Average Ingest Jitter",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "grafana-clickhouse-datasource",
-        "uid": "cdrta4zbtlddsa"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
           },
           "custom": {
             "axisBorderShow": false,
@@ -687,293 +1636,13 @@
               "mode": "off"
             }
           },
-          "fieldMinMax": false,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 500
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 25
-      },
-      "id": 31,
-      "options": {
-        "barRadius": 0,
-        "barWidth": 0.97,
-        "fullHighlight": true,
-        "groupWidth": 0.7,
-        "legend": {
-          "calcs": [],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": false
-        },
-        "orientation": "horizontal",
-        "showValue": "auto",
-        "stacking": "none",
-        "tooltip": {
-          "hideZeros": true,
-          "mode": "single",
-          "sort": "asc"
-        },
-        "xField": "first_error_message",
-        "xTickLabelRotation": 0,
-        "xTickLabelSpacing": 0
-      },
-      "pluginVersion": "12.0.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "grafana-clickhouse-datasource",
-            "uid": "cdrta4zbtlddsa"
-          },
-          "editorType": "sql",
-          "format": 1,
-          "hide": false,
-          "meta": {
-            "builderOptions": {
-              "columns": [],
-              "database": "",
-              "limit": 1000,
-              "mode": "list",
-              "queryType": "table",
-              "table": ""
-            }
-          },
-          "pluginVersion": "4.8.2",
-          "queryType": "table",
-          "rawSql": "SELECT\n  `source`.`first_error_message` AS `first_error_message`,\n  COUNT(*) AS `count`\nFROM\n  (\n    SELECT\n      `network_events`.`stream_trace_summary_view`.`stream_id` AS `stream_id`,\n      `network_events`.`stream_trace_summary_view`.`pipeline_id` AS `pipeline_id`,\n      `network_events`.`stream_trace_summary_view`.`user_agent_raw` AS `user_agent_raw`,\n      `network_events`.`stream_trace_summary_view`.`browser_type` AS `browser_type`,\n      `network_events`.`stream_trace_summary_view`.`device_type` AS `device_type`,\n      `network_events`.`stream_trace_summary_view`.`is_mobile` AS `is_mobile`,\n      `network_events`.`stream_trace_summary_view`.`hostname` AS `hostname`,\n      `network_events`.`stream_trace_summary_view`.`is_comfy_staging_gateway` AS `is_comfy_staging_gateway`,\n      `network_events`.`stream_trace_summary_view`.`request_count` AS `request_count`,\n      `network_events`.`stream_trace_summary_view`.`first_event_timestamp_ts` AS `first_event_timestamp_ts`,\n      `network_events`.`stream_trace_summary_view`.`last_event_timestamp_ts` AS `last_event_timestamp_ts`,\n      `network_events`.`stream_trace_summary_view`.`mid_stream_failure` AS `mid_stream_failure`,\n      `network_events`.`stream_trace_summary_view`.`restart_count` AS `restart_count`,\n      `network_events`.`stream_trace_summary_view`.`event_messages` AS `event_messages`,\n      `network_events`.`stream_trace_summary_view`.`event_message_string` AS `event_message_string`,\n      `network_events`.`stream_trace_summary_view`.`excusable_errors` AS `excusable_errors`,\n      `network_events`.`stream_trace_summary_view`.`error_count` AS `error_count`,\n      `network_events`.`stream_trace_summary_view`.`all_excusable_errors` AS `all_excusable_errors`,\n      `network_events`.`stream_trace_summary_view`.`total_time_diff_ms` AS `total_time_diff_ms`,\n      `network_events`.`stream_trace_summary_view`.`startup_completed` AS `startup_completed`,\n      `network_events`.`stream_trace_summary_view`.`user_generated_stream` AS `user_generated_stream`,\n      `network_events`.`stream_trace_summary_view`.`gateway_startup_completed` AS `gateway_startup_completed`,\n      `network_events`.`stream_trace_summary_view`.`videojs_fallback` AS `videojs_fallback`,\n      `network_events`.`stream_trace_summary_view`.`gateway_start_up_time_ms` AS `gateway_start_up_time_ms`,\n      `network_events`.`stream_trace_summary_view`.`first_event` AS `first_event`,\n      `network_events`.`stream_trace_summary_view`.`last_event` AS `last_event`,\n      `network_events`.`stream_trace_summary_view`.`first_error_message` AS `first_error_message`,\n      `network_events`.`stream_trace_summary_view`.`request_ids` AS `request_ids`,\n      `network_events`.`stream_trace_summary_view`.`orch_count` AS `orch_count`,\n      `network_events`.`stream_trace_summary_view`.`orch_urls` AS `orch_urls`,\n      `network_events`.`stream_trace_summary_view`.`events_sequence` AS `events_sequence`,\n      CASE\n        WHEN `positionUTF8`(\n          `Daydream Users Latest Table - Author`.`email`,\n          'livepeer.org'\n        ) > 0 THEN '1'\n        ELSE '0'\n      END AS `Internal User`,\n      CASE\n        WHEN `Daydream Streams Latest Table - Stream`.`whip_url` = '' THEN 'missing'\n        ELSE CASE\n          WHEN `extract`(\n            `Daydream Streams Latest Table - Stream`.`whip_url`,\n            '(live|aiWebrtc)/'\n          ) = 'live' THEN 'gateway'\n          ELSE 'mediamtx'\n        END\n      END AS `whip_server`,\n      CASE\n        WHEN `positionUTF8`(\n          `Daydream Users Latest Table - Author`.`email`,\n          'infraservice'\n        ) > 0 THEN 'load test'\n        ELSE CASE\n          WHEN `positionUTF8`(\n            `Daydream Users Latest Table - Author`.`email`,\n            'privy.io'\n          ) > 0 THEN 'e2e'\n          ELSE CASE\n            WHEN `positionUTF8`(\n              `Daydream Users Latest Table - Author`.`email`,\n              '@livepeer.org'\n            ) > 0 THEN 'internal'\n            ELSE 'user'\n          END\n        END\n      END AS `User Type`,\n      `Daydream Streams Latest Table - Stream`.`id` AS `Daydream Streams Latest Table - Stream__id`,\n      `Daydream Streams Latest Table - Stream`.`name` AS `Daydream Streams Latest Table - Stream__name`,\n      `Daydream Streams Latest Table - Stream`.`stream_key` AS `Daydream Streams Latest Table - Stream__stream_key`,\n      `Daydream Streams Latest Table - Stream`.`author` AS `Daydream Streams Latest Table - Stream__author`,\n      `Daydream Streams Latest Table - Stream`.`output_playback_id` AS `Daydream Streams Latest Table - Stream__output_playback_id`,\n      `Daydream Streams Latest Table - Stream`.`created_at` AS `Daydream Streams Latest Table - Stream__created_at`,\n      `Daydream Streams Latest Table - Stream`.`gateway_host` AS `Daydream Streams Latest Table - Stream__gateway_host`,\n      `Daydream Streams Latest Table - Stream`.`is_smoke_test` AS `Daydream Streams Latest Table - Stream__is_smoke_test`,\n      `Daydream Streams Latest Table - Stream`.`whip_url` AS `Daydream Streams Latest Table - Stream__whip_url`,\n      `Daydream Streams Latest Table - Stream`.`_peerdb_synced_at` AS `Daydream Streams Latest Table - Stream___peerdb_synced_at`,\n      `Daydream Users Latest Table - Author`.`id` AS `Daydream Users Latest Table - Author__id`,\n      `Daydream Users Latest Table - Author`.`name` AS `Daydream Users Latest Table - Author__name`,\n      `Daydream Users Latest Table - Author`.`email` AS `Daydream Users Latest Table - Author__email`,\n      `Daydream Users Latest Table - Author`.`created_at` AS `Daydream Users Latest Table - Author__created_at`,\n      `Daydream Users Latest Table - Author`.`provider` AS `Daydream Users Latest Table - Author__provider`,\n      `Daydream Users Latest Table - Author`.`_peerdb_synced_at` AS `Daydream Users Latest Table - Author___peerdb_synced_at`,\n      `Daydream Pipelines Latest Table - Pipeline`.`id` AS `Daydream Pipelines Latest Table - Pipeline__id`,\n      `Daydream Pipelines Latest Table - Pipeline`.`name` AS `Daydream Pipelines Latest Table - Pipeline__name`,\n      `Daydream Pipelines Latest Table - Pipeline`.`key` AS `Daydream Pipelines Latest Table - Pipeline__key`,\n      `Daydream Pipelines Latest Table - Pipeline`.`author` AS `Daydream Pipelines Latest Table - Pipeline__author`,\n      `Daydream Pipelines Latest Table - Pipeline`.`description` AS `Daydream Pipelines Latest Table - Pipeline__description`,\n      `Daydream Pipelines Latest Table - Pipeline`.`type` AS `Daydream Pipelines Latest Table - Pipeline__type`,\n      `Daydream Pipelines Latest Table - Pipeline`.`created_at` AS `Daydream Pipelines Latest Table - Pipeline__created_at`,\n      `Daydream Pipelines Latest Table - Pipeline`.`updated_at` AS `Daydream Pipelines Latest Table - Pipeline__updated_at`,\n      `Daydream Pipelines Latest Table - Pipeline`.`is_private` AS `Daydream Pipelines Latest Table - Pipeline__is_private`,\n      `Daydream Pipelines Latest Table - Pipeline`.`is_featured` AS `Daydream Pipelines Latest Table - Pipeline__is_featured`,\n      `Daydream Pipelines Latest Table - Pipeline`.`model_card` AS `Daydream Pipelines Latest Table - Pipeline__model_card`,\n      `Daydream Pipelines Latest Table - Pipeline`.`_peerdb_synced_at` AS `Daydream Pipelines Latest Table - Pipeline___peerdb_4080d2c9`\n    FROM\n      `network_events`.`stream_trace_summary_view`\n     \nLEFT JOIN `network_events`.`daydream_streams_latest_table` AS `Daydream Streams Latest Table - Stream` ON `network_events`.`stream_trace_summary_view`.`stream_id` = `Daydream Streams Latest Table - Stream`.`id`\n      LEFT JOIN `network_events`.`daydream_users_latest_table` AS `Daydream Users Latest Table - Author` ON `Daydream Streams Latest Table - Stream`.`author` = `Daydream Users Latest Table - Author`.`id`\n      LEFT JOIN `network_events`.`daydream_pipelines_latest_table` AS `Daydream Pipelines Latest Table - Pipeline` ON `network_events`.`stream_trace_summary_view`.`pipeline_id` = `Daydream Pipelines Latest Table - Pipeline`.`id`\n  ) AS `source`\nWHERE\n  `source`.`startup_completed` = 0\nGROUP BY\n  `source`.`first_error_message`\nHAVING\n  COUNT(*) > 500\nORDER BY\n  `source`.`first_error_message` ASC",
-          "refId": "A"
-        }
-      ],
-      "title": "Fail Start Up Errors",
-      "type": "barchart"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 33
-      },
-      "id": 3,
-      "panels": [],
-      "title": "Gateway Debug",
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "default": false,
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 24,
-        "x": 0,
-        "y": 34
-      },
-      "id": 8,
-      "options": {
-        "dedupStrategy": "none",
-        "enableInfiniteScrolling": false,
-        "enableLogDetails": true,
-        "prettifyLogMessage": false,
-        "showCommonLabels": false,
-        "showLabels": false,
-        "showTime": false,
-        "sortOrder": "Ascending",
-        "wrapLogMessage": false
-      },
-      "pluginVersion": "12.0.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
-          "editorMode": "code",
-          "expr": "{app=~\".*-livepeer-ai-gateway\"} != \"Polling blocks\"",
-          "queryType": "range",
-          "refId": "A"
-        }
-      ],
-      "title": "All Gateway Logs",
-      "type": "logs"
-    },
-    {
-      "datasource": {
-        "default": true,
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "line"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 3
-              }
-            ]
-          },
-          "unit": "percent"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 40
-      },
-      "id": 12,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.0.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "sum(increase(livepeer_ai_request_errors{pipeline=~\"live-.*\"}[$__rate_interval])) / sum(increase(livepeer_ai_live_attempt[$__rate_interval])) * 100",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "Error Rate",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
-      "description": "Shows the number of occurrences of each unique ‘Live video pipeline’ error in the last 15 minutes, grouped by error type",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -987,557 +1656,55 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 12,
-        "y": 40
+        "x": 0,
+        "y": 3
       },
-      "id": 18,
+      "id": 41,
       "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
         "legend": {
           "calcs": [
-            "lastNotNull"
+            "lastNotNull",
+            "sum"
           ],
           "displayMode": "table",
           "placement": "right",
           "showLegend": true
         },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
         "tooltip": {
           "hideZeros": false,
           "mode": "single",
           "sort": "none"
-        }
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "sum(count_over_time(\n    {container=\"ai-gateway\"} |= \"Live video pipeline finished with error\" | pattern \"<_>Live video pipeline finished with error: <errorr>\" \n[15m])) by (errorr)",
+          "expr": "count_over_time(\n  {container=\"live-video-to-video_streamdiffusion_8900\", node_name=~\".*\"}\n  != \"infer.py process is running...\"\n  != \"infer.py process diagnostics\" \n  != \"GET /metrics HTTP/1.1\"\n  [$__interval]\n)",
+          "legendFormat": "{{node_name}}",
           "queryType": "range",
           "refId": "A"
         }
       ],
-      "title": "Ai Video Pipeline Errors by Type",
-      "type": "timeseries"
+      "title": "CUDA Memory Leak - Stream Diffusion",
+      "type": "barchart"
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "description": "If O does not respond to a request from G within 45s, then G will not retry and flag this error.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 48
-      },
-      "id": 19,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.0.2",
-      "targets": [
-        {
-          "editorMode": "code",
-          "expr": "sum by (pipeline, model_name, region) (increase(livepeer_ai_request_errors{error_code=~\"no orchestrators available.*\", pipeline=~\"live-.*\"}[$__interval]))",
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "No Orchestrators Available errors per Region",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "default": true,
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 48
-      },
-      "id": 11,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.0.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "sum by(normalized_error_code, model_name) (label_replace(label_replace(increase(livepeer_ai_request_errors{pipeline=~\"live-.*\"}[1m]), \"normalized_error_code\", \"no orchestrators available\", \"error_code\", \"no orchestrators available.*\"), \"normalized_error_code\", \"$1\", \"error_code\", \"(.*)\"))",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "{{model_name}}: {{normalized_error_code}}",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "Error Responses in 1m",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "default": true,
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "ms"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 56
-      },
-      "id": 10,
-      "links": [
-        {
-          "targetBlank": true,
-          "title": "go-livepeer code",
-          "url": "https://github.com/search?q=repo%3Alivepeer%2Fgo-livepeer%20AIFirstSegmentDelay&type=code"
-        }
-      ],
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.0.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "avg by(orchestrator_uri) (increase(livepeer_ai_first_segment_delay_ms_sum[1m]))",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "First segment delay",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "default": true,
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 56
-      },
-      "id": 5,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.0.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "sum(increase(livepeer_ai_live_attempt[1m]))",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "Stream Attempts in 1m",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "default": true,
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 64
-      },
-      "id": 4,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.0.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "sum by(pipeline, model_name) (increase(livepeer_ai_request_errors{error_code=~\"no orchestrators available.*\", pipeline=~\"live-.*\"}[1m]))",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "Missing Capacity Errors in 1m (no orchestrators available)",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "default": false,
         "type": "loki",
         "uid": "P8E80F9AEF21F6940"
       },
+      "description": "This log shows CUDA memory leaks in production.",
       "fieldConfig": {
         "defaults": {},
         "overrides": []
@@ -1546,9 +1713,9 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 64
+        "y": 3
       },
-      "id": 9,
+      "id": 42,
       "options": {
         "dedupStrategy": "none",
         "enableInfiniteScrolling": false,
@@ -1560,34 +1727,22 @@
         "sortOrder": "Descending",
         "wrapLogMessage": false
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "datasource": {
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
+          "direction": "backward",
           "editorMode": "code",
-          "expr": "{app=\"mediamtx\"} |~ `the stream doesn't contain any supported codec|closed: codec`",
+          "expr": "{container=\"live-video-to-video_streamdiffusion_8900\", node_name=~\".*\"} != \"infer.py process is running...\" != \"message=infer.py process diagnostics\" != \"GET /metrics HTTP/1.1\"",
           "queryType": "range",
           "refId": "A"
         }
       ],
-      "title": "MediaMTX unsupported codec",
+      "title": "CUDA Memory Leak Logs - Stream Diffusion",
       "type": "logs"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 72
-      },
-      "id": 2,
-      "panels": [],
-      "title": "Orchestrators Debug",
-      "type": "row"
     },
     {
       "datasource": {
@@ -1638,7 +1793,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -1653,7 +1809,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 73
+        "y": 11
       },
       "id": 1,
       "options": {
@@ -1669,7 +1825,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "datasource": {
@@ -1740,7 +1896,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -1755,7 +1912,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 73
+        "y": 11
       },
       "id": 13,
       "options": {
@@ -1771,7 +1928,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "datasource": {
@@ -1837,7 +1994,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -1852,7 +2010,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 81
+        "y": 19
       },
       "id": 21,
       "options": {
@@ -1868,7 +2026,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "datasource": {
@@ -1960,7 +2118,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -1975,7 +2134,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 81
+        "y": 19
       },
       "id": 15,
       "options": {
@@ -1993,7 +2152,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "editorMode": "code",
@@ -2054,7 +2213,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -2069,7 +2229,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 89
+        "y": 27
       },
       "id": 22,
       "options": {
@@ -2087,7 +2247,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "disableTextWrap": false,
@@ -2154,7 +2314,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               }
             ]
           },
@@ -2166,7 +2327,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 89
+        "y": 27
       },
       "id": 24,
       "options": {
@@ -2186,7 +2347,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "disableTextWrap": false,
@@ -2252,7 +2413,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -2267,7 +2429,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 97
+        "y": 35
       },
       "id": 23,
       "options": {
@@ -2283,7 +2445,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "editorMode": "code",
@@ -2346,7 +2508,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -2361,7 +2524,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 97
+        "y": 35
       },
       "id": 26,
       "options": {
@@ -2381,7 +2544,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "disableTextWrap": false,
@@ -2447,7 +2610,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -2462,7 +2626,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 105
+        "y": 43
       },
       "id": 25,
       "options": {
@@ -2480,7 +2644,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "datasource": {
@@ -2546,7 +2710,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -2561,7 +2726,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 105
+        "y": 43
       },
       "id": 28,
       "options": {
@@ -2579,7 +2744,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "disableTextWrap": false,
@@ -2644,7 +2809,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -2659,7 +2825,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 113
+        "y": 51
       },
       "id": 27,
       "options": {
@@ -2675,7 +2841,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "editorMode": "code",
@@ -2737,7 +2903,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -2752,7 +2919,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 113
+        "y": 51
       },
       "id": 30,
       "options": {
@@ -2770,7 +2937,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "disableTextWrap": false,
@@ -2835,7 +3002,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -2850,7 +3018,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 121
+        "y": 59
       },
       "id": 29,
       "options": {
@@ -2868,7 +3036,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "disableTextWrap": false,
@@ -2933,7 +3101,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -2948,7 +3117,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 121
+        "y": 59
       },
       "id": 32,
       "options": {
@@ -2966,7 +3135,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "datasource": {
@@ -3032,7 +3201,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -3048,7 +3218,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 129
+        "y": 67
       },
       "id": 37,
       "links": [
@@ -3077,7 +3247,7 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "datasource": {
@@ -3168,7 +3338,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -3204,7 +3375,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 129
+        "y": 67
       },
       "id": 38,
       "links": [
@@ -3233,7 +3404,7 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "datasource": {
@@ -3315,7 +3486,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               }
             ]
           }
@@ -3326,7 +3498,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 137
+        "y": 75
       },
       "id": 33,
       "options": {
@@ -3354,7 +3526,7 @@
         "xTickLabelRotation": -45,
         "xTickLabelSpacing": 0
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "datasource": {
@@ -3383,216 +3555,219 @@
       "type": "barchart"
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 145
+        "y": 83
       },
       "id": 34,
-      "panels": [],
-      "title": "Wallet Funds",
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "axisSoftMax": 12,
-            "axisSoftMin": 0,
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "ETH"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 146
-      },
-      "id": 36,
-      "options": {
-        "legend": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.0.2",
-      "targets": [
+      "panels": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "editorMode": "code",
-          "expr": "avg(livepeer_gateway_reserve{livepeer_live_app=\"prod-livepeer-ai-gateway\"}) / 1e9 # ETH (metric in gwei)",
-          "instant": false,
-          "legendFormat": "0xca33...7fef",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "AI Gateways Reserve",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "axisSoftMax": 12,
+                "axisSoftMin": 0,
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "ETH"
+            },
+            "overrides": []
           },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "axisSoftMax": 15,
-            "axisSoftMin": 0,
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 226
+          },
+          "id": 36,
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true
             },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
             }
           },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
+          "pluginVersion": "12.1.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
               },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "ETH"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 146
-      },
-      "id": 35,
-      "options": {
-        "legend": {
-          "calcs": [
-            "lastNotNull"
+              "editorMode": "code",
+              "expr": "avg(livepeer_gateway_reserve{livepeer_live_app=\"prod-livepeer-ai-gateway\"}) / 1e9 # ETH (metric in gwei)",
+              "instant": false,
+              "legendFormat": "0xca33...7fef",
+              "range": true,
+              "refId": "A"
+            }
           ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true
+          "title": "AI Gateways Reserve",
+          "type": "timeseries"
         },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.0.2",
-      "targets": [
         {
-          "editorMode": "code",
-          "expr": "avg(livepeer_gateway_deposit{livepeer_live_app=\"prod-livepeer-ai-gateway\"}) / 1e9 # ETH (metric in gwei)",
-          "legendFormat": "0xca33...7fef",
-          "range": true,
-          "refId": "A"
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "axisSoftMax": 15,
+                "axisSoftMin": 0,
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "ETH"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 226
+          },
+          "id": 35,
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.1.0",
+          "targets": [
+            {
+              "editorMode": "code",
+              "expr": "avg(livepeer_gateway_deposit{livepeer_live_app=\"prod-livepeer-ai-gateway\"}) / 1e9 # ETH (metric in gwei)",
+              "legendFormat": "0xca33...7fef",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "AI Gateways Deposit",
+          "type": "timeseries"
         }
       ],
-      "title": "AI Gateways Deposit",
-      "type": "timeseries"
+      "title": "Wallet Funds",
+      "type": "row"
     }
   ],
   "preload": false,
@@ -3614,5 +3789,5 @@
   "timezone": "utc",
   "title": "AI Overview (Livestream)",
   "uid": "be6llteqebk00b",
-  "version": 96
+  "version": 102
 }
