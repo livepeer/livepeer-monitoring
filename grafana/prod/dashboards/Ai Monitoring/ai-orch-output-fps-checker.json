@@ -1,0 +1,275 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Showcases the real-time output FPS of orchs.",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "cdrta4zbtlddsa"
+      },
+      "description": "Orchestrator fps profile.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "area"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "yellow",
+                "value": 12
+              },
+              {
+                "color": "green",
+                "value": 15
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "builderOptions": {
+            "aggregates": [],
+            "columns": [
+              {
+                "alias": "output_fps",
+                "custom": false,
+                "name": "output_fps",
+                "type": "Float32"
+              },
+              {
+                "alias": "event_timestamp_ts",
+                "hint": "time",
+                "name": "event_timestamp_ts",
+                "type": "DateTime64(3)"
+              }
+            ],
+            "database": "network_events",
+            "filters": [
+              {
+                "condition": "AND",
+                "filterType": "custom",
+                "hint": "time",
+                "key": "",
+                "operator": "WITH IN DASHBOARD TIME RANGE",
+                "type": "datetime"
+              },
+              {
+                "condition": "AND",
+                "filterType": "custom",
+                "key": "orchestrator_url",
+                "label": "orchestrator_url",
+                "operator": "=",
+                "type": "String",
+                "value": "https://{orch_uri}"
+              }
+            ],
+            "groupBy": [],
+            "limit": 1000,
+            "meta": {},
+            "mode": "aggregate",
+            "orderBy": [
+              {
+                "default": true,
+                "dir": "ASC",
+                "hint": "time",
+                "name": ""
+              }
+            ],
+            "queryType": "timeseries",
+            "table": "stream_status_view"
+          },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrta4zbtlddsa"
+          },
+          "editorType": "sql",
+          "format": 0,
+          "meta": {
+            "builderOptions": {
+              "aggregates": [],
+              "columns": [
+                {
+                  "alias": "output_fps",
+                  "custom": false,
+                  "name": "output_fps",
+                  "type": "Float32"
+                },
+                {
+                  "alias": "event_timestamp_ts",
+                  "hint": "time",
+                  "name": "event_timestamp_ts",
+                  "type": "DateTime64(3)"
+                }
+              ],
+              "database": "network_events",
+              "filters": [
+                {
+                  "condition": "AND",
+                  "filterType": "custom",
+                  "hint": "time",
+                  "key": "",
+                  "operator": "WITH IN DASHBOARD TIME RANGE",
+                  "type": "datetime"
+                },
+                {
+                  "condition": "AND",
+                  "filterType": "custom",
+                  "key": "orchestrator_url",
+                  "label": "orchestrator_url",
+                  "operator": "=",
+                  "type": "String",
+                  "value": "https://{orch_uri}"
+                }
+              ],
+              "groupBy": [],
+              "limit": 1000,
+              "meta": {},
+              "mode": "aggregate",
+              "orderBy": [
+                {
+                  "default": true,
+                  "dir": "ASC",
+                  "hint": "time",
+                  "name": ""
+                }
+              ],
+              "queryType": "timeseries",
+              "table": "stream_status_view"
+            }
+          },
+          "pluginVersion": "4.10.2",
+          "queryType": "timeseries",
+          "rawSql": "SELECT\r\n  event_timestamp_ts AS \"time\",\r\n  output_fps\r\nFROM network_events.stream_status_view\r\nWHERE $__timeFilter(event_timestamp_ts)\r\n  AND orchestrator_url = concat('https://', '${orch_uri}')\r\n  AND output_fps > 0\r\nORDER BY \"time\" ASC\r\nLIMIT 1000;\r\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Orch fps",
+      "type": "timeseries"
+    }
+  ],
+  "preload": false,
+  "schemaVersion": 41,
+  "tags": [
+    "ai",
+    "orchestrator",
+    "daydream"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": "188.74.70.85:6500",
+          "value": "188.74.70.85:6500"
+        },
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "cdrta4zbtlddsa"
+        },
+        "definition": "SELECT DISTINCT extract(orchestrator_url, 'https?://([^/]+)') AS host\nFROM network_events.stream_status_view\nORDER BY host",
+        "description": "Realtime AI Orch URIs",
+        "label": "orchestrator URI",
+        "name": "orch_uri",
+        "options": [],
+        "query": "SELECT DISTINCT extract(orchestrator_url, 'https?://([^/]+)') AS host\nFROM network_events.stream_status_view\nORDER BY host",
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-5m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "utc",
+  "title": "AI Orch Output FPS Checker",
+  "uid": "bb079a08-3c02-42f3-ac88-48abc0a9b322",
+  "version": 6
+}

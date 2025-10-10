@@ -39,7 +39,6 @@
       "url": "/grafana/d/nginx/nginx-ingress-controller"
     }
   ],
-  "liveNow": false,
   "panels": [
     {
       "datasource": {
@@ -92,7 +91,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -190,10 +189,12 @@
           "sortDesc": false
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "asc"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -269,7 +270,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -322,11 +323,12 @@
           "width": 365
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "desc"
         }
       },
-      "repeatDirection": "h",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -417,7 +419,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -516,10 +518,12 @@
           "width": 700
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "desc"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -597,7 +601,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -695,10 +699,12 @@
           "width": 350
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "asc"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -775,7 +781,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -873,10 +879,12 @@
           "width": 190
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "asc"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -951,7 +959,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -1048,10 +1056,12 @@
           "sortDesc": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "asc"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -1082,6 +1092,10 @@
         "type": "loki",
         "uid": "P8E80F9AEF21F6940"
       },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
       "gridPos": {
         "h": 9,
         "w": 12,
@@ -1098,6 +1112,7 @@
       ],
       "options": {
         "dedupStrategy": "none",
+        "enableInfiniteScrolling": false,
         "enableLogDetails": true,
         "prettifyLogMessage": false,
         "showCommonLabels": false,
@@ -1106,14 +1121,16 @@
         "sortOrder": "Descending",
         "wrapLogMessage": true
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "editorMode": "builder",
-          "expr": "{app=\"ingress-nginx\", namespace=\"default\", stream=\"stdout\", region=~\"${region:pipe}\"} | pattern `<ip> - - <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<origin>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>` | upstream =~ `default-(${ingress:pipe})-.*` | status =~ `${status:pipe}` | method =~ `${method:pipe}` | url =~ `${path:pipe}`",
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "{app=\"ingress-nginx\", namespace=\"default\", stream=\"stdout\", region=~\"${region:pipe}\"} | pattern `<ip> - <svc> <timestamp> \"<method> <url> <protocol>\" <status> <bytes> \"<origin>\" \"<userAgent>\" <wtf1> <wtf2> [<upstream>] [<wtf3>] <upstreamAddr> <wtf4> <wtf5> <upstreamStatus> <requestId>` | upstream =~ `default-(${ingress:pipe})-.*` | status =~ `${status:pipe}` | method =~ `${method:pipe}` | url =~ `${path:pipe}`",
           "queryType": "range",
           "refId": "A"
         }
@@ -1171,7 +1188,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -1268,10 +1285,12 @@
           "sortDesc": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "asc"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -1294,9 +1313,9 @@
       "type": "timeseries"
     },
     {
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
       },
       "gridPos": {
         "h": 4,
@@ -1314,7 +1333,8 @@
         "content": "* We don't collect `/health`, `/healthz`, `/{{ UUID }}.json`, `/loki/api/v1/push`, `/insert/420/prometheus` logs.\nSo even you can see prometheus metrics related to these endpoints the logs are missing\n* Too narrow time range may filter out some logs while showing prometheus metrics on charts as metrics and logs might have slightly different datetimes.\n* [Explore nginx logs](/grafana/explore?schemaVersion=1&panes=%7B%22D32%22:%7B%22datasource%22:%22P8E80F9AEF21F6940%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22expr%22:%22%7Bapp%3D%5C%22ingress-nginx%5C%22,%20namespace%3D%5C%22default%5C%22,%20stream%3D%5C%22stdout%5C%22,%20region%3D~%5C%22${region:pipe}%5C%22%7D%20%7C%20pattern%20%60%3Cip%3E%20-%20-%20%3Ctimestamp%3E%20%5C%22%3Cmethod%3E%20%3Curl%3E%20%3Cprotocol%3E%5C%22%20%3Cstatus%3E%20%3Cbytes%3E%20%5C%22%3Corigin%3E%5C%22%20%5C%22%3CuserAgent%3E%5C%22%20%3Cwtf1%3E%20%3Cwtf2%3E%20%5B%3Cupstream%3E%5D%20%5B%3Cwtf3%3E%5D%20%3CupstreamAddr%3E%20%3Cwtf4%3E%20%3Cwtf5%3E%20%3CupstreamStatus%3E%20%3CrequestId%3E%60%20%7C%20upstream%20%3D~%20%60default-%28${ingress:pipe}%29-.%2A%60%20%7C%20status%20%3D~%20%60${status:pipe}%60%22,%22queryType%22:%22range%22,%22datasource%22:%7B%22type%22:%22loki%22,%22uid%22:%22P8E80F9AEF21F6940%22%7D,%22editorMode%22:%22code%22%7D%5D,%22range%22:%7B%22from%22:%22${__from}%22,%22to%22:%22${__to}%22%7D%7D%7D&orgId=1)",
         "mode": "markdown"
       },
-      "pluginVersion": "11.2.0",
+      "pluginVersion": "12.1.1",
+      "title": "",
       "type": "text"
     },
     {
@@ -1367,7 +1387,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -1464,10 +1485,12 @@
           "sortDesc": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "asc"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -1508,7 +1531,8 @@
       "type": "timeseries"
     }
   ],
-  "schemaVersion": 39,
+  "preload": false,
+  "schemaVersion": 41,
   "tags": [
     "nginx"
   ],
@@ -1517,7 +1541,6 @@
       {
         "allValue": ".*",
         "current": {
-          "selected": true,
           "text": [
             "5XX"
           ],
@@ -1525,7 +1548,6 @@
             "5.."
           ]
         },
-        "hide": 0,
         "includeAll": true,
         "label": "status code",
         "multi": true,
@@ -1708,14 +1730,11 @@
           }
         ],
         "query": "5XX : 5.., 4XX : 4.., 3XX : 3.., 2XX : 2.., 400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 500, 501, 502, 503, 504, 505, 506, 507, 508, 510, 511",
-        "queryValue": "",
-        "skipUrlSync": false,
         "type": "custom"
       },
       {
         "allValue": ".*",
         "current": {
-          "selected": true,
           "text": [
             "All"
           ],
@@ -1728,7 +1747,6 @@
           "uid": "PBFA97CFB590B2093"
         },
         "definition": "label_values(nginx_ingress_controller_requests{status=~\"${status:pipe}\"},ingress)",
-        "hide": 0,
         "includeAll": true,
         "label": "ingress",
         "multi": true,
@@ -1741,14 +1759,12 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
         "sort": 1,
         "type": "query"
       },
       {
         "allValue": ".*",
         "current": {
-          "selected": true,
           "text": [
             "All"
           ],
@@ -1761,7 +1777,6 @@
           "uid": "PBFA97CFB590B2093"
         },
         "definition": "label_values(nginx_ingress_controller_requests{ingress=~\"$ingress\", status=~\"${status:pipe}\"},region)",
-        "hide": 0,
         "includeAll": true,
         "label": "region",
         "multi": true,
@@ -1774,14 +1789,12 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
         "sort": 1,
         "type": "query"
       },
       {
         "allValue": ".*",
         "current": {
-          "selected": true,
           "text": [
             "All"
           ],
@@ -1794,7 +1807,6 @@
           "uid": "PBFA97CFB590B2093"
         },
         "definition": "label_values(nginx_ingress_controller_requests{ingress=~\"$ingress\", region=~\"$region\", status=~\"${status:pipe}\"},host)",
-        "hide": 0,
         "includeAll": true,
         "label": "hostname",
         "multi": true,
@@ -1807,14 +1819,12 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
         "sort": 1,
         "type": "query"
       },
       {
         "allValue": ".*",
         "current": {
-          "selected": true,
           "text": [
             "All"
           ],
@@ -1827,9 +1837,7 @@
           "uid": "PBFA97CFB590B2093"
         },
         "definition": "label_values(nginx_ingress_controller_requests{ingress=~\"$ingress\", region=~\"$region\", status=~\"${status:pipe}\", host=~\"${host:pipe}\"},method)",
-        "hide": 0,
         "includeAll": true,
-        "label": "",
         "multi": true,
         "name": "method",
         "options": [],
@@ -1840,14 +1848,12 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
         "sort": 1,
         "type": "query"
       },
       {
         "allValue": ".*",
         "current": {
-          "selected": true,
           "text": [
             "All"
           ],
@@ -1860,9 +1866,7 @@
           "uid": "PBFA97CFB590B2093"
         },
         "definition": "label_values(nginx_ingress_controller_requests{ingress=~\"$ingress\", region=~\"$region\", status=~\"${status:pipe}\", host=~\"${host:pipe}\", method=~\"${method:pipe}\"},path)",
-        "hide": 0,
         "includeAll": true,
-        "label": "",
         "multi": true,
         "name": "path",
         "options": [],
@@ -1873,7 +1877,6 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
         "sort": 1,
         "type": "query"
       }
@@ -1887,6 +1890,5 @@
   "timezone": "",
   "title": "nginx 5XX",
   "uid": "f74066bf-c68e-4303-a9c4-81423738f8a3",
-  "version": 12,
-  "weekStart": ""
+  "version": 14
 }

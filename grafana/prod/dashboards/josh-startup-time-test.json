@@ -48,7 +48,7 @@
         "sortOrder": "Ascending",
         "wrapLogMessage": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -57,7 +57,7 @@
           },
           "direction": "forward",
           "editorMode": "code",
-          "expr": "{container=~\"mediamtx|ai-gateway\"}\n|= `${userStreamKey}`\n|~ `RTMP.* is publishing to path .*-out|Gathered .* took=|First Segment delay=|creating whip|selected orchestrator=`\n\n",
+          "expr": "{container=~\"mediamtx|ai-gateway\"}\n|= `${userStreamKey}`\n|~ `RTMP.* is publishing to path .*-out|Gathered .* took=|First Segment delay=|creating whip|selected orchestrator=|Processed AI request`\n\n",
           "queryType": "range",
           "refId": "A"
         }
@@ -88,7 +88,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -119,7 +119,7 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -129,6 +129,7 @@
           "direction": "backward",
           "editorMode": "code",
           "expr": "{container=\"ai-gateway\"}\n|= \"source_type=livepeer-whip\"\n|~ \"Gathered .* took=\"\n| regexp `request_id=(?P<request_id>\\S+)\\s+stream=(?P<streamKey>\\S+).*took=(?P<raw>\\d+(?:\\.\\d+)?(?:ms|s))`\n| line_format \"request_id={{.request_id}} streamKey={{.streamKey}} gather_ms={{ mulf (duration_seconds .raw) 1000 }}\"\n| logfmt",
+          "maxLines": 5000,
           "queryType": "range",
           "refId": "track gather"
         },
@@ -141,6 +142,7 @@
           "editorMode": "code",
           "expr": "{container=\"ai-gateway\"}\n|= \"source_type=livepeer-whip\"\n|= \"First Segment delay=\"\n| regexp `request_id=(?P<request_id>\\S+)\\s+stream=(?P<streamKey>\\S+).*delay=(?P<delay_ms>\\d+)ms`\n| line_format \"request_id={{.request_id}} streamKey={{.streamKey}} delay_ms={{.delay_ms}}\"\n| logfmt",
           "hide": false,
+          "maxLines": 5000,
           "queryType": "range",
           "refId": "first segment"
         },
@@ -151,8 +153,9 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "{container=\"mediamtx\"}\n|= `RTMP`\n|= `is publishing to path`\n|~ \"-out',\"\n| regexp `'.*/(?P<streamKey>[^-]+)-out'`\n| line_format \"streamKey={{.streamKey}}\"",
+          "expr": "{container=\"mediamtx\"}\n|= `RTMP`\n|= `is publishing to path`\n|~ \"-out',\"\n| regexp `'.*/(?P<streamKey>[^-]+)-(?P<request_id>\\S+)-out'`\n| line_format \"request_id={{.request_id}} streamKey={{.streamKey}}\"",
           "hide": false,
+          "maxLines": 5000,
           "queryType": "range",
           "refId": "output publish"
         }
@@ -172,7 +175,7 @@
         {
           "id": "joinByField",
           "options": {
-            "byField": "streamKey",
+            "byField": "request_id",
             "mode": "outer"
           }
         },
@@ -208,6 +211,7 @@
               "stream 1": true,
               "stream 2": true,
               "streamKey 2": true,
+              "streamKey 3": true,
               "tsNs 1": true,
               "tsNs 2": true
             },
@@ -218,9 +222,10 @@
               "Time 3": 5,
               "delay_ms": 2,
               "gather_ms": 1,
-              "request_id 1": 6,
-              "request_id 2": 7,
-              "streamKey": 0
+              "request_id": 6,
+              "streamKey 1": 0,
+              "streamKey 2": 7,
+              "streamKey 3": 8
             },
             "renameByName": {
               "Time 1": "Gather Time",
@@ -351,7 +356,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -384,7 +389,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -545,7 +550,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -576,7 +581,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -613,7 +618,7 @@
         "type": "datasource",
         "uid": "-- Dashboard --"
       },
-      "description": "",
+      "description": "Time between receiving the first (whole) output segment and when MediaMTX registers the output stream",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -639,7 +644,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -670,7 +675,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -724,6 +729,7 @@
         "type": "loki",
         "uid": "P8E80F9AEF21F6940"
       },
+      "description": "Duration of First Selections, excluding anything >10s",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -750,7 +756,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -782,7 +788,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -792,6 +798,7 @@
           "direction": "backward",
           "editorMode": "builder",
           "expr": "{container=\"ai-gateway\"} |= `creating whip` | regexp `request_id=(?P<request_id>\\S+)\\s+`",
+          "maxLines": 5000,
           "queryType": "range",
           "refId": "A"
         },
@@ -802,13 +809,14 @@
           },
           "direction": "backward",
           "editorMode": "builder",
-          "expr": "{container=\"ai-gateway\"} |= `livepeer-whip` |= `Processed AI request` | regexp `request_id=(?P<request_id>\\S+)\\s+`",
+          "expr": "{container=\"ai-gateway\"} |= `Processed AI request` | regexp `request_id=(?P<request_id>\\S+)\\s+`",
           "hide": false,
+          "maxLines": 5000,
           "queryType": "range",
           "refId": "B"
         }
       ],
-      "title": "Selection Duration Histogram",
+      "title": "Selection Duration Histogram (ms)",
       "transformations": [
         {
           "id": "extractFields",
@@ -857,7 +865,7 @@
           "options": {
             "excludeByName": {
               "Time 1": true,
-              "Time 2": true,
+              "Time 2": false,
               "app 1": true,
               "app 2": true,
               "container 1": true,
@@ -903,17 +911,875 @@
               "stream 2": 21
             },
             "renameByName": {
-              "Time 2 - Time 1": "Selection Duration (ms)"
+              "Time 2": "Selection Time",
+              "Time 2 - Time 1": "Selection Duration"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "Selection Time"
+              }
+            ]
+          }
+        },
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "Selection Duration": {
+                "aggregations": [
+                  "first"
+                ],
+                "operation": "aggregate"
+              },
+              "Selection Duration (ms)": {
+                "aggregations": [
+                  "first"
+                ],
+                "operation": "aggregate"
+              },
+              "Selection Time": {
+                "aggregations": []
+              },
+              "request_id": {
+                "aggregations": [],
+                "operation": "groupby"
+              }
+            }
+          }
+        },
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": "10000"
+                  }
+                },
+                "fieldName": "Selection Duration (first)"
+              }
+            ],
+            "match": "any",
+            "type": "exclude"
+          }
+        }
+      ],
+      "type": "histogram"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            }
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 36
+      },
+      "id": 7,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "{container=\"ai-gateway\"} |= \"AI Stream authentication\"\n| logfmt\n| line_format \"dur_ms={{ mulf (duration .dur) 1000.0 }}\"",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Auth Duration Histogram",
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "delimiter": ",",
+            "format": "kvp",
+            "jsonPaths": [
+              {
+                "path": "dur_ms"
+              }
+            ],
+            "keepTime": true,
+            "replace": true,
+            "source": "Line"
+          }
+        },
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "number",
+                "targetField": "dur_ms"
+              }
+            ],
+            "fields": {}
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "dur_ms": "Auth Duration (ms)"
             }
           }
         }
       ],
       "type": "histogram"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "description": "Duration between publishing and playback, excluding anything > ",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 36
+      },
+      "id": 9,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "direction": "backward",
+          "editorMode": "builder",
+          "expr": "{container=\"mediamtx\"} |= `is publishing to path` |= `RTMP` |~ `aiWebrtc/stk_\\S+-\\S+-out` | regexp `aiWebrtc/[^-]+-(?P<request_id>[^-]+)-out` | line_format `request_id={{.request_id}}`",
+          "hide": false,
+          "maxLines": 5000,
+          "queryType": "range",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "direction": "backward",
+          "editorMode": "builder",
+          "expr": "{container=\"mediamtx\"} |= `is reading from path` |= `WebRTC` |~ `aiWebrtc/stk_\\S+-\\S+-out` | regexp `aiWebrtc/[^-]+-(?P<request_id>[^-]+)-out` | line_format `request_id={{.request_id}}`",
+          "hide": false,
+          "maxLines": 5000,
+          "queryType": "range",
+          "refId": "B"
+        }
+      ],
+      "title": "Playback Duration Histogram",
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "delimiter": ",",
+            "format": "kvp",
+            "keepTime": true,
+            "replace": true,
+            "source": "Line"
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "Time"
+              }
+            ]
+          }
+        },
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "Line": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "Time": {
+                "aggregations": [
+                  "firstNotNull"
+                ],
+                "operation": "aggregate"
+              },
+              "request_id": {
+                "aggregations": [],
+                "operation": "groupby"
+              }
+            }
+          }
+        },
+        {
+          "id": "joinByField",
+          "options": {
+            "byField": "request_id",
+            "mode": "inner"
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Playback Duration From Publish (ms)",
+            "binary": {
+              "left": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Time (firstNotNull) 2"
+                }
+              },
+              "operator": "-",
+              "right": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Time (firstNotNull) 1"
+                }
+              }
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": false
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time (firstNotNull) 2": true,
+              "Time (lastNotNull) 2": true
+            },
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "Time (firstNotNull) 1": "Publish Time",
+              "Time (lastNotNull) 1": "Publish Time"
+            }
+          }
+        }
+      ],
+      "type": "histogram"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "description": "excluding anything > 30 seconds",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic",
+            "seriesBy": "last"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 100,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "pointShape": "circle",
+            "pointSize": {
+              "fixed": 5
+            },
+            "pointStrokeWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "show": "points"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 44
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "calcs": [
+            "max",
+            "min",
+            "mean"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "mapping": "auto",
+        "series": [
+          {}
+        ],
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "direction": "backward",
+          "editorMode": "builder",
+          "expr": "{container=\"ai-gateway\"} |= `livepeer-whip` |= `Gathered` | regexp `\\((?P<media_type>.+)\\)` | regexp `request_id=(?P<request_id>\\S+)` | line_format `request_id={{.request_id}} media={{if contains \"video/H264, audio/opus\" .media_type }}audio+video{{else if contains \"video/H264\" .media_type}}video{{ else }}{{.media_type}}{{end}}`",
+          "maxLines": 5000,
+          "queryType": "range",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "{container=\"mediamtx\"} |= `is publishing to path` |= `RTMP` |~ `aiWebrtc/stk_\\S+-\\S+-out` | regexp `aiWebrtc/[^-]+-(?P<request_id>[^-]+)-out` | line_format `request_id={{.request_id}}`",
+          "hide": false,
+          "maxLines": 5000,
+          "queryType": "range",
+          "refId": "B"
+        }
+      ],
+      "title": "Publish Duration By Track",
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "delimiter": ",",
+            "format": "kvp",
+            "keepTime": true,
+            "replace": true,
+            "source": "Line"
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "Time"
+              }
+            ]
+          }
+        },
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "Time": {
+                "aggregations": [
+                  "first"
+                ],
+                "operation": "aggregate"
+              },
+              "media": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "request_id": {
+                "aggregations": [],
+                "operation": "groupby"
+              }
+            }
+          }
+        },
+        {
+          "id": "joinByField",
+          "options": {
+            "byField": "request_id",
+            "mode": "inner"
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Publish Duration (ms)",
+            "binary": {
+              "left": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Time (first) 2"
+                }
+              },
+              "operator": "-",
+              "right": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Time (first) 1"
+                }
+              }
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            }
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time (first) 1": false,
+              "Time (first) 2": true,
+              "Time 1": false,
+              "Time 2": true,
+              "request_id": false
+            },
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {}
+          }
+        },
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": "30000"
+                  }
+                },
+                "fieldName": "Publish Duration (ms)"
+              }
+            ],
+            "match": "any",
+            "type": "exclude"
+          }
+        },
+        {
+          "id": "partitionByValues",
+          "options": {
+            "fields": [
+              "media"
+            ],
+            "keepFields": true,
+            "naming": {
+              "asLabels": false
+            }
+          }
+        }
+      ],
+      "type": "xychart"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 23,
+        "x": 0,
+        "y": 52
+      },
+      "id": 10,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max",
+            "p90",
+            "count"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "sortBy": "Count",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "direction": "backward",
+          "editorMode": "builder",
+          "expr": "max_over_time({container=\"ai-gateway\"} |= `First Segment` | logfmt delay | regexp `url=https://(?P<orch>.*)/ai/trickle` | unwrap duration(delay) [$__auto]) by (orch)",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "First Segment Delay",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#64d3f5",
+            "mode": "palette-classic-by-name"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 22,
+        "w": 16,
+        "x": 0,
+        "y": 65
+      },
+      "id": 11,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.9,
+        "legend": {
+          "calcs": [
+            "allValues"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "sortBy": "All values",
+          "sortDesc": true
+        },
+        "orientation": "vertical",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "direction": "backward",
+          "editorMode": "builder",
+          "expr": "{container=\"ai-gateway\"} |= `First Segment` | logfmt delay | regexp `url=https://(?P<orch>.*)/ai/trickle` | regexp `url=https://.+\\.(?P<domain>.*)\\..+/ai/trickle` | label_format delay=`{{duration .delay}}` | label_format orch=`{{.orch}}` | label_format domain=`{{.domain}}`",
+          "maxLines": 5000,
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Startup Time by Orch",
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "delimiter": ",",
+            "format": "auto",
+            "keepTime": false,
+            "replace": true,
+            "source": "labels"
+          }
+        },
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "number",
+                "targetField": "delay"
+              }
+            ],
+            "fields": {}
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "domain"
+              }
+            ]
+          }
+        },
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "delay": {
+                "aggregations": [
+                  "mean",
+                  "p90"
+                ],
+                "operation": "aggregate"
+              },
+              "domain": {
+                "aggregations": []
+              },
+              "orch": {
+                "aggregations": [],
+                "operation": "groupby"
+              }
+            }
+          }
+        },
+        {
+          "id": "transpose",
+          "options": {}
+        }
+      ],
+      "type": "barchart"
     }
   ],
   "preload": false,
   "refresh": "",
-  "schemaVersion": 40,
+  "schemaVersion": 41,
   "tags": [],
   "templating": {
     "list": [
@@ -931,7 +1797,7 @@
             "value": ""
           }
         ],
-        "query": "",
+        "query": "9989597a",
         "type": "textbox"
       }
     ]
@@ -944,6 +1810,5 @@
   "timezone": "utc",
   "title": "Josh - Startup Time Test",
   "uid": "bekhljzdl5khsa",
-  "version": 4,
-  "weekStart": ""
+  "version": 38
 }

@@ -77,7 +77,7 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "barWidthFactor": 0.6,
-            "drawStyle": "line",
+            "drawStyle": "points",
             "fillOpacity": 0,
             "gradientMode": "none",
             "hideFrom": {
@@ -87,7 +87,7 @@
             },
             "insertNulls": false,
             "lineInterpolation": "linear",
-            "lineWidth": 1,
+            "lineWidth": 2,
             "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
@@ -108,7 +108,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -140,7 +140,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -149,7 +149,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sum by(test) (count_over_time(media_guard_successes_count{ecosystem=\"live\"}[5m]))",
+          "expr": "sum by(test) (count_over_time(media_guard_successes_count{ecosystem=\"live\"}[$__interval]))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -180,7 +180,7 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "barWidthFactor": 0.6,
-            "drawStyle": "line",
+            "drawStyle": "points",
             "fillOpacity": 0,
             "gradientMode": "none",
             "hideFrom": {
@@ -190,7 +190,7 @@
             },
             "insertNulls": false,
             "lineInterpolation": "linear",
-            "lineWidth": 1,
+            "lineWidth": 2,
             "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
@@ -211,7 +211,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -243,7 +243,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -252,7 +252,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum by(test) (count_over_time(media_guard_failures_count{ecosystem=\"live\"}[5m]))",
+          "expr": "sum by(test) (count_over_time(media_guard_failures_count{ecosystem=\"live\"}[$__interval]))",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
@@ -299,20 +299,71 @@
         "sortOrder": "Ascending",
         "wrapLogMessage": false
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "editorMode": "code",
-          "expr": "{job=\"default/prod-media-guard\"}",
+          "direction": "backward",
+          "editorMode": "builder",
+          "expr": "{job=\"default/prod-media-guard-live\"}",
           "queryType": "range",
           "refId": "A"
         }
       ],
-      "title": "Prod MediaGuard logs",
+      "title": "Prod live MediaGuard logs",
+      "type": "logs"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 9
+      },
+      "id": 13,
+      "links": [
+        {
+          "title": "Loki logs",
+          "url": "https://eu-metrics-monitoring.livepeer.live/grafana/explore?schemaVersion=1&panes=%7B%22caz%22:%7B%22datasource%22:%22P8E80F9AEF21F6940%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22expr%22:%22%7Bjob%3D%5C%22default%2Fprod-media-guard%5C%22%7D%22,%22queryType%22:%22range%22,%22datasource%22:%7B%22type%22:%22loki%22,%22uid%22:%22P8E80F9AEF21F6940%22%7D,%22editorMode%22:%22code%22%7D%5D,%22range%22:%7B%22from%22:%22${__from}%22,%22to%22:%22${__to}%22%7D%7D%7D&orgId=1"
+        }
+      ],
+      "options": {
+        "dedupStrategy": "none",
+        "enableInfiniteScrolling": false,
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": true,
+        "sortOrder": "Ascending",
+        "wrapLogMessage": false
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "direction": "backward",
+          "editorMode": "builder",
+          "expr": "{job=\"default/prod-media-guard-vod\"}",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Prod vod MediaGuard logs",
       "type": "logs"
     },
     {
@@ -364,7 +415,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -379,8 +430,8 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 12,
-        "y": 9
+        "x": 0,
+        "y": 17
       },
       "id": 10,
       "options": {
@@ -397,7 +448,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -406,7 +457,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum by(test) (increase(media_guard_test_time_seconds{quantile=\"0.99\", ecosystem=\"live\"}[10m]))",
+          "expr": "max by(test) (increase(media_guard_test_time_seconds{quantile=\"0.99\", ecosystem=\"live\"}[10m]))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -425,7 +476,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 17
+        "y": 25
       },
       "id": 8,
       "panels": [],
@@ -450,7 +501,7 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "barWidthFactor": 0.6,
-            "drawStyle": "line",
+            "drawStyle": "points",
             "fillOpacity": 0,
             "gradientMode": "none",
             "hideFrom": {
@@ -481,7 +532,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -496,7 +547,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 18
+        "y": 26
       },
       "id": 9,
       "options": {
@@ -512,7 +563,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -521,7 +572,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum by(test) (count_over_time(media_guard_successes_count{ecosystem=\"monster\"}[5m]))",
+          "expr": "sum by(test) (count_over_time(media_guard_successes_count{ecosystem=\"monster\"}[$__interval]))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -552,7 +603,7 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "barWidthFactor": 0.6,
-            "drawStyle": "line",
+            "drawStyle": "points",
             "fillOpacity": 0,
             "gradientMode": "none",
             "hideFrom": {
@@ -583,7 +634,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -598,7 +649,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 18
+        "y": 26
       },
       "id": 11,
       "options": {
@@ -614,7 +665,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -623,7 +674,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum by(test) (count_over_time(media_guard_failures_count{ecosystem=\"monster\"}[5m]))",
+          "expr": "sum by(test) (count_over_time(media_guard_failures_count{ecosystem=\"monster\"}[$__interval]))",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
@@ -650,7 +701,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 26
+        "y": 34
       },
       "id": 12,
       "links": [
@@ -670,20 +721,71 @@
         "sortOrder": "Ascending",
         "wrapLogMessage": false
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "editorMode": "code",
-          "expr": "{job=\"default/staging-media-guard\"}",
+          "direction": "backward",
+          "editorMode": "builder",
+          "expr": "{job=\"default/staging-media-guard-live\"}",
           "queryType": "range",
           "refId": "A"
         }
       ],
-      "title": "Staging MediaGuard logs",
+      "title": "Staging live MediaGuard logs",
+      "type": "logs"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 34
+      },
+      "id": 14,
+      "links": [
+        {
+          "title": "Loki logs",
+          "url": "https://eu-metrics-monitoring.livepeer.live/grafana/explore?schemaVersion=1&panes=%7B%22caz%22:%7B%22datasource%22:%22P8E80F9AEF21F6940%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22expr%22:%22%7Bjob%3D%5C%22default%2Fstaging-media-guard%5C%22%7D%22,%22queryType%22:%22range%22,%22datasource%22:%7B%22type%22:%22loki%22,%22uid%22:%22P8E80F9AEF21F6940%22%7D,%22editorMode%22:%22code%22%7D%5D,%22range%22:%7B%22from%22:%22${__from}%22,%22to%22:%22${__to}%22%7D%7D%7D&orgId=1"
+        }
+      ],
+      "options": {
+        "dedupStrategy": "none",
+        "enableInfiniteScrolling": false,
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": true,
+        "sortOrder": "Ascending",
+        "wrapLogMessage": false
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "direction": "backward",
+          "editorMode": "builder",
+          "expr": "{job=\"default/staging-media-guard-vod\"}",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Staging vod MediaGuard logs",
       "type": "logs"
     },
     {
@@ -735,7 +837,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -750,8 +852,8 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 12,
-        "y": 26
+        "x": 0,
+        "y": 42
       },
       "id": 2,
       "options": {
@@ -767,7 +869,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -792,7 +894,7 @@
   ],
   "preload": false,
   "refresh": "1m",
-  "schemaVersion": 40,
+  "schemaVersion": 41,
   "tags": [],
   "templating": {
     "list": []
@@ -805,6 +907,5 @@
   "timezone": "",
   "title": "MediaGuard",
   "uid": "bdls10ewyi5tsc",
-  "version": 12,
-  "weekStart": ""
+  "version": 20
 }

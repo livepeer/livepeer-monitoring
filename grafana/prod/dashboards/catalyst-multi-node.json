@@ -26,7 +26,6 @@
   "graphTooltip": 1,
   "id": null,
   "links": [],
-  "liveNow": false,
   "panels": [
     {
       "datasource": {
@@ -44,7 +43,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -75,7 +74,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.2.0",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -108,7 +107,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -139,7 +138,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.2.0",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -172,7 +171,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -203,7 +202,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.2.0",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -286,7 +285,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -608,6 +607,30 @@
                 "value": "Unlonely"
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "890as2fty0cqqajf"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "The Burning Man 890as2fty0cqqajf"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "284ets1tjy8sqak1"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Burning Man (AI Output)"
+              }
+            ]
           }
         ]
       },
@@ -630,10 +653,12 @@
           "sortDesc": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "asc"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -716,7 +741,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -786,6 +811,18 @@
                 "value": "Fishtank (c73e1d03-743e-4313-9612-6a760fb4d82c)"
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "30e0492e-ff0c-4ca5-982f-af1e7f627c0d"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "The Burning Man (30e0492e-ff0c-4ca5-982f-af1e7f627c0d)"
+              }
+            ]
           }
         ]
       },
@@ -808,10 +845,12 @@
           "sortDesc": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "asc"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -882,7 +921,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -904,11 +943,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.1",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -975,7 +1015,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -1010,11 +1050,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.1",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -1034,49 +1075,6 @@
       "type": "timeseries"
     },
     {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                5
-              ],
-              "type": "lt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "B",
-                "1m",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "max"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "5m",
-        "frequency": "1m",
-        "handler": 1,
-        "message": "No livestream viewers globally! \n\nSomething might have nuked our whole infra (or an entry point to it).",
-        "name": "No viewers globally!",
-        "noDataState": "keep_state",
-        "notifications": [
-          {
-            "uid": "jx6jkJxnk"
-          },
-          {
-            "uid": "xIogFCs7k"
-          }
-        ]
-      },
       "datasource": {
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
@@ -1125,7 +1123,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -1155,10 +1153,12 @@
           "sortDesc": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -1187,14 +1187,6 @@
           "interval": "",
           "legendFormat": "total",
           "refId": "B"
-        }
-      ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "op": "lt",
-          "value": 5,
-          "visible": true
         }
       ],
       "title": "Viewers by Region",
@@ -1249,7 +1241,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -1279,10 +1271,12 @@
           "sortDesc": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -1353,7 +1347,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -1375,11 +1369,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.1",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -1448,7 +1443,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -1474,10 +1469,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -1546,7 +1543,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -1577,10 +1574,12 @@
           "sortDesc": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -1650,7 +1649,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -1705,10 +1704,12 @@
           "sortDesc": false
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -1778,7 +1779,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -1815,10 +1817,12 @@
           "sortDesc": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -1840,49 +1844,6 @@
       "type": "timeseries"
     },
     {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                100
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "A",
-                "15m",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "min"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "5m",
-        "frequency": "1m",
-        "handler": 1,
-        "message": "Catalyst node ${host} is unable to be replicated by lots of other servers. Please investigate this server and take it out of production if necessary.",
-        "name": "\"Could not retrieve\" replications alert",
-        "noDataState": "ok",
-        "notifications": [
-          {
-            "uid": "jx6jkJxnk"
-          },
-          {
-            "uid": "xIogFCs7k"
-          }
-        ]
-      },
       "datasource": {
         "type": "loki",
         "uid": "P8E80F9AEF21F6940"
@@ -1931,7 +1892,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -1962,10 +1924,12 @@
           "sortDesc": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -1991,14 +1955,6 @@
           "refId": "B"
         }
       ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "op": "gt",
-          "value": 100,
-          "visible": true
-        }
-      ],
       "title": "\"Could not retrieve\" replications",
       "type": "timeseries"
     },
@@ -2019,6 +1975,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -2052,15 +2009,15 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
                 "value": 80
               }
             ]
-          },
-          "unitScale": true
+          }
         },
         "overrides": []
       },
@@ -2083,10 +2040,12 @@
           "sortDesc": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -2125,6 +2084,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -2156,15 +2116,15 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
                 "value": 80
               }
             ]
-          },
-          "unitScale": true
+          }
         },
         "overrides": []
       },
@@ -2188,10 +2148,12 @@
           "sortDesc": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -3375,19 +3337,17 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "30s",
-  "revision": 1,
-  "schemaVersion": 39,
+  "preload": false,
+  "refresh": "1m",
+  "schemaVersion": 41,
   "tags": [],
   "templating": {
     "list": [
       {
         "current": {
-          "selected": true,
           "text": ".+-test",
           "value": ".+-test"
         },
-        "hide": 0,
         "label": "Exclude streams:",
         "name": "exclude",
         "options": [
@@ -3398,7 +3358,6 @@
           }
         ],
         "query": ".+-test",
-        "skipUrlSync": false,
         "type": "textbox"
       }
     ]
@@ -3423,6 +3382,5 @@
   "timezone": "utc",
   "title": "Catalyst Multi-Node",
   "uid": "EWXkaj7Vz",
-  "version": 13,
-  "weekStart": ""
+  "version": 17
 }
