@@ -17,15 +17,15 @@
   },
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "graphTooltip": 0,
+  "graphTooltip": 1,
   "id": null,
   "links": [],
   "panels": [
     {
       "datasource": {
-        "uid": "P8E80F9AEF21F6940"
+        "type": "grafana-clickhouse-datasource",
+        "uid": "cdrt9r9yntbswf"
       },
-      "description": "This checks the rate of log entries that contain messages on audio/video being out of sync.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -35,217 +35,417 @@
             "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
+            "axisGridShow": true,
             "axisLabel": "",
             "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 80,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
+            "lineWidth": 10,
             "scaleDistribution": {
               "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
             },
             "thresholdsStyle": {
               "mode": "off"
             }
           },
+          "fieldMinMax": false,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
+                "color": "green",
+                "value": 0
               }
             ]
           }
         },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "{container=\"live-video-to-video_comfyui_8910\", group=\"td_eu-staging/tensordock/tensordock_staging/tensordock_staging_primary\", logstream=\"stderr\", node_name=\"eu-staging-0\", region=\"td_eu-staging\"}"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 24,
+        "h": 7,
+        "w": 12,
         "x": 0,
         "y": 0
       },
-      "id": 8,
+      "id": 4,
       "options": {
+        "barRadius": 0.5,
+        "barWidth": 0.8,
+        "fullHighlight": false,
+        "groupWidth": 0.73,
         "legend": {
           "calcs": [
-            "lastNotNull"
+            "lastNotNull",
+            "median",
+            "mean"
           ],
           "displayMode": "table",
           "placement": "right",
-          "showLegend": true
+          "showLegend": false
         },
+        "orientation": "horizontal",
+        "showValue": "auto",
+        "stacking": "normal",
+        "text": {},
         "tooltip": {
           "hideZeros": false,
           "mode": "single",
           "sort": "none"
-        }
-      },
-      "pluginVersion": "11.6.1",
-      "targets": [
-        {
-          "direction": "backward",
-          "editorMode": "code",
-          "expr": "rate({container=~\"live-video-to-video.*\"} |= `A/V is out of sync`[1m])",
-          "legendFormat": "",
-          "queryType": "range",
-          "refId": "A"
-        }
-      ],
-      "title": "A/V is out of sync",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
         },
-        "overrides": []
+        "xField": "orchestrator_short_uri",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100
       },
-      "gridPos": {
-        "h": 7,
-        "w": 24,
-        "x": 0,
-        "y": 8
-      },
-      "id": 1,
-      "options": {
-        "legend": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrt9r9yntbswf"
           },
-          "direction": "backward",
-          "editorMode": "code",
-          "expr": "count by(region) (rate({container=~\"ai-gateway|live-video-to-video_comfyui_.*\"} != `Sending input frame` != `message=frame_type=Video` != `message=Output image received` |~ `Exception while decoding` [$__auto]))",
-          "legendFormat": "{{region}}",
-          "queryType": "range",
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.10.2",
+          "queryType": "table",
+          "rawSql": "SELECT\n  CONCAT(extract(`network_events`.`stream_status_view`.`orchestrator_url`, 'https://(.*)'), ' - ', `network_events`.`stream_status_view`.`pipeline`) as orchestrator_short_uri,\n  `median`(`network_events`.`stream_status_view`.`output_fps`) AS `median`,\n  MAX(`network_events`.`stream_status_view`.`output_fps`) AS `max`\nFROM\n  `network_events`.`stream_status_view`\nWHERE\n  $__timeFilter(event_timestamp_ts)\n  AND\n  `network_events`.`stream_status_view`.`orchestrator_url` NOT LIKE '%lvpr.io%' \nGROUP BY\n  orchestrator_short_uri, `network_events`.`stream_status_view`.`pipeline`\nORDER BY\n  `median` DESC,\n  orchestrator_short_uri ASC,\n  `network_events`.`stream_status_view`.`pipeline` ASC\n",
           "refId": "A"
         }
       ],
-      "title": "Exception While Decoding",
+      "title": "Median Output FPS",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "cdrt9r9yntbswf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": true,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 10,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 6,
+      "options": {
+        "barRadius": 0.5,
+        "barWidth": 0.8,
+        "fullHighlight": false,
+        "groupWidth": 0.73,
+        "legend": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": false
+        },
+        "orientation": "horizontal",
+        "showValue": "auto",
+        "stacking": "none",
+        "text": {},
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xField": "orchestrator_short_uri",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrt9r9yntbswf"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.10.2",
+          "queryType": "table",
+          "rawSql": "SELECT\n  CONCAT(extract(`network_events`.`stream_status_view`.`orchestrator_url`, 'https://(.*)'), ' - ', `network_events`.`stream_status_view`.`pipeline`) as orchestrator_short_uri,\n  COUNT(DISTINCT `network_events`.`stream_status_view`.`stream_key`) AS `streams_count`\nFROM\n  `network_events`.`stream_status_view`\nWHERE\n  $__timeFilter(event_timestamp_ts)\n  AND\n  `network_events`.`stream_status_view`.`orchestrator_url` NOT LIKE '%lvpr.io%' \nGROUP BY\n  orchestrator_short_uri\nORDER BY\n  `streams_count` DESC,\n  orchestrator_short_uri ASC\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Stream count",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "cdrt9r9yntbswf"
+      },
+      "description": "showing last 7 days data at max",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": 15000,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "fps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 7
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Mean",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrt9r9yntbswf"
+          },
+          "editorType": "sql",
+          "format": 0,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.10.2",
+          "queryType": "timeseries",
+          "rawSql": "SELECT\n  `network_events`.`stream_status_view`.event_timestamp_ts as time,\n  CONCAT(extract(`network_events`.`stream_status_view`.`orchestrator_url`, 'https://(.*)'), ' - ', `network_events`.`stream_status_view`.`pipeline`) as orchestrator_short_uri,\n  `median`(`network_events`.`stream_status_view`.`output_fps`) AS ` `\nFROM\n  `network_events`.`stream_status_view`\nWHERE\n  $__timeFilter(event_timestamp_ts)\n  AND event_timestamp_ts >= now() - INTERVAL 7 DAY\n  AND `network_events`.`stream_status_view`.`orchestrator_url` NOT LIKE '%lvpr.io%'\nGROUP BY\n  orchestrator_short_uri, pipeline, `network_events`.`stream_status_view`.event_timestamp_ts\nORDER BY\n  `network_events`.`stream_status_view`.event_timestamp_ts ASC,\n  orchestrator_short_uri ASC,\n  pipeline ASC\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Median Output FPS",
       "type": "timeseries"
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
+        "type": "grafana-clickhouse-datasource",
+        "uid": "cdrt9r9yntbswf"
       },
-      "description": "Monitors for any ComfyUI pipeline cleanups that have process join errors.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisPlacement": "auto",
+            "fillOpacity": 100,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineWidth": 0,
+            "spanNulls": 60000
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 7
+      },
+      "id": 7,
+      "options": {
+        "alignValue": "left",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "mergeValues": true,
+        "rowHeight": 0.8,
+        "showValue": "never",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "none",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrt9r9yntbswf"
+          },
+          "editorType": "sql",
+          "format": 0,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.10.2",
+          "queryType": "timeseries",
+          "rawSql": "SELECT\n  `network_events`.`stream_status_view`.event_timestamp_ts as `time`,\n  CONCAT(extract(`network_events`.`stream_status_view`.`orchestrator_url`, 'https://(.*)'), ' - ', `network_events`.`stream_status_view`.`pipeline`) as orchestrator_short_uri,\n  COUNT(DISTINCT `network_events`.`stream_status_view`.`stream_key`) AS ` `\nFROM\n  `network_events`.`stream_status_view`\nWHERE\n  $__timeFilter(event_timestamp_ts)\n  AND\n  `network_events`.`stream_status_view`.`orchestrator_url` NOT LIKE '%lvpr.io%'\nGROUP BY\n  orchestrator_short_uri, `network_events`.`stream_status_view`.event_timestamp_ts\nORDER BY\n  `network_events`.`stream_status_view`.event_timestamp_ts ASC,\n  ` ` DESC,\n  orchestrator_short_uri ASC\n\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Streams",
+      "type": "state-timeline"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "aen1yqoj1i0hsb"
+      },
+      "description": "node_name may differ from the serviceURL",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -285,28 +485,31 @@
             }
           },
           "mappings": [],
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "none"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 0,
-        "y": 15
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 14
       },
-      "id": 2,
+      "id": 10,
       "options": {
         "legend": {
           "calcs": [],
@@ -320,29 +523,29 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
+            "uid": "aen1yqoj1i0hsb"
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "count by(region) (rate({container=~\"ai-gateway|live-video-to-video_comfyui_.*\"} != `Sending input frame` != `message=frame_type=Video` != `message=Output image received` |~ `Process join error:` [$__auto]))",
+          "expr": "sum by(node_name) (count_over_time({node_name=~\".+\"} [$__auto]))",
           "queryType": "range",
           "refId": "A"
         }
       ],
-      "title": "Process Join Error",
+      "title": "Logs per node",
       "type": "timeseries"
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
+        "default": true,
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
       },
-      "description": "Monitors for any ComfyUI pipeline cleanups that have process failing in killing or terminate errors.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -386,7 +589,125 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 15
+      },
+      "id": 1,
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "go-livepeer code",
+          "url": "https://github.com/search?q=repo%3Alivepeer%2Fgo-livepeer%20AIFirstSegmentDelay&type=code"
+        }
+      ],
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max",
+            "p99"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "99th %",
+          "sortDesc": false
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "avg by(orchestrator_uri) (increase(livepeer_ai_first_segment_delay_ms_sum{orchestrator_uri!~\".*lvpr.io.*\"}[1m]))",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "First segment delay",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "description": "SlowOrchestrator is a strong indicator of network connectivity issues between G/O and these tend to persist for a few hours until the tubes clear up or someone kicks something.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "points",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -398,20 +719,228 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 8,
-        "y": 15
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 23
+      },
+      "id": 11,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "direction": "backward",
+          "editorMode": "builder",
+          "expr": "sum by(host, region) (count_over_time({container=\"ai-gateway\"} |= `Orchestrator is slow` !~ `.+lvpr.io.+` | regexp `url=https?://(?P<host>[^/]+)` [1h]))",
+          "legendFormat": "{{host}}",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Slow Orchestrators",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "bars",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 31
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [
+            "p99"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "99th %",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "max by(orchestrator_uri) (livepeer_ai_container_idle{livepeer_live_app=~\".*-livepeer-ai-gateway\", orchestrator_uri!~\".*lvpr.io.*\"})",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Container idle",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 39
       },
       "id": 3,
       "options": {
         "legend": {
           "calcs": [
-            "lastNotNull"
+            "sum"
           ],
           "displayMode": "table",
           "placement": "right",
-          "showLegend": true
+          "showLegend": true,
+          "sortBy": "Total",
+          "sortDesc": true
         },
         "tooltip": {
           "hideZeros": false,
@@ -419,484 +948,26 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
           },
-          "direction": "backward",
+          "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "count by(region) (rate({container=~\"ai-gateway|live-video-to-video_comfyui_.*\"} != `Sending input frame` != `message=frame_type=Video` != `message=Output image received` |~ `Failed to terminate process, killing` [$__auto]))",
-          "queryType": "range",
-          "refId": "A"
+          "expr": "sum by(orchestrator_uri) (increase(livepeer_ai_request_errors{livepeer_live_app=~\".*-livepeer-ai-gateway\", orchestrator_uri!~\".*lvpr.io.*\", orchestrator_uri!=\"\"}[$__rate_interval])) > 0",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
         }
       ],
-      "title": "Fail to Terminate or Killing",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
-      "description": "Monitors for any ComfyUI pipeline cleanups that have process failing to kill errors.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 16,
-        "y": 15
-      },
-      "id": 4,
-      "options": {
-        "legend": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.6.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
-          "direction": "backward",
-          "editorMode": "code",
-          "expr": "count by(region) (rate({container=~\"ai-gateway|live-video-to-video_comfyui_.*\"} != `Sending input frame` != `message=frame_type=Video` != `message=Output image received` |~ `Failed to kill process` [$__auto]))",
-          "queryType": "range",
-          "refId": "A"
-        }
-      ],
-      "title": "Fail to kill process",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 22
-      },
-      "id": 5,
-      "options": {
-        "legend": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.6.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
-          "direction": "backward",
-          "editorMode": "code",
-          "expr": "avg(avg_over_time({container=~\"live-video-to-video_comfyui.+\", node_name=~\".+\"} |= \"Output FPS\" | pattern \"<_>Output FPS: <fps>\" | unwrap fps [1m]) by (node_name))",
-          "hide": true,
-          "legendFormat": "fps_{{node_name}}",
-          "queryType": "range",
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
-          "direction": "backward",
-          "editorMode": "code",
-          "expr": "avg(count(avg_over_time({container=~\"live-video-to-video_comfyui.+\", node_name=~\".+\"} |= \"Output FPS\" | pattern \"<_>Output FPS: <fps>\" | unwrap fps [1m]) by (node_name, container)) by (node_name))",
-          "hide": true,
-          "legendFormat": "concurrency_{{node_name}}",
-          "queryType": "range",
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
-          "direction": "backward",
-          "editorMode": "code",
-          "expr": "avg(\n  (\n    avg_over_time({container=~\"live-video-to-video_comfyui.+\", node_name=~\".+\"} |= \"Output FPS\" | pattern \"<_>Output FPS: <fps>\" | unwrap fps [1m]) by (node_name)\n  )\n  and\n  (\n    count(avg_over_time({container=~\"live-video-to-video_comfyui.+\", node_name=~\".+\"} |= \"Output FPS\" | pattern \"<_>Output FPS: <fps>\" | unwrap fps [1m]) by (node_name, container)) by (node_name) == 1\n  )\n)",
-          "hide": false,
-          "legendFormat": "fps_1_stream",
-          "queryType": "range",
-          "refId": "C"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
-          "direction": "backward",
-          "editorMode": "code",
-          "expr": "avg(\n  (\n    avg_over_time({container=~\"live-video-to-video_comfyui.+\", node_name=~\".+\"} |= \"Output FPS\" | pattern \"<_>Output FPS: <fps>\" | unwrap fps [1m]) by (node_name)\n  )\n  and\n  (\n    count(avg_over_time({container=~\"live-video-to-video_comfyui.+\", node_name=~\".+\"} |= \"Output FPS\" | pattern \"<_>Output FPS: <fps>\" | unwrap fps [1m]) by (node_name, container)) by (node_name) == 2\n  )\n)",
-          "hide": false,
-          "legendFormat": "fps_2_streams",
-          "queryType": "range",
-          "refId": "D"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
-          "direction": "backward",
-          "editorMode": "code",
-          "expr": "avg(\n  (\n    avg_over_time({container=~\"live-video-to-video_comfyui.+\", node_name=~\".+\"} |= \"Output FPS\" | pattern \"<_>Output FPS: <fps>\" | unwrap fps [1m]) by (node_name)\n  )\n  and\n  (\n    count(avg_over_time({container=~\"live-video-to-video_comfyui.+\", node_name=~\".+\"} |= \"Output FPS\" | pattern \"<_>Output FPS: <fps>\" | unwrap fps [1m]) by (node_name, container)) by (node_name) == 3\n  )\n)",
-          "hide": false,
-          "legendFormat": "fps_3_streams",
-          "queryType": "range",
-          "refId": "E"
-        }
-      ],
-      "title": "FPS Distribution Overview",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 22
-      },
-      "id": 6,
-      "options": {
-        "legend": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.6.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
-          "direction": "backward",
-          "editorMode": "code",
-          "expr": "avg_over_time(\n  {app=~\".*gateway.*\"} \n  |~ `Received GetOrchInfo RPC Response`\n  | pattern `<_> latency=<latency>` \n  | unwrap duration(latency) [1m]\n) by (app)",
-          "legendFormat": "avg",
-          "queryType": "range",
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
-          "direction": "backward",
-          "editorMode": "code",
-          "expr": "quantile_over_time(0.80,\n  {app=~\".*gateway.*\"} \n  |~ `Received GetOrchInfo RPC Response`\n  | pattern `<_> latency=<latency>` \n  | unwrap duration(latency) [1m]\n) by (app)",
-          "hide": false,
-          "legendFormat": "p80",
-          "queryType": "range",
-          "refId": "B"
-        }
-      ],
-      "title": "Orchestrator Selection Time Distribution",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
-      "description": "This chart shows the occurrence rate of the decoder crash.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 30
-      },
-      "id": 7,
-      "options": {
-        "legend": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.6.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
-          "direction": "backward",
-          "editorMode": "code",
-          "expr": "count_over_time({container=~\"live-video-to-video.*\"} |= \"Error in decode_av, maximum retries reached\" [1m])",
-          "legendFormat": "{{node_name}}",
-          "queryType": "range",
-          "refId": "A"
-        }
-      ],
-      "title": "Decoder Crash",
+      "title": "Request errors",
       "type": "timeseries"
     }
   ],
@@ -910,9 +981,20 @@
     "from": "now-6h",
     "to": "now"
   },
-  "timepicker": {},
+  "timepicker": {
+    "refresh_intervals": [
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ]
+  },
   "timezone": "utc",
-  "title": "Regression Tracker",
-  "uid": "fekb6zt42n2tcf",
-  "version": 22
+  "title": "AI Public Os",
+  "uid": "45346781-4b93-4865-9b10-ac4fc3ab0334",
+  "version": 21
 }
