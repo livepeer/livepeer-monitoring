@@ -15,128 +15,81 @@
       }
     ]
   },
-  "description": "Panels for monitoring the deposit amount available in the wallets used for mainnet jobs. Both transcoding and AI.",
+  "description": "Monitors application health by visualizing CPU and memory usage, heap size, event loop lag, garbage collection time, active resources, HTTP request rates, and response time distributions for comprehensive performance analysis.",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
   "id": null,
-  "links": [
-    {
-      "asDropdown": false,
-      "icon": "external link",
-      "includeVars": false,
-      "keepTime": false,
-      "tags": [],
-      "targetBlank": false,
-      "title": "Deposit ETH from Engineering Wallet into the Gateway/Broadcaster",
-      "tooltip": "",
-      "type": "link",
-      "url": "https://github.com/livepeer/livepeer-infra/actions/workflows/deposit-eth.yaml?query=event%3Aworkflow_dispatch"
-    },
-    {
-      "asDropdown": false,
-      "icon": "doc",
-      "includeVars": false,
-      "keepTime": false,
-      "tags": [],
-      "targetBlank": true,
-      "title": "Engineering ETH wallets",
-      "tooltip": "",
-      "type": "link",
-      "url": "https://www.notion.so/livepeer/Engineering-ETH-wallets-2060a3485687806aae3ad074c167193f"
-    }
-  ],
+  "links": [],
   "panels": [
     {
-      "collapsed": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "CPU (Seconds)",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "points",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
       "gridPos": {
-        "h": 1,
-        "w": 24,
+        "h": 6,
+        "w": 7,
         "x": 0,
         "y": 0
       },
-      "id": 3,
-      "panels": [],
-      "title": "Deposit",
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "axisSoftMax": 15,
-            "axisSoftMin": 0,
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "ETH"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 12,
-        "x": 0,
-        "y": 1
-      },
       "id": 1,
-      "links": [
-        {
-          "targetBlank": true,
-          "title": "Deposit ETH from Engineering Wallet into Video Broadcaster",
-          "url": "https://github.com/livepeer/livepeer-infra/actions/workflows/deposit-eth.yaml?query=event%3Aworkflow_dispatch"
-        }
-      ],
       "options": {
         "legend": {
           "calcs": [],
@@ -157,16 +110,12 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "editorMode": "code",
-          "expr": "avg(\n    livepeer_gateway_deposit{livepeer_live_app=\"prod-livepeer-broadcaster\"} # standalone broadcasters\n    or livepeer_gateway_deposit{job=\"broadcaster\"} # catalyst nodes\n) / 1e9 # ETH (livepeer_gateway_deposit metric in gwei)",
-          "instant": false,
-          "interval": "",
-          "legendFormat": "0xc3c7...e61E",
-          "range": true,
+          "expr": "daydream_api_process_cpu_seconds_total",
+          "legendFormat": "CPU Usage",
           "refId": "A"
         }
       ],
-      "title": "Video Gateways (Broadcasters) Deposit",
+      "title": "CPU Usage (Total)",
       "type": "timeseries"
     },
     {
@@ -174,7 +123,6 @@
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
-      "description": "Sawtooth wave shape comes from the daily cron withdrawing the fees from O and depositing back to the gateway",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -186,8 +134,6 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
-            "axisSoftMax": 15,
-            "axisSoftMin": 0,
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
@@ -228,30 +174,117 @@
                 "value": 80
               }
             ]
-          },
-          "unit": "ETH"
+          }
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 10,
-        "w": 12,
-        "x": 12,
-        "y": 1
+        "h": 6,
+        "w": 17,
+        "x": 7,
+        "y": 0
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "daydream_api_http_request_duration_seconds_bucket/10000 > 0.1",
+          "legendFormat": "{{route}}",
+          "range": true,
+          "refId": "I"
+        }
+      ],
+      "title": "HTTP Response Time Distribution(Sec)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Memory (Bytes)",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "points",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 7,
+        "x": 0,
+        "y": 6
       },
       "id": 2,
-      "links": [
-        {
-          "targetBlank": true,
-          "title": "Deposit ETH from Engineering Wallet into AI Gateway",
-          "url": "https://github.com/livepeer/livepeer-infra/actions/workflows/deposit-eth.yaml?query=event%3Aworkflow_dispatch"
-        },
-        {
-          "targetBlank": true,
-          "title": "Withdraw AI fees and Deposit ETH (daily cron)",
-          "url": "https://github.com/livepeer/livepeer-infra/actions/workflows/withdraw-ai-fees-and-deposit-eth.yaml?query=event%3Aschedule"
-        }
-      ],
       "options": {
         "legend": {
           "calcs": [],
@@ -272,29 +305,13 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "editorMode": "code",
-          "expr": "avg(livepeer_gateway_deposit{livepeer_live_app=\"prod-livepeer-ai-gateway\"}) / 1e9 # ETH (metric in gwei)",
-          "instant": false,
-          "legendFormat": "0xca33...7fef",
-          "range": true,
-          "refId": "A"
+          "expr": "daydream_api_process_resident_memory_bytes",
+          "legendFormat": "Resident Memory",
+          "refId": "B"
         }
       ],
-      "title": "AI Gateways Deposit",
+      "title": "Memory Usage (Resident)",
       "type": "timeseries"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 11
-      },
-      "id": 4,
-      "panels": [],
-      "title": "Reserve",
-      "type": "row"
     },
     {
       "datasource": {
@@ -310,14 +327,12 @@
             "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
-            "axisLabel": "",
+            "axisLabel": "GC Duration (Seconds)",
             "axisPlacement": "auto",
-            "axisSoftMax": 20,
-            "axisSoftMin": 0,
             "barAlignment": 0,
             "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
+            "drawStyle": "points",
+            "fillOpacity": 3,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -355,117 +370,15 @@
               }
             ]
           },
-          "unit": "ETH"
+          "unit": "seconds"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 10,
-        "w": 12,
-        "x": 0,
-        "y": 12
-      },
-      "id": 5,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.1.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "editorMode": "code",
-          "expr": "avg(\n    livepeer_gateway_reserve{livepeer_live_app=\"prod-livepeer-broadcaster\"} # standalone broadcasters\n    or livepeer_gateway_reserve{job=\"broadcaster\"} # catalyst nodes\n) / 1e9 # ETH (metric in gwei)",
-          "instant": false,
-          "interval": "",
-          "legendFormat": "0xc3c7...e61E",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Video Gateways (Broadcasters) Reserve",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "axisSoftMax": 20,
-            "axisSoftMin": 0,
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "ETH"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 12,
-        "x": 12,
-        "y": 12
+        "h": 6,
+        "w": 17,
+        "x": 7,
+        "y": 6
       },
       "id": 6,
       "options": {
@@ -488,15 +401,12 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "editorMode": "code",
-          "expr": "avg(livepeer_gateway_reserve{livepeer_live_app=\"prod-livepeer-ai-gateway\"}) / 1e9 # ETH (metric in gwei)",
-          "instant": false,
-          "legendFormat": "0xca33...7fef",
-          "range": true,
-          "refId": "A"
+          "expr": "daydream_api_nodejs_gc_duration_seconds_sum{kind='major'}",
+          "legendFormat": "Major GC",
+          "refId": "G"
         }
       ],
-      "title": "AI Gateways Reserve",
+      "title": "Garbage Collection Duration",
       "type": "timeseries"
     },
     {
@@ -504,7 +414,258 @@
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
-      "description": "Delayed 5 minutes from the actual blockchain state",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 7,
+        "x": 0,
+        "y": 12
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "daydream_api_nodejs_active_resources_total",
+          "legendFormat": "Active Resources",
+          "range": true,
+          "refId": "D"
+        }
+      ],
+      "title": "Active Resources",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Requests",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "points",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 17,
+        "x": 7,
+        "y": 12
+      },
+      "id": 7,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "daydream_api_http_requests_total",
+          "legendFormat": "{{method}} {{route}}",
+          "range": true,
+          "refId": "H"
+        }
+      ],
+      "title": "HTTP Request Count",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 7,
+        "x": 0,
+        "y": 18
+      },
+      "id": 5,
+      "options": {
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "daydream_api_nodejs_heap_size_used_bytes",
+          "legendFormat": "Used Heap",
+          "range": true,
+          "refId": "E"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "daydream_api_nodejs_heap_size_total_bytes",
+          "legendFormat": "Total Heap",
+          "range": true,
+          "refId": "F"
+        }
+      ],
+      "title": "Heap Size Usage",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -516,7 +677,6 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
-            "axisSoftMin": 0,
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
@@ -541,7 +701,7 @@
               "mode": "none"
             },
             "thresholdsStyle": {
-              "mode": "area"
+              "mode": "off"
             }
           },
           "mappings": [],
@@ -549,32 +709,25 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "dark-red",
+                "color": "green",
                 "value": 0
               },
               {
-                "color": "dark-green",
-                "value": 2
+                "color": "red",
+                "value": 80
               }
             ]
-          },
-          "unit": "ETH"
+          }
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
-        "w": 24,
-        "x": 0,
-        "y": 22
+        "h": 6,
+        "w": 17,
+        "x": 7,
+        "y": 18
       },
-      "id": 7,
-      "links": [
-        {
-          "title": "0xd51b5323ab38F936515bB14d13Cf81A8b517BE2d (Arbitrum)",
-          "url": "https://arbiscan.io/address/0xd51b5323ab38F936515bB14d13Cf81A8b517BE2d"
-        }
-      ],
+      "id": 3,
       "options": {
         "legend": {
           "calcs": [],
@@ -591,34 +744,37 @@
       "pluginVersion": "12.1.1",
       "targets": [
         {
-          "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "avg by(address, wallet) (last_over_time(livepeer_eth_wallet_balance_wei[1m])) / 1000000000000000000",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "legendFormat": "{{ wallet }} {{ address }}",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "expr": "daydream_api_nodejs_eventloop_lag_seconds",
+          "legendFormat": "Event Loop Lag",
+          "refId": "C"
         }
       ],
-      "title": "Engineering Wallet",
+      "title": "Event Loop Lag (Seconds)",
       "type": "timeseries"
     }
   ],
   "preload": false,
+  "refresh": "",
   "schemaVersion": 41,
-  "tags": [],
+  "tags": [
+    "performance",
+    "monitoring",
+    "daydream"
+  ],
   "templating": {
     "list": []
   },
   "time": {
-    "from": "now-7d",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Mainnet Wallet Funds",
-  "uid": "bdtfa42c9a1ogd",
-  "version": 31
+  "title": "Daydream express.js metrics",
+  "uid": "app-performance-dashboard-v3",
+  "version": 4
 }

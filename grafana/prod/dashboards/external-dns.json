@@ -18,17 +18,12 @@
   "description": "Grafana dashboard to display external-dns metrics",
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "gnetId": 15038,
   "graphTooltip": 0,
   "id": null,
   "links": [],
-  "liveNow": false,
   "panels": [
     {
       "collapsed": false,
-      "datasource": {
-        "uid": "$datasource"
-      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -37,14 +32,6 @@
       },
       "id": 2,
       "panels": [],
-      "targets": [
-        {
-          "datasource": {
-            "uid": "$datasource"
-          },
-          "refId": "A"
-        }
-      ],
       "title": "External-dns endpoints",
       "type": "row"
     },
@@ -59,11 +46,13 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 18,
             "gradientMode": "none",
@@ -95,7 +84,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -121,19 +110,23 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "uid": "$datasource"
           },
+          "editorMode": "code",
           "exemplar": true,
-          "expr": "external_dns_registry_endpoints_total {pod=~\".*external-dns.*\",pod=~\"$pod\"}",
+          "expr": "external_dns_registry_endpoints_total {pod=~\".*external-dns.*\",pod=~\"$pod\",region=~\"$region\"}",
           "interval": "",
-          "legendFormat": "{{pod}}",
+          "legendFormat": "{{region}}",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -152,11 +145,13 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 18,
             "gradientMode": "none",
@@ -188,7 +183,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -214,10 +209,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -225,9 +222,9 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "external_dns_source_endpoints_total {pod=~\".*external-dns.*\",pod=~\"$pod\"}",
+          "expr": "external_dns_source_endpoints_total {pod=~\".*external-dns.*\",pod=~\"$pod\",region=~\"$region\"}",
           "interval": "",
-          "legendFormat": "{{pod}}",
+          "legendFormat": "{{region}}",
           "range": true,
           "refId": "A"
         }
@@ -237,9 +234,6 @@
     },
     {
       "collapsed": false,
-      "datasource": {
-        "uid": "$datasource"
-      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -248,14 +242,6 @@
       },
       "id": 26,
       "panels": [],
-      "targets": [
-        {
-          "datasource": {
-            "uid": "$datasource"
-          },
-          "refId": "A"
-        }
-      ],
       "title": "External-dns sync",
       "type": "row"
     },
@@ -276,7 +262,7 @@
             "steps": [
               {
                 "color": "purple",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -293,8 +279,16 @@
       "id": 36,
       "options": {
         "displayMode": "lcd",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
         "minVizHeight": 10,
         "minVizWidth": 0,
+        "namePlacement": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
@@ -304,12 +298,13 @@
           "values": false
         },
         "showUnfilled": true,
+        "sizing": "auto",
         "text": {
           "valueSize": 24
         },
         "valueMode": "color"
       },
-      "pluginVersion": "10.1.5",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -317,9 +312,9 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "1000 * (external_dns_controller_last_reconcile_timestamp_seconds{pod=~\".*external-dns.*\",pod=~\"$pod\"})",
+          "expr": "1000 * (external_dns_controller_last_reconcile_timestamp_seconds{pod=~\".*external-dns.*\",pod=~\"$pod\",region=~\"$region\"})",
           "interval": "",
-          "legendFormat": "{{pod}}",
+          "legendFormat": "{{region}}",
           "range": true,
           "refId": "A"
         }
@@ -344,7 +339,7 @@
             "steps": [
               {
                 "color": "purple",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -361,8 +356,16 @@
       "id": 24,
       "options": {
         "displayMode": "lcd",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
         "minVizHeight": 10,
         "minVizWidth": 0,
+        "namePlacement": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
@@ -372,12 +375,13 @@
           "values": false
         },
         "showUnfilled": true,
+        "sizing": "auto",
         "text": {
           "valueSize": 24
         },
         "valueMode": "color"
       },
-      "pluginVersion": "10.1.5",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -385,9 +389,9 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "1000 * (external_dns_controller_last_sync_timestamp_seconds{pod=~\".*external-dns.*\",pod=~\"$pod\"})",
+          "expr": "1000 * (external_dns_controller_last_sync_timestamp_seconds{pod=~\".*external-dns.*\",pod=~\"$pod\",region=~\"$region\"})",
           "interval": "",
-          "legendFormat": "{{pod}}",
+          "legendFormat": "{{region}}",
           "range": true,
           "refId": "A"
         }
@@ -412,7 +416,7 @@
             "steps": [
               {
                 "color": "purple",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -431,6 +435,8 @@
       },
       "id": 37,
       "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -440,9 +446,10 @@
           "values": false
         },
         "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "showThresholdMarkers": true,
+        "sizing": "auto"
       },
-      "pluginVersion": "10.1.5",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -490,7 +497,7 @@
             "steps": [
               {
                 "color": "light-blue",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -509,6 +516,8 @@
       },
       "id": 32,
       "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -518,9 +527,10 @@
           "values": false
         },
         "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "showThresholdMarkers": true,
+        "sizing": "auto"
       },
-      "pluginVersion": "10.1.5",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -528,79 +538,14 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "external_dns_registry_a_records {pod=~\".*external-dns.*\",pod=~\"$pod\"}",
+          "expr": "sum(external_dns_registry_records {pod=~\".*external-dns.*\",pod=~\"$pod\",region=~\"$region\",record_type=\"a\"}) by (region)",
           "interval": "",
-          "legendFormat": "{{pod}}",
+          "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
       "title": "Number of A records in registry",
-      "type": "gauge"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "$datasource"
-      },
-      "description": "Number of AAAA records in registry",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "light-blue",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 5,
-        "x": 5,
-        "y": 26
-      },
-      "id": 33,
-      "options": {
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true
-      },
-      "pluginVersion": "10.1.5",
-      "targets": [
-        {
-          "datasource": {
-            "uid": "$datasource"
-          },
-          "editorMode": "code",
-          "exemplar": true,
-          "expr": "external_dns_registry_aaaa_records {pod=~\".*external-dns.*\",pod=~\"$pod\"}",
-          "interval": "",
-          "legendFormat": "{{pod}}",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Number of AAAA records in registry",
       "type": "gauge"
     },
     {
@@ -620,7 +565,7 @@
             "steps": [
               {
                 "color": "light-blue",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -634,11 +579,13 @@
       "gridPos": {
         "h": 7,
         "w": 5,
-        "x": 10,
+        "x": 5,
         "y": 26
       },
       "id": 34,
       "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -648,9 +595,10 @@
           "values": false
         },
         "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "showThresholdMarkers": true,
+        "sizing": "auto"
       },
-      "pluginVersion": "10.1.5",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -658,79 +606,14 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "external_dns_source_a_records {pod=~\".*external-dns.*\",pod=~\"$pod\"}",
+          "expr": "sum(external_dns_source_records {pod=~\".*external-dns.*\",pod=~\"$pod\",region=~\"$region\",record_type=\"a\"}) by (region)",
           "interval": "",
-          "legendFormat": "{{pod}}",
+          "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
       "title": "Number of A records in source",
-      "type": "gauge"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "$datasource"
-      },
-      "description": "Number of AAAA records in source",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "light-blue",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 5,
-        "x": 0,
-        "y": 33
-      },
-      "id": 35,
-      "options": {
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true
-      },
-      "pluginVersion": "10.1.5",
-      "targets": [
-        {
-          "datasource": {
-            "uid": "$datasource"
-          },
-          "editorMode": "code",
-          "exemplar": true,
-          "expr": "external_dns_source_aaaa_records {pod=~\".*external-dns.*\",pod=~\"$pod\"}",
-          "interval": "",
-          "legendFormat": "{{pod}}",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Number of AAAA records in source",
       "type": "gauge"
     },
     {
@@ -750,7 +633,143 @@
             "steps": [
               {
                 "color": "light-blue",
-                "value": null
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 5,
+        "x": 10,
+        "y": 26
+      },
+      "id": 6,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "sum by (region) (external_dns_controller_verified_records {pod=~\".*external-dns.*\",pod=~\"$pod\",region=~\"$region\",record_type=\"a\"})",
+          "interval": "",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Number of DNS A-records that exists both in source and registry",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
+      "description": "Number of AAAA records in registry",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "light-blue",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 5,
+        "x": 0,
+        "y": 33
+      },
+      "id": 33,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "sum by (region) (external_dns_registry_records {pod=~\".*external-dns.*\",pod=~\"$pod\",region=~\"$region\",record_type=\"aaaa\"})",
+          "interval": "",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Number of AAAA records in registry",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
+      "description": "Number of AAAA records in source",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "light-blue",
+                "value": 0
               },
               {
                 "color": "red",
@@ -767,8 +786,10 @@
         "x": 5,
         "y": 33
       },
-      "id": 6,
+      "id": 35,
       "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -778,9 +799,10 @@
           "values": false
         },
         "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "showThresholdMarkers": true,
+        "sizing": "auto"
       },
-      "pluginVersion": "10.1.5",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -788,14 +810,14 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "external_dns_controller_verified_a_records {pod=~\".*external-dns.*\",pod=~\"$pod\"}",
+          "expr": "sum by (region) (external_dns_source_records {pod=~\".*external-dns.*\",pod=~\"$pod\",region=~\"$region\",record_type=\"aaaa\"})",
           "interval": "",
-          "legendFormat": "{{pod}}",
+          "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Number of DNS A-records that exists both in source and registry",
+      "title": "Number of AAAA records in source",
       "type": "gauge"
     },
     {
@@ -815,7 +837,7 @@
             "steps": [
               {
                 "color": "light-blue",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -834,6 +856,8 @@
       },
       "id": 31,
       "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -843,9 +867,10 @@
           "values": false
         },
         "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "showThresholdMarkers": true,
+        "sizing": "auto"
       },
-      "pluginVersion": "10.1.5",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -853,9 +878,9 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "external_dns_controller_verified_aaaa_records {pod=~\".*external-dns.*\",pod=~\"$pod\"}",
+          "expr": "sum by (region) (external_dns_controller_verified_records {pod=~\".*external-dns.*\",pod=~\"$pod\",region=~\"$region\",record_type=\"aaaa\"})",
           "interval": "",
-          "legendFormat": "{{pod}}",
+          "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
@@ -865,9 +890,6 @@
     },
     {
       "collapsed": false,
-      "datasource": {
-        "uid": "$datasource"
-      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -876,78 +898,8 @@
       },
       "id": 8,
       "panels": [],
-      "targets": [
-        {
-          "datasource": {
-            "uid": "$datasource"
-          },
-          "refId": "A"
-        }
-      ],
       "title": "External-dns errors",
       "type": "row"
-    },
-    {
-      "datasource": {
-        "uid": "$datasource"
-      },
-      "description": "Number of Registry errors",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "light-red",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 5,
-        "x": 0,
-        "y": 41
-      },
-      "id": 10,
-      "options": {
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true
-      },
-      "pluginVersion": "10.1.5",
-      "targets": [
-        {
-          "datasource": {
-            "uid": "$datasource"
-          },
-          "exemplar": true,
-          "expr": "external_dns_registry_errors_total {pod=~\".*external-dns.*\",pod=~\"$pod\"}",
-          "interval": "",
-          "legendFormat": "{{pod}}",
-          "refId": "A"
-        }
-      ],
-      "title": "Total external-dns registry errors",
-      "type": "gauge"
     },
     {
       "datasource": {
@@ -965,7 +917,74 @@
             "steps": [
               {
                 "color": "light-red",
-                "value": null
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 5,
+        "x": 0,
+        "y": 41
+      },
+      "id": 12,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "sum by (region) (external_dns_source_errors_total {pod=~\".*external-dns.*\",pod=~\"$pod\",region=~\"$region\"})",
+          "interval": "",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Total external-dns source errors",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "uid": "$datasource"
+      },
+      "description": "Number of Registry errors",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "light-red",
+                "value": 0
               },
               {
                 "color": "red",
@@ -982,8 +1001,10 @@
         "x": 5,
         "y": 41
       },
-      "id": 12,
+      "id": 10,
       "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -993,29 +1014,29 @@
           "values": false
         },
         "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "showThresholdMarkers": true,
+        "sizing": "auto"
       },
-      "pluginVersion": "10.1.5",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "uid": "$datasource"
           },
+          "editorMode": "code",
           "exemplar": true,
-          "expr": "external_dns_source_errors_total {pod=~\".*external-dns.*\",pod=~\"$pod\"}",
+          "expr": "sum by (region) (external_dns_registry_errors_total {pod=~\".*external-dns.*\",pod=~\"$pod\",region=~\"$region\"})",
           "interval": "",
-          "legendFormat": "{{pod}}",
+          "legendFormat": "__auto",
+          "range": true,
           "refId": "A"
         }
       ],
-      "title": "Total external-dns source errors",
+      "title": "Total external-dns registry errors",
       "type": "gauge"
     },
     {
       "collapsed": false,
-      "datasource": {
-        "uid": "$datasource"
-      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -1024,14 +1045,6 @@
       },
       "id": 16,
       "panels": [],
-      "targets": [
-        {
-          "datasource": {
-            "uid": "$datasource"
-          },
-          "refId": "A"
-        }
-      ],
       "title": "External-dns pods",
       "type": "row"
     },
@@ -1046,11 +1059,13 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 100,
             "gradientMode": "none",
@@ -1085,7 +1100,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -1184,7 +1199,6 @@
         "y": 49
       },
       "id": 18,
-      "links": [],
       "options": {
         "legend": {
           "calcs": [],
@@ -1193,11 +1207,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "10.1.5",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -1254,11 +1269,13 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 100,
             "gradientMode": "none",
@@ -1291,7 +1308,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -1391,7 +1408,6 @@
         "y": 49
       },
       "id": 14,
-      "links": [],
       "options": {
         "legend": {
           "calcs": [],
@@ -1400,22 +1416,25 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "10.1.5",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "uid": "$datasource"
           },
+          "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(container_memory_working_set_bytes{pod=~\".*external-dns.*\",pod=~\"$pod\",container!=\"\", image!=\"\"}) by (pod)",
+          "expr": "sum(container_memory_working_set_bytes{pod=~\".*external-dns.*\",pod=~\"$pod\",container!=\"\", image!=\"\",region=~\"$region\"}) by (region)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
           "legendFormat": "{{pod}}",
+          "range": true,
           "refId": "A",
           "step": 10
         },
@@ -1425,7 +1444,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "scalar(kube_resourcequota{pod=~\".*external-dns.*\", type=\"hard\",resource=\"requests.memory\"})",
+          "expr": "scalar(kube_resourcequota{pod=~\".*external-dns.*\", type=\"hard\",resource=\"requests.memory\",region=~\"$region\"})",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1440,7 +1459,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "scalar(kube_resourcequota{pod=~\".*external-dns.*\",pod=~\"$pod\",type=\"hard\",resource=\"limits.memory\"})",
+          "expr": "scalar(kube_resourcequota{pod=~\".*external-dns.*\",pod=~\"$pod\",type=\"hard\",resource=\"limits.memory\",region=~\"$region\"})",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1477,7 +1496,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -1660,7 +1679,6 @@
         "y": 57
       },
       "id": 20,
-      "links": [],
       "options": {
         "cellHeight": "sm",
         "footer": {
@@ -1673,14 +1691,15 @@
         },
         "showHeader": true
       },
-      "pluginVersion": "10.1.5",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "uid": "$datasource"
           },
+          "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{pod=~\".*external-dns.*\",pod=~\"$pod\"}) by (pod)",
+          "expr": "sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{pod=~\".*external-dns.*\",pod=~\"$pod\",region=~\"$region\"}) by (region)",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1767,6 +1786,7 @@
             "mode": "thresholds"
           },
           "custom": {
+            "align": "auto",
             "cellOptions": {
               "type": "auto"
             },
@@ -1780,7 +1800,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -2032,7 +2052,6 @@
         "y": 64
       },
       "id": 22,
-      "links": [],
       "options": {
         "cellHeight": "sm",
         "footer": {
@@ -2045,14 +2064,15 @@
         },
         "showHeader": true
       },
-      "pluginVersion": "10.1.5",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "uid": "$datasource"
           },
+          "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(container_memory_working_set_bytes{pod=~\".*external-dns.*\",pod=~\"$pod\",container!=\"\", image!=\"\"}) by (pod)",
+          "expr": "sum(container_memory_working_set_bytes{pod=~\".*external-dns.*\",pod=~\"$pod\",container!=\"\", image!=\"\",region=~\"$region\"}) by (region)",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -2172,9 +2192,9 @@
       "type": "table"
     }
   ],
+  "preload": false,
   "refresh": "",
-  "schemaVersion": 38,
-  "style": "dark",
+  "schemaVersion": 41,
   "tags": [
     "external-dns",
     "dns"
@@ -2183,20 +2203,17 @@
     "list": [
       {
         "current": {
-          "selected": false,
           "text": "default",
           "value": "default"
         },
         "hide": 2,
         "includeAll": false,
         "label": "Datasource",
-        "multi": false,
         "name": "datasource",
         "options": [],
         "query": "prometheus",
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
         "type": "datasource"
       },
       {
@@ -2206,10 +2223,8 @@
           "uid": "$datasource"
         },
         "definition": "label_values(kube_pod_info{pod=~\".*external-dns.*\"}, pod)",
-        "hide": 0,
         "includeAll": true,
         "label": "pod",
-        "multi": false,
         "name": "pod",
         "options": [],
         "query": {
@@ -2218,20 +2233,44 @@
         },
         "refresh": 2,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": ".+",
+        "current": {
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "definition": "label_values(external_dns_registry_endpoints_total,region)",
+        "description": "Region name",
+        "includeAll": true,
+        "label": "Region",
+        "multi": true,
+        "name": "region",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(external_dns_registry_endpoints_total,region)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "sort": 1,
         "type": "query"
       }
     ]
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-12h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "utc",
   "title": "External DNS",
   "uid": "eea5u_I7z",
-  "version": 4,
-  "weekStart": ""
+  "version": 6
 }

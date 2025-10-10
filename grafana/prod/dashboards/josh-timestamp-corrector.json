@@ -37,7 +37,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -72,7 +73,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -141,7 +142,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -176,7 +178,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -236,7 +238,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -271,7 +274,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -331,7 +334,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -366,7 +370,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -442,7 +446,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               }
             ]
           }
@@ -468,7 +473,7 @@
         },
         "showHeader": true
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -543,7 +548,8 @@
           "custom": {
             "align": "auto",
             "cellOptions": {
-              "type": "auto"
+              "applyToRow": true,
+              "type": "color-background"
             },
             "filterable": true,
             "inspect": false
@@ -553,11 +559,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
+                "color": "transparent",
+                "value": 0
               }
             ]
           }
@@ -566,24 +569,24 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "first"
+              "options": "Unintended Change"
             },
             "properties": [
               {
-                "id": "custom.width",
-                "value": 83
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "detected"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 95
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "transparent",
+                      "value": 0
+                    },
+                    {
+                      "color": "red",
+                      "value": 1
+                    }
+                  ]
+                }
               }
             ]
           }
@@ -610,11 +613,11 @@
         "sortBy": [
           {
             "desc": true,
-            "displayName": "delta"
+            "displayName": "Unintended Change"
           }
         ]
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -623,7 +626,7 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "{container=\"ai-gateway\"} |= `user-agent` | regexp `user-agent=(?P<uaRaw>.*$)` | regexp `request_id=(?P<request_id>[a-z0-9]+)`\n\n| label_format ua=`\n    {{ if eq \"Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1\" .uaRaw }} iPhone 16.6 Safari\n    {{ else if eq \"Mozilla/5.0 (iPhone; CPU iPhone OS 18_1_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.1.1 Mobile/15E148 Safari/604.1\" .uaRaw }} iPhone 18.1.1 Safari\n    {{ else if eq \"Mozilla/5.0 (iPhone; CPU iPhone OS 18_3_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3.1 Mobile/15E148 Safari/604.1\" .uaRaw }} iPhone 18.3.1 Safari\n    {{ else if eq \"Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1\" .uaRaw }} iPhone 18.5 Safari\n    {{ else if eq \"Mozilla/5.0 (iPhone; CPU iPhone OS 18_5_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/137.0.7151.107 Mobile/15E148 Safari/604.1\" .uaRaw }} iPhone 18.5 Chrome\n    {{ else if eq \"Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Brave/1 Mobile/15E148 Safari/604.1\" .uaRaw }} iPhone 18.5 Brave\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Safari/605.1.15\" .uaRaw }} Mac Safari 18.3\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.4 Safari/605.1.15\" .uaRaw }} Mac Safari 18.4\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15\" .uaRaw}} Mac Safari 18.5\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36 OPR/118.0.0.0\" .uaRaw }} Mac Opera 118\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36\" .uaRaw }} Mac Chrome 126\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36\" .uaRaw }} Mac Chrome 135\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36\" .uaRaw }} Mac Chrome 136\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36\" .uaRaw }} Mac Chrome 137\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36\" .uaRaw }} Mac Chrome 138\n    {{ else if eq \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36\" .uaRaw }} Win Chrome 137\n    {{ else if eq \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36\" .uaRaw }} Win Chrome 138\n    {{ else if eq \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0) Gecko/20100101 Firefox/140.0\" .uaRaw }} Win Firefox 140\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:137.0) Gecko/20100101 Firefox/137.0\" .uaRaw }} Mac Firefox 137\n    {{ else if eq \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:139.0) Gecko/20100101 Firefox/139.0\" .uaRaw }} Mac Firefox 139\n    {{ else if eq \"Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36\" .uaRaw }} Android Chrome 137\n    {{ else if eq \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36\" .uaRaw }} Linux Chrome 137\n    {{ else if eq \"Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0\" .uaRaw  }} Linux Firefox 140\n    {{ else if eq \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/137.0.0.0 Safari/537.36\" .uaRaw }} Headless Chrome 137\n    {{ else if eq \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/138.0.0.0 Safari/537.36\" .uaRaw }} Headless Chrome 138\n    {{ else }} nonsense-string {{end}}`\n\n# strip leading whitespace\n| label_format ua=`{{ regexReplaceAll \"^\\\\s+\" .ua \"\" }}`\n\n# strip trailing whitespace\n| label_format ua=`{{ regexReplaceAll \"\\\\s+$\" .ua \"\" }}`\n\n# NB: Some Mac Safari 18.4 *might* actually be broken!\n# But this occurs during a minor update and it doesn't seem possible to distinguish between versions\n| label_format broken_ua=`{{if eq \"Mac Safari 18.5\" .ua}}true{{ else if contains \"iPhone 18.5\" .ua}}true{{else}}false{{end}}`\n\n| label_format recognized_ua=`{{if eq \"nonsense-string\" .ua }}false{{else}}true{{end}}`\n\n| label_format ua=`{{if eq \"nonsense-string\" .ua }}{{.uaRaw}}{{else}}{{.ua}}{{end}}`\n\n| line_format `request_id={{.request_id}} ua=\"{{.ua}}\" estimated_broken={{.broken_ua}} recognized_ua={{.recognized_ua}}`",
+          "expr": "{container=\"ai-gateway\"} |= `user-agent`\n| regexp `user-agent=(?P<uaRaw>.*)$`\n| regexp `request_id=(?P<request_id>[a-z0-9]+)`\n# device buckets\n| regexp `(?P<device>iPhone|Macintosh|Windows NT|X11; Linux x86_64|Linux; Android|Linux x86_64|Windows x86_64|iPad|Lavf)`\n# browser/version extracts (each stage is small & optional)\n| regexp `(?:Chrome|CriOS)/(?P<chrome_ver>\\d+)`\n| regexp `Firefox/(?P<ff_ver>\\d+)`\n| regexp `Version/(?P<safari_ver>\\d+(?:\\.\\d+){0,2})`\n| regexp `OPR/(?P<opr_ver>\\d+)`\n| regexp `HeadlessChrome/(?P<headless_ver>\\d+)`\n| regexp `Lavf/(?P<lavf_ver>\\d+\\.\\d+\\.\\d+)`\n| regexp `OBS-Studio/(?P<obs_ver>\\d+\\.\\d+\\.\\d+)`\n| regexp `Brave/(?P<brave_ver>\\d+)`\n# iOS version (for iPhone)\n| regexp `iPhone OS (?P<ios_ver>\\d+(?:_\\d+){0,2})`\n# normalize fields\n| label_format browser=`{{ if .chrome_ver }}Chrome{{ else if .ff_ver }}Firefox{{ else if .safari_ver }}Safari{{ else if .opr_ver }}Opera{{ else if .headless_ver }}Headless Chrome{{ else if .lavf_ver }}FFmpeg{{ else if .obs_ver }}OBS{{ else if .brave_ver }}Brave{{ else }}Other{{ end }}`\n| label_format ver=`{{ if .chrome_ver }}{{ .chrome_ver }}{{ else if .ff_ver }}{{ .ff_ver }}{{ else if .safari_ver }}{{ .safari_ver }}{{ else if .opr_ver }}{{ .opr_ver }}{{ else if .headless_ver }}{{ .headless_ver }}{{ else if .lavf_ver }}{{ .lavf_ver }}{{ else if .obs_ver }}{{ .obs_ver }}{{ else }}unknown{{ end }}`\n| label_format ios_ver=`{{ if .ios_ver }}{{ regexReplaceAll \"_\" .ios_ver \".\" }}{{ end }}`\n| label_format device=`{{ if eq .device \"Linux; Android\" }}Android{{ else if contains \"Linux\" .device }}Linux{{ else if contains \"Windows\" .device }}Windows{{ else }}{{ .device }}{{ end }}`\n# build your compact UA label\n| label_format platform=`{{ if eq .device \"iPhone\" }}iPhone {{ .ios_ver }}{{ else if eq .device \"Macintosh\" }}Mac{{ else if eq .device \"Windows\" }}Win{{ else if eq .device \"Linux\" }}Linux{{ else if eq .device \"Android\" }}Android{{ else if eq .device \"iPad\" }}iPad{{ else if .lavf_ver }}{{ else }}UNK - {{.uaRaw}}{{ end }}`\n| label_format ua=`{{.platform}} {{ .browser }} {{ .ver }}`\n# flags\n# NB: Some Mac Safari 18.4 *might* actually be broken!\n# But this occurs during a minor update and it doesn't seem possible to distinguish between versions\n| label_format broken_ua=`{{ if and (eq .device \"Macintosh\") (eq .browser \"Safari\") (contains .ver \"18.5\") }}true{{ else if and (eq .device \"iPhone\") (contains \"18.5\" .ios_ver ) }}true{{ else }}false{{ end }}`\n| label_format recognized_ua=`{{ if eq .browser \"Other\" }}false{{ else }}true{{ end }}`\n# fall back to raw if we couldn't ID it\n| label_format ua=`{{ if eq .browser \"Other\" }}{{ .uaRaw }}{{ else }}{{ .ua }}{{ end }}`\n| line_format `request_id={{.request_id}} ua=\"{{.ua}}\" estimated_broken={{.broken_ua}} recognized_ua={{.recognized_ua}}`\n",
           "hide": false,
           "maxLines": 5000,
           "queryType": "range",
@@ -762,23 +765,23 @@
             },
             "includeByName": {},
             "indexByName": {
+              "corrected": 12,
               "corrected 1": 8,
               "corrected 2": 6,
-              "corrected 3": 13,
+              "delta": 17,
               "delta 1": 10,
               "delta 2": 4,
-              "delta 3": 15,
+              "detected": 13,
               "detected 1": 7,
               "detected 2": 2,
-              "detected 3": 12,
+              "dt_ms": 18,
               "dt_ms 1": 11,
               "dt_ms 2": 5,
-              "dt_ms 3": 16,
-              "estimated_broken": 18,
+              "estimated_broken": 14,
+              "first": 16,
               "first 1": 9,
               "first 2": 3,
-              "first 3": 14,
-              "recognized_ua": 17,
+              "recognized_ua": 15,
               "request_id": 0,
               "ua": 1
             },
@@ -806,6 +809,20 @@
             "match": "all",
             "type": "exclude"
           }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Unintended Change",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "corrected",
+                "estimated_broken"
+              ],
+              "reducer": "changeCount"
+            }
+          }
         }
       ],
       "type": "table"
@@ -825,5 +842,5 @@
   "timezone": "utc",
   "title": "Josh - Timestamp Corrector",
   "uid": "cep5qbgj67jeoa",
-  "version": 5
+  "version": 12
 }

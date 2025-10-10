@@ -11,6 +11,12 @@
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
         "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
         "type": "dashboard"
       }
     ]
@@ -19,25 +25,76 @@
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
   "id": null,
-  "links": [
-    {
-      "asDropdown": false,
-      "icon": "external link",
-      "includeVars": false,
-      "keepTime": false,
-      "tags": [],
-      "targetBlank": true,
-      "title": "Trovo support guide",
-      "tooltip": "Trovo support guide",
-      "type": "link",
-      "url": "https://www.notion.so/livepeer/Trovo-05ab9ca9b54245888bf2292c1bc463ea"
-    }
-  ],
-  "liveNow": false,
+  "links": [],
   "panels": [
     {
       "datasource": {
-        "default": true,
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      },
+      "id": 29,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "sum (mist_sessions{catalyst=\"true\", sessType=\"viewers\", user_id=\"30e0492e-ff0c-4ca5-982f-af1e7f627c0d\", stream!~\"$exclude\"})",
+          "interval": "",
+          "legendFormat": "",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Current Viewers",
+      "type": "stat"
+    },
+    {
+      "datasource": {
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
@@ -52,7 +109,6 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
-            "axisSoftMin": 0,
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
@@ -86,7 +142,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -98,62 +154,63 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 10,
+        "h": 7,
         "w": 13,
-        "x": 0,
+        "x": 6,
         "y": 0
       },
-      "id": 9,
+      "id": 3,
       "options": {
         "legend": {
           "calcs": [
-            "last",
-            "max"
+            "max",
+            "mean"
           ],
           "displayMode": "table",
           "placement": "right",
           "showLegend": true,
-          "sortBy": "Last",
+          "sortBy": "Max",
           "sortDesc": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "count by(region) (mist_sessions{sessType=\"incoming\", user_id=\"${TROVO_USER_ID}\", region=~\"${region:pipe}\"}) > 0",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
+          "exemplar": false,
+          "expr": "sum(mist_sessions{user_id=\"30e0492e-ff0c-4ca5-982f-af1e7f627c0d\", catalyst=\"true\", sessType=\"viewers\", stream!~\"$exclude\", stream!~\"$exclude\"}) by (region)",
           "instant": false,
-          "legendFormat": "__auto",
+          "interval": "",
+          "key": "Q-aca73aa4-50db-4a58-ab60-0460130ab40b-0",
+          "legendFormat": "{{ stream }}",
           "range": true,
-          "refId": "A",
-          "useBackend": false
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "sum (mist_sessions{catalyst=\"true\", sessType=\"viewers\", stream!~\"$exclude\", stream!~\"$exclude\"})",
+          "hide": true,
+          "instant": false,
+          "interval": "",
+          "legendFormat": "total",
+          "refId": "B"
         }
       ],
-      "title": "Origin server",
+      "title": "Viewers by Region",
       "type": "timeseries"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 10
-      },
-      "id": 5,
-      "panels": [],
-      "title": "Viewership breakdown",
-      "type": "row"
     },
     {
       "datasource": {
@@ -163,13 +220,80 @@
       "fieldConfig": {
         "defaults": {
           "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 5,
+        "x": 19,
+        "y": 0
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "sum (mist_sessions{catalyst=\"true\", sessType=\"incoming\", user_id=\"30e0492e-ff0c-4ca5-982f-af1e7f627c0d\", stream!~\"$exclude\"})",
+          "interval": "",
+          "legendFormat": "",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Current Streams",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "description": "Viewer sessions as reported by mist for each active stream",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
             "mode": "palette-classic"
           },
           "custom": {
             "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
-            "axisLabel": "",
+            "axisLabel": "Sessions count",
             "axisPlacement": "auto",
             "axisSoftMin": 0,
             "barAlignment": 0,
@@ -184,231 +308,9 @@
             },
             "insertNulls": false,
             "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
+            "lineStyle": {
+              "fill": "solid"
             },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "links": [],
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "Trovo"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 11,
-        "w": 13,
-        "x": 0,
-        "y": 11
-      },
-      "id": 7,
-      "options": {
-        "legend": {
-          "calcs": [
-            "last",
-            "max"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true,
-          "sortBy": "Last",
-          "sortDesc": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", user_id=\"${TROVO_USER_ID}\", region=~\"${region:pipe}\"})",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "Trovo",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "Viewers globally",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 11,
-        "w": 11,
-        "x": 13,
-        "y": 11
-      },
-      "id": 3,
-      "options": {
-        "legend": {
-          "calcs": [
-            "last",
-            "max"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true,
-          "sortBy": "Last",
-          "sortDesc": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "editorMode": "code",
-          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", user_id=\"${TROVO_USER_ID}\", region=~\"${region:pipe}\"}[1m] ) by (catalyst_node)",
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Viewers per node",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
@@ -427,17 +329,26 @@
           "links": [
             {
               "targetBlank": true,
-              "title": "admin dashboard",
-              "url": "https://livepeer.com/app/stream/${__field.labels.stream_id}?autoplay"
+              "title": "admin panel",
+              "url": "https://livepeer.studio/dashboard/app/stream/${__field.labels.playback_id}"
+            },
+            {
+              "targetBlank": true,
+              "title": "lvpr.tv watching",
+              "url": "https://lvpr.tv/?v=${__field.labels.playback_id}"
             }
           ],
           "mappings": [],
           "thresholds": {
-            "mode": "percentage",
+            "mode": "absolute",
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 300
               }
             ]
           },
@@ -447,252 +358,362 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "video+2289jf6f37kq3put"
+              "options": "f77b5hz939s8z89b"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Living Room"
+                "value": "Bar (f77b5hz939s8z89b)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+c00a95tv3rysf9ji"
+              "options": "4fb8to1674q6ht0m"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Upstairs Bathroom"
+                "value": "Flat (4fb8to1674q6ht0m)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+f355shnx2w9xkhxo"
+              "options": "110bhp7ka9dbr86h"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Kitchen"
+                "value": "Greenroom (110bhp7ka9dbr86h)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+1bcd83gg4ang03l8"
+              "options": "b65269ekvyvfkous"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Upstairs Hallway"
+                "value": "Bedroom 1 (b65269ekvyvfkous)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+9cfeeodtu023cb91"
+              "options": "36708jd80gr91018"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Bar"
+                "value": "Bedroom 2 (36708jd80gr91018)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+33d25dz3mqilw1lp"
+              "options": "44daqjc6r1dfxd2e"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Lounge"
+                "value": "Bedroom 3 (44daqjc6r1dfxd2e)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+a12bmexn0h5td3kh"
+              "options": "68f8q4hl8cys37n2"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Bedroom 1"
+                "value": "Vanity (68f8q4hl8cys37n2)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+cc92intolqvyf117"
+              "options": "3760543f053u6c5m"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Downstairs Hallway"
+                "value": "Hallway (3760543f053u6c5m)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+052cnzsasax9c10b"
+              "options": "84485q0ve58ckwm2"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Master Bathroom"
+                "value": "Mail Room (84485q0ve58ckwm2)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+d7a07saeijthkqqk"
+              "options": "8c8btla37r6nux8f"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Bedroom 3"
+                "value": "Kitchen (8c8btla37r6nux8f)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+2ef11errf17as0df"
+              "options": "eac7ihz7d6ya9v1y"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Dog House"
+                "value": "Kitchen PTZ (eac7ihz7d6ya9v1y)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+d01cpugvvx04448x"
+              "options": "afacw5eipuyfsfny"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Bedroom 2"
+                "value": "Dining Room (afacw5eipuyfsfny)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+b0739nzrqm6m8k1k"
+              "options": "21aflvcz5puavd2e"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Downstairs Bathroom"
+                "value": "Confessional (21aflvcz5puavd2e)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+cbcbvq7hgf5vwti2"
+              "options": "9f41r40060icglir"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "The Bunk"
+                "value": "Lounge (9f41r40060icglir)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+0b6a2wuaxm56yhkr"
+              "options": "7d3e7e9s5qm5l1uf"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Attic"
+                "value": "Locker Room (7d3e7e9s5qm5l1uf)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+c0967lxltr0zkftj"
+              "options": "0c0bun9tebd65k3j"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Launch"
+                "value": "Penthouse (0c0bun9tebd65k3j)"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "video+b905oqz6q3czq6pb"
+              "options": "122bkgvyrj1f7pk4"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Confessionals"
+                "value": "Jacuzzi (122bkgvyrj1f7pk4)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "9d5ckl8snb01ba6i"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Loft (9d5ckl8snb01ba6i)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "d678xcnkn2slngkx"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Den (d678xcnkn2slngkx)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "8e1arf44e86qa7ru"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Den PTZ (8e1arf44e86qa7ru)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "b4e4iknxyd1u4g0c"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Deck (b4e4iknxyd1u4g0c)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "580elsslerqmt28u"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Catwalk (580elsslerqmt28u)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "4ab29ayc51cmiu7k"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Front Yard (4ab29ayc51cmiu7k)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "38847hg4plyxhzlf"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Back Yard (38847hg4plyxhzlf)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "85c28sa2o8wppm58"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "LotRadio 85c28sa2o8wppm58"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "3709skf56iakk5m1"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Unlonely"
               }
             ]
           }
         ]
       },
       "gridPos": {
-        "h": 16,
-        "w": 13,
+        "h": 9,
+        "w": 11,
         "x": 0,
-        "y": 22
+        "y": 7
       },
-      "id": 1,
+      "id": 37,
       "options": {
         "legend": {
           "calcs": [
-            "last",
-            "max"
+            "max",
+            "mean",
+            "sum"
           ],
           "displayMode": "table",
           "placement": "right",
           "showLegend": true,
-          "sortBy": "Last",
+          "sortBy": "Max",
           "sortDesc": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
-          "sort": "none"
+          "sort": "asc"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "label_replace(sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", user_id=\"${TROVO_USER_ID}\", region=~\"${region:pipe}\"}[1m] ) by (stream) or on() vector(0), \"stream_id\", \"$1\", \"stream\", \".*\\\\+(.*)\")",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
+          "exemplar": false,
+          "expr": "label_replace(sum(mist_sessions{catalyst=\"true\", user_id=\"30e0492e-ff0c-4ca5-982f-af1e7f627c0d\", sessType=\"viewers\", stream!=\"000reallylongnonexistenstreamnamethatreallyshouldntexist000\", stream!~\"$exclude\", stream!~\"catalyst_vod.+\"}[1m] ) by (stream) or on() vector(0), \"playback_id\", \"$1\", \"stream\", \".*[+](.*)\")",
           "instant": false,
-          "legendFormat": "{{stream_id}}",
+          "interval": "",
+          "key": "Q-aca73aa4-50db-4a58-ab60-0460130ab40b-0",
+          "legendFormat": "{{playback_id}}",
           "range": true,
-          "refId": "A",
-          "useBackend": false
+          "refId": "A"
         }
       ],
-      "title": "Viewers per stream",
+      "title": "Viewers by stream",
       "type": "timeseries"
     },
     {
@@ -711,7 +732,6 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
-            "axisSoftMin": 0,
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
@@ -724,6 +744,9 @@
             },
             "insertNulls": false,
             "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
@@ -739,14 +762,13 @@
               "mode": "off"
             }
           },
-          "links": [],
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -758,29 +780,31 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 16,
-        "w": 11,
-        "x": 13,
-        "y": 22
+        "h": 9,
+        "w": 13,
+        "x": 11,
+        "y": 7
       },
-      "id": 2,
+      "id": 14,
       "options": {
         "legend": {
           "calcs": [
-            "last",
+            "mean",
             "max"
           ],
           "displayMode": "table",
           "placement": "right",
           "showLegend": true,
-          "sortBy": "Last",
+          "sortBy": "Max",
           "sortDesc": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -788,77 +812,64 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(mist_sessions{catalyst=\"true\", sessType=\"viewers\", user_id=\"${TROVO_USER_ID}\", region=~\"${region:pipe}\"}) by (region)",
+          "exemplar": false,
+          "expr": "sum(mist_sessions{user_id=\"30e0492e-ff0c-4ca5-982f-af1e7f627c0d\", catalyst=\"true\", sessType=\"viewers\", stream!=\"000reallylongnonexistenstreamnamethatreallyshouldntexist000\", stream!~\"$exclude\"}[1m] ) by (catalyst_node) ",
           "instant": false,
-          "legendFormat": "__auto",
+          "interval": "",
+          "key": "Q-aca73aa4-50db-4a58-ab60-0460130ab40b-0",
+          "legendFormat": "{{ stream }}",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Viewers per region",
+      "title": "Viewers by Node",
       "type": "timeseries"
     }
   ],
-  "refresh": "1m",
-  "schemaVersion": 39,
-  "tags": [
-    "viewership",
-    "metrics",
-    "observe",
-    "trovo"
-  ],
+  "preload": false,
+  "refresh": "10s",
+  "schemaVersion": 41,
+  "tags": [],
   "templating": {
     "list": [
       {
-        "hide": 2,
-        "name": "TROVO_USER_ID",
-        "query": "a7833805-e313-452b-8c72-18923137f48d",
-        "skipUrlSync": false,
-        "type": "constant"
-      },
-      {
-        "allValue": ".*",
         "current": {
-          "selected": true,
-          "text": [
-            "All"
-          ],
-          "value": [
-            "$__all"
-          ]
+          "text": ".+-test",
+          "value": ".+-test"
         },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "PBFA97CFB590B2093"
-        },
-        "definition": "label_values(mist_sessions{user_id=\"$TROVO_USER_ID\"},region)",
-        "hide": 0,
-        "includeAll": true,
-        "label": "region",
-        "multi": true,
-        "name": "region",
-        "options": [],
-        "query": {
-          "qryType": 1,
-          "query": "label_values(mist_sessions{user_id=\"$TROVO_USER_ID\"},region)",
-          "refId": "PrometheusVariableQueryEditor-VariableQuery"
-        },
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 1,
-        "type": "query"
+        "label": "Exclude streams:",
+        "name": "exclude",
+        "options": [
+          {
+            "selected": true,
+            "text": ".+-test",
+            "value": ".+-test"
+          }
+        ],
+        "query": ".+-test",
+        "type": "textbox"
       }
     ]
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-1h",
     "to": "now"
   },
-  "timepicker": {},
-  "timezone": "",
-  "title": "Trovo viewership",
-  "uid": "fea1f415-fb66-4a69-a9a4-869def254322",
-  "version": 12,
-  "weekStart": ""
+  "timepicker": {
+    "refresh_intervals": [
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ]
+  },
+  "timezone": "utc",
+  "title": "Burning Man",
+  "uid": "BurningMan",
+  "version": 15
 }
