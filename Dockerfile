@@ -2,7 +2,7 @@ ARG	GRAFANA_ENV
 
 FROM	prom/prometheus:v2.54.1	AS	prometheus
 
-FROM	grafana/loki:2.9.10	AS	loki
+FROM	grafana/loki:3.6.3	AS	loki
 
 FROM	prom/alertmanager:v0.27.0	AS	alertmanager
 
