@@ -4,7 +4,7 @@ FROM	prom/prometheus:v2.54.1	AS	prometheus
 
 FROM	grafana/loki:2.9.10	AS	loki
 
-FROM	prom/alertmanager:v0.27.0	AS	alertmanager
+FROM	prom/alertmanager:v0.30.1	AS	alertmanager
 
 FROM	golang:1.20.4-alpine3.16	AS	nvidia-builder
 
