@@ -22,6 +22,19 @@
   "links": [],
   "panels": [
     {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 13,
+      "panels": [],
+      "title": "Orchestrators",
+      "type": "row"
+    },
+    {
       "datasource": {
         "type": "grafana-clickhouse-datasource",
         "uid": "cdrt9r9yntbswf"
@@ -68,10 +81,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
+        "h": 26,
         "w": 12,
         "x": 0,
-        "y": 0
+        "y": 1
       },
       "id": 4,
       "options": {
@@ -81,9 +94,7 @@
         "groupWidth": 0.73,
         "legend": {
           "calcs": [
-            "lastNotNull",
-            "median",
-            "mean"
+            "lastNotNull"
           ],
           "displayMode": "table",
           "placement": "right",
@@ -121,9 +132,9 @@
               "table": ""
             }
           },
-          "pluginVersion": "4.10.2",
+          "pluginVersion": "4.11.2",
           "queryType": "table",
-          "rawSql": "SELECT\n  CONCAT(extract(`network_events`.`stream_status_view`.`orchestrator_url`, 'https://(.*)'), ' - ', `network_events`.`stream_status_view`.`pipeline`) as orchestrator_short_uri,\n  `median`(`network_events`.`stream_status_view`.`output_fps`) AS `median`,\n  MAX(`network_events`.`stream_status_view`.`output_fps`) AS `max`\nFROM\n  `network_events`.`stream_status_view`\nWHERE\n  $__timeFilter(event_timestamp_ts)\n  AND\n  `network_events`.`stream_status_view`.`orchestrator_url` NOT LIKE '%lvpr.io%' \nGROUP BY\n  orchestrator_short_uri, `network_events`.`stream_status_view`.`pipeline`\nORDER BY\n  `median` DESC,\n  orchestrator_short_uri ASC,\n  `network_events`.`stream_status_view`.`pipeline` ASC\n",
+          "rawSql": "SELECT\n  CONCAT(extract(`network_events`.`stream_status_view`.`orchestrator_url`, 'https://(.*)'), ' - ', `network_events`.`stream_status_view`.`pipeline_key`) as orchestrator_short_uri,\n  `median`(`network_events`.`stream_status_view`.`output_fps`) AS `median`,\n  MAX(`network_events`.`stream_status_view`.`output_fps`) AS `max`\nFROM\n  `network_events`.`stream_status_view`\nWHERE\n  $__timeFilter(event_timestamp_ts)\n  AND\n  event_timestamp_ts < now() - INTERVAL 5 minute  -- last minutes data is missing pipeline_* data\n  AND\n  `network_events`.`stream_status_view`.`orchestrator_url` NOT LIKE '%lvpr.io%' \nGROUP BY\n  orchestrator_short_uri, `network_events`.`stream_status_view`.`pipeline_key`\nORDER BY\n  `median` DESC,\n  orchestrator_short_uri ASC,\n  `network_events`.`stream_status_view`.`pipeline_key` ASC\n",
           "refId": "A"
         }
       ],
@@ -181,10 +192,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
+        "h": 26,
         "w": 12,
         "x": 12,
-        "y": 0
+        "y": 1
       },
       "id": 6,
       "options": {
@@ -232,9 +243,9 @@
               "table": ""
             }
           },
-          "pluginVersion": "4.10.2",
+          "pluginVersion": "4.11.2",
           "queryType": "table",
-          "rawSql": "SELECT\n  CONCAT(extract(`network_events`.`stream_status_view`.`orchestrator_url`, 'https://(.*)'), ' - ', `network_events`.`stream_status_view`.`pipeline`) as orchestrator_short_uri,\n  COUNT(DISTINCT `network_events`.`stream_status_view`.`stream_key`) AS `streams_count`\nFROM\n  `network_events`.`stream_status_view`\nWHERE\n  $__timeFilter(event_timestamp_ts)\n  AND\n  `network_events`.`stream_status_view`.`orchestrator_url` NOT LIKE '%lvpr.io%' \nGROUP BY\n  orchestrator_short_uri\nORDER BY\n  `streams_count` DESC,\n  orchestrator_short_uri ASC\n",
+          "rawSql": "SELECT\n  CONCAT(extract(`network_events`.`stream_status_view`.`orchestrator_url`, 'https://(.*)'), ' - ', `network_events`.`stream_status_view`.`pipeline_key`) as orchestrator_short_uri,\n  COUNT(DISTINCT `network_events`.`stream_status_view`.`stream_key`) AS `streams_count`\nFROM\n  `network_events`.`stream_status_view`\nWHERE\n  $__timeFilter(event_timestamp_ts)\n  AND\n  event_timestamp_ts < now() - INTERVAL 5 minute  -- last minutes data is missing pipeline_* data\n  AND\n  `network_events`.`stream_status_view`.`orchestrator_url` NOT LIKE '%lvpr.io%' \nGROUP BY\n  orchestrator_short_uri\nORDER BY\n  `streams_count` DESC,\n  orchestrator_short_uri ASC\n",
           "refId": "A"
         }
       ],
@@ -304,7 +315,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 7
+        "y": 27
       },
       "id": 5,
       "options": {
@@ -344,13 +355,13 @@
               "table": ""
             }
           },
-          "pluginVersion": "4.10.2",
+          "pluginVersion": "4.11.2",
           "queryType": "timeseries",
-          "rawSql": "SELECT\n  `network_events`.`stream_status_view`.event_timestamp_ts as time,\n  CONCAT(extract(`network_events`.`stream_status_view`.`orchestrator_url`, 'https://(.*)'), ' - ', `network_events`.`stream_status_view`.`pipeline`) as orchestrator_short_uri,\n  `median`(`network_events`.`stream_status_view`.`output_fps`) AS ` `\nFROM\n  `network_events`.`stream_status_view`\nWHERE\n  $__timeFilter(event_timestamp_ts)\n  AND event_timestamp_ts >= now() - INTERVAL 7 DAY\n  AND `network_events`.`stream_status_view`.`orchestrator_url` NOT LIKE '%lvpr.io%'\nGROUP BY\n  orchestrator_short_uri, pipeline, `network_events`.`stream_status_view`.event_timestamp_ts\nORDER BY\n  `network_events`.`stream_status_view`.event_timestamp_ts ASC,\n  orchestrator_short_uri ASC,\n  pipeline ASC\n",
+          "rawSql": "SELECT\n  `network_events`.`stream_status_view`.event_timestamp_ts as time,\n  CONCAT(extract(`network_events`.`stream_status_view`.`orchestrator_url`, 'https://(.*:.+)'), ' - ', `network_events`.`stream_status_view`.`pipeline_key`) as pipeline,\n  `median`(`network_events`.`stream_status_view`.`output_fps`) AS ` `\nFROM\n  `network_events`.`stream_status_view`\nWHERE\n  $__timeFilter(event_timestamp_ts)\n  AND\n  event_timestamp_ts < now() - INTERVAL 5 minute  -- last minutes data is missing pipeline_* data\n  AND\n  `time` >= now() - INTERVAL 7 DAY -- too much data breaks Grafana\n  AND\n  `network_events`.`stream_status_view`.`orchestrator_url` NOT LIKE '%lvpr.io%' \nGROUP BY\n  `network_events`.`stream_status_view`.`orchestrator_url`, `network_events`.`stream_status_view`.`pipeline_key`, `network_events`.`stream_status_view`.event_timestamp_ts\nORDER BY\n  `network_events`.`stream_status_view`.event_timestamp_ts ASC,\n  `network_events`.`stream_status_view`.`orchestrator_url` ASC,\n  `network_events`.`stream_status_view`.`pipeline_key` ASC\n",
           "refId": "A"
         }
       ],
-      "title": "Median Output FPS",
+      "title": "Median Output FPS by Orchestrator URL",
       "type": "timeseries"
     },
     {
@@ -358,6 +369,7 @@
         "type": "grafana-clickhouse-datasource",
         "uid": "cdrt9r9yntbswf"
       },
+      "description": "Showing 7 last days at max",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -390,10 +402,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
+        "h": 19,
         "w": 12,
         "x": 12,
-        "y": 7
+        "y": 27
       },
       "id": 7,
       "options": {
@@ -431,14 +443,465 @@
               "table": ""
             }
           },
-          "pluginVersion": "4.10.2",
+          "pluginVersion": "4.11.2",
           "queryType": "timeseries",
-          "rawSql": "SELECT\n  `network_events`.`stream_status_view`.event_timestamp_ts as `time`,\n  CONCAT(extract(`network_events`.`stream_status_view`.`orchestrator_url`, 'https://(.*)'), ' - ', `network_events`.`stream_status_view`.`pipeline`) as orchestrator_short_uri,\n  COUNT(DISTINCT `network_events`.`stream_status_view`.`stream_key`) AS ` `\nFROM\n  `network_events`.`stream_status_view`\nWHERE\n  $__timeFilter(event_timestamp_ts)\n  AND\n  `network_events`.`stream_status_view`.`orchestrator_url` NOT LIKE '%lvpr.io%'\nGROUP BY\n  orchestrator_short_uri, `network_events`.`stream_status_view`.event_timestamp_ts\nORDER BY\n  `network_events`.`stream_status_view`.event_timestamp_ts ASC,\n  ` ` DESC,\n  orchestrator_short_uri ASC\n\n",
+          "rawSql": "SELECT\n  `network_events`.`stream_status_view`.event_timestamp_ts as `time`,\n  CONCAT(extract(`network_events`.`stream_status_view`.`orchestrator_url`, 'https://(.*)'), ' - ', `network_events`.`stream_status_view`.`pipeline_key`) as orchestrator_short_uri,\n  COUNT(DISTINCT `network_events`.`stream_status_view`.`stream_key`) AS ` `\nFROM\n  `network_events`.`stream_status_view`\nWHERE\n  $__timeFilter(event_timestamp_ts)\n  AND\n  event_timestamp_ts < now() - INTERVAL 5 minute  -- last minutes data is missing pipeline_* data\n  AND\n  `time` >= now() - INTERVAL 7 DAY\n  AND  \n  `network_events`.`stream_status_view`.`orchestrator_url` NOT LIKE '%lvpr.io%'\nGROUP BY\n  orchestrator_short_uri, `network_events`.`stream_status_view`.event_timestamp_ts\nORDER BY\n  `network_events`.`stream_status_view`.event_timestamp_ts ASC,\n  ` ` DESC,\n  orchestrator_short_uri ASC\n\n",
           "refId": "A"
         }
       ],
       "title": "Streams",
       "type": "state-timeline"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "cdrt9r9yntbswf"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "bars",
+            "fillOpacity": 60,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": 15000,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 35
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Last *",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrt9r9yntbswf"
+          },
+          "editorType": "sql",
+          "format": 0,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.11.2",
+          "queryType": "timeseries",
+          "rawSql": "SELECT\n  toStartOfHour(`network_events`.`stream_status_view`.event_timestamp_ts) as _time,\n  `network_events`.`stream_status_view`.pipeline_key,\n  count(DISTINCT `network_events`.`stream_status_view`.orchestrator_url ) AS ` `\nFROM\n  `network_events`.`stream_status_view`\nWHERE\n  $__timeFilter(event_timestamp_ts)\n  AND\n  event_timestamp_ts < now() - INTERVAL 5 minute  -- last minutes data is missing pipeline_* data\n  AND\n  `network_events`.`stream_status_view`.`orchestrator_url` NOT LIKE '%lvpr.io%'\n  AND\n  _time > '2025-09-17' -- we don't want to expose old models\nGROUP BY\n   pipeline_key, _time\nORDER BY\n  _time ASC,\n  pipeline_key ASC\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Number of orchestrators per pipeline/model",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "cdrt9r9yntbswf"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "bars",
+            "fillOpacity": 60,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "GPUs"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 43
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Last *",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrt9r9yntbswf"
+          },
+          "editorType": "sql",
+          "format": 0,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.11.2",
+          "queryType": "timeseries",
+          "rawSql": "SELECT\n     toStartOfHour(`network_events`.`network_capabilities_view`.timestamp_ts) as `_time`,\n     `network_events`.`network_capabilities_view`.`model_id` as model_id,\n     count(distinct gpu_id) as ` `\nFROM network_events.network_capabilities_view\nWHERE\n     $__timeFilter(timestamp_ts)\n     AND\n     timestamp_ts < now() - INTERVAL 5 minute  -- last minutes data is missing pipeline_* data\n     AND\n     orch_uri NOT LIKE '%lvpr.io%'\n     AND\n     _time > '2025-09-17' -- we don't want to expose old models\nGROUP by _time, model_id\nORDER BY _time, ` ` DESC",
+          "refId": "A"
+        }
+      ],
+      "title": "GPUs per model",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "cdrt9r9yntbswf"
+      },
+      "description": "Showing max 1 month of data",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "bars",
+            "fillOpacity": 60,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "GPUs"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 46
+      },
+      "id": 23,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Last *",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrt9r9yntbswf"
+          },
+          "editorType": "sql",
+          "format": 0,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.11.2",
+          "queryType": "timeseries",
+          "rawSql": "SELECT\n     toStartOfHour(`network_events`.`network_capabilities_view`.timestamp_ts) as `_time`,\n     (extract(`network_events`.`network_capabilities_view`.`orch_uri`, 'https://(.*)') || ' (' || model_id || ')') as orchestrator_short_uri,\n     count(distinct gpu_id) as ` `\nFROM network_events.network_capabilities_view\nWHERE\n     `_time` >= now() - INTERVAL 31 DAY\n     AND\n     timestamp_ts < now() - INTERVAL 5 minute  -- last minutes data is missing pipeline_* data\n     AND\n     orch_uri NOT LIKE '%lvpr.io%' AND  $__timeFilter(timestamp_ts)\nGROUP by _time, orchestrator_short_uri\nORDER BY _time, ` ` DESC",
+          "refId": "A"
+        }
+      ],
+      "title": "GPUs per URL/model",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "bars",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 50
+      },
+      "id": 22,
+      "options": {
+        "legend": {
+          "calcs": [
+            "p99"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "99th %",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "max by(orchestrator_uri, model_name) (livepeer_ai_container_idle{livepeer_live_app=~\".*-livepeer-ai-gateway\", orchestrator_uri!~\".*lvpr.io.*\"})",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{orchestrator_uri}} ({{model_name}})",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "GPU idle",
+      "type": "timeseries"
     },
     {
       "datasource": {
@@ -504,10 +967,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 9,
         "w": 12,
         "x": 12,
-        "y": 14
+        "y": 55
       },
       "id": 10,
       "options": {
@@ -538,6 +1001,204 @@
         }
       ],
       "title": "Logs per node",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "description": "SlowOrchestrator is a strong indicator of network connectivity issues between G/O and these tend to persist for a few hours until the tubes clear up or someone kicks something.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "points",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 59
+      },
+      "id": 11,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "direction": "backward",
+          "editorMode": "builder",
+          "expr": "sum by(host) (count_over_time({container=\"ai-gateway\"} |= `Orchestrator is slow` !~ `.+lvpr.io.+` | regexp `url=https?://(?P<host>[^/]+)` [1h]))",
+          "legendFormat": "{{host}}",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Slow Orchestrators",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "description": "SlowOrchestrator is a strong indicator of network connectivity issues between G/O and these tend to persist for a few hours until the tubes clear up or someone kicks something.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "points",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 64
+      },
+      "id": 21,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "direction": "backward",
+          "editorMode": "builder",
+          "expr": "sum by(region) (count_over_time({container=\"ai-gateway\"} |= `Orchestrator is slow` !~ `.+lvpr.io.+` | regexp `url=https?://(?P<host>[^/]+)` [1h]))",
+          "legendFormat": "{{ region }}",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Slow Orchestrators By Region",
       "type": "timeseries"
     },
     {
@@ -606,7 +1267,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 15
+        "y": 67
       },
       "id": 1,
       "links": [
@@ -643,8 +1304,8 @@
             "uid": "PBFA97CFB590B2093"
           },
           "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "avg by(orchestrator_uri) (increase(livepeer_ai_first_segment_delay_ms_sum{orchestrator_uri!~\".*lvpr.io.*\"}[1m]))",
+          "editorMode": "code",
+          "expr": "avg by (orchestrator_uri) (\n  (\n    increase(livepeer_ai_first_segment_delay_ms_sum{orchestrator_uri!~\".*lvpr.io.*\"}[1m])\n    /\n    increase(livepeer_ai_first_segment_delay_ms_count{orchestrator_uri!~\".*lvpr.io.*\"}[1m])\n  )\n)",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -655,212 +1316,6 @@
         }
       ],
       "title": "First segment delay",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
-      "description": "SlowOrchestrator is a strong indicator of network connectivity issues between G/O and these tend to persist for a few hours until the tubes clear up or someone kicks something.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "points",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 23
-      },
-      "id": 11,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.1.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
-          "direction": "backward",
-          "editorMode": "builder",
-          "expr": "sum by(host, region) (count_over_time({container=\"ai-gateway\"} |= `Orchestrator is slow` !~ `.+lvpr.io.+` | regexp `url=https?://(?P<host>[^/]+)` [1h]))",
-          "legendFormat": "{{host}}",
-          "queryType": "range",
-          "refId": "A"
-        }
-      ],
-      "title": "Slow Orchestrators",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "default": true,
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "bars",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "normal"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 31
-      },
-      "id": 2,
-      "options": {
-        "legend": {
-          "calcs": [
-            "p99"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true,
-          "sortBy": "99th %",
-          "sortDesc": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "desc"
-        }
-      },
-      "pluginVersion": "12.1.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "max by(orchestrator_uri) (livepeer_ai_container_idle{livepeer_live_app=~\".*-livepeer-ai-gateway\", orchestrator_uri!~\".*lvpr.io.*\"})",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "Container idle",
       "type": "timeseries"
     },
     {
@@ -927,8 +1382,8 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 0,
-        "y": 39
+        "x": 12,
+        "y": 72
       },
       "id": 3,
       "options": {
@@ -969,16 +1424,816 @@
       ],
       "title": "Request errors",
       "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 80
+      },
+      "id": 17,
+      "panels": [],
+      "title": "Earnings",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "cdrt9r9yntbswf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": true,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 10,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ETH"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 17,
+        "w": 12,
+        "x": 0,
+        "y": 81
+      },
+      "id": 8,
+      "options": {
+        "barRadius": 0.5,
+        "barWidth": 0.8,
+        "fullHighlight": false,
+        "groupWidth": 0.73,
+        "legend": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": false
+        },
+        "orientation": "horizontal",
+        "showValue": "auto",
+        "stacking": "none",
+        "text": {},
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xField": "orchestrator_short_uri",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrt9r9yntbswf"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.11.2",
+          "queryType": "table",
+          "rawSql": "SELECT\n  extract(`network_events`.`network_payments`.`orchestrator`, 'https://(.*)') as orchestrator_short_uri,\n  SUM(`network_events`.`network_payments`.`expected_value_eth`) AS `expected_value_eth_sum`\nFROM\n  `network_events`.`network_payments`\nWHERE\n  `network_events`.`network_payments`.`orchestrator` NOT LIKE '%lvpr.io%' \nGROUP BY\n  orchestrator_short_uri\nORDER BY\n  `expected_value_eth_sum` DESC,\n  orchestrator_short_uri ASC\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Expected Value ETH: All time",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "cdrt9r9yntbswf"
+      },
+      "description": "showing last 7 days data at max",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "bars",
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ETH"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 81
+      },
+      "id": 9,
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Total",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "hideZeros": true,
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrt9r9yntbswf"
+          },
+          "editorType": "sql",
+          "format": 0,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.10.2",
+          "queryType": "timeseries",
+          "rawSql": "SELECT\n  toStartOfHour(`network_events`.`network_payments`.timestamp_ts) as `time`,\n  extract(`network_events`.`network_payments`.`orchestrator`, 'https://(.*)') as orchestrator_short_uri,\n  SUM(`network_events`.`network_payments`.`expected_value_eth`) AS ` `\nFROM\n  `network_events`.`network_payments`\nWHERE\n  $__timeFilter(timestamp_ts)\n  AND\n  `network_events`.`network_payments`.`orchestrator` NOT LIKE '%lvpr.io%'\n  AND `time` >= now() - INTERVAL 7 DAY\nGROUP BY\n  orchestrator_short_uri, `time`\nORDER BY\n  `time` ASC,\n  ` ` DESC,\n  orchestrator_short_uri ASC\n\n\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Expected Value ETH: Hourly",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "cdrt9r9yntbswf"
+      },
+      "description": "showing last 31 days data at max",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "bars",
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ETH"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 12,
+        "x": 12,
+        "y": 90
+      },
+      "id": 19,
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Total",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "hideZeros": true,
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrt9r9yntbswf"
+          },
+          "editorType": "sql",
+          "format": 0,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.10.2",
+          "queryType": "timeseries",
+          "rawSql": "SELECT\n  toStartOfDay(`network_events`.`network_payments`.timestamp_ts) as `time`,\n  extract(`network_events`.`network_payments`.`orchestrator`, 'https://(.*)') as orchestrator_short_uri,\n  SUM(`network_events`.`network_payments`.`expected_value_eth`) AS ` `\nFROM\n  `network_events`.`network_payments`\nWHERE\n  $__timeFilter(timestamp_ts)\n  AND\n  `network_events`.`network_payments`.`orchestrator` NOT LIKE '%lvpr.io%'\n  AND `time` >= now() - INTERVAL 31 DAY\nGROUP BY\n  orchestrator_short_uri, `time`\nORDER BY\n  `time` ASC,\n  ` ` DESC,\n  orchestrator_short_uri ASC\n\n\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Expected Value ETH: Daily",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "cdrt9r9yntbswf"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": true,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 10,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ETH"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 19,
+        "w": 12,
+        "x": 0,
+        "y": 98
+      },
+      "id": 18,
+      "options": {
+        "barRadius": 0.5,
+        "barWidth": 0.8,
+        "fullHighlight": false,
+        "groupWidth": 0.73,
+        "legend": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": false
+        },
+        "orientation": "horizontal",
+        "showValue": "auto",
+        "stacking": "none",
+        "text": {},
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xField": "orchestrator_short_uri",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "cdrt9r9yntbswf"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.10.2",
+          "queryType": "table",
+          "rawSql": "SELECT\n  extract(`network_events`.`network_payments`.`orchestrator`, 'https://(.*)') as orchestrator_short_uri,\n  SUM(`network_events`.`network_payments`.`expected_value_eth`) AS `expected_value_eth_sum`\nFROM\n  `network_events`.`network_payments`\nWHERE\n  $__timeFilter(timestamp_ts)\n  AND\n  `network_events`.`network_payments`.`orchestrator` NOT LIKE '%lvpr.io%' \nGROUP BY\n  orchestrator_short_uri\nORDER BY\n  `expected_value_eth_sum` DESC,\n  orchestrator_short_uri ASC\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Expected Value ETH: Current time span ($__from - $__to)",
+      "type": "barchart"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 117
+      },
+      "id": 14,
+      "panels": [],
+      "title": "Livepeer's AI Gateway",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "description": "Measured in Gateways",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 118
+      },
+      "id": 15,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Last *",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "sum by(pipeline) (max by(node_id, pipeline, region) (livepeer_ai_current_live_pipelines{livepeer_node_type=~\".*-livepeer-ai-gateway.*\"}))",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Livepeer's AI Gateway: Total Streams",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 118
+      },
+      "id": 16,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "sum by(model_name) (increase(livepeer_ai_request_errors{error_code=~\"no orchestrators available.*\", pipeline=~\"live-.*\", model_name!~\"streamdiffusion|streamdiffusion-sd15\"}[$__interval]))",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Livepeer's AI Gateway: Missing Capacity Errors in $__interval (no orchestrators available)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "points",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 126
+      },
+      "id": 20,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "mean",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Mean",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "asc"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "direction": "backward",
+          "editorMode": "builder",
+          "expr": "last_over_time({container=\"ai-gateway\"} |= `, latency=` != `lvpr.io` | logfmt | unwrap duration(latency) [$__auto]) by (uri, region)",
+          "legendFormat": "{{uri}} {{region}} ",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Orchestrator selection latency",
+      "type": "timeseries"
     }
   ],
   "preload": false,
   "schemaVersion": 41,
-  "tags": [],
+  "tags": [
+    "ai",
+    "orchestrator",
+    "daydream"
+  ],
   "templating": {
     "list": []
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-12h",
     "to": "now"
   },
   "timepicker": {
@@ -996,5 +2251,5 @@
   "timezone": "utc",
   "title": "AI Public Os",
   "uid": "45346781-4b93-4865-9b10-ac4fc3ab0334",
-  "version": 21
+  "version": 26
 }
