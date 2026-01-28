@@ -70,7 +70,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -101,11 +101,13 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -114,7 +116,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "avg (\n    increase(analytics_logs_buffer_time_ms_sum{user_id=~\"${user_id:pipe}\", playback_id=~\"${playback_id:pipe}\", continent=~\"${continent:pipe}\", region=~\"${region:pipe}\"}[1m])\n    / \n    (\n        increase(analytics_logs_playtime_ms_sum{user_id=~\"${user_id}\", playback_id=~\"${playback_id}\", continent=~\"${continent:pipe}\", region=~\"${region:pipe}\"}[1m])\n        + \n        increase(analytics_logs_buffer_time_ms_sum{user_id=~\"${user_id:pipe}\", playback_id=~\"${playback_id:pipe}\", continent=~\"${continent:pipe}\", region=~\"${region:pipe}\"}[1m])\n    )\n) * 100",
+          "expr": "avg (\n    increase(analytics_logs_buffer_time_ms_sum{user_id=~\"${user_id:pipe}\", playback_id=~\"${playback_id:pipe}\", continent=~\"${continent:pipe}\", region=~\"${region:pipe}\"}[1m])\n    / \n    (\n        increase(analytics_logs_playtime_ms_sum{user_id=~\"${user_id:pipe}\", playback_id=~\"${playback_id:pipe}\", continent=~\"${continent:pipe}\", region=~\"${region:pipe}\"}[1m])\n        + \n        increase(analytics_logs_buffer_time_ms_sum{user_id=~\"${user_id:pipe}\", playback_id=~\"${playback_id:pipe}\", continent=~\"${continent:pipe}\", region=~\"${region:pipe}\"}[1m])\n    )\n) * 100",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -177,7 +179,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -210,11 +212,13 @@
           "sortDesc": true
         },
         "tooltip": {
+          "hideZeros": false,
           "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -286,7 +290,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -319,11 +323,13 @@
           "sortDesc": true
         },
         "tooltip": {
+          "hideZeros": false,
           "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -396,7 +402,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -429,11 +435,13 @@
           "sortDesc": true
         },
         "tooltip": {
+          "hideZeros": false,
           "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -442,7 +450,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "avg by(catalyst_node) (\n    increase(analytics_logs_buffer_time_ms_sum{user_id=~\"${user_id:pipe}\", playback_id=~\"${playback_id:pipe}\", continent=~\"${continent:pipe}\", region=~\"${region:pipe}\"}[1m])\n    /\n    (\n        increase(analytics_logs_playtime_ms_sum{user_id=~\"${user_id:pipe}\", playback_id=~\"${playback_id:pipe}\", continent=~\"${continent:pipe}\", region=~\"${region:pipe}\"}[1m])\n        +\n        increase(analytics_logs_buffer_time_ms_sum{user_id=~\"${user_id:pipe}\", playback_id=~\"${playback_id:pipe}\", continent=~\"${continent:pipe}\", region=~\"${region:pipe}\"}[1m])\n    )\n) * 100",
+          "expr": "avg by(node) (\n    increase(analytics_logs_buffer_time_ms_sum{user_id=~\"${user_id:pipe}\", playback_id=~\"${playback_id:pipe}\", continent=~\"${continent:pipe}\", region=~\"${region:pipe}\"}[1m])\n    /\n    (\n        increase(analytics_logs_playtime_ms_sum{user_id=~\"${user_id:pipe}\", playback_id=~\"${playback_id:pipe}\", continent=~\"${continent:pipe}\", region=~\"${region:pipe}\"}[1m])\n        +\n        increase(analytics_logs_buffer_time_ms_sum{user_id=~\"${user_id:pipe}\", playback_id=~\"${playback_id:pipe}\", continent=~\"${continent:pipe}\", region=~\"${region:pipe}\"}[1m])\n    )\n) * 100",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -500,13 +508,20 @@
           },
           "decimals": 1,
           "fieldMinMax": false,
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "admin panel",
+              "url": "https://livepeer.studio/dashboard/app/stream/${__field.labels.playback_id}"
+            }
+          ],
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -539,11 +554,13 @@
           "sortDesc": true
         },
         "tooltip": {
+          "hideZeros": false,
           "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -609,13 +626,20 @@
             }
           },
           "decimals": 1,
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "admin panel",
+              "url": "https://livepeer.studio/dashboard/app/admin/user/${__field.labels.user_id}"
+            }
+          ],
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -648,11 +672,13 @@
           "sortDesc": true
         },
         "tooltip": {
+          "hideZeros": false,
           "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -723,7 +749,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -753,11 +779,13 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -797,15 +825,15 @@
       "type": "timeseries"
     }
   ],
+  "preload": false,
   "refresh": "",
-  "schemaVersion": 39,
+  "schemaVersion": 41,
   "tags": [],
   "templating": {
     "list": [
       {
         "allValue": ".+",
         "current": {
-          "selected": false,
           "text": "All",
           "value": "$__all"
         },
@@ -814,7 +842,6 @@
           "uid": "PBFA97CFB590B2093"
         },
         "definition": "label_values(analytics_logs_playtime_ms_sum,user_id)",
-        "hide": 0,
         "includeAll": true,
         "multi": true,
         "name": "user_id",
@@ -826,14 +853,11 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query"
       },
       {
         "allValue": ".+",
         "current": {
-          "selected": false,
           "text": "All",
           "value": "$__all"
         },
@@ -842,7 +866,6 @@
           "uid": "PBFA97CFB590B2093"
         },
         "definition": "label_values(analytics_logs_playtime_ms_sum{user_id=~\"$user_id\"},playback_id)",
-        "hide": 0,
         "includeAll": true,
         "multi": true,
         "name": "playback_id",
@@ -854,13 +877,10 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query"
       },
       {
         "current": {
-          "selected": true,
           "text": [
             "All"
           ],
@@ -873,7 +893,6 @@
           "uid": "PBFA97CFB590B2093"
         },
         "definition": "label_values(analytics_logs_playtime_ms_sum{user_id=~\"$user_id\", playback_id=~\"$playback_id\"},continent)",
-        "hide": 0,
         "includeAll": true,
         "multi": true,
         "name": "continent",
@@ -885,14 +904,11 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query"
       },
       {
         "allValue": ".+",
         "current": {
-          "selected": true,
           "text": [
             "All"
           ],
@@ -905,7 +921,6 @@
           "uid": "PBFA97CFB590B2093"
         },
         "definition": "label_values(analytics_logs_playtime_ms_sum{user_id=~\"$user_id\", playback_id=~\"$playback_id\", continent=~\"$continent\"},region)",
-        "hide": 0,
         "includeAll": true,
         "multi": true,
         "name": "region",
@@ -917,8 +932,6 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query"
       }
     ]
@@ -931,6 +944,5 @@
   "timezone": "",
   "title": "Rebuffer Rate",
   "uid": "cdsxag32xzojkf",
-  "version": 11,
-  "weekStart": ""
+  "version": 14
 }

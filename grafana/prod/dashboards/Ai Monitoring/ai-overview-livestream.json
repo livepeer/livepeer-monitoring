@@ -128,7 +128,7 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "100 * (\n  sum (count_over_time({app=~\".*prod-ai-load-test.*\"} |= \"PASS: TestFeatures/Start_a_Stream\" [10m]))\n) / (\n  sum (count_over_time({app=~\".*prod-ai-load-test.*\"} |= \"PASS: TestFeatures/Start_a_Stream\" [10m])) +\n  (sum (count_over_time({app=~\".*prod-ai-load-test.*\"} |= \"FAIL: TestFeatures/Start_a_Stream\" [10m])) or vector(0))\n)",
+          "expr": "100 * (\n  sum (count_over_time({app=~\".*prod-ai-load-test.*\"} |= \"PASS: TestFeatures/\" [10m]))\n) / (\n  sum (count_over_time({app=~\".*prod-ai-load-test.*\"} |= \"PASS: TestFeatures/\" [10m])) +\n  (sum (count_over_time({app=~\".*prod-ai-load-test.*\"} |= \"FAIL: TestFeatures/\" [10m])) or vector(0))\n)",
           "queryType": "range",
           "refId": "A"
         }
@@ -228,7 +228,7 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "100 * (\n  sum (count_over_time({app=~\".*staging-ai-load-test.*\"} |= \"PASS: TestFeatures/Start_a_Stream\" [10m]))\n) / (\n  sum (count_over_time({app=~\".*staging-ai-load-test.*\"} |= \"PASS: TestFeatures/Start_a_Stream\" [10m])) +\n  (sum (count_over_time({app=~\".*staging-ai-load-test.*\"} |= \"FAIL: TestFeatures/Start_a_Stream\" [10m])) or vector(0))\n)\n",
+          "expr": "100 * (\n  sum (count_over_time({app=~\".*staging-ai-load-test.*\"} |= \"PASS: TestFeatures/\" [10m]))\n) / (\n  sum (count_over_time({app=~\".*staging-ai-load-test.*\"} |= \"PASS: TestFeatures/\" [10m])) +\n  (sum (count_over_time({app=~\".*staging-ai-load-test.*\"} |= \"FAIL: TestFeatures/\" [10m])) or vector(0))\n)\n",
           "queryType": "range",
           "refId": "A"
         }
@@ -568,6 +568,108 @@
       "type": "barchart"
     },
     {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "description": "Compares the input and output of FPS on the runner.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 17
+      },
+      "id": 53,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Name",
+          "sortDesc": false
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "sum by(stream_id, direction) (\n  sum_over_time({container=~\"live-video-to-video.*\"} \n    |~ `str_\\w+`\n    |~ `Input FPS|Output FPS` \n    | regexp `str_(?P<stream_id>\\w+).*FPS: (?P<fps>.*$)` \n    | label_format direction=\"{{ if contains `Input FPS` __line__ }}input{{ else }}output{{ end }}\" \n    | unwrap fps [$__auto]\n  )\n)",
+          "hide": false,
+          "legendFormat": "{{stream_id}}-{{direction}}",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Stream Health Tracker",
+      "type": "timeseries"
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
@@ -596,6 +698,7 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMin": 0,
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "bars",
@@ -639,33 +742,7 @@
           },
           "unit": "GPUs"
         },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "  ai3.ad-astra.live:9988 (streamdiffusion-sdxl)",
-                  "  ai3.ad-astra.live:9988 (streamdiffusion-sdxl-faceid)"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -717,7 +794,7 @@
           "refId": "A"
         }
       ],
-      "title": "GPUs per model",
+      "title": "Public capacity per O+pipeline",
       "type": "timeseries"
     },
     {
@@ -779,7 +856,32 @@
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "streamdiffusion-sdxl"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -805,7 +907,7 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "sum by (model_name) (max by(orchestrator_uri, model_name) (livepeer_ai_container_idle{model_name=~\"${model:pipe}\"}[$__interval]))",
+          "expr": "sum by (model_name) (max by(orchestrator_uri, model_name) (livepeer_ai_container_idle{model_name=~\"${model:pipe}\", orchestrator_uri!=\"\"}[30s]))",
           "hide": false,
           "legendFormat": "__auto",
           "range": true,
@@ -835,7 +937,7 @@
             "axisSoftMin": 0,
             "barAlignment": 0,
             "barWidthFactor": 0.6,
-            "drawStyle": "line",
+            "drawStyle": "bars",
             "fillOpacity": 0,
             "gradientMode": "none",
             "hideFrom": {
@@ -854,7 +956,7 @@
             "spanNulls": false,
             "stacking": {
               "group": "A",
-              "mode": "none"
+              "mode": "normal"
             },
             "thresholdsStyle": {
               "mode": "off"
@@ -887,13 +989,12 @@
       "options": {
         "legend": {
           "calcs": [
-            "p99",
             "lastNotNull"
           ],
           "displayMode": "table",
           "placement": "right",
           "showLegend": true,
-          "sortBy": "99th %",
+          "sortBy": "Last *",
           "sortDesc": true
         },
         "tooltip": {
@@ -907,7 +1008,7 @@
         {
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sum by(region) (max by(region, node_id, pipeline) (livepeer_ai_current_live_pipelines{livepeer_node_type=~\"prod-livepeer-ai-gateway.*\", region=~\"${gateway:pipe}\"}))",
+          "expr": "sum by(region) (max by(region, node_id, pipeline) (livepeer_ai_current_live_pipelines{livepeer_node_type=~\".*-livepeer-ai-gateway.*\", region=~\"${gateway:pipe}\"}))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "__auto",
@@ -1044,7 +1145,7 @@
             "axisSoftMin": 0,
             "barAlignment": 0,
             "barWidthFactor": 0.6,
-            "drawStyle": "line",
+            "drawStyle": "bars",
             "fillOpacity": 0,
             "gradientMode": "none",
             "hideFrom": {
@@ -1063,7 +1164,7 @@
             "spanNulls": false,
             "stacking": {
               "group": "A",
-              "mode": "none"
+              "mode": "normal"
             },
             "thresholdsStyle": {
               "mode": "off"
@@ -1096,13 +1197,12 @@
       "options": {
         "legend": {
           "calcs": [
-            "p99",
             "lastNotNull"
           ],
           "displayMode": "table",
           "placement": "right",
           "showLegend": true,
-          "sortBy": "99th %",
+          "sortBy": "Last *",
           "sortDesc": true
         },
         "tooltip": {
@@ -1116,7 +1216,7 @@
         {
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sum by(pipeline) (max by(pipeline, region, node_id) (livepeer_ai_current_live_pipelines{livepeer_node_type=~\".*-livepeer-ai-gateway.*\"}))\n\n",
+          "expr": "sum by(pipeline) (max by(region, node_id, pipeline) (livepeer_ai_current_live_pipelines{livepeer_node_type=~\".*-livepeer-ai-gateway.*\", region=~\"${gateway:pipe}\"}))\n\n",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "__auto",
@@ -1199,7 +1299,10 @@
       "interval": "1m",
       "options": {
         "legend": {
-          "calcs": [],
+          "calcs": [
+            "last",
+            "max"
+          ],
           "displayMode": "list",
           "placement": "right",
           "showLegend": true
@@ -1237,6 +1340,7 @@
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
+      "description": "orchestrator-based metric",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1306,7 +1410,9 @@
           ],
           "displayMode": "table",
           "placement": "right",
-          "showLegend": true
+          "showLegend": true,
+          "sortBy": "Last *",
+          "sortDesc": true
         },
         "tooltip": {
           "hideZeros": false,
@@ -1317,11 +1423,15 @@
       "pluginVersion": "12.1.1",
       "targets": [
         {
-          "editorMode": "code",
-          "expr": "sum by(model_name) (livepeer_ai_container_in_use{model_name=~\"${model:pipe}\"}[1h])",
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "sum by(model_name) (livepeer_ai_container_in_use{model_name=~\"${model:pipe}\"})",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
           "legendFormat": "{{label_name}}",
           "range": true,
-          "refId": "A"
+          "refId": "A",
+          "useBackend": false
         }
       ],
       "title": "First-party In Use Runners",
@@ -1582,6 +1692,7 @@
           "direction": "backward",
           "editorMode": "code",
           "expr": "sum(count_over_time(\n    {container=\"ai-gateway\", region=~\"${gateway:pipe}\"} |= \"Live video pipeline finished with error\" | pattern \"<_>Live video pipeline finished with error: <errorr>\" \n[1m])) by (errorr)",
+          "legendFormat": "{{ error }}",
           "queryType": "range",
           "refId": "A"
         }
@@ -1702,9 +1813,8 @@
     },
     {
       "datasource": {
-        "default": true,
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "type": "datasource",
+        "uid": "-- Mixed --"
       },
       "fieldConfig": {
         "defaults": {
@@ -1757,7 +1867,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "ms"
         },
         "overrides": []
       },
@@ -1767,12 +1878,19 @@
         "x": 12,
         "y": 73
       },
-      "id": 11,
+      "id": 54,
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "go-livepeer code",
+          "url": "https://github.com/search?q=repo%3Alivepeer%2Fgo-livepeer%20AIFirstSegmentDelay&type=code"
+        }
+      ],
       "options": {
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom",
+          "placement": "right",
           "showLegend": true
         },
         "tooltip": {
@@ -1788,19 +1906,28 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sum by(normalized_error_code, model_name) (label_replace(label_replace(increase(livepeer_ai_request_errors{pipeline=~\"live-.*\", model_name=~\"${model:pipe}\"}[1m]), \"normalized_error_code\", \"no orchestrators available\", \"error_code\", \"no orchestrators available.*\"), \"normalized_error_code\", \"$1\", \"error_code\", \"(.*)\"))",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "{{model_name}}: {{normalized_error_code}}",
+          "expr": "histogram_quantile(\n  0.95, \n  sum by (le) (rate(livepeer_ai_first_segment_delay_ms_bucket{service=\"prod-livepeer-ai-gateway\"}[5m]))\n) / 1000",
+          "hide": false,
+          "legendFormat": "__auto",
           "range": true,
-          "refId": "A",
-          "useBackend": false
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "quantile_over_time(0.95, {container=\"ai-gateway\"} |= \"First Segment delay\" | logfmt | keep delay | unwrap duration(delay) [5m])",
+          "hide": false,
+          "legendFormat": "quantile_over_time",
+          "queryType": "range",
+          "refId": "B"
         }
       ],
-      "title": "Error Responses in 1m",
+      "title": "First segment delay - UPDATE",
       "type": "timeseries"
     },
     {
@@ -1915,6 +2042,109 @@
         "x": 12,
         "y": 81
       },
+      "id": 11,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum by(normalized_error_code, model_name) (label_replace(label_replace(increase(livepeer_ai_request_errors{pipeline=~\"live-.*\", model_name=~\"${model:pipe}\"}[1m]), \"normalized_error_code\", \"no orchestrators available\", \"error_code\", \"no orchestrators available.*\"), \"normalized_error_code\", \"$1\", \"error_code\", \"(.*)\"))",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{model_name}}: {{normalized_error_code}}",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Error Responses in 1m",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 89
+      },
       "id": 5,
       "options": {
         "legend": {
@@ -1957,7 +2187,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 89
+        "y": 97
       },
       "id": 2,
       "panels": [],
@@ -2033,7 +2263,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 90
+        "y": 98
       },
       "id": 41,
       "interval": "30s",
@@ -2080,7 +2310,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 90
+        "y": 98
       },
       "id": 42,
       "options": {
@@ -2177,7 +2407,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 98
+        "y": 106
       },
       "id": 49,
       "options": {
@@ -2274,7 +2504,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 98
+        "y": 106
       },
       "id": 13,
       "options": {
@@ -2374,7 +2604,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 106
+        "y": 114
       },
       "id": 1,
       "options": {
@@ -2475,7 +2705,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 106
+        "y": 114
       },
       "id": 24,
       "options": {
@@ -2576,7 +2806,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 114
+        "y": 122
       },
       "id": 21,
       "options": {
@@ -2700,7 +2930,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 114
+        "y": 122
       },
       "id": 32,
       "options": {
@@ -2800,7 +3030,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 122
+        "y": 130
       },
       "id": 23,
       "options": {
@@ -2915,7 +3145,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 122
+        "y": 130
       },
       "id": 38,
       "links": [
@@ -3053,7 +3283,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 130
+        "y": 138
       },
       "id": 25,
       "options": {
@@ -3154,7 +3384,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 130
+        "y": 138
       },
       "id": 46,
       "options": {
@@ -3180,6 +3410,7 @@
           "direction": "backward",
           "editorMode": "code",
           "expr": "sum(count_over_time({container=~\"live-video-to-video.+\"} |= \"Pipeline is in ERROR state. Stopping streamer and restarting process\" [15m])) by (region)",
+          "legendFormat": "{{ region }}",
           "queryType": "range",
           "refId": "A"
         }
@@ -3254,7 +3485,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 138
+        "y": 146
       },
       "id": 50,
       "options": {
@@ -3356,20 +3587,20 @@
         "h": 21,
         "w": 12,
         "x": 12,
-        "y": 138
+        "y": 146
       },
       "id": 43,
       "options": {
         "legend": {
           "calcs": [
-            "median",
+            "mean",
             "max"
           ],
           "displayMode": "table",
           "placement": "right",
           "showLegend": true,
-          "sortBy": "Median",
-          "sortDesc": true
+          "sortBy": "Mean",
+          "sortDesc": false
         },
         "tooltip": {
           "hideZeros": false,
@@ -3396,9 +3627,9 @@
               "table": ""
             }
           },
-          "pluginVersion": "4.10.2",
+          "pluginVersion": "4.11.2",
           "queryType": "timeseries",
-          "rawSql": "SELECT\n  `network_events`.`stream_status_view`.event_timestamp_ts as time,\n  CONCAT(extract(`network_events`.`stream_status_view`.`orchestrator_url`, 'https://(.*):.+'), ' - ', `network_events`.`stream_status_view`.`pipeline`) as pipeline,\n  `median`(`network_events`.`stream_status_view`.`output_fps`) AS ` `\nFROM\n  `network_events`.`stream_status_view`\nWHERE\n  $__timeFilter(event_timestamp_ts)\nGROUP BY\n  `network_events`.`stream_status_view`.`orchestrator_url`, `network_events`.`stream_status_view`.`pipeline`, `network_events`.`stream_status_view`.event_timestamp_ts\nORDER BY\n  `network_events`.`stream_status_view`.event_timestamp_ts ASC,\n  `network_events`.`stream_status_view`.`orchestrator_url` ASC,\n  `network_events`.`stream_status_view`.`pipeline` ASC\n",
+          "rawSql": "SELECT\n  `network_events`.`stream_status_view`.event_timestamp_ts as time,\n  CONCAT(extract(`network_events`.`stream_status_view`.`orchestrator_url`, 'https://(.*):.+'), ' - ', `network_events`.`stream_status_view`.`pipeline_key`) as pipeline,\n  `median`(`network_events`.`stream_status_view`.`output_fps`) AS ` `\nFROM\n  `network_events`.`stream_status_view`\nWHERE\n  $__timeFilter(event_timestamp_ts)\nGROUP BY\n  `network_events`.`stream_status_view`.`orchestrator_url`, `network_events`.`stream_status_view`.`pipeline_key`, `network_events`.`stream_status_view`.event_timestamp_ts\nORDER BY\n  `network_events`.`stream_status_view`.event_timestamp_ts ASC,\n  `network_events`.`stream_status_view`.`orchestrator_url` ASC,\n  `network_events`.`stream_status_view`.`pipeline_key` ASC\n",
           "refId": "A"
         }
       ],
@@ -3471,7 +3702,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 146
+        "y": 154
       },
       "id": 37,
       "links": [
@@ -3592,7 +3823,7 @@
         "h": 21,
         "w": 12,
         "x": 0,
-        "y": 154
+        "y": 162
       },
       "id": 33,
       "options": {
@@ -3638,9 +3869,9 @@
               "table": ""
             }
           },
-          "pluginVersion": "4.10.2",
+          "pluginVersion": "4.11.2",
           "queryType": "table",
-          "rawSql": "SELECT\n  `network_events`.`stream_status_view`.`orchestrator_url` AS `orchestrator_url`,\n  CONCAT(extract(`network_events`.`stream_status_view`.`orchestrator_url`, 'https://(.*)'), ' - ', `network_events`.`stream_status_view`.`pipeline`),\n  `median`(`network_events`.`stream_status_view`.`output_fps`) AS `median`,\n  MAX(`network_events`.`stream_status_view`.`output_fps`) AS `max`\nFROM\n  `network_events`.`stream_status_view`\nWHERE\n  $__timeFilter(event_timestamp_ts)\nGROUP BY\n  `network_events`.`stream_status_view`.`orchestrator_url`, `network_events`.`stream_status_view`.`pipeline`\nORDER BY\n  `median` DESC,\n  `network_events`.`stream_status_view`.`orchestrator_url` ASC,\n  `network_events`.`stream_status_view`.`pipeline` ASC",
+          "rawSql": "SELECT\n  `network_events`.`stream_status_view`.`orchestrator_url` AS `orchestrator_url`,\n  CONCAT(extract(`network_events`.`stream_status_view`.`orchestrator_url`, 'https://(.*)'), ' - ', `network_events`.`stream_status_view`.`pipeline_key`),\n  `median`(`network_events`.`stream_status_view`.`output_fps`) AS `median`,\n  MAX(`network_events`.`stream_status_view`.`output_fps`) AS `max`\nFROM\n  `network_events`.`stream_status_view`\nWHERE\n  $__timeFilter(event_timestamp_ts)\nGROUP BY\n  `network_events`.`stream_status_view`.`orchestrator_url`, `network_events`.`stream_status_view`.`pipeline_key`\nORDER BY\n  `median` DESC,\n  `network_events`.`stream_status_view`.`orchestrator_url` ASC,\n  `network_events`.`stream_status_view`.`pipeline_key` ASC",
           "refId": "A"
         }
       ],
@@ -3715,7 +3946,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 159
+        "y": 167
       },
       "id": 51,
       "options": {
@@ -3771,7 +4002,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 175
+        "y": 183
       },
       "id": 34,
       "panels": [],
@@ -3845,7 +4076,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 176
+        "y": 184
       },
       "id": 36,
       "options": {
@@ -3948,7 +4179,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 176
+        "y": 184
       },
       "id": 35,
       "options": {
@@ -4019,9 +4250,7 @@
       {
         "allowCustomValue": false,
         "current": {
-          "text": [
-            "All"
-          ],
+          "text": "All",
           "value": [
             "$__all"
           ]
@@ -4053,5 +4282,5 @@
   "timezone": "utc",
   "title": "AI Overview (Livestream)",
   "uid": "be6llteqebk00b",
-  "version": 203
+  "version": 229
 }

@@ -429,11 +429,12 @@
       },
       "gridPos": {
         "h": 7,
-        "w": 5,
-        "x": 0,
+        "w": 10,
+        "x": 7,
         "y": 18
       },
       "id": 37,
+      "interval": "1m",
       "options": {
         "minVizHeight": 75,
         "minVizWidth": 75,
@@ -455,13 +456,17 @@
           "datasource": {
             "uid": "$datasource"
           },
+          "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": true,
-          "expr": "external_dns_controller_no_op_runs_total {pod=~\".*external-dns.*\",pod=~\"$pod\"}",
+          "expr": "avg by(region) (external_dns_controller_no_op_runs_total{pod=~\".*external-dns.*\", pod=~\"$pod\", region=~\"$region\"})",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
           "interval": "",
-          "legendFormat": "{{pod}}",
+          "legendFormat": "{{region}}",
           "range": true,
-          "refId": "A"
+          "refId": "A",
+          "useBackend": false
         }
       ],
       "title": "External-dns controller no_op runs total",
@@ -510,7 +515,7 @@
       },
       "gridPos": {
         "h": 7,
-        "w": 5,
+        "w": 6,
         "x": 0,
         "y": 26
       },
@@ -578,8 +583,8 @@
       },
       "gridPos": {
         "h": 7,
-        "w": 5,
-        "x": 5,
+        "w": 7,
+        "x": 6,
         "y": 26
       },
       "id": 34,
@@ -646,8 +651,8 @@
       },
       "gridPos": {
         "h": 7,
-        "w": 5,
-        "x": 10,
+        "w": 7,
+        "x": 13,
         "y": 26
       },
       "id": 6,
@@ -689,7 +694,7 @@
         "type": "prometheus",
         "uid": "$datasource"
       },
-      "description": "Number of AAAA records in registry",
+      "description": "Number of TXT records in registry",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -714,7 +719,7 @@
       },
       "gridPos": {
         "h": 7,
-        "w": 5,
+        "w": 6,
         "x": 0,
         "y": 33
       },
@@ -742,14 +747,14 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum by (region) (external_dns_registry_records {pod=~\".*external-dns.*\",pod=~\"$pod\",region=~\"$region\",record_type=\"aaaa\"})",
+          "expr": "sum by (region) (external_dns_registry_records {pod=~\".*external-dns.*\",pod=~\"$pod\",region=~\"$region\",record_type=\"txt\"})",
           "interval": "",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Number of AAAA records in registry",
+      "title": "Number of TXT records in registry",
       "type": "gauge"
     },
     {
@@ -757,7 +762,7 @@
         "type": "prometheus",
         "uid": "$datasource"
       },
-      "description": "Number of AAAA records in source",
+      "description": "Number of TXT records in source",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -782,8 +787,8 @@
       },
       "gridPos": {
         "h": 7,
-        "w": 5,
-        "x": 5,
+        "w": 7,
+        "x": 6,
         "y": 33
       },
       "id": 35,
@@ -810,14 +815,14 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum by (region) (external_dns_source_records {pod=~\".*external-dns.*\",pod=~\"$pod\",region=~\"$region\",record_type=\"aaaa\"})",
+          "expr": "sum by (region) (external_dns_source_records {pod=~\".*external-dns.*\",pod=~\"$pod\",region=~\"$region\",record_type=\"txt\"})",
           "interval": "",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Number of AAAA records in source",
+      "title": "Number of TXT records in source",
       "type": "gauge"
     },
     {
@@ -825,7 +830,7 @@
         "type": "prometheus",
         "uid": "$datasource"
       },
-      "description": "Number of DNS AAAA-records that exists both in source and registry",
+      "description": "Number of DNS TXT-records that exists both in source and registry",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -850,8 +855,8 @@
       },
       "gridPos": {
         "h": 7,
-        "w": 5,
-        "x": 10,
+        "w": 7,
+        "x": 13,
         "y": 33
       },
       "id": 31,
@@ -878,14 +883,14 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum by (region) (external_dns_controller_verified_records {pod=~\".*external-dns.*\",pod=~\"$pod\",region=~\"$region\",record_type=\"aaaa\"})",
+          "expr": "sum by (region) (external_dns_controller_verified_records {pod=~\".*external-dns.*\",pod=~\"$pod\",region=~\"$region\",record_type=\"txt\"})",
           "interval": "",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Number of DNS AAAA-records that exists both in source and registry",
+      "title": "Number of DNS TXT-records that exists both in source and registry",
       "type": "gauge"
     },
     {
@@ -1218,12 +1223,14 @@
           "datasource": {
             "uid": "$datasource"
           },
+          "editorMode": "code",
           "exemplar": true,
           "expr": "sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{pod=~\".*external-dns.*\",pod=~\"$pod\"}) by (pod)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
           "legendFormat": "{{pod}}",
+          "range": true,
           "refId": "A",
           "step": 10
         },
@@ -2272,5 +2279,5 @@
   "timezone": "utc",
   "title": "External DNS",
   "uid": "eea5u_I7z",
-  "version": 6
+  "version": 9
 }
