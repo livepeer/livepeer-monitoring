@@ -459,7 +459,7 @@
           "exemplar": true,
           "expr": "sum(external_dns_controller_no_op_runs_total {pod=~\".*external-dns.*\",pod=~\"$pod\", region=~\"$region\"}) by (region)",
           "interval": "",
-          "legendFormat": "{{pod}}",
+          "legendFormat": "{{region}}",
           "range": true,
           "refId": "A"
         }
@@ -2286,5 +2286,5 @@
   "timezone": "utc",
   "title": "External DNS",
   "uid": "eea5u_I7z",
-  "version": 9
+  "version": 11
 }

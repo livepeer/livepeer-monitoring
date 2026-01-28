@@ -65,6 +65,7 @@
             }
           },
           "mappings": [],
+          "max": 100,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -101,17 +102,17 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.1.0",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "editorMode": "code",
-          "expr": "100 * sum((sum_over_time(e2e_test_success_total{environment=\"staging\", pipeline=\"streamdiffusion\"}[10m])) / sum(sum_over_time(e2e_test_success_total{environment=\"staging\", pipeline=\"streamdiffusion\"}[10m]) + sum(sum_over_time(e2e_test_failure_total{environment=\"staging\", pipeline=\"streamdiffusion\"}[10m]) or vector(0))))",
-          "legendFormat": "Success ({{environment}}): {{test_name}}",
+          "expr": "100 * sum by (pipeline) ((sum_over_time(e2e_test_success_total{environment=\"staging\"}[10m])) or vector(0) / sum by (pipeline) (sum_over_time(e2e_test_success_total{environment=\"staging\"}[10m]) or vector(0) + sum by (pipeline) (sum_over_time(e2e_test_failure_total{environment=\"staging\"}[10m]) or vector(0))))",
+          "legendFormat": "{{pipeline}}",
           "range": true,
           "refId": "success rate"
         }
       ],
-      "title": "E2E Success Rate (Stream Diffusion)",
+      "title": "E2E Success Rate",
       "type": "timeseries"
     },
     {
@@ -119,6 +120,7 @@
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
+      "description": "Duration of the E2E test run in seconds",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -170,7 +172,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "s"
         },
         "overrides": []
       },
@@ -180,7 +183,7 @@
         "x": 12,
         "y": 0
       },
-      "id": 3,
+      "id": 1,
       "options": {
         "legend": {
           "calcs": [],
@@ -194,17 +197,25 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.1.0",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
-          "editorMode": "code",
-          "expr": "100 * sum((sum_over_time(e2e_test_success_total{environment=\"staging\", pipeline=\"comfyui\"}[10m])) / sum(sum_over_time(e2e_test_success_total{environment=\"staging\", pipeline=\"comfyui\"}[10m]) + sum(sum_over_time(e2e_test_failure_total{environment=\"staging\", pipeline=\"comfyui\"}[10m]) or vector(0))))",
-          "legendFormat": "Success ({{environment}}): {{test_name}}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "sum by(environment) (e2e_test_duration_seconds)",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "legendFormat": "__auto",
           "range": true,
-          "refId": "success rate"
+          "refId": "A",
+          "useBackend": false
         }
       ],
-      "title": "E2E Success Rate (ComfyUI)",
+      "title": "E2E test runtime",
       "type": "timeseries"
     },
     {
@@ -290,7 +301,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.1.0",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "editorMode": "code",
@@ -308,7 +319,6 @@
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
-      "description": "Duration of the E2E test run in seconds",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -323,7 +333,7 @@
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 47,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -331,7 +341,7 @@
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "linear",
+            "lineInterpolation": "smooth",
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
@@ -341,7 +351,7 @@
             "spanNulls": false,
             "stacking": {
               "group": "A",
-              "mode": "none"
+              "mode": "normal"
             },
             "thresholdsStyle": {
               "mode": "off"
@@ -360,10 +370,34 @@
                 "value": 80
               }
             ]
-          },
-          "unit": "s"
+          }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "video elements load and play correctly #1 (retry #2)"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -371,7 +405,7 @@
         "x": 12,
         "y": 8
       },
-      "id": 1,
+      "id": 2,
       "options": {
         "legend": {
           "calcs": [],
@@ -385,7 +419,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.1.0",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -393,17 +427,19 @@
             "uid": "PBFA97CFB590B2093"
           },
           "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "sum by(environment) (e2e_test_duration_seconds)",
+          "editorMode": "code",
+          "expr": "sum by(test_name) (sum_over_time(e2e_test_failure_total{environment=\"staging\"}[10m]))",
           "fullMetaSearch": false,
+          "hide": false,
           "includeNullMetadata": true,
-          "legendFormat": "__auto",
+          "instant": false,
+          "legendFormat": "{{test_name}}",
           "range": true,
-          "refId": "A",
+          "refId": "failure",
           "useBackend": false
         }
       ],
-      "title": "E2E test runtime",
+      "title": "Failure counts",
       "type": "timeseries"
     },
     {
@@ -490,7 +526,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.1.0",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "editorMode": "code",
@@ -501,109 +537,6 @@
         }
       ],
       "title": "E2E Frame Diff Ratio",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 47,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "smooth",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "normal"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 16
-      },
-      "id": 2,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.1.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "sum by(test_name) (sum_over_time(e2e_test_failure_total{environment=\"staging\"}[10m]))",
-          "fullMetaSearch": false,
-          "hide": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "{{test_name}}",
-          "range": true,
-          "refId": "failure",
-          "useBackend": false
-        }
-      ],
-      "title": "Failure counts",
       "type": "timeseries"
     }
   ],
@@ -621,5 +554,5 @@
   "timezone": "utc",
   "title": "Daydream E2E Testing",
   "uid": "eek9x61543k00e",
-  "version": 23
+  "version": 28
 }
