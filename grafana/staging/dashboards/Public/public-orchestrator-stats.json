@@ -133,7 +133,7 @@
           },
           "pluginVersion": "4.11.2",
           "queryType": "table",
-          "rawSql": "SELECT\n  `network_events`.`stream_status_view`.`orchestrator_url` AS `orchestrator_url`,\n  `median`(`network_events`.`stream_status_view`.`output_fps`) AS `median`,\n  MAX(`network_events`.`stream_status_view`.`output_fps`) AS `max`\nFROM\n  `network_events`.`stream_status_view`\nWHERE\n`network_events`.`stream_status_view`.`gateway` LIKE '%-staging-ai-staging-livepeer-ai-gateway-%.livepeer.monster%'\nAND $__timeFilter(event_timestamp_ts)\nAND  `network_events`.`stream_status_view`.`orchestrator_url` NOT LIKE '%lvpr.io%' \nGROUP BY\n  `network_events`.`stream_status_view`.`orchestrator_url`\nORDER BY\n  `median` DESC,\n  `network_events`.`stream_status_view`.`orchestrator_url` ASC",
+          "rawSql": "SELECT\n  `semantic`.`stream_status`.`orchestrator_url` AS `orchestrator_url`,\n  `median`(`semantic`.`stream_status`.`output_fps`) AS `median`,\n  MAX(`semantic`.`stream_status`.`output_fps`) AS `max`\nFROM\n  `semantic`.`stream_status`\nWHERE\n`semantic`.`stream_status`.`gateway` LIKE '%-staging-ai-staging-livepeer-ai-gateway-%.livepeer.monster%'\nAND $__timeFilter(event_timestamp_ts)\nAND  `semantic`.`stream_status`.`orchestrator_url` NOT LIKE '%lvpr.io%' \nGROUP BY\n  `semantic`.`stream_status`.`orchestrator_url`\nORDER BY\n  `median` DESC,\n  `semantic`.`stream_status`.`orchestrator_url` ASC",
           "refId": "A"
         }
       ],
@@ -157,5 +157,5 @@
   "timezone": "utc",
   "title": "[Public] Orchestrator Stats",
   "uid": "26fe28f6-1572-454c-9197-6eb47cecc8f0",
-  "version": 18
+  "version": 20
 }
