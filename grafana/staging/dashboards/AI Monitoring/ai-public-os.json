@@ -134,7 +134,7 @@
           },
           "pluginVersion": "4.11.2",
           "queryType": "table",
-          "rawSql": "SELECT\n  CONCAT(extract(`network_events`.`stream_status_view`.`orchestrator_url`, 'https://(.*)'), ' - ', `network_events`.`stream_status_view`.`pipeline_key`) as orchestrator_short_uri,\n  `median`(`network_events`.`stream_status_view`.`output_fps`) AS `median`,\n  MAX(`network_events`.`stream_status_view`.`output_fps`) AS `max`\nFROM\n  `network_events`.`stream_status_view`\nWHERE\n  $__timeFilter(event_timestamp_ts)\n  AND\n  event_timestamp_ts < now() - INTERVAL 5 minute  -- last minutes data is missing pipeline_* data\n  AND\n  `network_events`.`stream_status_view`.`orchestrator_url` NOT LIKE '%lvpr.io%' \nGROUP BY\n  orchestrator_short_uri, `network_events`.`stream_status_view`.`pipeline_key`\nORDER BY\n  `median` DESC,\n  orchestrator_short_uri ASC,\n  `network_events`.`stream_status_view`.`pipeline_key` ASC\n",
+          "rawSql": "SELECT\n  CONCAT(extract(`semantic`.`stream_status`.`orchestrator_url`, 'https://(.*)'), ' - ', `semantic`.`stream_status`.`pipeline_key`) as orchestrator_short_uri,\n  `median`(`semantic`.`stream_status`.`output_fps`) AS `median`,\n  MAX(`semantic`.`stream_status`.`output_fps`) AS `max`\nFROM\n  `semantic`.`stream_status`\nWHERE\n  $__timeFilter(event_timestamp_ts)\n  AND\n  event_timestamp_ts < now() - INTERVAL 5 minute  -- last minutes data is missing pipeline_* data\n  AND\n  `semantic`.`stream_status`.`orchestrator_url` NOT LIKE '%lvpr.io%' \nGROUP BY\n  orchestrator_short_uri, `semantic`.`stream_status`.`pipeline_key`\nORDER BY\n  `median` DESC,\n  orchestrator_short_uri ASC,\n  `semantic`.`stream_status`.`pipeline_key` ASC\n",
           "refId": "A"
         }
       ],
@@ -245,7 +245,7 @@
           },
           "pluginVersion": "4.11.2",
           "queryType": "table",
-          "rawSql": "SELECT\n  CONCAT(extract(`network_events`.`stream_status_view`.`orchestrator_url`, 'https://(.*)'), ' - ', `network_events`.`stream_status_view`.`pipeline_key`) as orchestrator_short_uri,\n  COUNT(DISTINCT `network_events`.`stream_status_view`.`stream_key`) AS `streams_count`\nFROM\n  `network_events`.`stream_status_view`\nWHERE\n  $__timeFilter(event_timestamp_ts)\n  AND\n  event_timestamp_ts < now() - INTERVAL 5 minute  -- last minutes data is missing pipeline_* data\n  AND\n  `network_events`.`stream_status_view`.`orchestrator_url` NOT LIKE '%lvpr.io%' \nGROUP BY\n  orchestrator_short_uri\nORDER BY\n  `streams_count` DESC,\n  orchestrator_short_uri ASC\n",
+          "rawSql": "SELECT\n  CONCAT(extract(`semantic`.`stream_status`.`orchestrator_url`, 'https://(.*)'), ' - ', `semantic`.`stream_status`.`pipeline_key`) as orchestrator_short_uri,\n  COUNT(DISTINCT `semantic`.`stream_status`.`stream_key`) AS `streams_count`\nFROM\n  `semantic`.`stream_status`\nWHERE\n  $__timeFilter(event_timestamp_ts)\n  AND\n  event_timestamp_ts < now() - INTERVAL 5 minute  -- last minutes data is missing pipeline_* data\n  AND\n  `semantic`.`stream_status`.`orchestrator_url` NOT LIKE '%lvpr.io%' \nGROUP BY\n  orchestrator_short_uri\nORDER BY\n  `streams_count` DESC,\n  orchestrator_short_uri ASC\n",
           "refId": "A"
         }
       ],
@@ -357,7 +357,7 @@
           },
           "pluginVersion": "4.11.2",
           "queryType": "timeseries",
-          "rawSql": "SELECT\n  `network_events`.`stream_status_view`.event_timestamp_ts as time,\n  CONCAT(extract(`network_events`.`stream_status_view`.`orchestrator_url`, 'https://(.*:.+)'), ' - ', `network_events`.`stream_status_view`.`pipeline_key`) as pipeline,\n  `median`(`network_events`.`stream_status_view`.`output_fps`) AS ` `\nFROM\n  `network_events`.`stream_status_view`\nWHERE\n  $__timeFilter(event_timestamp_ts)\n  AND\n  event_timestamp_ts < now() - INTERVAL 5 minute  -- last minutes data is missing pipeline_* data\n  AND\n  `time` >= now() - INTERVAL 7 DAY -- too much data breaks Grafana\n  AND\n  `network_events`.`stream_status_view`.`orchestrator_url` NOT LIKE '%lvpr.io%' \nGROUP BY\n  `network_events`.`stream_status_view`.`orchestrator_url`, `network_events`.`stream_status_view`.`pipeline_key`, `network_events`.`stream_status_view`.event_timestamp_ts\nORDER BY\n  `network_events`.`stream_status_view`.event_timestamp_ts ASC,\n  `network_events`.`stream_status_view`.`orchestrator_url` ASC,\n  `network_events`.`stream_status_view`.`pipeline_key` ASC\n",
+          "rawSql": "SELECT\n  `semantic`.`stream_status`.event_timestamp_ts as time,\n  CONCAT(extract(`semantic`.`stream_status`.`orchestrator_url`, 'https://(.*:.+)'), ' - ', `semantic`.`stream_status`.`pipeline_key`) as pipeline,\n  `median`(`semantic`.`stream_status`.`output_fps`) AS ` `\nFROM\n  `semantic`.`stream_status`\nWHERE\n  $__timeFilter(event_timestamp_ts)\n  AND\n  event_timestamp_ts < now() - INTERVAL 5 minute  -- last minutes data is missing pipeline_* data\n  AND\n  `time` >= now() - INTERVAL 7 DAY -- too much data breaks Grafana\n  AND\n  `semantic`.`stream_status`.`orchestrator_url` NOT LIKE '%lvpr.io%' \nGROUP BY\n  `semantic`.`stream_status`.`orchestrator_url`, `semantic`.`stream_status`.`pipeline_key`, `semantic`.`stream_status`.event_timestamp_ts\nORDER BY\n  `semantic`.`stream_status`.event_timestamp_ts ASC,\n  `semantic`.`stream_status`.`orchestrator_url` ASC,\n  `semantic`.`stream_status`.`pipeline_key` ASC\n",
           "refId": "A"
         }
       ],
@@ -445,7 +445,7 @@
           },
           "pluginVersion": "4.11.2",
           "queryType": "timeseries",
-          "rawSql": "SELECT\n  `network_events`.`stream_status_view`.event_timestamp_ts as `time`,\n  CONCAT(extract(`network_events`.`stream_status_view`.`orchestrator_url`, 'https://(.*)'), ' - ', `network_events`.`stream_status_view`.`pipeline_key`) as orchestrator_short_uri,\n  COUNT(DISTINCT `network_events`.`stream_status_view`.`stream_key`) AS ` `\nFROM\n  `network_events`.`stream_status_view`\nWHERE\n  $__timeFilter(event_timestamp_ts)\n  AND\n  event_timestamp_ts < now() - INTERVAL 5 minute  -- last minutes data is missing pipeline_* data\n  AND\n  `time` >= now() - INTERVAL 7 DAY\n  AND  \n  `network_events`.`stream_status_view`.`orchestrator_url` NOT LIKE '%lvpr.io%'\nGROUP BY\n  orchestrator_short_uri, `network_events`.`stream_status_view`.event_timestamp_ts\nORDER BY\n  `network_events`.`stream_status_view`.event_timestamp_ts ASC,\n  ` ` DESC,\n  orchestrator_short_uri ASC\n\n",
+          "rawSql": "SELECT\n  `semantic`.`stream_status`.event_timestamp_ts as `time`,\n  CONCAT(extract(`semantic`.`stream_status`.`orchestrator_url`, 'https://(.*)'), ' - ', `semantic`.`stream_status`.`pipeline_key`) as orchestrator_short_uri,\n  COUNT(DISTINCT `semantic`.`stream_status`.`stream_key`) AS ` `\nFROM\n  `semantic`.`stream_status`\nWHERE\n  $__timeFilter(event_timestamp_ts)\n  AND\n  event_timestamp_ts < now() - INTERVAL 5 minute  -- last minutes data is missing pipeline_* data\n  AND\n  `time` >= now() - INTERVAL 7 DAY\n  AND  \n  `semantic`.`stream_status`.`orchestrator_url` NOT LIKE '%lvpr.io%'\nGROUP BY\n  orchestrator_short_uri, `semantic`.`stream_status`.event_timestamp_ts\nORDER BY\n  `semantic`.`stream_status`.event_timestamp_ts ASC,\n  ` ` DESC,\n  orchestrator_short_uri ASC\n\n",
           "refId": "A"
         }
       ],
@@ -558,7 +558,7 @@
           },
           "pluginVersion": "4.11.2",
           "queryType": "timeseries",
-          "rawSql": "SELECT\n  toStartOfHour(`network_events`.`stream_status_view`.event_timestamp_ts) as _time,\n  `network_events`.`stream_status_view`.pipeline_key,\n  count(DISTINCT `network_events`.`stream_status_view`.orchestrator_url ) AS ` `\nFROM\n  `network_events`.`stream_status_view`\nWHERE\n  $__timeFilter(event_timestamp_ts)\n  AND\n  event_timestamp_ts < now() - INTERVAL 5 minute  -- last minutes data is missing pipeline_* data\n  AND\n  `network_events`.`stream_status_view`.`orchestrator_url` NOT LIKE '%lvpr.io%'\n  AND\n  _time > '2025-09-17' -- we don't want to expose old models\nGROUP BY\n   pipeline_key, _time\nORDER BY\n  _time ASC,\n  pipeline_key ASC\n",
+          "rawSql": "SELECT\n  toStartOfHour(`semantic`.`stream_status`.event_timestamp_ts) as _time,\n  `semantic`.`stream_status`.pipeline_key,\n  count(DISTINCT `semantic`.`stream_status`.orchestrator_url ) AS ` `\nFROM\n  `semantic`.`stream_status`\nWHERE\n  $__timeFilter(event_timestamp_ts)\n  AND\n  event_timestamp_ts < now() - INTERVAL 5 minute  -- last minutes data is missing pipeline_* data\n  AND\n  `semantic`.`stream_status`.`orchestrator_url` NOT LIKE '%lvpr.io%'\n  AND\n  _time > '2025-09-17' -- we don't want to expose old models\nGROUP BY\n   pipeline_key, _time\nORDER BY\n  _time ASC,\n  pipeline_key ASC\n",
           "refId": "A"
         }
       ],
@@ -674,7 +674,7 @@
           },
           "pluginVersion": "4.11.2",
           "queryType": "timeseries",
-          "rawSql": "SELECT\n     toStartOfHour(`network_events`.`network_capabilities_view`.timestamp_ts) as `_time`,\n     `network_events`.`network_capabilities_view`.`model_id` as model_id,\n     count(distinct gpu_id) as ` `\nFROM network_events.network_capabilities_view\nWHERE\n     $__timeFilter(timestamp_ts)\n     AND\n     timestamp_ts < now() - INTERVAL 5 minute  -- last minutes data is missing pipeline_* data\n     AND\n     orch_uri NOT LIKE '%lvpr.io%'\n     AND\n     _time > '2025-09-17' -- we don't want to expose old models\nGROUP by _time, model_id\nORDER BY _time, ` ` DESC",
+          "rawSql": "SELECT\n     toStartOfHour(`semantic`.`network_capabilities_view`.timestamp_ts) as `_time`,\n     `semantic`.`network_capabilities_view`.`model_id` as model_id,\n     count(distinct gpu_id) as ` `\nFROM semantic.network_capabilities_view\nWHERE\n     $__timeFilter(timestamp_ts)\n     AND\n     timestamp_ts < now() - INTERVAL 5 minute  -- last minutes data is missing pipeline_* data\n     AND\n     orch_uri NOT LIKE '%lvpr.io%'\n     AND\n     _time > '2025-09-17' -- we don't want to expose old models\nGROUP by _time, model_id\nORDER BY _time, ` ` DESC",
           "refId": "A"
         }
       ],
@@ -789,7 +789,7 @@
           },
           "pluginVersion": "4.11.2",
           "queryType": "timeseries",
-          "rawSql": "SELECT\n     toStartOfHour(`network_events`.`network_capabilities_view`.timestamp_ts) as `_time`,\n     (extract(`network_events`.`network_capabilities_view`.`orch_uri`, 'https://(.*)') || ' (' || model_id || ')') as orchestrator_short_uri,\n     count(distinct gpu_id) as ` `\nFROM network_events.network_capabilities_view\nWHERE\n     `_time` >= now() - INTERVAL 31 DAY\n     AND\n     timestamp_ts < now() - INTERVAL 5 minute  -- last minutes data is missing pipeline_* data\n     AND\n     orch_uri NOT LIKE '%lvpr.io%' AND  $__timeFilter(timestamp_ts)\nGROUP by _time, orchestrator_short_uri\nORDER BY _time, ` ` DESC",
+          "rawSql": "SELECT\n     toStartOfHour(`semantic`.`network_capabilities_view`.timestamp_ts) as `_time`,\n     (extract(`semantic`.`network_capabilities_view`.`orch_uri`, 'https://(.*)') || ' (' || model_id || ')') as orchestrator_short_uri,\n     count(distinct gpu_id) as ` `\nFROM semantic.network_capabilities_view\nWHERE\n     `_time` >= now() - INTERVAL 31 DAY\n     AND\n     timestamp_ts < now() - INTERVAL 5 minute  -- last minutes data is missing pipeline_* data\n     AND\n     orch_uri NOT LIKE '%lvpr.io%' AND  $__timeFilter(timestamp_ts)\nGROUP by _time, orchestrator_short_uri\nORDER BY _time, ` ` DESC",
           "refId": "A"
         }
       ],
@@ -1543,7 +1543,7 @@
           },
           "pluginVersion": "4.11.2",
           "queryType": "table",
-          "rawSql": "SELECT\n  extract(`network_events`.`network_payments`.`orchestrator`, 'https://(.*)') as orchestrator_short_uri,\n  SUM(`network_events`.`network_payments`.`expected_value_eth`) AS `expected_value_eth_sum`\nFROM\n  `network_events`.`network_payments`\nWHERE\n  `network_events`.`network_payments`.`orchestrator` NOT LIKE '%lvpr.io%' \nGROUP BY\n  orchestrator_short_uri\nORDER BY\n  `expected_value_eth_sum` DESC,\n  orchestrator_short_uri ASC\n",
+          "rawSql": "SELECT\n  extract(`semantic`.`network_payments`.`orchestrator`, 'https://(.*)') as orchestrator_short_uri,\n  SUM(`semantic`.`network_payments`.`expected_value_eth`) AS `expected_value_eth_sum`\nFROM\n  `semantic`.`network_payments`\nWHERE\n  `semantic`.`network_payments`.`orchestrator` NOT LIKE '%lvpr.io%' \nGROUP BY\n  orchestrator_short_uri\nORDER BY\n  `expected_value_eth_sum` DESC,\n  orchestrator_short_uri ASC\n",
           "refId": "A"
         }
       ],
@@ -1659,7 +1659,7 @@
           },
           "pluginVersion": "4.10.2",
           "queryType": "timeseries",
-          "rawSql": "SELECT\n  toStartOfHour(`network_events`.`network_payments`.timestamp_ts) as `time`,\n  extract(`network_events`.`network_payments`.`orchestrator`, 'https://(.*)') as orchestrator_short_uri,\n  SUM(`network_events`.`network_payments`.`expected_value_eth`) AS ` `\nFROM\n  `network_events`.`network_payments`\nWHERE\n  $__timeFilter(timestamp_ts)\n  AND\n  `network_events`.`network_payments`.`orchestrator` NOT LIKE '%lvpr.io%'\n  AND `time` >= now() - INTERVAL 7 DAY\nGROUP BY\n  orchestrator_short_uri, `time`\nORDER BY\n  `time` ASC,\n  ` ` DESC,\n  orchestrator_short_uri ASC\n\n\n",
+          "rawSql": "SELECT\n  toStartOfHour(`semantic`.`network_payments`.timestamp_ts) as `time`,\n  extract(`semantic`.`network_payments`.`orchestrator`, 'https://(.*)') as orchestrator_short_uri,\n  SUM(`semantic`.`network_payments`.`expected_value_eth`) AS ` `\nFROM\n  `semantic`.`network_payments`\nWHERE\n  $__timeFilter(timestamp_ts)\n  AND\n  `semantic`.`network_payments`.`orchestrator` NOT LIKE '%lvpr.io%'\n  AND `time` >= now() - INTERVAL 7 DAY\nGROUP BY\n  orchestrator_short_uri, `time`\nORDER BY\n  `time` ASC,\n  ` ` DESC,\n  orchestrator_short_uri ASC\n\n\n",
           "refId": "A"
         }
       ],
@@ -1775,7 +1775,7 @@
           },
           "pluginVersion": "4.10.2",
           "queryType": "timeseries",
-          "rawSql": "SELECT\n  toStartOfDay(`network_events`.`network_payments`.timestamp_ts) as `time`,\n  extract(`network_events`.`network_payments`.`orchestrator`, 'https://(.*)') as orchestrator_short_uri,\n  SUM(`network_events`.`network_payments`.`expected_value_eth`) AS ` `\nFROM\n  `network_events`.`network_payments`\nWHERE\n  $__timeFilter(timestamp_ts)\n  AND\n  `network_events`.`network_payments`.`orchestrator` NOT LIKE '%lvpr.io%'\n  AND `time` >= now() - INTERVAL 31 DAY\nGROUP BY\n  orchestrator_short_uri, `time`\nORDER BY\n  `time` ASC,\n  ` ` DESC,\n  orchestrator_short_uri ASC\n\n\n",
+          "rawSql": "SELECT\n  toStartOfDay(`semantic`.`network_payments`.timestamp_ts) as `time`,\n  extract(`semantic`.`network_payments`.`orchestrator`, 'https://(.*)') as orchestrator_short_uri,\n  SUM(`semantic`.`network_payments`.`expected_value_eth`) AS ` `\nFROM\n  `semantic`.`network_payments`\nWHERE\n  $__timeFilter(timestamp_ts)\n  AND\n  `semantic`.`network_payments`.`orchestrator` NOT LIKE '%lvpr.io%'\n  AND `time` >= now() - INTERVAL 31 DAY\nGROUP BY\n  orchestrator_short_uri, `time`\nORDER BY\n  `time` ASC,\n  ` ` DESC,\n  orchestrator_short_uri ASC\n\n\n",
           "refId": "A"
         }
       ],
@@ -1888,7 +1888,7 @@
           },
           "pluginVersion": "4.10.2",
           "queryType": "table",
-          "rawSql": "SELECT\n  extract(`network_events`.`network_payments`.`orchestrator`, 'https://(.*)') as orchestrator_short_uri,\n  SUM(`network_events`.`network_payments`.`expected_value_eth`) AS `expected_value_eth_sum`\nFROM\n  `network_events`.`network_payments`\nWHERE\n  $__timeFilter(timestamp_ts)\n  AND\n  `network_events`.`network_payments`.`orchestrator` NOT LIKE '%lvpr.io%' \nGROUP BY\n  orchestrator_short_uri\nORDER BY\n  `expected_value_eth_sum` DESC,\n  orchestrator_short_uri ASC\n",
+          "rawSql": "SELECT\n  extract(`semantic`.`network_payments`.`orchestrator`, 'https://(.*)') as orchestrator_short_uri,\n  SUM(`semantic`.`network_payments`.`expected_value_eth`) AS `expected_value_eth_sum`\nFROM\n  `semantic`.`network_payments`\nWHERE\n  $__timeFilter(timestamp_ts)\n  AND\n  `semantic`.`network_payments`.`orchestrator` NOT LIKE '%lvpr.io%' \nGROUP BY\n  orchestrator_short_uri\nORDER BY\n  `expected_value_eth_sum` DESC,\n  orchestrator_short_uri ASC\n",
           "refId": "A"
         }
       ],
@@ -2233,7 +2233,7 @@
     "list": []
   },
   "time": {
-    "from": "now-12h",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {
@@ -2251,5 +2251,5 @@
   "timezone": "utc",
   "title": "AI Public Os",
   "uid": "45346781-4b93-4865-9b10-ac4fc3ab0334",
-  "version": 26
+  "version": 28
 }
