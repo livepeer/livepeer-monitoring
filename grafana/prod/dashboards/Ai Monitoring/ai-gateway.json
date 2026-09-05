@@ -1857,7 +1857,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "transparent"
+                "color": "transparent",
+                "value": 0
               }
             ]
           },
@@ -1904,7 +1905,7 @@
           }
         ]
       },
-      "pluginVersion": "11.1.3",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -1967,6 +1968,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -1999,7 +2001,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "transparent"
+                "color": "transparent",
+                "value": 0
               }
             ]
           },
@@ -2028,11 +2031,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.1.0",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -2146,6 +2150,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -2176,7 +2181,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -2208,10 +2214,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -2220,7 +2228,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "count by(orchestrator_version) (count by(orchestrator_uri, orchestrator_version, ) (increase(livepeer_ai_request_latency_score{livepeer_live_app=~\".*-livepeer-ai-gateway\", pipeline=~\"${pipeline:pipe}\", model_name=~\"${model:pipe}\"}[$__rate_interval])))",
+          "expr": "count by(orchestrator_version) (count by(orchestrator_uri, orchestrator_version, ) (increase(livepeer_ai_request_latency_score{livepeer_live_app=~\".*-livepeer-ai-gateway.*\", pipeline=~\"${pipeline:pipe}\", model_name=~\"${model:pipe}\"}[$__rate_interval])))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -2267,6 +2275,7 @@
       ],
       "options": {
         "dedupStrategy": "none",
+        "enableInfiniteScrolling": false,
         "enableLogDetails": true,
         "prettifyLogMessage": false,
         "showCommonLabels": false,
@@ -2275,14 +2284,16 @@
         "sortOrder": "Descending",
         "wrapLogMessage": false
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
+          "direction": "backward",
           "editorMode": "code",
-          "expr": "{app=~\".*-livepeer-ai-gateway\"} != `Polling blocks`",
+          "expr": "{container=\"ai-gateway\"} != `Polling blocks`",
           "queryType": "range",
           "refId": "A"
         }
@@ -2315,6 +2326,7 @@
       ],
       "options": {
         "dedupStrategy": "none",
+        "enableInfiniteScrolling": false,
         "enableLogDetails": true,
         "prettifyLogMessage": false,
         "showCommonLabels": false,
@@ -2323,14 +2335,16 @@
         "sortOrder": "Descending",
         "wrapLogMessage": false
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
+          "direction": "backward",
           "editorMode": "code",
-          "expr": "{app=~\".*livepeer-api\"} |= `/api/beta/generate/`",
+          "expr": "{app=\"prod-livepeer-api\"} |= `/api/beta/generate`",
           "queryType": "range",
           "refId": "A"
         }
@@ -2359,7 +2373,7 @@
             "value": "2675"
           }
         ],
-        "query": "2675",
+        "query": "2068.37",
         "type": "textbox"
       },
       {
@@ -2457,6 +2471,6 @@
   "timezone": "",
   "title": "AI Gateway",
   "uid": "Livepeer-Gateway-AI",
-  "version": 6,
+  "version": 7,
   "weekStart": "monday"
 }
