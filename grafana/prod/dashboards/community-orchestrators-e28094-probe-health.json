@@ -1,0 +1,322 @@
+{
+  "//": "Grafana dashboard, committed and provisioned rather than hand-built in the UI — same discipline as simple-infra keeping promtail.yaml.template in-repo instead of only on a host. Datasource is the existing Grafana Cloud Loki (eu-metrics-loki.livepeer.live); there is no metrics backend in this stack and none is needed, because a probe result is an event and LogQL aggregates events natively.",
+  "annotations": {
+    "list": [
+      {
+        "//": "Turns a latency step change from a mystery into 'kilout added 3 capabilities that morning'. This is the context nobody reconstructs later.",
+        "datasource": {
+          "type": "loki"
+        },
+        "enable": true,
+        "iconColor": "purple",
+        "name": "Fleet changes",
+        "target": {
+          "expr": "{role=\"loadtest\"} | json | evt=\"fleet_change\""
+        }
+      }
+    ]
+  },
+  "id": null,
+  "panels": [
+    {
+      "//": "Denominator is attributable outcomes only — payment_rejected and platform_error are excluded so a platform fault does not read as a fleet outage.",
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 0.8
+              },
+              {
+                "color": "green",
+                "value": 0.95
+              }
+            ]
+          },
+          "unit": "percentunit"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      },
+      "targets": [
+        {
+          "expr": "sum(count_over_time({role=\"loadtest\"} | json | evt=\"probe\" | outcome=\"ok\" [24h])) / sum(count_over_time({role=\"loadtest\"} | json | evt=\"probe\" | outcome!~\"payment_rejected|platform_error|skipped\" [24h]))"
+        }
+      ],
+      "title": "Fleet success rate (24h)",
+      "type": "stat"
+    },
+    {
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 6,
+        "y": 0
+      },
+      "targets": [
+        {
+          "expr": "sum(count_over_time({role=\"loadtest\"} | json | evt=\"probe\" [24h]))"
+        }
+      ],
+      "title": "Probes today",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 10,
+        "y": 0
+      },
+      "targets": [
+        {
+          "expr": "sum(sum_over_time({role=\"loadtest\"} | json | evt=\"probe\" | unwrap usd [24h]))"
+        }
+      ],
+      "title": "Spend today (USD)",
+      "type": "stat"
+    },
+    {
+      "//": "Deliberately prominent. If this drops below 1.0 the run bought data it cannot use, and that must be as visible as a failure.",
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "percentunit"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 14,
+        "y": 0
+      },
+      "targets": [
+        {
+          "expr": "sum(count_over_time({role=\"loadtest\"} | json | evt=\"probe\" | attr=\"confirmed\" [24h])) / sum(count_over_time({role=\"loadtest\"} | json | evt=\"probe\" [24h]))"
+        }
+      ],
+      "title": "Attribution coverage",
+      "type": "stat"
+    },
+    {
+      "//": "Backs the dead-man's switch: a dead VM must not look like a healthy fleet.",
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 19,
+        "y": 0
+      },
+      "targets": [
+        {
+          "expr": "sum(count_over_time({role=\"loadtest\"} | json | evt=\"run_complete\" | probes > 0 [26h]))"
+        }
+      ],
+      "title": "Hours since last completed round",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "max": 1,
+          "min": 0,
+          "unit": "percentunit"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 4
+      },
+      "targets": [
+        {
+          "expr": "sum by (orch) (count_over_time({role=\"loadtest\", orch=~\"$orch\"} | json | evt=\"probe\" | outcome=\"ok\" [24h])) / sum by (orch) (count_over_time({role=\"loadtest\", orch=~\"$orch\"} | json | evt=\"probe\" | outcome!~\"payment_rejected|platform_error|skipped\" [24h]))"
+        }
+      ],
+      "title": "Success rate by orchestrator (24h)",
+      "type": "bargauge"
+    },
+    {
+      "//": "p50, not p95: at a few probes per capability per day a p95 is essentially the second-worst observation and would be an alarm generator.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 4
+      },
+      "targets": [
+        {
+          "expr": "quantile_over_time(0.5, {role=\"loadtest\", orch=~\"$orch\"} | json | evt=\"probe\" | outcome=\"ok\" | unwrap ms [6h]) by (orch)"
+        }
+      ],
+      "title": "p50 latency by orchestrator",
+      "type": "timeseries"
+    },
+    {
+      "//": "max is the honest tail at low sample counts, where a p95 is not supportable.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms"
+        }
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 12
+      },
+      "targets": [
+        {
+          "expr": "max_over_time({role=\"loadtest\", orch=~\"$orch\"} | json | evt=\"probe\" | outcome=\"ok\" | unwrap ms [24h]) by (orch)"
+        }
+      ],
+      "title": "Worst observed latency (24h)",
+      "type": "timeseries"
+    },
+    {
+      "//": "The allocator distributes MEASUREMENT and lets dollars follow; this is where a dollar split that looks unfair in practice would become visible before anyone builds a fee-fairness mechanism for it.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD"
+        }
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 12
+      },
+      "targets": [
+        {
+          "expr": "sum by (orch) (sum_over_time({role=\"loadtest\", orch=~\"$orch\"} | json | evt=\"probe\" | unwrap usd [24h]))"
+        }
+      ],
+      "title": "Spend by orchestrator vs fair share",
+      "type": "timeseries"
+    },
+    {
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 19
+      },
+      "targets": [
+        {
+          "expr": "sum by (orch, outcome) (count_over_time({role=\"loadtest\", orch=~\"$orch\"} | json | evt=\"probe\" | outcome!~\"ok|skipped\" [24h]))",
+          "instant": true
+        }
+      ],
+      "title": "Failures by orchestrator and cause (24h)",
+      "type": "table"
+    },
+    {
+      "//": "20 attempts is the demotion threshold; below it no decision can be made, and that must be visible rather than silent.",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 19
+      },
+      "targets": [
+        {
+          "expr": "sum by (orch) (count_over_time({role=\"loadtest\"} | json | evt=\"probe\" [7d]))",
+          "instant": true
+        }
+      ],
+      "title": "Samples in the 7-day window (is each node judgeable?)",
+      "type": "table"
+    },
+    {
+      "//": "Without this, 'no data for slack-send-file' is indistinguishable from a broken probe and someone re-adds it next quarter.",
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 27
+      },
+      "targets": [
+        {
+          "expr": "sum by (orch, reason) (count_over_time({role=\"loadtest\"} | json | evt=\"excluded\" [24h]))",
+          "instant": true
+        }
+      ],
+      "title": "Excluded capabilities (never probed)",
+      "type": "table"
+    },
+    {
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 27
+      },
+      "targets": [
+        {
+          "expr": "{role=\"loadtest\"} | json | evt=\"probe\" | outcome!~\"ok|skipped\""
+        }
+      ],
+      "title": "Failed probes (drill-down)",
+      "type": "logs"
+    }
+  ],
+  "refresh": "5m",
+  "tags": [
+    "livepeer",
+    "orchestrators",
+    "loadtest"
+  ],
+  "templating": {
+    "list": [
+      {
+        "datasource": {
+          "type": "loki"
+        },
+        "includeAll": true,
+        "label": "Orchestrator",
+        "multi": true,
+        "name": "orch",
+        "query": "label_values({role=\"loadtest\"}, orch)",
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-7d",
+    "to": "now"
+  },
+  "timezone": "utc",
+  "title": "Community Orchestrators — Probe Health",
+  "uid": "community-orch-probe",
+  "version": 1
+}
