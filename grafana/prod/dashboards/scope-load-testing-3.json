@@ -1,0 +1,754 @@
+{
+  "description": "Scope cloud load test. Rates use increase() over the selected range so they survive harness restarts (raw counters reset to 0 when the harness container restarts). Filter by orchestrator / pipeline / mode at the top.",
+  "editable": true,
+  "graphTooltip": 1,
+  "id": null,
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "title": "Overview (range-based — survives harness restarts)",
+      "type": "row"
+    },
+    {
+      "datasource": "eflvecykhxcsgd",
+      "description": "Passed / total over the selected time range. Uses increase() so a harness restart (which zeroes the raw counters) does not distort it.",
+      "fieldConfig": {
+        "defaults": {
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 80
+              },
+              {
+                "color": "green",
+                "value": 95
+              }
+            ]
+          },
+          "unit": "percent"
+        }
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 0,
+        "y": 1
+      },
+      "targets": [
+        {
+          "expr": "100 * sum(increase(runs_total{job=\"scope_loadtest\", pipeline=~\"$pipeline\", mode=~\"$mode\", orchestrator_id=~\"$orchestrator\", result=\"pass\"}[$__range])) / clamp_min(sum(increase(runs_total{job=\"scope_loadtest\", pipeline=~\"$pipeline\", mode=~\"$mode\", orchestrator_id=~\"$orchestrator\"}[$__range])), 1)"
+        }
+      ],
+      "title": "Pass Rate",
+      "type": "gauge"
+    },
+    {
+      "datasource": "eflvecykhxcsgd",
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 0,
+          "thresholds": {
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 10
+              },
+              {
+                "color": "green",
+                "value": 50
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 5,
+        "y": 1
+      },
+      "targets": [
+        {
+          "expr": "sum(increase(runs_total{job=\"scope_loadtest\", pipeline=~\"$pipeline\", mode=~\"$mode\", orchestrator_id=~\"$orchestrator\"}[$__range]))"
+        }
+      ],
+      "title": "Total Runs",
+      "type": "stat"
+    },
+    {
+      "datasource": "eflvecykhxcsgd",
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 0,
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 1
+              },
+              {
+                "color": "red",
+                "value": 5
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 10,
+        "y": 1
+      },
+      "targets": [
+        {
+          "expr": "sum(increase(runs_total{job=\"scope_loadtest\", pipeline=~\"$pipeline\", mode=~\"$mode\", orchestrator_id=~\"$orchestrator\", result=\"fail\"}[$__range])) or vector(0)"
+        }
+      ],
+      "title": "Failures",
+      "type": "stat"
+    },
+    {
+      "datasource": "eflvecykhxcsgd",
+      "description": "Distinct orchestrators that served at least one run in the range. Expect 2 (gcp + vast) once trickle routing is enabled.",
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 0,
+          "thresholds": {
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 15,
+        "y": 1
+      },
+      "targets": [
+        {
+          "expr": "count(count by (orchestrator_id) (increase(runs_total{job=\"scope_loadtest\", pipeline=~\"$pipeline\", mode=~\"$mode\", orchestrator_id=~\"$orchestrator\"}[$__range]) > 0)) or vector(0)"
+        }
+      ],
+      "title": "Orchestrators Serving",
+      "type": "stat"
+    },
+    {
+      "datasource": "eflvecykhxcsgd",
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 0,
+          "thresholds": {
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 50
+              },
+              {
+                "color": "green",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        }
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 19,
+        "y": 1
+      },
+      "targets": [
+        {
+          "expr": "sum(budget_runs_completed{job=\"scope_loadtest\"}) / clamp_min(sum(budget_runs_planned{job=\"scope_loadtest\"}), 1) * 100"
+        }
+      ],
+      "title": "Budget Consumed",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 6
+      },
+      "title": "By Orchestrator (gcp vs vast)",
+      "type": "row"
+    },
+    {
+      "datasource": "eflvecykhxcsgd",
+      "description": "Per-VM pass rate over the range. Surfaces a single bad orchestrator that a global pass rate would hide.",
+      "fieldConfig": {
+        "defaults": {
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 80
+              },
+              {
+                "color": "green",
+                "value": 95
+              }
+            ]
+          },
+          "unit": "percent"
+        }
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 0,
+        "y": 7
+      },
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal"
+      },
+      "targets": [
+        {
+          "expr": "sum by (orchestrator_id) (increase(runs_total{job=\"scope_loadtest\", pipeline=~\"$pipeline\", mode=~\"$mode\", orchestrator_id=~\"$orchestrator\", result=\"pass\"}[$__range])) / clamp_min(sum by (orchestrator_id) (increase(runs_total{job=\"scope_loadtest\", pipeline=~\"$pipeline\", mode=~\"$mode\", orchestrator_id=~\"$orchestrator\"}[$__range])), 1) * 100",
+          "legendFormat": "{{orchestrator_id}}"
+        }
+      ],
+      "title": "Pass Rate by Orchestrator",
+      "type": "bargauge"
+    },
+    {
+      "datasource": "eflvecykhxcsgd",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "stacking": {
+              "mode": "normal"
+            }
+          },
+          "decimals": 0
+        }
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 8,
+        "y": 7
+      },
+      "options": {
+        "orientation": "horizontal",
+        "xTickLabelRotation": 0
+      },
+      "targets": [
+        {
+          "expr": "sum by (orchestrator_id) (increase(runs_total{job=\"scope_loadtest\", pipeline=~\"$pipeline\", mode=~\"$mode\", orchestrator_id=~\"$orchestrator\", result=\"pass\"}[$__range]))",
+          "legendFormat": "pass"
+        },
+        {
+          "expr": "sum by (orchestrator_id) (increase(runs_total{job=\"scope_loadtest\", pipeline=~\"$pipeline\", mode=~\"$mode\", orchestrator_id=~\"$orchestrator\", result=\"fail\"}[$__range]))",
+          "legendFormat": "fail"
+        }
+      ],
+      "title": "Runs by Orchestrator (Pass/Fail)",
+      "type": "barchart"
+    },
+    {
+      "datasource": "eflvecykhxcsgd",
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 5
+              },
+              {
+                "color": "red",
+                "value": 30
+              }
+            ]
+          },
+          "unit": "s"
+        }
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 16,
+        "y": 7
+      },
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal"
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.5, sum by (orchestrator_id, le) (first_frame_seconds_bucket{job=\"scope_loadtest\", pipeline=~\"$pipeline\", mode=~\"$mode\", orchestrator_id=~\"$orchestrator\"}))",
+          "legendFormat": "{{orchestrator_id}}"
+        }
+      ],
+      "title": "First Frame P50 by Orchestrator",
+      "type": "bargauge"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 14
+      },
+      "title": "Failures — what / where / when",
+      "type": "row"
+    },
+    {
+      "datasource": "eflvecykhxcsgd",
+      "description": "One row per failing (scenario, orchestrator, category). Count is over the range; 'Last Failed' is the most recent occurrence. Full error text per run is in ClickHouse network_events (client_source='scope-loadtest') and in the runner/Loki logs (grep 'RUN_FAILED').",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Last Failed"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dateTimeFromNow"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Failures"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 1
+                    },
+                    {
+                      "color": "red",
+                      "value": 3
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 14,
+        "x": 0,
+        "y": 15
+      },
+      "options": {
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Last Failed"
+          }
+        ]
+      },
+      "targets": [
+        {
+          "expr": "sum by (scenario, orchestrator_id, category) (increase(failures_total{job=\"scope_loadtest\", pipeline=~\"$pipeline\", mode=~\"$mode\", orchestrator_id=~\"$orchestrator\"}[$__range])) > 0",
+          "format": "table",
+          "instant": true,
+          "refId": "A"
+        },
+        {
+          "expr": "max by (scenario, orchestrator_id, category) (last_failure_timestamp_seconds{job=\"scope_loadtest\", pipeline=~\"$pipeline\", mode=~\"$mode\", orchestrator_id=~\"$orchestrator\"}) * 1000",
+          "format": "table",
+          "instant": true,
+          "refId": "B"
+        }
+      ],
+      "title": "Recent Failures (scenario · orchestrator · category · last seen)",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Time 1": true,
+              "Time 2": true
+            },
+            "indexByName": {
+              "Value #A": 3,
+              "Value #B": 4,
+              "category": 2,
+              "orchestrator_id": 1,
+              "scenario": 0
+            },
+            "renameByName": {
+              "Value #A": "Failures",
+              "Value #B": "Last Failed",
+              "category": "Category",
+              "orchestrator_id": "Orchestrator",
+              "scenario": "Scenario"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": "eflvecykhxcsgd",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0
+        }
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 10,
+        "x": 14,
+        "y": 15
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "values": [
+            "value"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (category) (increase(failures_total{job=\"scope_loadtest\", pipeline=~\"$pipeline\", mode=~\"$mode\", orchestrator_id=~\"$orchestrator\"}[$__range])) > 0",
+          "legendFormat": "{{category}}"
+        }
+      ],
+      "title": "Failures by Category",
+      "type": "piechart"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 24
+      },
+      "title": "Latency & Throughput Trends",
+      "type": "row"
+    },
+    {
+      "datasource": "eflvecykhxcsgd",
+      "description": "Stream start to runner ready (orchestrator provisioning + pipeline load).",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "lineInterpolation": "smooth",
+            "showPoints": "auto"
+          },
+          "unit": "s"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 25
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.5, sum by (le) (rate(connect_duration_seconds_bucket{job=\"scope_loadtest\", pipeline=~\"$pipeline\", mode=~\"$mode\", orchestrator_id=~\"$orchestrator\"}[$__rate_interval])))",
+          "legendFormat": "P50"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(connect_duration_seconds_bucket{job=\"scope_loadtest\", pipeline=~\"$pipeline\", mode=~\"$mode\", orchestrator_id=~\"$orchestrator\"}[$__rate_interval])))",
+          "legendFormat": "P95"
+        }
+      ],
+      "title": "Connect + Load Time (P50 / P95)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "eflvecykhxcsgd",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "lineInterpolation": "smooth",
+            "showPoints": "auto"
+          },
+          "unit": "s"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 25
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.5, sum by (le) (rate(first_frame_seconds_bucket{job=\"scope_loadtest\", pipeline=~\"$pipeline\", mode=~\"$mode\", orchestrator_id=~\"$orchestrator\"}[$__rate_interval])))",
+          "legendFormat": "P50"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(first_frame_seconds_bucket{job=\"scope_loadtest\", pipeline=~\"$pipeline\", mode=~\"$mode\", orchestrator_id=~\"$orchestrator\"}[$__rate_interval])))",
+          "legendFormat": "P95"
+        }
+      ],
+      "title": "First Frame Latency (P50 / P95)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "eflvecykhxcsgd",
+      "description": "frames_captured / stream_duration (last run per pipeline/mode). NOTE: true runner FPS requires trickle telemetry (PR daydreamlive/scope#1040); until that flows this is a capture-rate estimate, not the generation FPS.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "showPoints": "always"
+          },
+          "unit": "none"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 25
+      },
+      "targets": [
+        {
+          "expr": "stream_fps_out{job=\"scope_loadtest\", pipeline=~\"$pipeline\", mode=~\"$mode\", orchestrator_id=~\"$orchestrator\"}",
+          "legendFormat": "{{orchestrator_id}} {{pipeline}}/{{mode}}"
+        }
+      ],
+      "title": "Estimated Output FPS",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 33
+      },
+      "title": "Runs & Duration by Scenario",
+      "type": "row"
+    },
+    {
+      "datasource": "eflvecykhxcsgd",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "stacking": {
+              "mode": "normal"
+            }
+          },
+          "decimals": 0
+        }
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 14,
+        "x": 0,
+        "y": 34
+      },
+      "options": {
+        "barWidth": 0.6,
+        "orientation": "horizontal"
+      },
+      "targets": [
+        {
+          "expr": "sum by (scenario) (increase(runs_total{job=\"scope_loadtest\", pipeline=~\"$pipeline\", mode=~\"$mode\", orchestrator_id=~\"$orchestrator\", result=\"pass\"}[$__range]))",
+          "legendFormat": "pass"
+        },
+        {
+          "expr": "sum by (scenario) (increase(runs_total{job=\"scope_loadtest\", pipeline=~\"$pipeline\", mode=~\"$mode\", orchestrator_id=~\"$orchestrator\", result=\"fail\"}[$__range]))",
+          "legendFormat": "fail"
+        }
+      ],
+      "title": "Runs by Scenario (Pass/Fail)",
+      "type": "barchart"
+    },
+    {
+      "datasource": "eflvecykhxcsgd",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "showPoints": "auto"
+          },
+          "unit": "s"
+        }
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 10,
+        "x": 14,
+        "y": 34
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.5, sum by (le) (rate(run_duration_seconds_bucket{job=\"scope_loadtest\", pipeline=~\"$pipeline\", mode=~\"$mode\", orchestrator_id=~\"$orchestrator\"}[$__rate_interval])))",
+          "legendFormat": "P50"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(run_duration_seconds_bucket{job=\"scope_loadtest\", pipeline=~\"$pipeline\", mode=~\"$mode\", orchestrator_id=~\"$orchestrator\"}[$__rate_interval])))",
+          "legendFormat": "P95"
+        }
+      ],
+      "title": "Run Duration (P50 / P95)",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "1m",
+  "schemaVersion": 39,
+  "tags": [
+    "scope",
+    "loadtest",
+    "livepeer"
+  ],
+  "templating": {
+    "list": [
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": "eflvecykhxcsgd",
+        "includeAll": true,
+        "label": "Orchestrator",
+        "multi": true,
+        "name": "orchestrator",
+        "query": "label_values(runs_total{job=\"scope_loadtest\"}, orchestrator_id)",
+        "type": "query"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": "eflvecykhxcsgd",
+        "includeAll": true,
+        "label": "Pipeline",
+        "multi": true,
+        "name": "pipeline",
+        "query": "label_values(runs_total{job=\"scope_loadtest\"}, pipeline)",
+        "type": "query"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": "eflvecykhxcsgd",
+        "includeAll": true,
+        "label": "Mode",
+        "multi": true,
+        "name": "mode",
+        "query": "label_values(runs_total{job=\"scope_loadtest\"}, mode)",
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-7d",
+    "to": "now"
+  },
+  "timezone": "utc",
+  "title": "Scope Load Testing 3",
+  "uid": "scope-loadtest",
+  "version": 13
+}
