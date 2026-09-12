@@ -1,0 +1,607 @@
+{
+  "editable": true,
+  "graphTooltip": 1,
+  "id": null,
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "title": "Overview",
+      "type": "row"
+    },
+    {
+      "datasource": "eflvecykhxcsgd",
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 10
+              },
+              {
+                "color": "green",
+                "value": 50
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 1
+      },
+      "targets": [
+        {
+          "expr": "sum(runs_total{job=\"scope_loadtest\"})"
+        }
+      ],
+      "title": "Total Runs",
+      "type": "stat"
+    },
+    {
+      "datasource": "eflvecykhxcsgd",
+      "fieldConfig": {
+        "defaults": {
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 70
+              },
+              {
+                "color": "green",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "percent"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 1
+      },
+      "targets": [
+        {
+          "expr": "sum(runs_total{job=\"scope_loadtest\", result=\"pass\"}) / sum(runs_total{job=\"scope_loadtest\"}) * 100"
+        }
+      ],
+      "title": "Pass Rate",
+      "type": "gauge"
+    },
+    {
+      "datasource": "eflvecykhxcsgd",
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 5
+              },
+              {
+                "color": "red",
+                "value": 20
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 1
+      },
+      "targets": [
+        {
+          "expr": "sum(runs_total{job=\"scope_loadtest\", result=\"fail\"}) or vector(0)"
+        }
+      ],
+      "title": "Failures",
+      "type": "stat"
+    },
+    {
+      "datasource": "eflvecykhxcsgd",
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 50
+              },
+              {
+                "color": "green",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 1
+      },
+      "targets": [
+        {
+          "expr": "budget_runs_completed{job=\"scope_loadtest\"} / clamp_min(budget_runs_planned{job=\"scope_loadtest\"}, 1) * 100"
+        }
+      ],
+      "title": "Budget Consumed",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 5
+      },
+      "title": "Per-Pipeline Performance",
+      "type": "row"
+    },
+    {
+      "datasource": "eflvecykhxcsgd",
+      "description": "Time from stream start to runner ready (includes orchestrator provisioning and pipeline loading)",
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 30
+              },
+              {
+                "color": "red",
+                "value": 120
+              }
+            ]
+          },
+          "unit": "s"
+        }
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 0,
+        "y": 6
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.5, sum by (pipeline, le) (connect_duration_seconds_bucket{job=\"scope_loadtest\"}))",
+          "legendFormat": "{{pipeline}}"
+        }
+      ],
+      "title": "Connect + Load Time (P50)",
+      "type": "bargauge"
+    },
+    {
+      "datasource": "eflvecykhxcsgd",
+      "description": "Time from runner ready to first output frame received",
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 5
+              },
+              {
+                "color": "red",
+                "value": 30
+              }
+            ]
+          },
+          "unit": "s"
+        }
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 8,
+        "y": 6
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.5, sum by (pipeline, mode, le) (first_frame_seconds_bucket{job=\"scope_loadtest\"}))",
+          "legendFormat": "{{pipeline}}/{{mode}}"
+        }
+      ],
+      "title": "First Frame Latency (P50)",
+      "type": "bargauge"
+    },
+    {
+      "datasource": "eflvecykhxcsgd",
+      "description": "Output frames captured during last session (proxy for throughput)",
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 3
+              },
+              {
+                "color": "green",
+                "value": 5
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 16,
+        "y": 6
+      },
+      "targets": [
+        {
+          "expr": "frames_captured{job=\"scope_loadtest\"}",
+          "legendFormat": "{{pipeline}}/{{mode}}"
+        }
+      ],
+      "title": "Frames Captured per Run",
+      "type": "bargauge"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 12
+      },
+      "title": "Latency Trends",
+      "type": "row"
+    },
+    {
+      "datasource": "eflvecykhxcsgd",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "lineInterpolation": "smooth",
+            "showPoints": "auto"
+          },
+          "unit": "s"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 13
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.5, sum by (le) (connect_duration_seconds_bucket{job=\"scope_loadtest\"}))",
+          "legendFormat": "P50"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum by (le) (connect_duration_seconds_bucket{job=\"scope_loadtest\"}))",
+          "legendFormat": "P95"
+        }
+      ],
+      "title": "Connect Time (7-day trend)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "eflvecykhxcsgd",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "lineInterpolation": "smooth",
+            "showPoints": "auto"
+          },
+          "unit": "s"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 13
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.5, sum by (le) (first_frame_seconds_bucket{job=\"scope_loadtest\"}))",
+          "legendFormat": "P50"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum by (le) (first_frame_seconds_bucket{job=\"scope_loadtest\"}))",
+          "legendFormat": "P95"
+        }
+      ],
+      "title": "First Frame Latency (7-day trend)",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 21
+      },
+      "title": "Error Breakdown",
+      "type": "row"
+    },
+    {
+      "datasource": "eflvecykhxcsgd",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          }
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 22
+      },
+      "targets": [
+        {
+          "expr": "sum by (category) (failures_total{job=\"scope_loadtest\"})",
+          "legendFormat": "{{category}}"
+        }
+      ],
+      "title": "Failures by Category",
+      "type": "piechart"
+    },
+    {
+      "datasource": "eflvecykhxcsgd",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 22
+      },
+      "targets": [
+        {
+          "expr": "sum by (scenario, category) (failures_total{job=\"scope_loadtest\"}) > 0",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "{{scenario}} ({{category}})"
+        }
+      ],
+      "title": "Failures by Scenario",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 30
+      },
+      "title": "Run Results by Scenario",
+      "type": "row"
+    },
+    {
+      "datasource": "eflvecykhxcsgd",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "stacking": {
+              "mode": "normal"
+            }
+          }
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 31
+      },
+      "options": {
+        "barWidth": 0.5,
+        "orientation": "horizontal"
+      },
+      "targets": [
+        {
+          "expr": "sum by (scenario) (runs_total{job=\"scope_loadtest\", result=\"pass\"})",
+          "legendFormat": "{{scenario}} pass"
+        },
+        {
+          "expr": "sum by (scenario) (runs_total{job=\"scope_loadtest\", result=\"fail\"})",
+          "legendFormat": "{{scenario}} fail"
+        }
+      ],
+      "title": "Runs by Scenario (Pass/Fail)",
+      "type": "barchart"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 39
+      },
+      "title": "Budget & Coverage",
+      "type": "row"
+    },
+    {
+      "datasource": "eflvecykhxcsgd",
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 5
+              },
+              {
+                "color": "green",
+                "value": 9
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 40
+      },
+      "targets": [
+        {
+          "expr": "budget_runs_completed{job=\"scope_loadtest\"}",
+          "legendFormat": "Completed"
+        },
+        {
+          "expr": "budget_runs_planned{job=\"scope_loadtest\"}",
+          "legendFormat": "Planned"
+        }
+      ],
+      "title": "Budget Progress",
+      "type": "bargauge"
+    },
+    {
+      "datasource": "eflvecykhxcsgd",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "showPoints": "auto"
+          },
+          "unit": "s"
+        }
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 40
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.5, sum by (le) (run_duration_seconds_bucket{job=\"scope_loadtest\"}))",
+          "legendFormat": "P50"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum by (le) (run_duration_seconds_bucket{job=\"scope_loadtest\"}))",
+          "legendFormat": "P95"
+        }
+      ],
+      "title": "Run Duration",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "1m",
+  "schemaVersion": 39,
+  "tags": [
+    "scope",
+    "loadtest",
+    "livepeer"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": "eflvecykhxcsgd",
+        "includeAll": true,
+        "multi": true,
+        "name": "pipeline",
+        "query": "label_values(runs_total{job=\"scope_loadtest\"}, pipeline)",
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": "eflvecykhxcsgd",
+        "includeAll": true,
+        "multi": true,
+        "name": "mode",
+        "query": "label_values(runs_total{job=\"scope_loadtest\"}, mode)",
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timezone": "utc",
+  "title": "Scope Load Testing - 2",
+  "uid": "scope-loadtest-2",
+  "version": 1
+}
